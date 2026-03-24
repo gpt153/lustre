@@ -1,5 +1,32 @@
 {
   "name": "@lustre/web",
   "private": true,
-  "version": "0.0.0"
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "test": "echo 'no tests yet'"
+  },
+  "dependencies": {
+    "next": "^15.1",
+    "react": "^18.3",
+    "react-dom": "^18.3",
+    "@lustre/ui": "workspace:*",
+    "@lustre/app": "workspace:*",
+    "@lustre/api": "workspace:*",
+    "tamagui": "^1.114",
+    "@tamagui/core": "^1.114",
+    "@tamagui/config": "^1.114",
+    "@tamagui/next-plugin": "^1.114",
+    "next-themes": "^0.4",
+    "solito": "^4.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.7",
+    "@types/react": "^18.3",
+    "@types/react-dom": "^18.3"
+  }
 }

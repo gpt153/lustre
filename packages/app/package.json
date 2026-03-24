@@ -2,5 +2,16 @@
   "name": "@lustre/app",
   "version": "0.0.0",
   "main": "src/index.ts",
-  "types": "src/index.ts"
+  "types": "src/index.ts",
+  "sideEffects": false,
+  "dependencies": {
+    "@lustre/ui": "workspace:*",
+    "@lustre/api": "workspace:*",
+    "@tanstack/react-query": "^5",
+    "zustand": "^5",
+    "react": "^18.3"
+  },
+  "devDependencies": {
+    "typescript": "^5.7"
+  }
 }

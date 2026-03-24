@@ -1,0 +1,30 @@
+{
+  "expo": {
+    "name": "Lustre",
+    "slug": "lustre",
+    "scheme": "lustre",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#E91E63"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.lovelustre.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#E91E63"
+      },
+      "package": "com.lovelustre.app"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": ["expo-router"]
+  }
+}
