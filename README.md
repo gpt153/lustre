@@ -68,11 +68,22 @@ docker compose up        # Starts API, web, PostgreSQL, Redis, Meilisearch, NATS
 | `MEILI_MASTER_KEY` | — | Meilisearch API key |
 | `NATS_URL` | `nats://localhost:4222` | NATS JetStream server |
 | `NEXT_PUBLIC_API_URL` | `http://localhost:4000` | API URL for web app |
+| `R2_ACCOUNT_ID` | — | Cloudflare R2 account ID |
+| `R2_ACCESS_KEY_ID` | — | R2 access key |
+| `R2_SECRET_ACCESS_KEY` | — | R2 secret key |
+| `R2_BUCKET_NAME` | `lustre-photos` | R2 bucket for photo storage |
+| `R2_PUBLIC_URL` | — | Public URL for R2 bucket |
 
 ## API Endpoints
 
 - `GET /health` — Health check (returns `{ status: "ok"|"degraded", postgres, redis, meilisearch, nats, timestamp }`)
+- `POST /api/photos/upload` — Multipart photo upload (Bearer auth, max 20MB, WebP conversion + 3 thumbnail sizes to R2)
 - `/trpc/*` — tRPC router (type-safe RPC via `@trpc/server`)
+  - `profile.*` — Profile CRUD (create, update, get, getPublic)
+  - `photo.*` — Photo management (list, delete, reorder)
+  - `search.profiles` — Meilisearch-powered profile search with filters
+  - `kink.*` — Kink tag listing, search, and assignment
+  - `pair.*` — Pair/poly linking (invite, respond, leave, getMyLinks)
 
 ## CI/CD
 
@@ -96,4 +107,4 @@ Production runs on a 3-node k3s cluster on Hetzner Cloud (Helsinki):
 
 ## Status
 
-F01 scaffolding, F03 database & infrastructure complete. See `.bmad/STATUS.md` for full feature roadmap.
+F01 scaffolding, F02 auth, F03 database & infrastructure, F04 profiles complete. See `.bmad/STATUS.md` for full feature roadmap.
