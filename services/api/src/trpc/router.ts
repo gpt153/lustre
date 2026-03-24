@@ -6,6 +6,8 @@ import { generateAccessToken, generateRefreshToken } from '../auth/jwt.js'
 import { getAuthorizationUrl, exchangeCodeForIdentity } from '../auth/bankid.js'
 import { hashPersonnummer, validateAge } from '../auth/personnummer.js'
 import { encryptIdentity } from '../auth/crypto.js'
+import { createPaymentRequest } from '../auth/swish.js'
+import { userRouter } from './user-router.js'
 
 export const appRouter = router({
   health: {
@@ -45,6 +47,28 @@ export const appRouter = router({
         await revokeSession(ctx.prisma, input.sessionId)
         return { success: true }
       }),
+
+    swish: {
+      createPayment: protectedProcedure
+        .input(z.object({ phoneNumber: z.string().optional() }))
+        .mutation(async ({ ctx, input }) => {
+          const user = await ctx.prisma.user.findUnique({ where: { id: ctx.userId } })
+          if (!user || user.status !== 'PENDING') {
+            throw new TRPCError({ code: 'BAD_REQUEST', message: 'Payment not required' })
+          }
+
+          const result = await createPaymentRequest(ctx.prisma, ctx.userId, input.phoneNumber)
+          return result
+        }),
+
+      checkStatus: protectedProcedure.query(async ({ ctx }) => {
+        const payment = await ctx.prisma.payment.findFirst({
+          where: { userId: ctx.userId },
+          orderBy: { createdAt: 'desc' },
+        })
+        return { status: payment?.status ?? null, paidAt: payment?.completedAt ?? null }
+      }),
+    },
 
     bankid: {
       // Initiate BankID login — returns the Criipto authorization URL and a state token
@@ -128,6 +152,7 @@ export const appRouter = router({
         }),
     },
   },
+  user: userRouter,
 })
 
 export type AppRouter = typeof appRouter

@@ -3,7 +3,8 @@ import cors from '@fastify/cors'
 import helmet from '@fastify/helmet'
 import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify'
 import { appRouter } from './trpc/router.js'
-import { createContext } from './trpc/context.js'
+import { createContext, prisma } from './trpc/context.js'
+import { handleSwishCallback, type SwishCallbackBody } from './auth/swish.js'
 
 const server = Fastify({
   logger: {
@@ -29,6 +30,24 @@ async function start() {
     status: 'ok',
     timestamp: new Date().toISOString(),
   }))
+
+  // Swish payment callback — called by Swish servers when a payment completes.
+  // Must be a plain REST endpoint (not tRPC) because Swish sends a fixed POST format.
+  server.post('/swish/callback', async (request, reply) => {
+    const body = request.body as SwishCallbackBody
+
+    if (!body || !body.id || !body.status) {
+      return reply.status(400).send({ error: 'Invalid callback body' })
+    }
+
+    const handled = await handleSwishCallback(prisma, body)
+    if (!handled) {
+      server.log.warn({ swishPaymentId: body.id }, 'Swish callback received for unknown payment')
+    }
+
+    // Swish requires a 200 response to consider the callback delivered.
+    return reply.status(200).send()
+  })
 
   await server.register(fastifyTRPCPlugin, {
     prefix: '/trpc',

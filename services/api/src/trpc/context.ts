@@ -13,6 +13,8 @@ if (!global.__prisma) {
 }
 prisma = global.__prisma
 
+export { prisma }
+
 export async function createContext({ req, res }: CreateFastifyContextOptions) {
   let userId: string | null = null
   let sessionId: string | null = null
