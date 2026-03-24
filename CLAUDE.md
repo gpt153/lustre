@@ -53,6 +53,18 @@ lustre/
 All feature planning in: `~/bodycontact-recon/.bmad/features/planned/`
 Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
 
+## Auth (F02-CORE-auth)
+- **BankID:** Criipto/Idura OIDC integration (`services/api/src/auth/bankid.ts`)
+- **Swish:** Swish Handel API for 10 SEK registration payment (`services/api/src/auth/swish.ts`)
+- **JWT:** `jose` library, HS256, access (24h) + refresh (30d) tokens (`services/api/src/auth/jwt.ts`)
+- **Anonymity:** AES-256-GCM encrypted PII in `encrypted_identities` table (`services/api/src/auth/crypto.ts`)
+- **Auth store:** Zustand in `packages/app/src/stores/authStore.ts`, shared across mobile/web
+- **Env vars required:**
+  - `JWT_SECRET` — signing key for JWT tokens
+  - `ENCRYPTION_KEY` — 64 hex chars (32 bytes) for AES-256-GCM
+  - `CRIIPTO_DOMAIN`, `CRIIPTO_CLIENT_ID`, `CRIIPTO_CLIENT_SECRET`, `CRIIPTO_REDIRECT_URI`
+  - `SWISH_MERCHANT_NUMBER`, `SWISH_API_URL`, `SWISH_CALLBACK_URL`, `SWISH_CERT_PATH`, `SWISH_CERT_PASSPHRASE`
+
 ## Rules
 - All users verified via BankID (Sweden) or Veriff (international)
 - Real names NEVER shown in app — stored encrypted, released only via court order
