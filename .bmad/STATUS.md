@@ -1,0 +1,49 @@
+# BMAD Status — Lustre
+
+**Project:** Lustre (lovelustre.com)
+**Stack:** Turborepo + Expo + Next.js + Fastify + Elixir + PostgreSQL
+**Next feature number:** F28
+
+## Planned Features
+
+| ID | Group | Name | Waves | Epics | Status |
+|----|-------|------|-------|-------|--------|
+| F01 | CORE | Scaffolding | 3 | 7 | PLANNED |
+| F02 | CORE | Auth & Verification | 3 | 7 | PLANNED |
+| F03 | CORE | Database & Infrastructure | 2 | 5 | PLANNED |
+| F04 | SOCIAL | Profiles | 3 | 7 | PLANNED |
+| F05 | SOCIAL | Feed | 3 | 8 | PLANNED |
+| F06 | SOCIAL | Groups | 2 | 5 | PLANNED |
+| F07 | CONNECT | AI Gatekeeper | 3 | 7 | PLANNED |
+| F08 | CONNECT | Matching | 2 | 5 | PLANNED |
+| F09 | CONNECT | Chat | 3 | 7 | PLANNED |
+| F10 | CONNECT | Voice & Video | 2 | 4 | PLANNED |
+| F11 | MEET | Events | 3 | 7 | PLANNED |
+| F12 | MEET | Organizations | 2 | 4 | PLANNED |
+| F13 | SAFE | SafeDate | 2 | 5 | PLANNED |
+| F14 | SAFE | ConsentVault | 3 | 6 | PLANNED |
+| F15 | LEARN | Coach Engine | 2 | 5 | PLANNED |
+| F16 | LEARN | Coach Vanilla | 2 | 5 | PLANNED |
+| F17 | LEARN | Coach Spicy | 2 | 4 | PLANNED |
+| F18 | LEARN | Gamification | 2 | 4 | PLANNED |
+| F19 | LEARN | Sexual Health Education | 2 | 5 | PLANNED |
+| F20 | SHOP | Marketplace | 3 | 6 | PLANNED |
+| F21 | SHOP | Business Shops | 2 | 4 | PLANNED |
+| F22 | SHOP | Advertising | 2 | 5 | PLANNED |
+| F23 | PAY | Token System | 3 | 7 | PLANNED |
+| F24 | MOD | Content Moderation | 2 | 5 | PLANNED |
+| F25 | UX | Dual Mode (Vanilla/Spicy) | 2 | 4 | PLANNED |
+| F26 | ADMIN | Dashboard | 2 | 5 | PLANNED |
+| F27 | GROWTH | Migration & Onboarding | 2 | 4 | PLANNED |
+
+## Build Order (Suggested Phases)
+
+### Phase 1: Foundation (F01, F02, F03)
+### Phase 2: Core Social (F04, F05, F23, F25)
+### Phase 3: Connect MVP (F07, F08, F09, F24)
+### Phase 4: Safety (F13, F06)
+### Phase 5: Voice/Video & Events (F10, F11)
+### Phase 6: Learn Platform (F15, F16, F18)
+### Phase 7: Advanced Features (F12, F14, F17, F19)
+### Phase 8: Commerce (F20, F21, F22)
+### Phase 9: Admin & Growth (F26, F27)
