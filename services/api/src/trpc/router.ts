@@ -9,6 +9,9 @@ import { encryptIdentity } from '../auth/crypto.js'
 import { createPaymentRequest } from '../auth/swish.js'
 import { userRouter } from './user-router.js'
 import { profileRouter } from './profile-router.js'
+import { photoRouter } from './photo-router.js'
+import { searchRouter } from './search-router.js'
+import { kinkRouter } from './kink-router.js'
 
 export const appRouter = router({
   health: {
@@ -155,6 +158,9 @@ export const appRouter = router({
   },
   user: userRouter,
   profile: profileRouter,
+  photo: photoRouter,
+  search: searchRouter,
+  kink: kinkRouter,
 })
 
 export type AppRouter = typeof appRouter

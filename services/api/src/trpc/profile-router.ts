@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { TRPCError } from '@trpc/server'
 import { router, publicProcedure, protectedProcedure } from './middleware.js'
+import { indexProfile } from '../lib/meilisearch.js'
 
 // Define schemas inline to avoid monorepo resolution issues at runtime
 const GenderEnum = z.enum([
@@ -75,6 +76,9 @@ export const profileRouter = router({
         },
       })
 
+      // Index in Meilisearch
+      await indexProfile(profile).catch(() => {})
+
       return profile
     }),
 
@@ -96,6 +100,9 @@ export const profileRouter = router({
           kinkTags: { include: { kinkTag: true } },
         },
       })
+
+      // Update search index
+      await indexProfile(updated).catch(() => {})
 
       return updated
     }),

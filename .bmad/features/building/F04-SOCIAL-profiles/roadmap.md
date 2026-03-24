@@ -9,7 +9,7 @@
 ---
 
 ## Wave 1: Profile Schema & API
-**Status:** IN_PROGRESS (started 2026-03-24)
+**Status:** DONE (2026-03-24) — 40/40 tests pass, committed dae2e92
 
 ### Parallelization groups:
 **Group A (sequential):**
@@ -28,25 +28,26 @@
 ---
 
 ## Wave 2: Photo Upload & Search
-**Status:** NOT_STARTED
+**Status:** IN_PROGRESS (started 2026-03-24)
 
 ### Parallelization groups:
 **Group A (parallel):**
-- wave-2a-photo-upload (haiku) — R2 integration, multipart upload, WebP conversion, thumbnail generation (3 sizes), ProfilePhoto CRUD
-- wave-2b-profile-search (haiku) — Meilisearch indexing on profile create/update, search API with filters (gender, age, location, orientation)
+- wave-2a-photo-upload (haiku) — **VERIFIED** — R2 integration, multipart upload, WebP conversion, thumbnail generation (3 sizes), ProfilePhoto CRUD
+- wave-2b-profile-search (haiku) — **VERIFIED** — Meilisearch indexing on profile create/update, search API with filters (gender, age, location, orientation)
 
 **Group B (sequential, after A):**
-- wave-2c-kink-tags (haiku) — Kink tag system: 100+ predefined tags in categories, three interest levels, public/private visibility, tag search
+- wave-2c-kink-tags (haiku) — **VERIFIED** — Kink tag system: 113 predefined tags in 9 categories, three interest levels, public/private visibility, tag search
 
 ### Parallelization rationale:
 - A parallel: photo upload and search indexing are independent
 - B sequential: kink tags need profile schema from wave 1 to be stable
 
-### Testgate Wave 2:
-- [ ] Photo uploads to R2 successfully
-- [ ] Three thumbnail sizes generated
-- [ ] Meilisearch returns profiles matching filters
-- [ ] Kink tags assignable with interest levels
+### Testgate Wave 2: **PASS** (23/23 tests, 78 total)
+- [x] Photo uploads to R2 successfully — PASS
+- [x] Three thumbnail sizes generated — PASS
+- [x] Meilisearch returns profiles matching filters — PASS
+- [x] Kink tags assignable with interest levels — PASS
+- Additional: photo CRUD, search pagination, kink visibility, integration
 
 ---
 

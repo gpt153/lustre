@@ -1,12 +1,16 @@
 import Fastify from 'fastify'
 import cors from '@fastify/cors'
 import helmet from '@fastify/helmet'
+import multipart from '@fastify/multipart'
 import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify'
 import { appRouter } from './trpc/router.js'
 import { createContext, prisma, redis } from './trpc/context.js'
 import { handleSwishCallback, type SwishCallbackBody } from './auth/swish.js'
 import { meili } from './lib/meilisearch.js'
 import { getNatsConnection } from './lib/nats.js'
+import { processImage } from './lib/image.js'
+import { uploadToR2, getPhotoKey } from './lib/r2.js'
+import { verifyToken } from './auth/jwt.js'
 
 const server = Fastify({
   logger: {
@@ -27,6 +31,8 @@ async function start() {
   })
 
   await server.register(helmet, { contentSecurityPolicy: false })
+
+  await server.register(multipart, { limits: { fileSize: 20 * 1024 * 1024 } })
 
   server.get('/health', async () => {
     const checks: Record<string, string> = {
@@ -86,6 +92,78 @@ async function start() {
 
     // Swish requires a 200 response to consider the callback delivered.
     return reply.status(200).send()
+  })
+
+  server.post('/api/photos/upload', async (request, reply) => {
+    // Auth check
+    const authHeader = request.headers.authorization
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return reply.status(401).send({ error: 'Unauthorized' })
+    }
+    const token = authHeader.slice(7)
+    let userId: string
+    try {
+      const decoded = await verifyToken(token)
+      if (decoded.type !== 'access') throw new Error('Invalid token type')
+      userId = decoded.userId
+    } catch {
+      return reply.status(401).send({ error: 'Invalid token' })
+    }
+
+    // Get profile
+    const profile = await prisma.profile.findUnique({
+      where: { userId },
+      include: { photos: true },
+    })
+    if (!profile) {
+      return reply.status(404).send({ error: 'Profile not found' })
+    }
+
+    // Check photo limit
+    if (profile.photos.length >= 10) {
+      return reply.status(400).send({ error: 'Maximum 10 photos allowed' })
+    }
+
+    // Get file
+    const file = await request.file()
+    if (!file) {
+      return reply.status(400).send({ error: 'No file provided' })
+    }
+
+    const buffer = await file.toBuffer()
+
+    // Process image (convert to WebP + generate thumbnails)
+    const images = await processImage(buffer)
+
+    // Create DB record first to get ID
+    const photo = await prisma.profilePhoto.create({
+      data: {
+        profileId: profile.id,
+        url: '',
+        position: profile.photos.length,
+      },
+    })
+
+    // Upload all sizes to R2
+    const [originalUrl, smallUrl, mediumUrl, largeUrl] = await Promise.all([
+      uploadToR2(getPhotoKey(profile.id, photo.id, 'original'), images.original, 'image/webp'),
+      uploadToR2(getPhotoKey(profile.id, photo.id, 'small'), images.small, 'image/webp'),
+      uploadToR2(getPhotoKey(profile.id, photo.id, 'medium'), images.medium, 'image/webp'),
+      uploadToR2(getPhotoKey(profile.id, photo.id, 'large'), images.large, 'image/webp'),
+    ])
+
+    // Update record with URLs
+    const updated = await prisma.profilePhoto.update({
+      where: { id: photo.id },
+      data: {
+        url: originalUrl,
+        thumbnailSmall: smallUrl,
+        thumbnailMedium: mediumUrl,
+        thumbnailLarge: largeUrl,
+      },
+    })
+
+    return reply.status(201).send(updated)
   })
 
   await server.register(fastifyTRPCPlugin, {
