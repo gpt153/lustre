@@ -8,6 +8,7 @@ import { hashPersonnummer, validateAge } from '../auth/personnummer.js'
 import { encryptIdentity } from '../auth/crypto.js'
 import { createPaymentRequest } from '../auth/swish.js'
 import { userRouter } from './user-router.js'
+import { profileRouter } from './profile-router.js'
 
 export const appRouter = router({
   health: {
@@ -153,6 +154,7 @@ export const appRouter = router({
     },
   },
   user: userRouter,
+  profile: profileRouter,
 })
 
 export type AppRouter = typeof appRouter

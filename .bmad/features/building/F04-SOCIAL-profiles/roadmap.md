@@ -1,27 +1,29 @@
 # Roadmap: F04-SOCIAL-profiles
 
-**Status:** NOT_STARTED
+**Status:** IN_PROGRESS
 **Created:** 2026-03-24
+**Started:** 2026-03-24
 **Waves:** 3
 **Total epics:** 7
 
 ---
 
 ## Wave 1: Profile Schema & API
-**Status:** NOT_STARTED
+**Status:** IN_PROGRESS (started 2026-03-24)
 
 ### Parallelization groups:
 **Group A (sequential):**
-- wave-1a-profile-schema (haiku) — Prisma models: Profile, ProfilePhoto, KinkTag, ProfileKinkTag. Enums for gender, orientation, relationship type, seeking. Migration.
-- wave-1b-profile-crud-api (haiku) — tRPC procedures: profile.create, profile.update, profile.get, profile.getPublic. Input validation with Zod.
+- wave-1a-profile-schema (haiku) — **VERIFIED** — Prisma models: Profile, ProfilePhoto, KinkTag, ProfileKinkTag. Enums for gender, orientation, relationship type, seeking.
+- wave-1b-profile-crud-api (haiku) — **VERIFIED** — tRPC procedures: profile.create, profile.update, profile.get, profile.getPublic. Input validation with Zod.
 
 ### Parallelization rationale:
 - Sequential: API depends on schema
 
-### Testgate Wave 1:
-- [ ] Profile CRUD operations work via tRPC
-- [ ] All enum values stored correctly
-- [ ] Profile.getPublic excludes private fields
+### Testgate Wave 1: **PASS** (40/40 tests)
+- [x] Profile CRUD operations work via tRPC — PASS (16 tests)
+- [x] All enum values stored correctly — PASS (5 tests)
+- [x] Profile.getPublic excludes private fields — PASS
+- Additional: age validation (7), input validation (8), edge cases (4)
 
 ---
 

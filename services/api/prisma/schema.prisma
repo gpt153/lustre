@@ -23,6 +23,64 @@ enum PaymentStatus {
   ERROR
 }
 
+enum Gender {
+  MAN
+  WOMAN
+  NON_BINARY
+  TRANS_MAN
+  TRANS_WOMAN
+  GENDERQUEER
+  GENDERFLUID
+  AGENDER
+  BIGENDER
+  TWO_SPIRIT
+  OTHER
+}
+
+enum Orientation {
+  STRAIGHT
+  GAY
+  LESBIAN
+  BISEXUAL
+  PANSEXUAL
+  QUEER
+  ASEXUAL
+  DEMISEXUAL
+  OTHER
+}
+
+enum RelationshipType {
+  SINGLE
+  PARTNERED
+  MARRIED
+  OPEN_RELATIONSHIP
+  POLYAMOROUS
+  OTHER
+}
+
+enum Seeking {
+  FRIENDSHIP
+  DATING
+  CASUAL
+  RELATIONSHIP
+  PLAY_PARTNER
+  NETWORKING
+  OTHER
+}
+
+enum ContentPreference {
+  SOFT
+  OPEN
+  EXPLICIT
+  NO_DICK_PICS
+}
+
+enum KinkInterestLevel {
+  CURIOUS
+  LIKE
+  LOVE
+}
+
 model User {
   id                 String            @id @default(uuid()) @db.Uuid
   displayName        String?           @map("display_name")
@@ -33,6 +91,7 @@ model User {
   encryptedIdentity  EncryptedIdentity?
   sessions           Session[]
   payments           Payment[]
+  profile            Profile?
 
   @@map("users")
 }
@@ -78,4 +137,63 @@ model Payment {
   user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("payments")
+}
+
+model Profile {
+  id                String            @id @default(uuid()) @db.Uuid
+  userId            String            @unique @db.Uuid @map("user_id")
+  displayName       String            @map("display_name")
+  bio               String?
+  age               Int
+  gender            Gender
+  orientation       Orientation
+  relationshipType  RelationshipType? @map("relationship_type")
+  seeking           Seeking[]
+  contentPreference ContentPreference @map("content_preference")
+  verified          Boolean           @default(false)
+  createdAt         DateTime          @default(now()) @map("created_at")
+  updatedAt         DateTime          @updatedAt @map("updated_at")
+  user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  photos            ProfilePhoto[]
+  kinkTags          ProfileKinkTag[]
+
+  @@map("profiles")
+}
+
+model ProfilePhoto {
+  id              String   @id @default(uuid()) @db.Uuid
+  profileId       String   @db.Uuid @map("profile_id")
+  url             String
+  thumbnailSmall  String?  @map("thumbnail_small")
+  thumbnailMedium String?  @map("thumbnail_medium")
+  thumbnailLarge  String?  @map("thumbnail_large")
+  position        Int      @default(0)
+  isPublic        Boolean  @default(true) @map("is_public")
+  createdAt       DateTime @default(now()) @map("created_at")
+  profile         Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@map("profile_photos")
+}
+
+model KinkTag {
+  id        String           @id @default(uuid()) @db.Uuid
+  name      String           @unique
+  category  String
+  createdAt DateTime         @default(now()) @map("created_at")
+  profiles  ProfileKinkTag[]
+
+  @@map("kink_tags")
+}
+
+model ProfileKinkTag {
+  id            String            @id @default(uuid()) @db.Uuid
+  profileId     String            @db.Uuid @map("profile_id")
+  kinkTagId     String            @db.Uuid @map("kink_tag_id")
+  interestLevel KinkInterestLevel @map("interest_level")
+  isPublic      Boolean           @default(true) @map("is_public")
+  profile       Profile           @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  kinkTag       KinkTag           @relation(fields: [kinkTagId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, kinkTagId])
+  @@map("profile_kink_tags")
 }
