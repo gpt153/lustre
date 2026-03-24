@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-redis-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "lustre-redis.labels" . | nindent 4 }}
+data:
+  redis.conf: |
+    appendonly {{ .Values.redis_config.appendonly }}
+    appendfsync {{ .Values.redis_config.appendfsync }}
+    maxmemory-policy {{ .Values.redis_config.maxmemory_policy }}
+    bind {{ .Values.redis_config.bind }}
+    protected-mode {{ .Values.redis_config.protected_mode }}
+    save ""
+    lazyfree-lazy-eviction yes
+    lazyfree-lazy-expire yes
+    lazyfree-lazy-server-del yes
+    lazyfree-user-del yes
+  sentinel.conf: |
+    sentinel monitor mymaster 127.0.0.1 6379 1
+    sentinel auth-pass mymaster {{ .Values.redis.password }}
+    sentinel down-after-milliseconds mymaster {{ .Values.sentinel_config.down_after_milliseconds }}
+    sentinel failover-timeout mymaster {{ .Values.sentinel_config.failover_timeout }}
+    sentinel parallel-syncs mymaster 1

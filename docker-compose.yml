@@ -10,6 +10,7 @@ services:
     environment:
       - PORT=4000
       - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/lustre
+      - REDIS_URL=redis://redis:6379
     depends_on:
       postgres:
         condition: service_healthy
@@ -26,7 +27,7 @@ services:
       - NEXT_PUBLIC_API_URL=http://api:4000
 
   postgres:
-    image: postgres:17-alpine
+    image: postgis/postgis:17-3.5-alpine
     ports:
       - "5432:5432"
     environment:
@@ -35,6 +36,7 @@ services:
       - POSTGRES_PASSWORD=postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./infrastructure/docker/postgres-init/:/docker-entrypoint-initdb.d/
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -45,6 +47,8 @@ services:
     image: redis:7-alpine
     ports:
       - "6379:6379"
+    volumes:
+      - redis_data:/data
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s
@@ -62,4 +66,5 @@ services:
 
 volumes:
   postgres_data:
+  redis_data:
   meili_data:

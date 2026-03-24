@@ -1,0 +1,97 @@
+{{- if .Values.backup.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "lustre-postgresql.fullname" . }}-backup
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "lustre-postgresql.labels" . | nindent 4 }}
+spec:
+  schedule: {{ .Values.backup.schedule | quote }}
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: {{ include "lustre-postgresql.name" . }}
+            app.kubernetes.io/instance: {{ .Release.Name }}
+            app.kubernetes.io/component: backup
+            job-type: backup
+        spec:
+          serviceAccountName: {{ include "lustre-postgresql.fullname" . }}
+          containers:
+            - name: backup
+              image: "{{ .Values.backup.image.repository }}:{{ .Values.backup.image.tag }}"
+              imagePullPolicy: {{ .Values.backup.image.pullPolicy }}
+              env:
+                - name: PGPASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ include "lustre-postgresql.fullname" . }}-secret
+                      key: POSTGRES_PASSWORD
+                - name: R2_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ include "lustre-postgresql.fullname" . }}-secret
+                      key: R2_ACCESS_KEY_ID
+                - name: R2_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ include "lustre-postgresql.fullname" . }}-secret
+                      key: R2_SECRET_ACCESS_KEY
+                - name: R2_ENDPOINT
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ include "lustre-postgresql.fullname" . }}-secret
+                      key: R2_ENDPOINT
+                - name: R2_BUCKET
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ include "lustre-postgresql.fullname" . }}-secret
+                      key: R2_BUCKET
+              command:
+                - /bin/bash
+                - -c
+                - |
+                  set -eo pipefail
+
+                  BACKUP_FILE="lustre-backup-$(date +%Y%m%d-%H%M%S).sql.gz"
+                  TEMP_BACKUP="/tmp/$BACKUP_FILE"
+
+                  echo "Starting PostgreSQL backup: $BACKUP_FILE"
+
+                  pg_dump \
+                    -h {{ include "lustre-postgresql.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local \
+                    -U {{ .Values.postgresql.user }} \
+                    -d {{ .Values.postgresql.database }} \
+                    -v \
+                    | gzip > "$TEMP_BACKUP"
+
+                  echo "Backup completed: $BACKUP_FILE"
+
+                  # Install rclone
+                  apk add --no-cache rclone
+
+                  # Configure rclone for R2
+                  mkdir -p ~/.config/rclone
+                  cat > ~/.config/rclone/rclone.conf <<EOF
+                  [r2]
+                  type = s3
+                  provider = Cloudflare
+                  access_key_id = $R2_ACCESS_KEY_ID
+                  secret_access_key = $R2_SECRET_ACCESS_KEY
+                  endpoint = $R2_ENDPOINT
+                  EOF
+
+                  # Upload backup to R2
+                  echo "Uploading backup to R2..."
+                  rclone copy "$TEMP_BACKUP" "r2:$R2_BUCKET/postgresql-backups/" -v
+
+                  # Cleanup local backup
+                  rm "$TEMP_BACKUP"
+
+                  echo "Backup upload completed"
+              resources:
+                {{- toYaml .Values.backup.resources | nindent 16 }}
+          restartPolicy: OnFailure
+{{- end }}

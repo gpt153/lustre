@@ -1,0 +1,92 @@
+replicaCount: 1
+
+image:
+  repository: postgis/postgis
+  tag: "17-3.5"
+  pullPolicy: IfNotPresent
+
+postgresql:
+  database: lustre
+  user: lustre
+  password: ""  # Must be set at deploy time
+
+pgbouncer:
+  image:
+    repository: edoburu/pgbouncer
+    tag: "1.23.1"
+    pullPolicy: IfNotPresent
+  enabled: true
+  port: 6432
+  poolMode: transaction
+  maxClientConn: 200
+  defaultPoolSize: 25
+
+persistence:
+  enabled: true
+  size: 20Gi
+  storageClassName: ""  # Use default if not specified
+
+resources:
+  postgres:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 2Gi
+  pgbouncer:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+livenessProbe:
+  exec:
+    command:
+      - /bin/sh
+      - -c
+      - pg_isready -U lustre -h localhost
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  exec:
+    command:
+      - /bin/sh
+      - -c
+      - pg_isready -U lustre -h localhost
+  initialDelaySeconds: 10
+  periodSeconds: 5
+  timeoutSeconds: 5
+  failureThreshold: 2
+
+backup:
+  enabled: true
+  schedule: "0 3 * * *"
+  image:
+    repository: postgres
+    tag: "17-alpine"
+    pullPolicy: IfNotPresent
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  rclone:
+    accessKeyId: ""  # Must be set at deploy time
+    secretAccessKey: ""  # Must be set at deploy time
+    endpoint: ""  # Must be set at deploy time
+    bucket: ""  # Must be set at deploy time
+
+service:
+  type: ClusterIP
+  postgres:
+    port: 5432
+  pgbouncer:
+    port: 6432

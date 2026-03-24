@@ -3,7 +3,7 @@ import cors from '@fastify/cors'
 import helmet from '@fastify/helmet'
 import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify'
 import { appRouter } from './trpc/router.js'
-import { createContext, prisma } from './trpc/context.js'
+import { createContext, prisma, redis } from './trpc/context.js'
 import { handleSwishCallback, type SwishCallbackBody } from './auth/swish.js'
 
 const server = Fastify({
@@ -26,10 +26,28 @@ async function start() {
 
   await server.register(helmet, { contentSecurityPolicy: false })
 
-  server.get('/health', async () => ({
-    status: 'ok',
-    timestamp: new Date().toISOString(),
-  }))
+  server.get('/health', async () => {
+    const checks: Record<string, string> = {
+      timestamp: new Date().toISOString(),
+    }
+
+    try {
+      await prisma.$queryRaw`SELECT 1`
+      checks.postgres = 'ok'
+    } catch {
+      checks.postgres = 'error'
+    }
+
+    try {
+      await redis.ping()
+      checks.redis = 'ok'
+    } catch {
+      checks.redis = 'error'
+    }
+
+    const status = checks.postgres === 'ok' && checks.redis === 'ok' ? 'ok' : 'degraded'
+    return { status, ...checks }
+  })
 
   // Swish payment callback — called by Swish servers when a payment completes.
   // Must be a plain REST endpoint (not tRPC) because Swish sends a fixed POST format.

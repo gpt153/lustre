@@ -1,0 +1,40 @@
+image:
+  repository: redis
+  tag: "7-alpine"
+  pullPolicy: IfNotPresent
+
+persistence:
+  enabled: true
+  size: 5Gi
+  storageClassName: ""
+
+redis:
+  # Set via --set redis.password=<value> at deploy time
+  password: ""
+
+resources:
+  redis:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  sentinel:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+
+redis_config:
+  appendonly: "yes"
+  appendfsync: "everysec"
+  maxmemory_policy: "allkeys-lru"
+  bind: "0.0.0.0"
+  protected_mode: "no"
+
+sentinel_config:
+  down_after_milliseconds: "5000"
+  failover_timeout: "10000"
