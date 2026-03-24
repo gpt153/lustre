@@ -1,0 +1,26 @@
+---
+cluster_name: lustre-prod
+kubeconfig_path: "./kubeconfig"
+k3s_version: v1.31.4+k3s1
+networking:
+  ssh:
+    port: 22
+    use_agent: false
+  allowed_networks:
+    ssh:
+      - 0.0.0.0/0
+    api:
+      - 0.0.0.0/0
+  cni: flannel
+api_server_hostname: api.lovelustre.com
+schedule_workloads_on_masters: true
+masters_pool:
+  instance_type: cx32
+  instance_count: 3
+  location: hel1
+  image: ubuntu-24.04
+post_create_commands:
+  - kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.16.0/cert-manager.yaml
+  - sleep 30
+  - kubectl apply -f infrastructure/k8s/cluster-issuer.yaml
+  - kubectl create namespace lustre-prod --dry-run=client -o yaml | kubectl apply -f -
