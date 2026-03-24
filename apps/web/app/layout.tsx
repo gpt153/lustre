@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Providers } from './providers'
+import { AuthGuard } from './auth-guard'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
@@ -35,8 +36,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <body style={{ margin: 0, fontFamily: 'Inter, system-ui, sans-serif' }}>
         <Providers>
-          <Header />
-          <main>{children}</main>
+          <AuthGuard>
+            <Header />
+            <main>{children}</main>
+          </AuthGuard>
         </Providers>
       </body>
     </html>
