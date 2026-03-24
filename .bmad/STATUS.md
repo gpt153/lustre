@@ -10,7 +10,7 @@
 |----|-------|------|-------|-------|--------|
 | F01 | CORE | Scaffolding | 3 | 7 | **DONE** (2026-03-24) |
 | F02 | CORE | Auth & Verification | 3 | 7 | PLANNED |
-| F03 | CORE | Database & Infrastructure | 2 | 5 | PLANNED |
+| F03 | CORE | Database & Infrastructure | 2 | 5 | **DONE** (2026-03-24) |
 | F04 | SOCIAL | Profiles | 3 | 7 | PLANNED |
 | F05 | SOCIAL | Feed | 3 | 8 | PLANNED |
 | F06 | SOCIAL | Groups | 2 | 5 | PLANNED |

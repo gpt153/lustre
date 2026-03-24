@@ -22,6 +22,10 @@ lustre/
     hetzner-k3s.yaml # k3s cluster config (Hetzner Helsinki)
     helm/api/        # Helm chart for API deployment
     helm/web/        # Helm chart for web deployment
+    helm/postgresql/ # PostgreSQL 17 + PostGIS + pgvector + PgBouncer
+    helm/redis/      # Redis 7 + AOF + Sentinel
+    helm/meilisearch/ # Meilisearch v1.12 full-text search
+    helm/nats/       # NATS JetStream event bus
     k8s/             # Kubernetes manifests (namespace, cert-manager)
     deploy.sh        # Deploy script
 ```
@@ -50,7 +54,7 @@ pnpm turbo lint typecheck
 ## Local Development with Docker
 
 ```bash
-docker compose up        # Starts API, web, PostgreSQL, Redis, Meilisearch
+docker compose up        # Starts API, web, PostgreSQL, Redis, Meilisearch, NATS
 ```
 
 ### Environment Variables
@@ -59,11 +63,15 @@ docker compose up        # Starts API, web, PostgreSQL, Redis, Meilisearch
 |----------|---------|-------------|
 | `PORT` | `4000` | API server port |
 | `DATABASE_URL` | `postgresql://postgres:postgres@localhost:5432/lustre` | PostgreSQL connection |
+| `REDIS_URL` | `redis://localhost:6379` | Redis connection |
+| `MEILI_URL` | `http://localhost:7700` | Meilisearch host |
+| `MEILI_MASTER_KEY` | — | Meilisearch API key |
+| `NATS_URL` | `nats://localhost:4222` | NATS JetStream server |
 | `NEXT_PUBLIC_API_URL` | `http://localhost:4000` | API URL for web app |
 
 ## API Endpoints
 
-- `GET /health` — Health check (`{ status: "ok", timestamp: "..." }`)
+- `GET /health` — Health check (returns `{ status: "ok"|"degraded", postgres, redis, meilisearch, nats, timestamp }`)
 - `/trpc/*` — tRPC router (type-safe RPC via `@trpc/server`)
 
 ## CI/CD
@@ -88,4 +96,4 @@ Production runs on a 3-node k3s cluster on Hetzner Cloud (Helsinki):
 
 ## Status
 
-F01 scaffolding complete. See `.bmad/STATUS.md` for full feature roadmap.
+F01 scaffolding, F03 database & infrastructure complete. See `.bmad/STATUS.md` for full feature roadmap.
