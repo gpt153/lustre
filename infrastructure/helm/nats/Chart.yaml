@@ -1,0 +1,6 @@
+apiVersion: v2
+name: lustre-nats
+description: NATS JetStream for event bus in Lustre
+type: application
+version: 0.1.0
+appVersion: "2"

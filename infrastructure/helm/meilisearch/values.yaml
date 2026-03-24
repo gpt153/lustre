@@ -1,0 +1,43 @@
+replicaCount: 1
+
+image:
+  repository: getmeili/meilisearch
+  tag: "v1.12"
+  pullPolicy: IfNotPresent
+
+persistence:
+  size: 10Gi
+  storageClass: ""
+
+env:
+  MEILI_ENV: production
+  MEILI_DB_PATH: /meili_data
+  MEILI_HTTP_ADDR: "0.0.0.0:7700"
+
+masterKey: ""  # Set via --set masterKey=<value>
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 1Gi
+
+service:
+  type: ClusterIP
+  port: 7700
+
+livenessProbe:
+  httpGet:
+    path: /health
+    port: 7700
+  initialDelaySeconds: 10
+  periodSeconds: 30
+
+readinessProbe:
+  httpGet:
+    path: /health
+    port: 7700
+  initialDelaySeconds: 5
+  periodSeconds: 10

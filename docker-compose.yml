@@ -11,10 +11,15 @@ services:
       - PORT=4000
       - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/lustre
       - REDIS_URL=redis://redis:6379
+      - MEILI_URL=http://meilisearch:7700
+      - MEILI_MASTER_KEY=dev-master-key
+      - NATS_URL=nats://nats:4222
     depends_on:
       postgres:
         condition: service_healthy
       redis:
+        condition: service_healthy
+      nats:
         condition: service_healthy
 
   web:
@@ -61,10 +66,26 @@ services:
       - "7700:7700"
     environment:
       - MEILI_ENV=development
+      - MEILI_MASTER_KEY=dev-master-key
     volumes:
       - meili_data:/meili_data
+
+  nats:
+    image: nats:2-alpine
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+    command: ["--jetstream", "--store_dir", "/data/jetstream"]
+    volumes:
+      - nats_data:/data/jetstream
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8222/healthz"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:
   redis_data:
   meili_data:
+  nats_data:

@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lustre-meilisearch.fullname" . }}
+  labels:
+    {{- include "lustre-meilisearch.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "lustre-meilisearch.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "lustre-meilisearch.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: meilisearch
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - name: http
+          containerPort: 7700
+          protocol: TCP
+        env:
+        {{- range $key, $value := .Values.env }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+        - name: MEILI_MASTER_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lustre-meilisearch.fullname" . }}
+              key: master-key
+        livenessProbe:
+          {{- toYaml .Values.livenessProbe | nindent 10 }}
+        readinessProbe:
+          {{- toYaml .Values.readinessProbe | nindent 10 }}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        volumeMounts:
+        - name: data
+          mountPath: /meili_data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: {{ include "lustre-meilisearch.fullname" . }}

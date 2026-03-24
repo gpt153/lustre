@@ -5,6 +5,8 @@ import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify'
 import { appRouter } from './trpc/router.js'
 import { createContext, prisma, redis } from './trpc/context.js'
 import { handleSwishCallback, type SwishCallbackBody } from './auth/swish.js'
+import { meili } from './lib/meilisearch.js'
+import { getNatsConnection } from './lib/nats.js'
 
 const server = Fastify({
   logger: {
@@ -45,7 +47,26 @@ async function start() {
       checks.redis = 'error'
     }
 
-    const status = checks.postgres === 'ok' && checks.redis === 'ok' ? 'ok' : 'degraded'
+    try {
+      await meili.health()
+      checks.meilisearch = 'ok'
+    } catch {
+      checks.meilisearch = 'error'
+    }
+
+    try {
+      const nc = await getNatsConnection()
+      checks.nats = nc.isClosed() ? 'error' : 'ok'
+    } catch {
+      checks.nats = 'error'
+    }
+
+    const allOk =
+      checks.postgres === 'ok' &&
+      checks.redis === 'ok' &&
+      checks.meilisearch === 'ok' &&
+      checks.nats === 'ok'
+    const status = allOk ? 'ok' : 'degraded'
     return { status, ...checks }
   })
 
