@@ -28,6 +28,9 @@ function createMockPrisma(): Partial<PrismaClient> {
       create: vi.fn(),
       update: vi.fn(),
     } as any,
+    pairLinkMember: {
+      findMany: vi.fn(),
+    } as any,
   }
 }
 
@@ -352,7 +355,9 @@ describe('Profile CRUD Operations', () => {
       const mockPrisma = ctx.prisma as any
 
       const userId = '550e8400-e29b-41d4-a716-446655440001'
+      const profileId = '550e8400-e29b-41d4-a716-446655440101'
       const profile = {
+        id: profileId,
         userId,
         displayName: 'PublicUser',
         bio: 'Public bio',
@@ -367,6 +372,7 @@ describe('Profile CRUD Operations', () => {
       }
 
       mockPrisma.profile.findUnique.mockResolvedValueOnce(profile)
+      mockPrisma.pairLinkMember.findMany.mockResolvedValueOnce([])
 
       const caller = createCaller(ctx)
       const result = await caller.profile.getPublic({
@@ -384,7 +390,9 @@ describe('Profile CRUD Operations', () => {
       const mockPrisma = ctx.prisma as any
 
       const userId = '550e8400-e29b-41d4-a716-446655440002'
+      const profileId = '550e8400-e29b-41d4-a716-446655440102'
       const profile = {
+        id: profileId,
         userId,
         displayName: 'PhotoUser',
         bio: null,
@@ -402,6 +410,7 @@ describe('Profile CRUD Operations', () => {
       }
 
       mockPrisma.profile.findUnique.mockResolvedValueOnce(profile)
+      mockPrisma.pairLinkMember.findMany.mockResolvedValueOnce([])
 
       const caller = createCaller(ctx)
       const result = await caller.profile.getPublic({
@@ -433,7 +442,9 @@ describe('Profile CRUD Operations', () => {
       const ctx = createMockContext(null)
       const mockPrisma = ctx.prisma as any
 
+      const profileId = '550e8400-e29b-41d4-a716-446655440103'
       const profile = {
+        id: profileId,
         userId: '550e8400-e29b-41d4-a716-446655440000',
         displayName: 'UuidUser',
         bio: null,
@@ -448,6 +459,7 @@ describe('Profile CRUD Operations', () => {
       }
 
       mockPrisma.profile.findUnique.mockResolvedValueOnce(profile)
+      mockPrisma.pairLinkMember.findMany.mockResolvedValueOnce([])
 
       const caller = createCaller(ctx)
       const result = await caller.profile.getPublic({

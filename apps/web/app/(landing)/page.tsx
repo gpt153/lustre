@@ -138,6 +138,94 @@ export default function LandingPage() {
           </div>
         </section>
 
+        {/* ═══ MORE THAN DATING ═══ */}
+        <section className="pillars">
+          <ScrollReveal>
+            <div className="pillars__header" data-reveal>
+              <div className="pillars__label">Mer än dejting</div>
+              <h2 className="pillars__title">Ett helt ekosystem.</h2>
+              <p className="pillars__subtitle">
+                Dejting är bara början. Lustre är ett socialt nätverk, en mötesplats,
+                en kunskapsplattform och en marknadsplats &mdash; allt i en app.
+              </p>
+            </div>
+          </ScrollReveal>
+
+          <div className="pillars__list">
+            <ScrollReveal className="pillar">
+              <div className="pillar__number" data-reveal>01</div>
+              <div className="pillar__content">
+                <h3 className="pillar__title" data-reveal>Social feed</h3>
+                <p className="pillar__text" data-reveal>
+                  Dela tankar, bilder och stunder. Följ personer du gillar.
+                  Upptäck nytt genom en feed som lär sig vad du vill se &mdash;
+                  och vad du inte vill se. Du styr, inte algoritmen.
+                </p>
+              </div>
+            </ScrollReveal>
+
+            <ScrollReveal className="pillar">
+              <div className="pillar__number" data-reveal>02</div>
+              <div className="pillar__content">
+                <h3 className="pillar__title" data-reveal>Events &amp; träffar</h3>
+                <p className="pillar__text" data-reveal>
+                  Hitta och skapa events &mdash; online eller IRL. Workshops, fester,
+                  munchar, after works. Bara matchande profiler ser dina event.
+                  Biljettförsäljning inbyggd.
+                </p>
+              </div>
+            </ScrollReveal>
+
+            <ScrollReveal className="pillar">
+              <div className="pillar__number" data-reveal>03</div>
+              <div className="pillar__content">
+                <h3 className="pillar__title" data-reveal>Grupper &amp; community</h3>
+                <p className="pillar__text" data-reveal>
+                  Intressegrupper kring allt från tantra till polyamori.
+                  Öppna eller privata. Egna diskussioner, egna events, egna regler.
+                  Hitta din flock.
+                </p>
+              </div>
+            </ScrollReveal>
+
+            <ScrollReveal className="pillar">
+              <div className="pillar__number" data-reveal>04</div>
+              <div className="pillar__content">
+                <h3 className="pillar__title" data-reveal>Organisationer &amp; klubbar</h3>
+                <p className="pillar__text" data-reveal>
+                  Swingersklubbar, föreningar och arrangörer får en verifierad
+                  profil med eventhantering, medlemslista och nyhetsbrev.
+                  En riktigt hem för er community.
+                </p>
+              </div>
+            </ScrollReveal>
+
+            <ScrollReveal className="pillar">
+              <div className="pillar__number" data-reveal>05</div>
+              <div className="pillar__content">
+                <h3 className="pillar__title" data-reveal>Butiker &amp; marknadsplats</h3>
+                <p className="pillar__text" data-reveal>
+                  Sexleksaker, underkläder, konst, böcker. Köp och sälj direkt i appen.
+                  Företag öppnar webshop, privatpersoner säljer mellan varandra.
+                  Diskret leverans, diskret betalning.
+                </p>
+              </div>
+            </ScrollReveal>
+
+            <ScrollReveal className="pillar">
+              <div className="pillar__number" data-reveal>06</div>
+              <div className="pillar__content">
+                <h3 className="pillar__title" data-reveal>Video, röst &amp; chat</h3>
+                <p className="pillar__text" data-reveal>
+                  Krypterad chatt, videosamtal, röstmeddelanden. Allt inbyggt.
+                  Inga tredjepartsappar, ingen risk att konversationen läcker.
+                  Meddelanden som försvinner, om du vill.
+                </p>
+              </div>
+            </ScrollReveal>
+          </div>
+        </section>
+
         {/* ═══ DUAL MODE ═══ */}
         <section className="dual-mode">
           <div className="dual-mode__container">
@@ -157,6 +245,65 @@ export default function LandingPage() {
                   Spicy
                 </span>
               </div>
+            </ScrollReveal>
+          </div>
+        </section>
+
+        {/* ═══ FOR EVERYONE ═══ */}
+        <section className="audience">
+          <ScrollReveal>
+            <h2 className="audience__title" data-reveal>
+              För alla som vill mer.
+            </h2>
+          </ScrollReveal>
+          <div className="audience__grid">
+            <ScrollReveal className="audience__card">
+              <div className="audience__emoji" data-reveal>&#x1F46B;</div>
+              <h3 className="audience__card-title" data-reveal>Par</h3>
+              <p className="audience__card-text" data-reveal>
+                Utforska tillsammans. Hitta andra par, skapa en gemensam profil,
+                gå på events ihop.
+              </p>
+            </ScrollReveal>
+            <ScrollReveal className="audience__card">
+              <div className="audience__emoji" data-reveal>&#x2728;</div>
+              <h3 className="audience__card-title" data-reveal>Nyfikna</h3>
+              <p className="audience__card-text" data-reveal>
+                Vill du bara dejta &quot;vanligt&quot; med bättre verktyg? Perfekt.
+                Vill du utforska mer? Det finns här när du är redo.
+              </p>
+            </ScrollReveal>
+            <ScrollReveal className="audience__card">
+              <div className="audience__emoji" data-reveal>&#x1F308;</div>
+              <h3 className="audience__card-title" data-reveal>LGBTQ+</h3>
+              <p className="audience__card-text" data-reveal>
+                Alla läggningar, identiteter och uttryck. Pronomen, icke-binärt,
+                poly &mdash; inte en eftertanke utan inbyggt från dag ett.
+              </p>
+            </ScrollReveal>
+            <ScrollReveal className="audience__card">
+              <div className="audience__emoji" data-reveal>&#x1F3AD;</div>
+              <h3 className="audience__card-title" data-reveal>Kink &amp; BDSM</h3>
+              <p className="audience__card-text" data-reveal>
+                Tagga dina intressen, hitta likasinnade, gå med i grupper.
+                Utan att ditt vanliga dejtingläge avslöjar något du inte vill.
+              </p>
+            </ScrollReveal>
+            <ScrollReveal className="audience__card">
+              <div className="audience__emoji" data-reveal>&#x1F3AA;</div>
+              <h3 className="audience__card-title" data-reveal>Arrangörer</h3>
+              <p className="audience__card-text" data-reveal>
+                Driver du klubb, förening eller event? Få verifierad profil,
+                sälj biljetter, nå exakt rätt publik.
+              </p>
+            </ScrollReveal>
+            <ScrollReveal className="audience__card">
+              <div className="audience__emoji" data-reveal>&#x1F6CD;&#xFE0F;</div>
+              <h3 className="audience__card-title" data-reveal>Företag</h3>
+              <p className="audience__card-text" data-reveal>
+                Sexleksaksbutiker, underklädesföretag, hälsotjänster &mdash;
+                öppna butik direkt i appen och nå en engagerad publik.
+              </p>
             </ScrollReveal>
           </div>
         </section>

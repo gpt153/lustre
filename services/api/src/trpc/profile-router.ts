@@ -143,6 +143,44 @@ export const profileRouter = router({
 
       // Exclude private fields
       const { contentPreference, ...publicProfile } = profile
-      return publicProfile
+
+      // Get pair link members
+      const pairMembers = await ctx.prisma.pairLinkMember.findMany({
+        where: { profileId: profile.id },
+        include: {
+          pairLink: {
+            include: {
+              members: {
+                include: {
+                  profile: {
+                    select: {
+                      displayName: true,
+                      userId: true,
+                      photos: {
+                        where: { isPublic: true },
+                        orderBy: { position: 'asc' },
+                        take: 1,
+                        select: { thumbnailSmall: true },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      })
+
+      const linkedPartners = pairMembers.flatMap(m =>
+        m.pairLink.members
+          .filter(member => member.profileId !== profile.id)
+          .map(member => ({
+            userId: member.profile.userId,
+            displayName: member.profile.displayName,
+            thumbnailUrl: member.profile.photos[0]?.thumbnailSmall ?? null,
+          }))
+      )
+
+      return { ...publicProfile, linkedPartners }
     }),
 })

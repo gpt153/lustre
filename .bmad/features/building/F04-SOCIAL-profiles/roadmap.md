@@ -1,8 +1,9 @@
 # Roadmap: F04-SOCIAL-profiles
 
-**Status:** IN_PROGRESS
+**Status:** DONE — all waves implemented and tested
 **Created:** 2026-03-24
 **Started:** 2026-03-24
+**Completed:** 2026-03-24
 **Waves:** 3
 **Total epics:** 7
 
@@ -28,7 +29,7 @@
 ---
 
 ## Wave 2: Photo Upload & Search
-**Status:** IN_PROGRESS (started 2026-03-24)
+**Status:** DONE (2026-03-24) — 23/23 tests pass, committed 4ca191e
 
 ### Parallelization groups:
 **Group A (parallel):**
@@ -52,22 +53,23 @@
 ---
 
 ## Wave 3: Profile Screens & Pair Linking
-**Status:** NOT_STARTED
+**Status:** DONE (2026-03-24) — 32/32 tests pass
 
 ### Parallelization groups:
 **Group A (parallel):**
-- wave-3a-profile-screens-mobile (haiku) — Onboarding wizard (5 steps), profile view screen, profile edit screen, photo gallery
-- wave-3b-profile-screens-web (haiku) — Same screens for web
+- wave-3a-profile-screens-mobile (haiku) — **VERIFIED** — Onboarding wizard (5 steps), profile view screen, profile edit screen, photo gallery
+- wave-3b-profile-screens-web (haiku) — **VERIFIED** — Onboarding, profile view/edit, public profile [userId], profile card
 
 **Group B (sequential, after A):**
-- wave-3c-pair-linking (haiku) — Pair invitation flow, confirmation, linked profile display, up to 5 people
+- wave-3c-pair-linking (haiku) — **VERIFIED** — Pair invitation flow, confirmation, linked profile display, up to 5 people
 
 ### Parallelization rationale:
 - A parallel: mobile and web screens independent
 - B sequential: pair linking is enhancement on top of base profiles
 
-### Testgate Wave 3:
-- [ ] Onboarding wizard completes and creates profile
-- [ ] Profile displays correctly with photos and tags
-- [ ] Pair linking invitation and confirmation works
-- [ ] Pair profile visible in search results
+### Testgate Wave 3: **PASS** (32/32 tests, 110 total)
+- [x] Onboarding wizard completes and creates profile — PASS (shared component)
+- [x] Profile displays correctly with photos and tags — PASS (shared screens)
+- [x] Pair linking invitation and confirmation works — PASS (9 tests)
+- [x] Pair profile visible in search results — PASS (linkedPartners in getPublic)
+- Additional: leave, max 5 members, expired invites, duplicate prevention, auth checks
