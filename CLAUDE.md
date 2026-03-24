@@ -94,6 +94,20 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
 - **Env vars required:**
   - `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET_NAME`, `R2_PUBLIC_URL`
 
+## Social Feed (F05-SOCIAL-feed)
+- **Schema:** Post, PostMedia, ContentTag, UserContentFilter, FeedInteraction — Prisma models in `services/api/prisma/schema.prisma`
+- **Enums:** NudityLevel (4), BodyPartTag (8), ActivityTag (8), VibeTag (6), GenderPresentationTag (4), ContentTagDimension (5), FeedInteractionType (2)
+- **tRPC Routers:** `post` (create, get, list, delete, feed, like, unlike, showLess), `contentFilter` (get, update, applyPreset)
+- **REST endpoint:** `POST /api/posts/upload?postId=` — multipart image upload with sharp WebP conversion + 3 thumbnails to R2
+- **Feed algorithm:** SQL-based scoring (recency decay 24h half-life, show-less penalty 50%), content filter matching via NOT EXISTS subquery
+- **Content classification:** Sightengine API (`nudity-2.1`, `face-attributes-3.0`, `type-1.0`), 5-dimension tag mapping, fire-and-forget after upload
+- **Content filters:** 4 presets (SOFT, OPEN, EXPLICIT, NO_DICK_PICS) with per-dimension customization
+- **Shared components:** `packages/app/src/` — FeedScreen, CreatePostScreen, PostCard, PostImageGallery, useFeed hook
+- **Mobile:** Feed replaces home tab at `apps/mobile/app/(tabs)/index.tsx`
+- **Web:** Feed at `apps/web/app/(app)/home/page.tsx` with IntersectionObserver infinite scroll
+- **Env vars required:**
+  - `SIGHTENGINE_API_USER`, `SIGHTENGINE_API_SECRET`
+
 ## Rules
 - All users verified via BankID (Sweden) or Veriff (international)
 - Real names NEVER shown in app — stored encrypted, released only via court order
