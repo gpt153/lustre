@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "jsx": "react-jsx",
+    "paths": {
+      "@lustre/ui": ["./packages/ui/src"],
+      "@lustre/api": ["./packages/api/src"],
+      "@lustre/app": ["./packages/app/src"]
+    }
+  },
+  "exclude": ["node_modules", "dist", ".next", ".expo"]
+}
