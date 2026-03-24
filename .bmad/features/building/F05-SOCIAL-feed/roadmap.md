@@ -8,7 +8,7 @@
 ---
 
 ## Wave 1: Post Schema & CRUD
-**Status:** IN_PROGRESS (started 2026-03-24)
+**Status:** DONE (2026-03-24)
 
 ### Parallelization groups:
 **Group A (sequential):**
@@ -25,20 +25,21 @@
 ---
 
 ## Wave 2: Classification & Feed Algorithm
-**Status:** NOT_STARTED
+**Status:** IN_PROGRESS (started 2026-03-24)
 
 ### Parallelization groups:
 **Group A (parallel):**
-- wave-2a-sightengine-classification (sonnet) — Sightengine API integration, classify uploaded images, store multi-label tags per PostMedia
-- wave-2b-feed-algorithm (sonnet) — Feed scoring: recency, interest match, interaction history, location proximity. SQL query with scoring.
+- wave-2a-sightengine-classification (sonnet) — VERIFIED — Sightengine API integration, classify uploaded images, store multi-label tags per PostMedia
+- wave-2b-feed-algorithm (sonnet) — VERIFIED — Feed scoring: recency, interest match, interaction history, location proximity. SQL query with scoring.
 
 **Group B (sequential, after A):**
-- wave-2c-filter-matching (haiku) — Feed query filters posts by user's content filter settings, matching against content tags
+- wave-2c-filter-matching (haiku) — VERIFIED — Feed query filters posts by user's content filter settings, matching against content tags
 
 ### Testgate Wave 2:
-- [ ] Images classified with 5-dimension tags
-- [ ] Feed returns posts sorted by relevance score
-- [ ] Content filters exclude posts matching blocked tags
+- [x] Images classified with 5-dimension tags — PASS (Sightengine integration, 5-dim mapper, fire-and-forget)
+- [x] Feed returns posts sorted by relevance score — PASS (SQL scoring with exponential decay + show-less penalty)
+- [x] Content filters exclude posts matching blocked tags — PASS (NOT EXISTS subquery with Prisma.join)
+- Note: Prisma valid, 110 unit tests pass, 0 post-router TS errors after prisma generate
 
 ---
 

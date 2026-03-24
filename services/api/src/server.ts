@@ -11,6 +11,7 @@ import { getNatsConnection } from './lib/nats.js'
 import { processImage } from './lib/image.js'
 import { uploadToR2, getPhotoKey, getPostMediaKey } from './lib/r2.js'
 import { verifyToken } from './auth/jwt.js'
+import { classifyAndTagMedia } from './lib/sightengine.js'
 
 const server = Fastify({
   logger: {
@@ -230,6 +231,9 @@ async function start() {
         thumbnailLarge: largeUrl,
       },
     })
+
+    // Classify image asynchronously (don't block the response)
+    classifyAndTagMedia(media.id, originalUrl).catch(() => {})
 
     return reply.status(201).send(updated)
   })

@@ -94,6 +94,7 @@ model User {
   profile            Profile?
   posts              Post[]
   contentFilter      UserContentFilter?
+  feedInteractions   FeedInteraction[]
 
   @@map("users")
 }
@@ -297,13 +298,14 @@ enum ContentTagDimension {
 }
 
 model Post {
-  id        String     @id @default(uuid()) @db.Uuid
-  authorId  String     @db.Uuid @map("author_id")
-  text      String?    @db.VarChar(2000)
-  createdAt DateTime   @default(now()) @map("created_at")
-  updatedAt DateTime   @updatedAt @map("updated_at")
-  author    User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  media     PostMedia[]
+  id           String            @id @default(uuid()) @db.Uuid
+  authorId     String            @db.Uuid @map("author_id")
+  text         String?           @db.VarChar(2000)
+  createdAt    DateTime          @default(now()) @map("created_at")
+  updatedAt    DateTime          @updatedAt @map("updated_at")
+  author       User              @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  media        PostMedia[]
+  interactions FeedInteraction[]
 
   @@map("posts")
 }
@@ -348,4 +350,22 @@ model UserContentFilter {
   user                User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("user_content_filters")
+}
+
+enum FeedInteractionType {
+  LIKE
+  SHOW_LESS
+}
+
+model FeedInteraction {
+  id        String              @id @default(uuid()) @db.Uuid
+  userId    String              @db.Uuid @map("user_id")
+  postId    String              @db.Uuid @map("post_id")
+  type      FeedInteractionType
+  createdAt DateTime            @default(now()) @map("created_at")
+  user      User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post      Post                @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId, type])
+  @@map("feed_interactions")
 }

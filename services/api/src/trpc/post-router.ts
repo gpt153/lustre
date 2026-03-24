@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { Prisma } from '@prisma/client'
 import { TRPCError } from '@trpc/server'
 import { router, protectedProcedure } from './middleware.js'
 import { deleteFromR2, getPostMediaKey } from '../lib/r2.js'
@@ -90,6 +91,221 @@ export const postRouter = router({
       }
 
       await ctx.prisma.post.delete({ where: { id: input.postId } })
+      return { success: true }
+    }),
+
+  feed: protectedProcedure
+    .input(z.object({
+      cursor: z.string().uuid().optional(),
+      limit: z.number().int().min(1).max(50).default(20),
+    }))
+    .query(async ({ ctx, input }) => {
+      const { cursor, limit } = input
+      const userId = ctx.userId
+
+      const filter = await ctx.prisma.userContentFilter.findUnique({
+        where: { userId },
+      })
+      const allowedNudity = filter?.nudityLevel ?? ['NONE']
+      const allowedBodyPart = filter?.bodyPart ?? ['FACE', 'CHEST', 'BACK', 'BUTT', 'LEGS', 'FEET', 'FULL_BODY']
+      const allowedActivity = filter?.activity ?? ['SELFIE', 'MIRROR', 'OUTDOOR', 'GYM', 'BEDROOM', 'ARTISTIC', 'COUPLE', 'GROUP']
+      const allowedVibe = filter?.vibe ?? ['CASUAL', 'PLAYFUL', 'ROMANTIC', 'ARTISTIC']
+      const allowedGender = filter?.genderPresentation ?? ['MASCULINE', 'FEMININE', 'ANDROGYNOUS', 'MIXED']
+
+      let cursorDate: Date | null = null
+      if (cursor) {
+        const cursorPost = await ctx.prisma.post.findUnique({
+          where: { id: cursor },
+          select: { createdAt: true },
+        })
+        cursorDate = cursorPost?.createdAt ?? null
+      }
+
+      type FeedRow = {
+        id: string
+        author_id: string
+        text: string | null
+        created_at: Date
+        updated_at: Date
+        display_name: string | null
+        like_count: bigint
+        is_liked: boolean
+        relevance_score: number
+      }
+
+      const baseSelect = Prisma.sql`
+        SELECT
+          p.id,
+          p.author_id,
+          p.text,
+          p.created_at,
+          p.updated_at,
+          u.display_name,
+          COALESCE(lc.like_count, 0) AS like_count,
+          CASE WHEN ul.id IS NOT NULL THEN true ELSE false END AS is_liked,
+          (
+            EXP(-0.693 * EXTRACT(EPOCH FROM (NOW() - p.created_at)) / 86400)
+            * CASE WHEN sl.id IS NOT NULL THEN 0.5 ELSE 1.0 END
+          ) AS relevance_score
+        FROM posts p
+        JOIN users u ON u.id = p.author_id
+        LEFT JOIN (
+          SELECT post_id, COUNT(*) AS like_count
+          FROM feed_interactions
+          WHERE type = 'LIKE'
+          GROUP BY post_id
+        ) lc ON lc.post_id = p.id
+        LEFT JOIN feed_interactions ul
+          ON ul.post_id = p.id AND ul.user_id = ${userId}::uuid AND ul.type = 'LIKE'
+        LEFT JOIN feed_interactions sl
+          ON sl.post_id = p.id AND sl.user_id = ${userId}::uuid AND sl.type = 'SHOW_LESS'
+      `
+
+      const filterClause = Prisma.sql`
+        AND NOT EXISTS (
+          SELECT 1 FROM content_tags ct
+          JOIN post_media pm ON pm.id = ct.post_media_id
+          WHERE pm.post_id = p.id
+          AND (
+            (ct.dimension = 'NUDITY' AND ct.value NOT IN (${Prisma.join(allowedNudity)}))
+            OR (ct.dimension = 'BODY_PART' AND ct.value NOT IN (${Prisma.join(allowedBodyPart)}))
+            OR (ct.dimension = 'ACTIVITY' AND ct.value NOT IN (${Prisma.join(allowedActivity)}))
+            OR (ct.dimension = 'VIBE' AND ct.value NOT IN (${Prisma.join(allowedVibe)}))
+            OR (ct.dimension = 'GENDER_PRESENTATION' AND ct.value NOT IN (${Prisma.join(allowedGender)}))
+          )
+        )
+      `
+
+      const posts = cursorDate
+        ? await ctx.prisma.$queryRaw<FeedRow[]>`
+            ${baseSelect}
+            WHERE p.author_id != ${userId}::uuid
+              AND (
+                p.created_at < ${cursorDate}
+                OR (p.created_at = ${cursorDate} AND p.id != ${cursor}::uuid)
+              )
+            ${filterClause}
+            ORDER BY relevance_score DESC, p.created_at DESC
+            LIMIT ${limit + 1}
+          `
+        : await ctx.prisma.$queryRaw<FeedRow[]>`
+            ${baseSelect}
+            WHERE p.author_id != ${userId}::uuid
+            ${filterClause}
+            ORDER BY relevance_score DESC, p.created_at DESC
+            LIMIT ${limit + 1}
+          `
+
+      let nextCursor: string | undefined
+      if (posts.length > limit) {
+        const nextItem = posts.pop()
+        nextCursor = nextItem?.id
+      }
+
+      const postIds = posts.map(p => p.id)
+      const media = postIds.length > 0
+        ? await ctx.prisma.postMedia.findMany({
+            where: { postId: { in: postIds } },
+            include: { tags: true },
+            orderBy: { position: 'asc' },
+          })
+        : []
+
+      const mediaByPost = new Map<string, typeof media>()
+      for (const m of media) {
+        const existing = mediaByPost.get(m.postId) ?? []
+        existing.push(m)
+        mediaByPost.set(m.postId, existing)
+      }
+
+      const authorIds = [...new Set(posts.map(p => p.author_id))]
+      const profiles = authorIds.length > 0
+        ? await ctx.prisma.profile.findMany({
+            where: { userId: { in: authorIds } },
+            include: {
+              photos: {
+                orderBy: { position: 'asc' },
+                take: 1,
+                select: { thumbnailSmall: true },
+              },
+            },
+          })
+        : []
+
+      const profileByUser = new Map(profiles.map(p => [p.userId, p]))
+
+      const feedPosts = posts.map(p => ({
+        id: p.id,
+        authorId: p.author_id,
+        text: p.text,
+        createdAt: p.created_at,
+        updatedAt: p.updated_at,
+        author: {
+          id: p.author_id,
+          displayName: p.display_name,
+          avatarUrl: profileByUser.get(p.author_id)?.photos[0]?.thumbnailSmall ?? null,
+        },
+        media: mediaByPost.get(p.id) ?? [],
+        likeCount: Number(p.like_count),
+        isLiked: p.is_liked,
+        relevanceScore: p.relevance_score,
+      }))
+
+      return { posts: feedPosts, nextCursor }
+    }),
+
+  like: protectedProcedure
+    .input(z.object({ postId: z.string().uuid() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.feedInteraction.upsert({
+        where: {
+          userId_postId_type: {
+            userId: ctx.userId,
+            postId: input.postId,
+            type: 'LIKE',
+          },
+        },
+        create: {
+          userId: ctx.userId,
+          postId: input.postId,
+          type: 'LIKE',
+        },
+        update: {},
+      })
+      return { success: true }
+    }),
+
+  unlike: protectedProcedure
+    .input(z.object({ postId: z.string().uuid() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.feedInteraction.deleteMany({
+        where: {
+          userId: ctx.userId,
+          postId: input.postId,
+          type: 'LIKE',
+        },
+      })
+      return { success: true }
+    }),
+
+  showLess: protectedProcedure
+    .input(z.object({ postId: z.string().uuid() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.feedInteraction.upsert({
+        where: {
+          userId_postId_type: {
+            userId: ctx.userId,
+            postId: input.postId,
+            type: 'SHOW_LESS',
+          },
+        },
+        create: {
+          userId: ctx.userId,
+          postId: input.postId,
+          type: 'SHOW_LESS',
+        },
+        update: {},
+      })
       return { success: true }
     }),
 })
