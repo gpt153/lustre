@@ -13,6 +13,8 @@ import { photoRouter } from './photo-router.js'
 import { searchRouter } from './search-router.js'
 import { kinkRouter } from './kink-router.js'
 import { pairRouter } from './pair-router.js'
+import { postRouter } from './post-router.js'
+import { contentFilterRouter } from './content-filter-router.js'
 
 export const appRouter = router({
   health: {
@@ -163,6 +165,8 @@ export const appRouter = router({
   search: searchRouter,
   kink: kinkRouter,
   pair: pairRouter,
+  post: postRouter,
+  contentFilter: contentFilterRouter,
 })
 
 export type AppRouter = typeof appRouter

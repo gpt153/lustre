@@ -92,6 +92,8 @@ model User {
   sessions           Session[]
   payments           Payment[]
   profile            Profile?
+  posts              Post[]
+  contentFilter      UserContentFilter?
 
   @@map("users")
 }
@@ -239,4 +241,111 @@ model PairLinkMember {
 
   @@unique([pairLinkId, profileId])
   @@map("pair_link_members")
+}
+
+enum NudityLevel {
+  NONE
+  IMPLIED
+  PARTIAL
+  FULL
+}
+
+enum BodyPartTag {
+  FACE
+  CHEST
+  BACK
+  BUTT
+  GENITALS
+  LEGS
+  FEET
+  FULL_BODY
+}
+
+enum ActivityTag {
+  SELFIE
+  MIRROR
+  OUTDOOR
+  GYM
+  BEDROOM
+  ARTISTIC
+  COUPLE
+  GROUP
+}
+
+enum VibeTag {
+  CASUAL
+  SENSUAL
+  PLAYFUL
+  INTENSE
+  ROMANTIC
+  ARTISTIC
+}
+
+enum GenderPresentationTag {
+  MASCULINE
+  FEMININE
+  ANDROGYNOUS
+  MIXED
+}
+
+enum ContentTagDimension {
+  NUDITY
+  BODY_PART
+  ACTIVITY
+  VIBE
+  GENDER_PRESENTATION
+}
+
+model Post {
+  id        String     @id @default(uuid()) @db.Uuid
+  authorId  String     @db.Uuid @map("author_id")
+  text      String?    @db.VarChar(2000)
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  author    User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  media     PostMedia[]
+
+  @@map("posts")
+}
+
+model PostMedia {
+  id              String       @id @default(uuid()) @db.Uuid
+  postId          String       @db.Uuid @map("post_id")
+  url             String
+  thumbnailSmall  String?      @map("thumbnail_small")
+  thumbnailMedium String?      @map("thumbnail_medium")
+  thumbnailLarge  String?      @map("thumbnail_large")
+  position        Int          @default(0)
+  createdAt       DateTime     @default(now()) @map("created_at")
+  post            Post         @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tags            ContentTag[]
+
+  @@map("post_media")
+}
+
+model ContentTag {
+  id          String              @id @default(uuid()) @db.Uuid
+  postMediaId String              @db.Uuid @map("post_media_id")
+  dimension   ContentTagDimension
+  value       String
+  confidence  Float               @default(1.0)
+  createdAt   DateTime            @default(now()) @map("created_at")
+  postMedia   PostMedia           @relation(fields: [postMediaId], references: [id], onDelete: Cascade)
+
+  @@map("content_tags")
+}
+
+model UserContentFilter {
+  id                  String                  @id @default(uuid()) @db.Uuid
+  userId              String                  @unique @db.Uuid @map("user_id")
+  nudityLevel         NudityLevel[]           @map("nudity_level")
+  bodyPart            BodyPartTag[]           @map("body_part")
+  activity            ActivityTag[]
+  vibe                VibeTag[]
+  genderPresentation  GenderPresentationTag[] @map("gender_presentation")
+  preset              ContentPreference
+  updatedAt           DateTime                @updatedAt @map("updated_at")
+  user                User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_content_filters")
 }

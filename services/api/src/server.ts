@@ -9,7 +9,7 @@ import { handleSwishCallback, type SwishCallbackBody } from './auth/swish.js'
 import { meili } from './lib/meilisearch.js'
 import { getNatsConnection } from './lib/nats.js'
 import { processImage } from './lib/image.js'
-import { uploadToR2, getPhotoKey } from './lib/r2.js'
+import { uploadToR2, getPhotoKey, getPostMediaKey } from './lib/r2.js'
 import { verifyToken } from './auth/jwt.js'
 
 const server = Fastify({
@@ -155,6 +155,74 @@ async function start() {
     // Update record with URLs
     const updated = await prisma.profilePhoto.update({
       where: { id: photo.id },
+      data: {
+        url: originalUrl,
+        thumbnailSmall: smallUrl,
+        thumbnailMedium: mediumUrl,
+        thumbnailLarge: largeUrl,
+      },
+    })
+
+    return reply.status(201).send(updated)
+  })
+
+  server.post('/api/posts/upload', async (request, reply) => {
+    const authHeader = request.headers.authorization
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return reply.status(401).send({ error: 'Unauthorized' })
+    }
+    const token = authHeader.slice(7)
+    let userId: string
+    try {
+      const decoded = await verifyToken(token)
+      if (decoded.type !== 'access') throw new Error('Invalid token type')
+      userId = decoded.userId
+    } catch {
+      return reply.status(401).send({ error: 'Invalid token' })
+    }
+
+    const postId = (request.query as Record<string, string>).postId
+    if (!postId) {
+      return reply.status(400).send({ error: 'postId query parameter required' })
+    }
+
+    const post = await prisma.post.findUnique({
+      where: { id: postId },
+      include: { media: true },
+    })
+    if (!post || post.authorId !== userId) {
+      return reply.status(404).send({ error: 'Post not found' })
+    }
+
+    if (post.media.length >= 4) {
+      return reply.status(400).send({ error: 'Maximum 4 images per post' })
+    }
+
+    const file = await request.file()
+    if (!file) {
+      return reply.status(400).send({ error: 'No file provided' })
+    }
+
+    const buffer = await file.toBuffer()
+    const images = await processImage(buffer)
+
+    const media = await prisma.postMedia.create({
+      data: {
+        postId: post.id,
+        url: '',
+        position: post.media.length,
+      },
+    })
+
+    const [originalUrl, smallUrl, mediumUrl, largeUrl] = await Promise.all([
+      uploadToR2(getPostMediaKey(post.id, media.id, 'original'), images.original, 'image/webp'),
+      uploadToR2(getPostMediaKey(post.id, media.id, 'small'), images.small, 'image/webp'),
+      uploadToR2(getPostMediaKey(post.id, media.id, 'medium'), images.medium, 'image/webp'),
+      uploadToR2(getPostMediaKey(post.id, media.id, 'large'), images.large, 'image/webp'),
+    ])
+
+    const updated = await prisma.postMedia.update({
+      where: { id: media.id },
       data: {
         url: originalUrl,
         thumbnailSmall: smallUrl,

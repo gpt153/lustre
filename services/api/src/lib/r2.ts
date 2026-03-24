@@ -32,3 +32,7 @@ export async function deleteFromR2(key: string): Promise<void> {
 export function getPhotoKey(profileId: string, photoId: string, size: string): string {
   return `profiles/${profileId}/photos/${photoId}/${size}.webp`
 }
+
+export function getPostMediaKey(postId: string, mediaId: string, size: string): string {
+  return `posts/${postId}/media/${mediaId}/${size}.webp`
+}
