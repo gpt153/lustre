@@ -4,6 +4,11 @@ import { router, protectedProcedure } from './middleware.js'
 
 export const moduleRouter = router({
   list: protectedProcedure.query(async ({ ctx }) => {
+    const profile = await ctx.prisma.profile.findUnique({
+      where: { userId: ctx.userId },
+      select: { spicyModeEnabled: true },
+    })
+
     const modules = await ctx.prisma.learnModule.findMany({
       orderBy: { order: 'asc' },
       include: {
@@ -18,17 +23,25 @@ export const moduleRouter = router({
       },
     })
 
-    return modules.map((m) => ({
-      id: m.id,
-      order: m.order,
-      title: m.title,
-      description: m.description,
-      badgeName: m.badgeName,
-      isUnlocked: m.isUnlocked,
-      createdAt: m.createdAt,
-      lessons: m.lessons,
-      progress: m.userProgress[0] ?? null,
-    }))
+    return modules
+      .filter((m) => {
+        if (m.isSpicy && !profile?.spicyModeEnabled) {
+          return false
+        }
+        return true
+      })
+      .map((m) => ({
+        id: m.id,
+        order: m.order,
+        title: m.title,
+        description: m.description,
+        badgeName: m.badgeName,
+        isUnlocked: m.isUnlocked,
+        isSpicy: m.isSpicy,
+        createdAt: m.createdAt,
+        lessons: m.lessons,
+        progress: m.userProgress[0] ?? null,
+      }))
   }),
 
   get: protectedProcedure
@@ -85,8 +98,37 @@ export const moduleRouter = router({
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Lesson not found' })
       }
 
-      if (!lesson.module.isUnlocked) {
+      if (!lesson.module.isSpicy && !lesson.module.isUnlocked) {
         throw new TRPCError({ code: 'FORBIDDEN', message: 'Module is locked' })
+      }
+
+      if (lesson.module.isSpicy) {
+        const profile = await ctx.prisma.profile.findUnique({
+          where: { userId: ctx.userId },
+          select: { spicyModeEnabled: true },
+        })
+
+        if (!profile?.spicyModeEnabled) {
+          throw new TRPCError({
+            code: 'FORBIDDEN',
+            message: 'Requires Spicy mode and completion of vanilla module 6',
+          })
+        }
+
+        const vanillaModule6Progress = await ctx.prisma.userModuleProgress.findFirst({
+          where: {
+            userId: ctx.userId,
+            module: { order: 6 },
+            badgeAwardedAt: { not: null },
+          },
+        })
+
+        if (!vanillaModule6Progress) {
+          throw new TRPCError({
+            code: 'FORBIDDEN',
+            message: 'Requires Spicy mode and completion of vanilla module 6',
+          })
+        }
       }
 
       const progress = await ctx.prisma.userLessonProgress.upsert({

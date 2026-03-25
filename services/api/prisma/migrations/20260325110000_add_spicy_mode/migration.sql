@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "profiles" ADD COLUMN "spicy_mode_enabled" BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE "learn_modules" ADD COLUMN "is_spicy" BOOLEAN NOT NULL DEFAULT FALSE;

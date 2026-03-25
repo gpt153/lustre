@@ -184,4 +184,26 @@ export const profileRouter = router({
 
       return { ...publicProfile, linkedPartners }
     }),
+
+  toggleSpicyMode: protectedProcedure
+    .input(z.object({ enabled: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      const profile = await ctx.prisma.profile.findUnique({
+        where: { userId: ctx.userId },
+      })
+      if (!profile) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Profile not found' })
+      }
+
+      const updated = await ctx.prisma.profile.update({
+        where: { userId: ctx.userId },
+        data: { spicyModeEnabled: input.enabled },
+        include: {
+          photos: { orderBy: { position: 'asc' } },
+          kinkTags: { include: { kinkTag: true } },
+        },
+      })
+
+      return updated
+    }),
 })

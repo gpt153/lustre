@@ -237,6 +237,7 @@ model Profile {
   contentPreference         ContentPreference                     @map("content_preference")
   verified                  Boolean                               @default(false)
   allowPostEventSuggestions Boolean                               @default(false) @map("allow_post_event_suggestions")
+  spicyModeEnabled          Boolean                               @default(false) @map("spicy_mode_enabled")
   createdAt                 DateTime                              @default(now()) @map("created_at")
   updatedAt                 DateTime                              @updatedAt @map("updated_at")
   location                  Unsupported("geography(Point,4326)")? @map("location")
@@ -1053,6 +1054,7 @@ model LearnModule {
   description  String
   badgeName    String               @map("badge_name")
   isUnlocked   Boolean              @default(false) @map("is_unlocked")
+  isSpicy      Boolean              @default(false) @map("is_spicy")
   createdAt    DateTime             @default(now()) @map("created_at")
   lessons      Lesson[]
   userProgress UserModuleProgress[]
