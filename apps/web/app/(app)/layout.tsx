@@ -20,6 +20,7 @@ function Header() {
       <nav style={{ display: 'flex', gap: 24 }}>
         <Link href="/discover" style={{ color: '#fff', textDecoration: 'none' }}>Discover</Link>
         <Link href="/groups" style={{ color: '#fff', textDecoration: 'none' }}>Groups</Link>
+        <Link href="/events" style={{ color: '#fff', textDecoration: 'none' }}>Events</Link>
         <Link href="/chat" style={{ color: '#fff', textDecoration: 'none' }}>Chat</Link>
         <Link href="/profile" style={{ color: '#fff', textDecoration: 'none' }}>Profile</Link>
       </nav>

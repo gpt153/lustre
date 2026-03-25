@@ -195,26 +195,27 @@ model Payment {
 }
 
 model Profile {
-  id                  String            @id @default(uuid()) @db.Uuid
-  userId              String            @unique @map("user_id") @db.Uuid
-  displayName         String            @map("display_name")
-  bio                 String?
-  age                 Int
-  gender              Gender
-  orientation         Orientation
-  relationshipType    RelationshipType? @map("relationship_type")
-  seeking             Seeking[]
-  contentPreference   ContentPreference @map("content_preference")
-  verified            Boolean           @default(false)
-  createdAt           DateTime          @default(now()) @map("created_at")
-  updatedAt           DateTime          @updatedAt @map("updated_at")
-  location            Unsupported("geography(Point,4326)")? @map("location")
-  user                User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  photos              ProfilePhoto[]
-  kinkTags            ProfileKinkTag[]
-  invitationsSent     PairInvitation[]  @relation("invitationsSent")
-  invitationsReceived PairInvitation[]  @relation("invitationsReceived")
-  pairLinkMembers     PairLinkMember[]
+  id                      String            @id @default(uuid()) @db.Uuid
+  userId                  String            @unique @map("user_id") @db.Uuid
+  displayName             String            @map("display_name")
+  bio                     String?
+  age                     Int
+  gender                  Gender
+  orientation             Orientation
+  relationshipType        RelationshipType? @map("relationship_type")
+  seeking                 Seeking[]
+  contentPreference       ContentPreference @map("content_preference")
+  verified                Boolean           @default(false)
+  allowPostEventSuggestions Boolean         @default(false) @map("allow_post_event_suggestions")
+  createdAt               DateTime          @default(now()) @map("created_at")
+  updatedAt               DateTime          @updatedAt @map("updated_at")
+  location                Unsupported("geography(Point,4326)")? @map("location")
+  user                    User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  photos                  ProfilePhoto[]
+  kinkTags                ProfileKinkTag[]
+  invitationsSent         PairInvitation[]  @relation("invitationsSent")
+  invitationsReceived     PairInvitation[]  @relation("invitationsReceived")
+  pairLinkMembers         PairLinkMember[]
 
   @@map("profiles")
 }

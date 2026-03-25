@@ -15,6 +15,8 @@ import { verifyToken } from './auth/jwt.js'
 import { classifyAndTagMedia } from './lib/sightengine.js'
 import { classifyChatMedia } from './lib/chat-classifier.js'
 import { startChatConsumer } from './lib/chat-consumer.js'
+import { startPostEventConsumer } from './lib/post-event-consumer.js'
+import { startEventCompletedConsumer } from './lib/event-completed-consumer.js'
 import { callRoutes } from './routes/call.js'
 
 const server = Fastify({
@@ -369,9 +371,18 @@ async function start() {
     })
   })
 
-  // Start NATS chat consumer in background
+  // Start NATS consumers in background
   startChatConsumer().catch((err) => {
     server.log.error('Failed to start chat consumer:', err)
+  })
+
+  const nc = await getNatsConnection()
+  startPostEventConsumer(prisma, nc).catch((err) => {
+    server.log.error('Failed to start post-event consumer:', err)
+  })
+
+  startEventCompletedConsumer(prisma, nc).catch((err) => {
+    server.log.error('Failed to start event-completed consumer:', err)
   })
 
   await server.register(callRoutes)

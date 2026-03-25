@@ -1,6 +1,6 @@
 # Roadmap: F11-MEET-events
 
-**Status:** IN_PROGRESS
+**Status:** DONE — all waves implemented and tested
 **Created:** 2026-03-24
 **Started:** 2026-03-25
 **Waves:** 3
@@ -48,16 +48,19 @@
 ---
 
 ## Wave 3: Event Screens
-**Status:** IN_PROGRESS
+**Status:** DONE
 **Started:** 2026-03-25
+**Completed:** 2026-03-25
+
+**Testgate results:** Event creation end-to-end PASS | Discovery/map screens PASS | Ticket purchase flow PASS
 
 ### Parallelization groups:
 **Group A (parallel):**
-- wave-3a-event-screens-mobile (haiku) **Status: IN_PROGRESS** — Event list, event detail, create event, RSVP flow, ticket purchase
-- wave-3b-event-screens-web (haiku) **Status: IN_PROGRESS** — Same for web
-- wave-3c-post-event (haiku) **Status: IN_PROGRESS** — Post-event suggestion engine: "You were at the same event" opt-in connections
+- wave-3a-event-screens-mobile (haiku) **Status: VERIFIED** — Event list, event detail, create event, RSVP flow, ticket purchase
+- wave-3b-event-screens-web (haiku) **Status: VERIFIED** — Same for web
+- wave-3c-post-event (haiku) **Status: VERIFIED** — Post-event suggestion engine: "You were at the same event" opt-in connections
 
 ### Testgate Wave 3:
-- [ ] Event creation flow works end-to-end
-- [ ] Discovery shows nearby events
-- [ ] Ticket purchase completes successfully
+- [x] Event creation flow works end-to-end
+- [x] Discovery shows nearby events
+- [x] Ticket purchase completes successfully

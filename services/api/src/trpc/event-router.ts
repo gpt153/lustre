@@ -1,7 +1,11 @@
 import { z } from 'zod'
 import { TRPCError } from '@trpc/server'
+import { StringCodec } from 'nats'
 import { router, protectedProcedure } from './middleware.js'
 import { createTicketPaymentRequest } from '../lib/event-tickets.js'
+import { getNatsConnection } from '../lib/nats.js'
+
+const sc = StringCodec()
 
 const GenderEnum = z.enum([
   'MAN', 'WOMAN', 'NON_BINARY', 'TRANS_MAN', 'TRANS_WOMAN',
@@ -453,6 +457,25 @@ export const eventRouter = router({
         where: { id: input.ticketId },
         data: { status: 'REFUNDED', refundedAt: new Date() },
       })
+    }),
+
+  complete: protectedProcedure
+    .input(z.object({ eventId: z.string().uuid() }))
+    .mutation(async ({ ctx, input }) => {
+      const event = await ctx.prisma.event.findUnique({ where: { id: input.eventId } })
+      if (!event) throw new TRPCError({ code: 'NOT_FOUND' })
+      if (event.createdById !== ctx.userId) throw new TRPCError({ code: 'FORBIDDEN' })
+
+      const updated = await ctx.prisma.event.update({
+        where: { id: input.eventId },
+        data: { status: 'COMPLETED' },
+      })
+
+      // Publish event.completed for post-event suggestion processing
+      const nats = await getNatsConnection()
+      nats.publish('event.completed', sc.encode(JSON.stringify({ eventId: input.eventId })))
+
+      return updated
     }),
 
   nearby: protectedProcedure
