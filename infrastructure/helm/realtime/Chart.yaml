@@ -1,0 +1,6 @@
+apiVersion: v2
+name: lustre-realtime
+description: Lustre Realtime WebSocket Service (Elixir/Phoenix)
+type: application
+version: 0.1.0
+appVersion: "0.1.0"

@@ -18,6 +18,7 @@ import { contentFilterRouter } from './content-filter-router.js'
 import { groupRouter } from './group-router.js'
 import { gatekeeperRouter } from './gatekeeper-router.js'
 import { matchRouter } from './match-router.js'
+import { conversationRouter } from './conversation-router.js'
 
 export const appRouter = router({
   health: {
@@ -173,6 +174,7 @@ export const appRouter = router({
   group: groupRouter,
   gatekeeper: gatekeeperRouter,
   match: matchRouter,
+  conversation: conversationRouter,
 })
 
 export type AppRouter = typeof appRouter

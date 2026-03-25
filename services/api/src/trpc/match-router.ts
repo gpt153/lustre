@@ -199,14 +199,32 @@ export const matchRouter = router({
       // Sort UUIDs to ensure user1Id < user2Id for consistency
       const [user1Id, user2Id] = [ctx.userId, input.targetId].sort()
 
-      const match = await ctx.prisma.match.create({
-        data: {
-          user1Id,
-          user2Id,
-        },
+      const result = await ctx.prisma.$transaction(async (tx) => {
+        const match = await tx.match.create({
+          data: {
+            user1Id,
+            user2Id,
+          },
+        })
+
+        const conversation = await tx.conversation.create({
+          data: {
+            matchId: match.id,
+            participants: {
+              createMany: {
+                data: [
+                  { userId: user1Id },
+                  { userId: user2Id },
+                ],
+              },
+            },
+          },
+        })
+
+        return { match, conversation }
       })
 
-      return { matched: true, matchId: match.id }
+      return { matched: true, matchId: result.match.id, conversationId: result.conversation.id }
     }),
 
   getMatches: protectedProcedure

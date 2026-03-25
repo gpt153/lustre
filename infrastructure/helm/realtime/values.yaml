@@ -1,0 +1,60 @@
+replicaCount: 2
+
+image:
+  repository: ghcr.io/gpt153/lustre-realtime
+  tag: latest
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 4001
+
+ingress:
+  enabled: true
+  className: traefik
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    traefik.ingress.kubernetes.io/router.middlewares: lustre-prod-rate-limit@kubernetescrd
+  hosts:
+    - host: ws.lovelustre.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: realtime-tls
+      hosts:
+        - ws.lovelustre.com
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+
+env:
+  - name: PORT
+    value: "4001"
+  - name: MIX_ENV
+    value: prod
+
+livenessProbe:
+  httpGet:
+    path: /health
+    port: 4001
+  initialDelaySeconds: 15
+  periodSeconds: 30
+
+readinessProbe:
+  httpGet:
+    path: /health
+    port: 4001
+  initialDelaySeconds: 10
+  periodSeconds: 10
