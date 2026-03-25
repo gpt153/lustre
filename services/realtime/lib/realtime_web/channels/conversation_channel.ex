@@ -90,6 +90,19 @@ defmodule RealtimeWeb.ConversationChannel do
     {:noreply, socket}
   end
 
+  # Handle screenshot_taken event; broadcast to all OTHER participants.
+  @impl true
+  def handle_in("screenshot_taken", _payload, socket) do
+    user_id = socket.assigns.current_user_id
+
+    broadcast_from!(socket, "screenshot_taken", %{
+      "user_id" => user_id,
+      "at" => DateTime.utc_now() |> DateTime.to_iso8601()
+    })
+
+    {:noreply, socket}
+  end
+
   # ---------------------------------------------------------------------------
   # Private helpers
   # ---------------------------------------------------------------------------

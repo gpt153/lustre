@@ -150,6 +150,7 @@ export const conversationRouter = router({
           type: true,
           status: true,
           mediaUrl: true,
+          isFiltered: true,
           deletedAt: true,
           createdAt: true,
           senderId: true,
@@ -191,6 +192,7 @@ export const conversationRouter = router({
           type: msg.type,
           status: msg.status,
           mediaUrl: msg.mediaUrl,
+          isFiltered: msg.isFiltered,
           deletedAt: msg.deletedAt,
           createdAt: msg.createdAt,
           sender: {
@@ -405,5 +407,36 @@ export const conversationRouter = router({
         success: true,
         readReceipts: updated.readReceipts,
       }
+    }),
+
+  deleteMessage: protectedProcedure
+    .input(z.object({
+      messageId: z.string().uuid(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const message = await ctx.prisma.message.findUnique({
+        where: { id: input.messageId },
+      })
+
+      if (!message) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Message not found',
+        })
+      }
+
+      if (message.senderId !== ctx.userId) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'Cannot delete this message',
+        })
+      }
+
+      await ctx.prisma.message.update({
+        where: { id: input.messageId },
+        data: { deletedAt: new Date() },
+      })
+
+      return { success: true }
     }),
 })

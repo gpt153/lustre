@@ -9,7 +9,8 @@
     "@lustre/api": "workspace:*",
     "@tanstack/react-query": "^5",
     "zustand": "^5",
-    "react": "^18.3"
+    "react": "^18.3",
+    "phoenix": "^1.7.0"
   },
   "devDependencies": {
     "@types/react": "^18.3",
