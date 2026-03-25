@@ -26,6 +26,7 @@ lustre/
     helm/redis/      # Redis 7 + AOF + Sentinel
     helm/meilisearch/ # Meilisearch v1.12 full-text search
     helm/nats/       # NATS JetStream event bus
+    helm/livekit/    # LiveKit WebRTC server (voice & video calls)
     k8s/             # Kubernetes manifests (namespace, cert-manager)
     deploy.sh        # Deploy script
 ```
@@ -75,12 +76,16 @@ docker compose up        # Starts API, web, PostgreSQL, Redis, Meilisearch, NATS
 | `R2_PUBLIC_URL` | — | Public URL for R2 bucket |
 | `SIGHTENGINE_API_USER` | — | Sightengine API user (content classification) |
 | `SIGHTENGINE_API_SECRET` | — | Sightengine API secret |
+| `LIVEKIT_API_KEY` | — | LiveKit server API key (for token signing) |
+| `LIVEKIT_API_SECRET` | — | LiveKit server API secret (for token signing) |
+| `LIVEKIT_WS_URL` | `wss://livekit.lovelustre.com` | LiveKit WebSocket URL for clients |
 
 ## API Endpoints
 
 - `GET /health` — Health check (returns `{ status: "ok"|"degraded", postgres, redis, meilisearch, nats, timestamp }`)
 - `POST /api/photos/upload` — Multipart photo upload (Bearer auth, max 20MB, WebP conversion + 3 thumbnail sizes to R2)
 - `POST /api/posts/upload?postId=` — Multipart post media upload (Bearer auth, max 4 images per post, WebP + thumbnails to R2, auto-classification via Sightengine)
+- `POST /api/call/token` — Generate LiveKit JWT for a call room (Bearer auth, body: `{ conversationId }`, returns `{ token, wsUrl, roomName, receiverId }`)
 - `/trpc/*` — tRPC router (type-safe RPC via `@trpc/server`)
   - `profile.*` — Profile CRUD (create, update, get, getPublic)
   - `photo.*` — Photo management (list, delete, reorder)
@@ -90,6 +95,7 @@ docker compose up        # Starts API, web, PostgreSQL, Redis, Meilisearch, NATS
   - `post.*` — Post CRUD (create, get, list, delete), feed algorithm (feed), interactions (like, unlike, showLess)
   - `contentFilter.*` — User content filter preferences (get, update, applyPreset)
   - `group.*` — Interest groups (create, get, list, search, join, leave, approve, reject, members, ban, unban, removePost, update, addModerator, removeModerator, pendingMembers)
+  - `call.*` — Voice/video calls (initiate, accept, reject, end, getStatus)
 
 ## CI/CD
 
@@ -113,4 +119,4 @@ Production runs on a 3-node k3s cluster on Hetzner Cloud (Helsinki):
 
 ## Status
 
-F01 scaffolding, F02 auth, F03 database & infrastructure, F04 profiles, F05 social feed, F06 interest groups complete. See `.bmad/STATUS.md` for full feature roadmap.
+F01 scaffolding, F03 database & infrastructure, F04 profiles, F05 social feed, F06 interest groups, F07 AI gatekeeper, F08 matching, F10 voice & video calls complete. See `.bmad/STATUS.md` for full feature roadmap.
