@@ -101,15 +101,34 @@ export const gatekeeperRouter = router({
         return { required: false }
       }
 
-      const passed = await ctx.prisma.gatekeeperConversation.findFirst({
+      const senderLiked = await ctx.prisma.feedInteraction.findFirst({
         where: {
-          senderId: ctx.userId,
-          recipientId: input.recipientId,
-          status: 'PASSED',
+          userId: ctx.userId,
+          type: 'LIKE',
+          post: { authorId: input.recipientId },
+        },
+      })
+      const recipientLiked = await ctx.prisma.feedInteraction.findFirst({
+        where: {
+          userId: input.recipientId,
+          type: 'LIKE',
+          post: { authorId: ctx.userId },
         },
       })
 
-      if (passed) {
+      if (senderLiked && recipientLiked) {
+        return { required: false, bypassed: true, reason: 'mutual_match' }
+      }
+
+      const bypassed = await ctx.prisma.gatekeeperConversation.findFirst({
+        where: {
+          senderId: ctx.userId,
+          recipientId: input.recipientId,
+          status: { in: ['PASSED', 'BYPASSED'] },
+        },
+      })
+
+      if (bypassed) {
         return { required: false, alreadyPassed: true }
       }
 
@@ -122,6 +141,44 @@ export const gatekeeperRouter = router({
       message: z.string().min(1).max(2000),
     }))
     .mutation(async ({ ctx, input }) => {
+      const senderLiked = await ctx.prisma.feedInteraction.findFirst({
+        where: {
+          userId: ctx.userId,
+          type: 'LIKE',
+          post: { authorId: input.recipientId },
+        },
+      })
+      const recipientLiked = await ctx.prisma.feedInteraction.findFirst({
+        where: {
+          userId: input.recipientId,
+          type: 'LIKE',
+          post: { authorId: ctx.userId },
+        },
+      })
+
+      if (senderLiked && recipientLiked) {
+        const config = await ctx.prisma.gatekeeperConfig.findUnique({
+          where: { userId: input.recipientId },
+        })
+        if (config) {
+          await ctx.prisma.gatekeeperConversation.create({
+            data: {
+              senderId: ctx.userId,
+              recipientId: input.recipientId,
+              configId: config.id,
+              status: 'BYPASSED',
+              summary: 'Mutual match — Gatekeeper bypassed',
+            },
+          })
+        }
+        return {
+          conversationId: null,
+          aiMessage: null,
+          decision: 'BYPASSED' as const,
+          bypassed: true,
+        }
+      }
+
       const config = await ctx.prisma.gatekeeperConfig.findUnique({
         where: { userId: input.recipientId },
       })
@@ -152,7 +209,7 @@ export const gatekeeperRouter = router({
         where: {
           senderId: ctx.userId,
           recipientId: input.recipientId,
-          status: 'PASSED',
+          status: { in: ['PASSED', 'BYPASSED'] },
         },
       })
 

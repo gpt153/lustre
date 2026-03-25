@@ -457,6 +457,7 @@ enum GatekeeperStatus {
   PASSED
   FAILED
   EXPIRED
+  BYPASSED
 }
 
 enum GatekeeperMessageRole {

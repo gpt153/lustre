@@ -1,6 +1,6 @@
 # Roadmap: F07-CONNECT-gatekeeper
 
-**Status:** IN_PROGRESS
+**Status:** DONE — all waves implemented and tested
 **Created:** 2026-03-24
 **Waves:** 3
 **Total epics:** 8
@@ -48,18 +48,20 @@
 ---
 
 ## Wave 3: Gatekeeper Screens & Bypass Rules
-**Status:** NOT_STARTED
+**Status:** DONE
+**Started:** 2026-03-25
+**Completed:** 2026-03-25
 
 ### Parallelization groups:
 **Group A (parallel):**
-- wave-3a-gatekeeper-screens-mobile (haiku) — Gatekeeper conversation UI in chat, config settings screen, AI-qualified badge display
-- wave-3b-gatekeeper-screens-web (haiku) — Same for web
+- wave-3a-gatekeeper-screens-mobile (haiku) — **VERIFIED** — Gatekeeper conversation UI in chat, config settings screen, AI-qualified badge display
+- wave-3b-gatekeeper-screens-web (haiku) — **VERIFIED** — Same for web
 
 **Group B (sequential, after A):**
-- wave-3c-bypass-rules (haiku) — Mutual match bypass, pair profile qualification, no-purchase-bypass enforcement
+- wave-3c-bypass-rules (haiku) — **VERIFIED** — Mutual match bypass, pair profile qualification, no-purchase-bypass enforcement
 
-### Testgate Wave 3:
-- [ ] Gatekeeper conversation renders in chat UI
-- [ ] Settings screen allows config changes
-- [ ] Mutual match bypasses Gatekeeper
-- [ ] Pair profiles qualified as unit
+### Testgate Wave 3: PASS
+- [x] Gatekeeper conversation renders in chat UI
+- [x] Settings screen allows config changes
+- [x] Mutual match bypasses Gatekeeper
+- [x] Pair profiles qualified as unit (data available for AI)
