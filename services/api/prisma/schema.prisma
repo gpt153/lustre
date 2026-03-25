@@ -101,6 +101,8 @@ model User {
   gatekeeperConfig   GatekeeperConfig?        @relation("gatekeeperConfig")
   gatekeeperSent     GatekeeperConversation[] @relation("gatekeeperSent")
   gatekeeperReceived GatekeeperConversation[] @relation("gatekeeperReceived")
+  userBalance        UserBalance?
+  tokenTransactions  TokenTransaction[]
 
   @@map("users")
 }
@@ -509,4 +511,33 @@ model GatekeeperMessage {
 
   @@index([conversationId])
   @@map("gatekeeper_messages")
+}
+
+enum TokenTransactionType {
+  GATEKEEPER
+  TOPUP
+  REFUND
+}
+
+model UserBalance {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @unique @map("user_id") @db.Uuid
+  balance   Int      @default(0)
+  updatedAt DateTime @updatedAt @map("updated_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_balances")
+}
+
+model TokenTransaction {
+  id          String               @id @default(uuid()) @db.Uuid
+  userId      String               @map("user_id") @db.Uuid
+  amount      Int
+  type        TokenTransactionType
+  referenceId String?              @map("reference_id") @db.Uuid
+  createdAt   DateTime             @default(now()) @map("created_at")
+  user        User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("token_transactions")
 }
