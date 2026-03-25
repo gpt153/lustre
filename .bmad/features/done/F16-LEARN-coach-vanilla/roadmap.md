@@ -1,15 +1,16 @@
 # Roadmap: F16-LEARN-coach-vanilla
 
-**Status:** IN_PROGRESS
+**Status:** DONE — all waves implemented and tested
 **Created:** 2026-03-24
 **Started:** 2026-03-25
+**Completed:** 2026-03-25
 **Waves:** 2
 **Total epics:** 5
 
 ---
 
 ## Wave 1: Module Framework & Content
-**Status:** IN_PROGRESS
+**Status:** DONE
 **Started:** 2026-03-25T00:00:00Z
 
 ### Parallelization groups:
@@ -28,7 +29,7 @@
 ---
 
 ## Wave 2: Module Screens
-**Status:** IN_PROGRESS
+**Status:** DONE
 **Started:** 2026-03-25T01:00:00Z
 
 ### Parallelization groups:

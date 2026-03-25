@@ -204,6 +204,18 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
   - `OPENAI_API_KEY` — Whisper STT + GPT-4o-mini LLM
   - `ELEVENLABS_API_KEY` — TTS voice synthesis
 
+## Vanilla Coaching Modules (F16-LEARN-coach-vanilla)
+- **Schema:** `LearnModule`, `Lesson`, `UserModuleProgress`, `UserLessonProgress` — Prisma models in `services/api/prisma/schema.prisma`
+- **Module data:** 10 progressive modules (Overcome Fear → Masculine Leadership), orders 1-10; modules 1-3 unlocked by default (`isUnlocked: true`), 4-10 locked; each module has `badgeName` awarded on completion
+- **Lesson data:** 35 lessons (3-4 per module) seeded via `services/api/prisma/seed.ts`; each lesson has `coachSystemPrompt` (Axel persona), `partnerSystemPrompt` (Sophia persona), `assessmentCriteria`
+- **Unlock logic:** completing all lessons in a module (all `passed: true`) awards badge, sets `badgeAwardedAt`, and auto-unlocks the next module via `LearnModule.updateMany({ order: module.order + 1 })`
+- **Migration:** `services/api/prisma/migrations/20260325100000_add_learn_modules/migration.sql`
+- **tRPC Router:** `module` — `list` (all modules + user progress), `get` (module detail with lesson progress), `startLesson` (upsert UserLessonProgress), `completeLesson` (marks passed, awards badge if all done), `getProgress` (full user progress summary)
+- **Shared components:** `packages/app/src/` — `LearnModuleListScreen`, `LearnModuleDetailScreen`, `LearnLessonScreen`, `useLearn` hook, `useLearnModule` hook
+- **Mobile:** Learn tab at `apps/mobile/app/(tabs)/learn/` — index (module list), `[moduleId]` (detail), `[moduleId]/lesson/[lessonId]` (lesson + session launch)
+- **Web:** `/learn` (module grid), `/learn/[moduleId]` (lesson table with Axel/Sophia action buttons), `/learn/[moduleId]/lesson/[lessonId]` (dual persona cards + assessment criteria)
+- **Session integration:** lesson screens launch into existing F15 coach session — mobile via `router.push('/(tabs)/coach/start', { persona, lessonContext })`, web via `/coach/start?persona=X&context=Y`
+
 ## Rules
 - All users verified via BankID (Sweden) or Veriff (international)
 - Real names NEVER shown in app — stored encrypted, released only via court order

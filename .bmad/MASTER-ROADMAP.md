@@ -178,10 +178,15 @@ F15 Wave 1 (AI agent backend)
           |       +--> F16 Wave 2 (module screens)               +--> F18 Wave 2 (gamification screens)
 ```
 
+### Phase 6 Progress:
+- **F15 (Coach Engine):** DONE
+- **F16 (Coach Vanilla):** DONE — 10 modules, 35 lessons, badge system, mobile + web screens ✓
+- **F18 (Gamification):** NOT_STARTED
+
 ### Phase 6 Testgate:
 - [ ] AI coach responds in voice/text sessions
-- [ ] Vanilla modules 1-3 playable
-- [ ] Badges awarded on completion
+- [x] Vanilla modules 1-3 playable — F16 DONE, modules 1-3 unlocked by default
+- [x] Badges awarded on completion — F16 DONE, badge auto-awarded when all lessons passed
 - [ ] Streaks tracked
 
 ---
