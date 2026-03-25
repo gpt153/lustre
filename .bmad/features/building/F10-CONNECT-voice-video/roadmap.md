@@ -1,6 +1,6 @@
 # Roadmap: F10-CONNECT-voice-video
 
-**Status:** DONE
+**Status:** DONE — all waves implemented and tested
 **Created:** 2026-03-24
 **Waves:** 2
 **Total epics:** 4
