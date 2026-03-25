@@ -118,6 +118,19 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
 - **Mobile:** Groups tab at `apps/mobile/app/(tabs)/groups.tsx`
 - **Web:** `/groups`, `/groups/create`, `/groups/[groupId]`, `/groups/[groupId]/moderation`
 
+## AI Gatekeeper (F07-CONNECT-gatekeeper)
+- **Schema:** GatekeeperConfig, GatekeeperConversation, GatekeeperMessage, UserBalance, TokenTransaction — Prisma models in `services/api/prisma/schema.prisma`
+- **Enums:** GatekeeperStrictness (MILD, STANDARD, STRICT), GatekeeperTone (FORMAL, CASUAL, FLIRTY), GatekeeperStatus (ACTIVE, PASSED, FAILED, EXPIRED, BYPASSED), GatekeeperMessageRole (USER, AI, SYSTEM), TokenTransactionType (GATEKEEPER, TOPUP, REFUND)
+- **tRPC Router:** `gatekeeper` — getConfig, updateConfig, toggle, checkRequired, initiate, respond, getConversation
+- **AI service:** `services/api/src/lib/gatekeeper-ai.ts` — OpenAI GPT-4o-mini integration, system prompt builder (dealbreakers anonymized via keyword mapping), multi-turn conversation manager, JSON response parsing with fallback
+- **Token system:** `services/api/src/lib/tokens.ts` — checkBalance, debitTokens (atomic via Prisma transaction), creditTokens. Gatekeeper costs 20 tokens (~2 SEK). Sender pays on conversation completion (PASS or FAIL), recipient never charged
+- **Bypass rules:** Mutual match (both liked each other's posts) bypasses Gatekeeper entirely; no-purchase-bypass enforced by design (no endpoint exists)
+- **Shared components:** `packages/app/src/` — GatekeeperConversationScreen, GatekeeperSettingsScreen, AiQualifiedBadge, useGatekeeper hook
+- **Mobile:** Gatekeeper settings at `apps/mobile/app/(tabs)/profile/gatekeeper.tsx`
+- **Web:** Settings at `/settings/gatekeeper`, conversation view at `/gatekeeper/[conversationId]`
+- **Env vars required:**
+  - `OPENAI_API_KEY` — OpenAI API key for GPT-4o-mini
+
 ## Rules
 - All users verified via BankID (Sweden) or Veriff (international)
 - Real names NEVER shown in app — stored encrypted, released only via court order
