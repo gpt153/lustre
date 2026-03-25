@@ -28,14 +28,17 @@
 ---
 
 ## Wave 2: Module Screens
-**Status:** NOT_STARTED
+**Status:** IN_PROGRESS
+**Started:** 2026-03-25T01:00:00Z
 
 ### Parallelization groups:
 **Group A (parallel):**
-- wave-2a-learn-screens-mobile (haiku) — Module list with progress, lesson view, start coaching session button, badge display on completion
-- wave-2b-learn-screens-web (haiku) — Same for web
+- wave-2a-learn-screens-mobile (haiku) — Module list with progress, lesson view, start coaching session button, badge display on completion **Status: VERIFIED** — useLearn hook, 3 shared screens, 3 mobile routes, Learn tab added to _layout.tsx
+- wave-2b-learn-screens-web (haiku) — Same for web **Status: VERIFIED** — 3 web pages (list, module detail, lesson detail) with Axel/Sophia session launch buttons
 
 ### Testgate Wave 2:
-- [ ] Module list shows lock/unlock status
-- [ ] Lesson launches coaching session with correct module context
-- [ ] Badge awarded on module completion
+- [x] Module list shows lock/unlock status — LearnModuleListScreen opacity=0.5 + 🔒 icon for locked modules, isUnlocked check before onModulePress
+- [x] Lesson launches coaching session with correct module context — LearnLessonScreen calls startLesson() then onStartSession(persona, lesson.title), web routes link to /coach/start?persona=X&context=Y
+- [x] Badge awarded on module completion — completeLesson checks all lessons passed → upserts UserModuleProgress with badgeAwardedAt, displayed in detail screens
+
+**Testgate: PASS**
