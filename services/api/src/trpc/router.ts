@@ -16,6 +16,7 @@ import { pairRouter } from './pair-router.js'
 import { postRouter } from './post-router.js'
 import { contentFilterRouter } from './content-filter-router.js'
 import { groupRouter } from './group-router.js'
+import { gatekeeperRouter } from './gatekeeper-router.js'
 
 export const appRouter = router({
   health: {
@@ -169,6 +170,7 @@ export const appRouter = router({
   post: postRouter,
   contentFilter: contentFilterRouter,
   group: groupRouter,
+  gatekeeper: gatekeeperRouter,
 })
 
 export type AppRouter = typeof appRouter
