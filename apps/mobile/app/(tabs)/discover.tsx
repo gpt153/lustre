@@ -1,10 +1,17 @@
-import { YStack, Text, H2 } from 'tamagui'
+import { useState } from 'react'
+import { YStack } from 'tamagui'
+import { DiscoverScreen, MatchesListScreen, SearchScreen } from '@lustre/app'
 
-export default function DiscoverScreen() {
+type TabType = 'discover' | 'matches' | 'search'
+
+export default function DiscoverTab() {
+  const [activeTab, setActiveTab] = useState<TabType>('discover')
+
   return (
-    <YStack flex={1} alignItems="center" justifyContent="center" backgroundColor="$background">
-      <H2 color="$primary">Discover</H2>
-      <Text color="$textSecondary" marginTop="$2">Coming Soon</Text>
+    <YStack flex={1} backgroundColor="$background">
+      {activeTab === 'discover' && <DiscoverScreen />}
+      {activeTab === 'matches' && <MatchesListScreen />}
+      {activeTab === 'search' && <SearchScreen />}
     </YStack>
   )
 }
