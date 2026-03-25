@@ -170,6 +170,10 @@ model User {
   orgsCreated              Organization[]            @relation("orgsCreated")
   orgMemberships           OrgMember[]
   safeDates                SafeDate[]
+  consentRecordsInitiated  ConsentRecord[]           @relation("consentInitiator")
+  consentRecordsParticipated ConsentRecord[]         @relation("consentParticipant")
+  recordingAccesses        RecordingAccess[]
+  recordingRevocations     RecordingRevocation[]
 
   @@map("users")
 }
@@ -852,6 +856,18 @@ enum SafeDateStatus {
   COMPLETED
 }
 
+enum ConsentStatus {
+  PENDING
+  CONFIRMED
+  REVOKED
+}
+
+enum RecordingStatus {
+  PROCESSING
+  READY
+  DELETED
+}
+
 model SafeDate {
   id                  String          @id @default(uuid()) @db.Uuid
   userId              String          @map("user_id") @db.Uuid
@@ -901,4 +917,78 @@ model GPSLog {
 
   @@index([safeDateId, recordedAt])
   @@map("gps_logs")
+}
+
+model ConsentRecord {
+  id             String           @id @default(uuid()) @db.Uuid
+  initiatorId    String           @map("initiator_id") @db.Uuid
+  participantId  String           @map("participant_id") @db.Uuid
+  status         ConsentStatus    @default(PENDING)
+  gpsLat         Float?           @map("gps_lat")
+  gpsLng         Float?           @map("gps_lng")
+  bluetoothProof String?          @map("bluetooth_proof")
+  timestamp      DateTime         @map("timestamp")
+  expiresAt      DateTime         @map("expires_at")
+  createdAt      DateTime         @default(now()) @map("created_at")
+  initiator      User             @relation("consentInitiator", fields: [initiatorId], references: [id], onDelete: Cascade)
+  participant    User             @relation("consentParticipant", fields: [participantId], references: [id], onDelete: Cascade)
+  recording      Recording?
+
+  @@map("consent_records")
+}
+
+model Recording {
+  id             String                  @id @default(uuid()) @db.Uuid
+  consentRecordId String                 @unique @map("consent_record_id") @db.Uuid
+  s3Key          String?                 @map("s3_key")
+  drmContentId   String?                 @map("drm_content_id")
+  drmUrl         String?                 @map("drm_url")
+  durationSeconds Int?                   @map("duration_seconds")
+  sizeBytes      BigInt?                 @map("size_bytes")
+  status         RecordingStatus         @default(PROCESSING)
+  createdAt      DateTime                @default(now()) @map("created_at")
+  deletedAt      DateTime?               @map("deleted_at")
+  consentRecord  ConsentRecord           @relation(fields: [consentRecordId], references: [id], onDelete: Cascade)
+  accesses       RecordingAccess[]
+  revocations    RecordingRevocation[]
+  playbackLogs   PlaybackLog[]
+
+  @@map("recordings")
+}
+
+model RecordingAccess {
+  id         String      @id @default(uuid()) @db.Uuid
+  recordingId String      @map("recording_id") @db.Uuid
+  userId     String      @map("user_id") @db.Uuid
+  isActive   Boolean     @default(true) @map("is_active")
+  revokedAt  DateTime?   @map("revoked_at")
+  createdAt  DateTime    @default(now()) @map("created_at")
+  recording  Recording   @relation(fields: [recordingId], references: [id], onDelete: Cascade)
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([recordingId, userId])
+  @@map("recording_accesses")
+}
+
+model RecordingRevocation {
+  id           String    @id @default(uuid()) @db.Uuid
+  recordingId  String    @map("recording_id") @db.Uuid
+  revokedByUserId String  @map("revoked_by_user_id") @db.Uuid
+  reason       String?
+  createdAt    DateTime  @default(now()) @map("created_at")
+  recording    Recording @relation(fields: [recordingId], references: [id], onDelete: Cascade)
+  revokedBy    User      @relation(fields: [revokedByUserId], references: [id], onDelete: Cascade)
+
+  @@map("recording_revocations")
+}
+
+model PlaybackLog {
+  id         String    @id @default(uuid()) @db.Uuid
+  recordingId String   @map("recording_id") @db.Uuid
+  userId     String    @map("user_id") @db.Uuid
+  startedAt  DateTime  @default(now()) @map("started_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  recording  Recording @relation(fields: [recordingId], references: [id], onDelete: Cascade)
+
+  @@map("playback_logs")
 }
