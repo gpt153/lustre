@@ -623,6 +623,8 @@ model ConversationParticipant {
   conversationId String       @map("conversation_id") @db.Uuid
   userId         String       @map("user_id") @db.Uuid
   joinedAt       DateTime     @default(now()) @map("joined_at")
+  lastReadAt     DateTime?    @map("last_read_at")
+  readReceipts   Boolean      @default(true) @map("read_receipts")
   conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -638,6 +640,7 @@ model Message {
   type           MessageType    @default(TEXT)
   status         MessageStatus  @default(SENT)
   mediaUrl       String?        @map("media_url")
+  isFiltered     Boolean        @default(false) @map("is_filtered")
   deletedAt      DateTime?      @map("deleted_at")
   createdAt      DateTime       @default(now()) @map("created_at")
   conversation   Conversation   @relation(fields: [conversationId], references: [id], onDelete: Cascade)

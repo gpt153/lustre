@@ -8,7 +8,7 @@
 ---
 
 ## Wave 1: Phoenix Channels Setup
-**Status:** IN_PROGRESS — started 2026-03-25
+**Status:** DONE — 2026-03-25. Committed faab796. All epics VERIFIED. 110 tests pass.
 
 ### Parallelization groups:
 **Group A (sequential):**
@@ -28,19 +28,20 @@
 ---
 
 ## Wave 2: Chat Features
-**Status:** NOT_STARTED
+**Status:** IN_PROGRESS — started 2026-03-25
 
 ### Parallelization groups:
 **Group A (parallel):**
-- wave-2a-message-delivery (haiku) — Send/receive messages via Phoenix Channel, message status (sent/delivered/read), presence tracking
-- wave-2b-media-messages (haiku) — Image/video upload in chat, R2 storage, content classification trigger, blur for filtered content
-- wave-2c-typing-receipts (haiku) — Typing indicator broadcasts, read receipt tracking, optional per-user setting
+- wave-2a-message-delivery (haiku) — **VERIFIED** — Send/receive messages via Phoenix Channel, message status (sent/delivered/read), presence tracking
+- wave-2b-media-messages (haiku) — **VERIFIED** — Image/video upload in chat, R2 storage, content classification trigger, blur for filtered content
+- wave-2c-typing-receipts (haiku) — **VERIFIED** — Typing indicator broadcasts, read receipt tracking, optional per-user setting
 
 ### Testgate Wave 2:
-- [ ] Messages delivered in real-time
-- [ ] Media messages uploaded and classified
-- [ ] Typing indicators work
-- [ ] Read receipts toggle works
+- [x] Messages delivered in real-time — VERIFIED (send_message → NATS publish → chat-consumer persists → broadcast_from!)
+- [x] Media messages uploaded and classified — VERIFIED (/api/chat/upload + chat-classifier.ts with NO_DICK_PICS filter)
+- [x] Typing indicators work — VERIFIED (typing_start/stop → broadcast_from! "user_typing")
+- [x] Read receipts toggle works — VERIFIED (toggleReadReceipts + markRead mutations)
+- **Wave 2 result: PASS — TypeScript 0 errors, 110 tests pass, code reviewed**
 
 ---
 

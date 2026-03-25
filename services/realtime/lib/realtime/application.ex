@@ -8,6 +8,8 @@ defmodule Realtime.Application do
     children = [
       Realtime.Repo,
       {Phoenix.PubSub, name: Realtime.PubSub},
+      Realtime.Presence,
+      {Realtime.NatsConnector, []},
       RealtimeWeb.Endpoint
     ]
 

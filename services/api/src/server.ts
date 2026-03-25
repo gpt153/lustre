@@ -12,6 +12,8 @@ import { processImage } from './lib/image.js'
 import { uploadToR2, getPhotoKey, getPostMediaKey } from './lib/r2.js'
 import { verifyToken } from './auth/jwt.js'
 import { classifyAndTagMedia } from './lib/sightengine.js'
+import { classifyChatMedia } from './lib/chat-classifier.js'
+import { startChatConsumer } from './lib/chat-consumer.js'
 
 const server = Fastify({
   logger: {
@@ -236,6 +238,121 @@ async function start() {
     classifyAndTagMedia(media.id, originalUrl).catch(() => {})
 
     return reply.status(201).send(updated)
+  })
+
+  server.post('/api/chat/upload', async (request, reply) => {
+    // Auth check
+    const authHeader = request.headers.authorization
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return reply.status(401).send({ error: 'Unauthorized' })
+    }
+    const token = authHeader.slice(7)
+    let userId: string
+    try {
+      const decoded = await verifyToken(token)
+      if (decoded.type !== 'access') throw new Error('Invalid token type')
+      userId = decoded.userId
+    } catch {
+      return reply.status(401).send({ error: 'Invalid token' })
+    }
+
+    // Get conversationId from query params
+    const conversationId = (request.query as Record<string, string>).conversationId
+    if (!conversationId) {
+      return reply.status(400).send({ error: 'conversationId query parameter required' })
+    }
+
+    // Verify user is participant in conversation
+    const participant = await prisma.conversationParticipant.findUnique({
+      where: {
+        conversationId_userId: {
+          conversationId,
+          userId,
+        },
+      },
+    })
+    if (!participant) {
+      return reply.status(403).send({ error: 'Not a participant in this conversation' })
+    }
+
+    // Get file
+    const file = await request.file()
+    if (!file) {
+      return reply.status(400).send({ error: 'No file provided' })
+    }
+
+    // Content-type validation
+    const contentType = file.mimetype
+    if (!['image/jpeg', 'image/png', 'image/webp', 'video/mp4'].includes(contentType)) {
+      return reply.status(400).send({
+        error: 'Invalid content type. Allowed: image/jpeg, image/png, image/webp, video/mp4',
+      })
+    }
+
+    const buffer = await file.toBuffer()
+
+    // Determine media type
+    let mediaType: 'IMAGE' | 'VIDEO'
+    let mediaUrl: string
+
+    if (contentType.startsWith('image/')) {
+      mediaType = 'IMAGE'
+
+      // Process image: convert to WebP and generate thumbnails
+      const images = await processImage(buffer)
+
+      // Create R2 keys with pattern: chat/<conversationId>/<userId>/<timestamp>-<filename>.webp
+      const timestamp = Date.now()
+      const filename = file.filename.replace(/\.[^.]+$/, '') // Remove extension
+      const baseKey = `chat/${conversationId}/${userId}/${timestamp}-${filename}.webp`
+
+      // Upload original and thumbnails (sized versions)
+      const [originalUrl] = await Promise.all([
+        uploadToR2(`${baseKey}`, images.original, 'image/webp'),
+        uploadToR2(`${baseKey.replace('.webp', '-small.webp')}`, images.small, 'image/webp'),
+        uploadToR2(`${baseKey.replace('.webp', '-medium.webp')}`, images.medium, 'image/webp'),
+        uploadToR2(`${baseKey.replace('.webp', '-large.webp')}`, images.large, 'image/webp'),
+      ])
+
+      mediaUrl = originalUrl
+    } else {
+      mediaType = 'VIDEO'
+
+      // Upload video as-is
+      const timestamp = Date.now()
+      const filename = file.filename
+      const videoKey = `chat/${conversationId}/${userId}/${timestamp}-${filename}`
+
+      mediaUrl = await uploadToR2(videoKey, buffer, contentType)
+    }
+
+    // Create Message record with status SENT
+    const message = await prisma.message.create({
+      data: {
+        conversationId,
+        senderId: userId,
+        type: mediaType,
+        mediaUrl,
+        status: 'SENT',
+        content: null,
+      },
+    })
+
+    // Trigger classification asynchronously (fire-and-forget) for images only
+    if (mediaType === 'IMAGE') {
+      classifyChatMedia(message.id, mediaUrl, conversationId).catch(() => {})
+    }
+
+    return reply.status(201).send({
+      messageId: message.id,
+      mediaUrl: message.mediaUrl,
+      type: message.type,
+    })
+  })
+
+  // Start NATS chat consumer in background
+  startChatConsumer().catch((err) => {
+    server.log.error('Failed to start chat consumer:', err)
   })
 
   await server.register(fastifyTRPCPlugin, {

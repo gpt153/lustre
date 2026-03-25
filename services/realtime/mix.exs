@@ -32,7 +32,8 @@ defmodule Realtime.MixProject do
       {:ecto_sql, "~> 3.11"},
       {:postgrex, "~> 0.18"},
       {:jason, "~> 1.4"},
-      {:plug_cowboy, "~> 2.7"}
+      {:plug_cowboy, "~> 2.7"},
+      {:gnat, "~> 1.8"}
     ]
   end
 
