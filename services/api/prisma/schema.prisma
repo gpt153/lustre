@@ -95,6 +95,9 @@ model User {
   posts              Post[]
   contentFilter      UserContentFilter?
   feedInteractions   FeedInteraction[]
+  groupsCreated      Group[]           @relation("groupsCreated")
+  groupMemberships   GroupMember[]
+  groupModerators    GroupModerator[]
 
   @@map("users")
 }
@@ -301,9 +304,11 @@ model Post {
   id           String            @id @default(uuid()) @db.Uuid
   authorId     String            @db.Uuid @map("author_id")
   text         String?           @db.VarChar(2000)
+  groupId      String?           @db.Uuid @map("group_id")
   createdAt    DateTime          @default(now()) @map("created_at")
   updatedAt    DateTime          @updatedAt @map("updated_at")
   author       User              @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  group        Group?            @relation("groupPosts", fields: [groupId], references: [id], onDelete: SetNull)
   media        PostMedia[]
   interactions FeedInteraction[]
 
@@ -368,4 +373,64 @@ model FeedInteraction {
 
   @@unique([userId, postId, type])
   @@map("feed_interactions")
+}
+
+enum GroupVisibility {
+  OPEN
+  PRIVATE
+}
+
+enum MembershipStatus {
+  PENDING
+  ACTIVE
+  BANNED
+}
+
+enum ModeratorRole {
+  MODERATOR
+  OWNER
+}
+
+model Group {
+  id            String          @id @default(uuid()) @db.Uuid
+  name          String          @db.VarChar(100)
+  description   String?         @db.VarChar(2000)
+  category      String          @db.VarChar(100)
+  visibility    GroupVisibility  @default(OPEN)
+  coverImageUrl String?         @map("cover_image_url")
+  createdById   String          @db.Uuid @map("created_by_id")
+  createdAt     DateTime        @default(now()) @map("created_at")
+  updatedAt     DateTime        @updatedAt @map("updated_at")
+  creator       User            @relation("groupsCreated", fields: [createdById], references: [id], onDelete: Cascade)
+  members       GroupMember[]
+  moderators    GroupModerator[]
+  posts         Post[]          @relation("groupPosts")
+
+  @@map("groups")
+}
+
+model GroupMember {
+  id        String           @id @default(uuid()) @db.Uuid
+  groupId   String           @db.Uuid @map("group_id")
+  userId    String           @db.Uuid @map("user_id")
+  status    MembershipStatus @default(ACTIVE)
+  joinedAt  DateTime         @default(now()) @map("joined_at")
+  group     Group            @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([groupId, userId])
+  @@map("group_members")
+}
+
+model GroupModerator {
+  id         String        @id @default(uuid()) @db.Uuid
+  groupId    String        @db.Uuid @map("group_id")
+  userId     String        @db.Uuid @map("user_id")
+  role       ModeratorRole
+  assignedAt DateTime      @default(now()) @map("assigned_at")
+  group      Group         @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([groupId, userId])
+  @@map("group_moderators")
 }

@@ -15,6 +15,7 @@ import { kinkRouter } from './kink-router.js'
 import { pairRouter } from './pair-router.js'
 import { postRouter } from './post-router.js'
 import { contentFilterRouter } from './content-filter-router.js'
+import { groupRouter } from './group-router.js'
 
 export const appRouter = router({
   health: {
@@ -167,6 +168,7 @@ export const appRouter = router({
   pair: pairRouter,
   post: postRouter,
   contentFilter: contentFilterRouter,
+  group: groupRouter,
 })
 
 export type AppRouter = typeof appRouter
