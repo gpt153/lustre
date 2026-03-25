@@ -19,6 +19,7 @@ import { groupRouter } from './group-router.js'
 import { gatekeeperRouter } from './gatekeeper-router.js'
 import { matchRouter } from './match-router.js'
 import { conversationRouter } from './conversation-router.js'
+import { callRouter } from './call-router.js'
 
 export const appRouter = router({
   health: {
@@ -175,6 +176,7 @@ export const appRouter = router({
   gatekeeper: gatekeeperRouter,
   match: matchRouter,
   conversation: conversationRouter,
+  call: callRouter,
 })
 
 export type AppRouter = typeof appRouter

@@ -1,0 +1,53 @@
+replicaCount: 1
+
+image:
+  repository: livekit/livekit-server
+  tag: v1.7.2
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 7880
+  rtcTcpPort: 7881
+
+ingress:
+  enabled: true
+  className: traefik
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    traefik.ingress.kubernetes.io/router.middlewares: lustre-prod-rate-limit@kubernetescrd
+  hosts:
+    - host: livekit.lovelustre.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: livekit-tls
+      hosts:
+        - livekit.lovelustre.com
+
+resources:
+  requests:
+    cpu: 200m
+    memory: 256Mi
+  limits:
+    cpu: "1"
+    memory: 1Gi
+
+env:
+  - name: PORT
+    value: "7880"
+
+livenessProbe:
+  httpGet:
+    path: /healthz
+    port: 7880
+  initialDelaySeconds: 15
+  periodSeconds: 30
+
+readinessProbe:
+  httpGet:
+    path: /healthz
+    port: 7880
+  initialDelaySeconds: 15
+  periodSeconds: 30

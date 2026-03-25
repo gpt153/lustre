@@ -1,0 +1,6 @@
+apiVersion: v2
+name: lustre-livekit
+description: Lustre LiveKit Server (WebRTC)
+type: application
+version: 0.1.0
+appVersion: "1.7.2"

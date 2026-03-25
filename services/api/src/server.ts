@@ -14,6 +14,7 @@ import { verifyToken } from './auth/jwt.js'
 import { classifyAndTagMedia } from './lib/sightengine.js'
 import { classifyChatMedia } from './lib/chat-classifier.js'
 import { startChatConsumer } from './lib/chat-consumer.js'
+import { callRoutes } from './routes/call.js'
 
 const server = Fastify({
   logger: {
@@ -354,6 +355,8 @@ async function start() {
   startChatConsumer().catch((err) => {
     server.log.error('Failed to start chat consumer:', err)
   })
+
+  await server.register(callRoutes)
 
   await server.register(fastifyTRPCPlugin, {
     prefix: '/trpc',
