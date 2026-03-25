@@ -169,6 +169,27 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
 - **Mobile:** Orgs tab at `apps/mobile/app/(tabs)/orgs.tsx`; detail at `/orgs/[orgId]`; admin at `/orgs/[orgId]/admin`
 - **Web:** `/orgs`, `/orgs/create`, `/orgs/[orgId]`, `/orgs/[orgId]/admin`; Orgs nav link in layout
 
+## ConsentVault (F14-SAFE-consent-vault)
+- **Schema:** ConsentRecord, Recording, RecordingAccess, RecordingRevocation, PlaybackLog — Prisma models in `services/api/prisma/schema.prisma`
+- **Enums:** ConsentStatus (PENDING, CONFIRMED, REVOKED), RecordingStatus (PROCESSING, READY, DELETED)
+- **tRPC Router:** `consent` — initiate, confirm, getRecordings, revoke, delete, getUploadUrl, confirmUpload, getPlaybackToken, getStatus
+- **Consent flow:** initiator calls `consent.initiate` (GPS + optional Bluetooth proof) → participant calls `consent.confirm` (Haversine GPS ≤100m check) → status=CONFIRMED → upload enabled
+- **DRM pipeline:** `services/api/src/lib/drm.ts` — S3 presigned upload URL (SigV4), AWS MediaConvert CMAF+SPEKE job (Widevine + FairPlay via PallyCon), CloudFront signed streaming URL (24h)
+- **Access control:** both parties must have active RecordingAccess to view; either party revoking removes their access; Recording marked DELETED when all accesses revoked
+- **Forensic watermarking:** `services/api/src/lib/watermark.ts` — VideoSeal API embeds viewer ID + sessionId + timestamp; PlaybackLog records every playback session; graceful fallback on API failure
+- **Webhook:** `POST /api/consent/mediaconvert-webhook` — SNS notification from MediaConvert; marks Recording READY + sets CloudFront drmUrl
+- **Mobile screens:** `packages/app/src/` — ConsentVaultScreen, ConsentInitiateScreen, ConsentConfirmScreen, ConsentPlaybackScreen, useConsent hook
+- **Mobile tab:** `apps/mobile/app/(tabs)/consent/` — "Vault" tab
+- **Env vars required:**
+  - `AWS_REGION`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`
+  - `S3_RECORDINGS_BUCKET` — S3 bucket for source uploads and packaged output
+  - `MEDIACONVERT_ENDPOINT` — AWS MediaConvert account-specific endpoint
+  - `MEDIACONVERT_ROLE_ARN` — IAM role ARN for MediaConvert
+  - `PALLYCON_SITE_ID`, `PALLYCON_SITE_KEY` — PallyCon DRM credentials
+  - `CLOUDFRONT_RECORDINGS_DOMAIN` — CloudFront domain for streaming
+  - `CLOUDFRONT_KEY_PAIR_ID`, `CLOUDFRONT_PRIVATE_KEY` — CloudFront signing key
+  - `VIDEOSEAL_API_URL`, `VIDEOSEAL_API_KEY` — VideoSeal forensic watermarking
+
 ## Rules
 - All users verified via BankID (Sweden) or Veriff (international)
 - Real names NEVER shown in app — stored encrypted, released only via court order

@@ -21,7 +21,7 @@
 | F11 | MEET | Events | 3 | 7 | PLANNED |
 | F12 | MEET | Organizations | 2 | 4 | **DONE** (2026-03-25) |
 | F13 | SAFE | SafeDate | 2 | 5 | PLANNED |
-| F14 | SAFE | ConsentVault | 3 | 6 | PLANNED |
+| F14 | SAFE | ConsentVault | 3 | 6 | **DONE** (2026-03-25) |
 | F15 | LEARN | Coach Engine | 2 | 5 | PLANNED |
 | F16 | LEARN | Coach Vanilla | 2 | 5 | PLANNED |
 | F17 | LEARN | Coach Spicy | 2 | 4 | PLANNED |
