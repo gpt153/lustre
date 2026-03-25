@@ -19,6 +19,7 @@ import { startPostEventConsumer } from './lib/post-event-consumer.js'
 import { startEventCompletedConsumer } from './lib/event-completed-consumer.js'
 import { startEscalationService } from './lib/safedate-escalation.js'
 import { callRoutes } from './routes/call.js'
+import { consentRoutes } from './routes/consent.js'
 
 const server = Fastify({
   logger: {
@@ -389,6 +390,7 @@ async function start() {
   startEscalationService()
 
   await server.register(callRoutes)
+  await server.register(consentRoutes)
 
   await server.register(fastifyTRPCPlugin, {
     prefix: '/trpc',

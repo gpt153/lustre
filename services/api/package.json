@@ -21,6 +21,7 @@
     "@fastify/multipart": "^9",
     "@prisma/client": "^6",
     "@trpc/server": "^11",
+    "bcryptjs": "^3.0.3",
     "fastify": "^5",
     "ioredis": "^5.10.1",
     "jose": "^6.2.2",
@@ -30,9 +31,11 @@
     "openai": "^4",
     "sharp": "^0.33",
     "superjson": "^2",
+    "twilio": "^5.13.1",
     "zod": "^3.23"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^3.0.0",
     "@types/node": "^22",
     "pino-pretty": "^11",
     "prisma": "^6.19.2",

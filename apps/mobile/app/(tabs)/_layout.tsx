@@ -23,6 +23,7 @@ export default function TabLayout() {
       <Tabs.Screen name="events" options={{ title: 'Events' }} />
       <Tabs.Screen name="orgs" options={{ title: 'Orgs' }} />
       <Tabs.Screen name="safedate" options={{ title: 'SafeDate' }} />
+      <Tabs.Screen name="consent" options={{ title: 'Vault' }} />
       <Tabs.Screen
         name="chat"
         options={{
