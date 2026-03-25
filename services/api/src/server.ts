@@ -6,6 +6,7 @@ import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify'
 import { appRouter } from './trpc/router.js'
 import { createContext, prisma, redis } from './trpc/context.js'
 import { handleSwishCallback, type SwishCallbackBody } from './auth/swish.js'
+import { handleTicketPaymentCallback, type SwishCallbackBody as TicketSwishCallbackBody } from './lib/event-tickets.js'
 import { meili } from './lib/meilisearch.js'
 import { getNatsConnection } from './lib/nats.js'
 import { processImage } from './lib/image.js'
@@ -92,6 +93,23 @@ async function start() {
     const handled = await handleSwishCallback(prisma, body)
     if (!handled) {
       server.log.warn({ swishPaymentId: body.id }, 'Swish callback received for unknown payment')
+    }
+
+    // Swish requires a 200 response to consider the callback delivered.
+    return reply.status(200).send()
+  })
+
+  // Swish ticket payment callback — called by Swish servers when a ticket payment completes.
+  server.post('/api/events/ticket-callback', async (request, reply) => {
+    const body = request.body as TicketSwishCallbackBody
+
+    if (!body || !body.id || !body.status) {
+      return reply.status(400).send({ error: 'Invalid callback body' })
+    }
+
+    const handled = await handleTicketPaymentCallback(prisma, body)
+    if (!handled) {
+      server.log.warn({ swishPaymentId: body.id }, 'Swish ticket callback received for unknown ticket')
     }
 
     // Swish requires a 200 response to consider the callback delivered.

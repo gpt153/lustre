@@ -29,29 +29,33 @@
 ---
 
 ## Wave 2: Ticketing & Discovery
+**Status:** DONE
+**Started:** 2026-03-25
+**Completed:** 2026-03-25
+
+**Testgate results:** Ticket purchase via Swish PASS | Map nearby events PASS | Calendar view PASS
+
+### Parallelization groups:
+**Group A (parallel):**
+- wave-2a-ticketing (haiku) **Status: VERIFIED** — Ticket purchase flow, Swish integration for payment, ticket validation, refund handling
+- wave-2b-event-discovery (haiku) **Status: VERIFIED** — Map view (PostGIS proximity), calendar view, list with filters, AI event recommendations (basic scoring)
+
+### Testgate Wave 2:
+- [x] Ticket purchase via Swish works
+- [x] Map shows nearby events
+- [x] Calendar view displays events chronologically
+
+---
+
+## Wave 3: Event Screens
 **Status:** IN_PROGRESS
 **Started:** 2026-03-25
 
 ### Parallelization groups:
 **Group A (parallel):**
-- wave-2a-ticketing (haiku) **Status: IN_PROGRESS** — Ticket purchase flow, Swish integration for payment, ticket validation, refund handling
-- wave-2b-event-discovery (haiku) **Status: IN_PROGRESS** — Map view (PostGIS proximity), calendar view, list with filters, AI event recommendations (basic scoring)
-
-### Testgate Wave 2:
-- [ ] Ticket purchase via Swish works
-- [ ] Map shows nearby events
-- [ ] Calendar view displays events chronologically
-
----
-
-## Wave 3: Event Screens
-**Status:** NOT_STARTED
-
-### Parallelization groups:
-**Group A (parallel):**
-- wave-3a-event-screens-mobile (haiku) — Event list, event detail, create event, RSVP flow, ticket purchase
-- wave-3b-event-screens-web (haiku) — Same for web
-- wave-3c-post-event (haiku) — Post-event suggestion engine: "You were at the same event" opt-in connections
+- wave-3a-event-screens-mobile (haiku) **Status: IN_PROGRESS** — Event list, event detail, create event, RSVP flow, ticket purchase
+- wave-3b-event-screens-web (haiku) **Status: IN_PROGRESS** — Same for web
+- wave-3c-post-event (haiku) **Status: IN_PROGRESS** — Post-event suggestion engine: "You were at the same event" opt-in connections
 
 ### Testgate Wave 3:
 - [ ] Event creation flow works end-to-end
