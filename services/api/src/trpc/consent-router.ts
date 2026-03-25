@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { TRPCError } from '@trpc/server'
 import { router, protectedProcedure } from './middleware.js'
+import { generateUploadPresignedUrl, submitMediaConvertJob, generateDrmLicenseToken, generateStreamingUrl } from '../lib/drm.js'
 
 function haversineDistanceMeters(
   lat1: number,
@@ -290,5 +291,161 @@ export const consentRouter = router({
       })
 
       return { success: true }
+    }),
+
+  getUploadUrl: protectedProcedure
+    .input(z.object({ consentRecordId: z.string().uuid() }))
+    .mutation(async ({ ctx, input }) => {
+      const consentRecord = await ctx.prisma.consentRecord.findFirst({
+        where: {
+          id: input.consentRecordId,
+          OR: [{ initiatorId: ctx.userId }, { participantId: ctx.userId }],
+        },
+        include: { recording: true },
+      })
+
+      if (!consentRecord) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Consent record not found',
+        })
+      }
+
+      if (consentRecord.status !== 'CONFIRMED') {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Consent must be confirmed before recording',
+        })
+      }
+
+      if (consentRecord.recording && consentRecord.recording.status !== 'PROCESSING') {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Recording already exists',
+        })
+      }
+
+      const recording =
+        consentRecord.recording ??
+        (await ctx.prisma.recording.create({ data: { consentRecordId: consentRecord.id } }))
+
+      const result = await generateUploadPresignedUrl(recording.id)
+
+      await ctx.prisma.recording.update({
+        where: { id: recording.id },
+        data: { s3Key: result.s3Key },
+      })
+
+      return {
+        recordingId: recording.id,
+        uploadUrl: result.uploadUrl,
+        expiresAt: new Date(Date.now() + 15 * 60 * 1000),
+      }
+    }),
+
+  confirmUpload: protectedProcedure
+    .input(z.object({ recordingId: z.string().uuid() }))
+    .mutation(async ({ ctx, input }) => {
+      const recording = await ctx.prisma.recording.findUnique({
+        where: { id: input.recordingId },
+        include: { consentRecord: true },
+      })
+
+      if (
+        !recording ||
+        (ctx.userId !== recording.consentRecord.initiatorId &&
+          ctx.userId !== recording.consentRecord.participantId)
+      ) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Recording not found',
+        })
+      }
+
+      if (recording.s3Key === null) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Upload not started',
+        })
+      }
+
+      const { jobId } = await submitMediaConvertJob(recording.id, recording.s3Key)
+
+      return { jobId, status: 'PROCESSING' as const }
+    }),
+
+  getPlaybackToken: protectedProcedure
+    .input(z.object({ recordingId: z.string().uuid() }))
+    .query(async ({ ctx, input }) => {
+      const access = await ctx.prisma.recordingAccess.findFirst({
+        where: {
+          recordingId: input.recordingId,
+          userId: ctx.userId,
+          isActive: true,
+        },
+      })
+
+      if (!access) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Access denied',
+        })
+      }
+
+      const recording = await ctx.prisma.recording.findUnique({
+        where: { id: input.recordingId },
+      })
+
+      if (!recording || recording.status !== 'READY') {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Recording not yet ready',
+        })
+      }
+
+      const licenseToken = await generateDrmLicenseToken(ctx.userId, recording.id)
+      const streamingUrl = await generateStreamingUrl(recording.id)
+
+      await ctx.prisma.playbackLog.create({
+        data: { recordingId: recording.id, userId: ctx.userId },
+      })
+
+      return { licenseToken, streamingUrl }
+    }),
+
+  getStatus: protectedProcedure
+    .input(z.object({ recordingId: z.string().uuid() }))
+    .query(async ({ ctx, input }) => {
+      const access = await ctx.prisma.recordingAccess.findFirst({
+        where: {
+          recordingId: input.recordingId,
+          userId: ctx.userId,
+        },
+      })
+
+      if (!access) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Recording not found',
+        })
+      }
+
+      const recording = await ctx.prisma.recording.findUnique({
+        where: { id: input.recordingId },
+      })
+
+      if (!recording) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Recording not found',
+        })
+      }
+
+      return {
+        id: recording.id,
+        status: recording.status,
+        drmUrl: recording.status === 'READY' ? recording.drmUrl : null,
+        createdAt: recording.createdAt,
+      }
     }),
 })
