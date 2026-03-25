@@ -1,7 +1,9 @@
+import crypto from 'node:crypto'
 import { z } from 'zod'
 import { TRPCError } from '@trpc/server'
 import { router, protectedProcedure } from './middleware.js'
 import { generateUploadPresignedUrl, submitMediaConvertJob, generateDrmLicenseToken, generateStreamingUrl } from '../lib/drm.js'
+import { embedWatermark } from '../lib/watermark.js'
 
 function haversineDistanceMeters(
   lat1: number,
@@ -405,12 +407,16 @@ export const consentRouter = router({
 
       const licenseToken = await generateDrmLicenseToken(ctx.userId, recording.id)
       const streamingUrl = await generateStreamingUrl(recording.id)
+      const sessionId = crypto.randomUUID()
+
+      const watermarkResult = await embedWatermark(ctx.userId, recording.id, sessionId)
+      const finalUrl = watermarkResult.watermarkedUrl || streamingUrl
 
       await ctx.prisma.playbackLog.create({
-        data: { recordingId: recording.id, userId: ctx.userId },
+        data: { recordingId: recording.id, userId: ctx.userId, sessionId, watermarkedUrl: finalUrl },
       })
 
-      return { licenseToken, streamingUrl }
+      return { licenseToken, streamingUrl: finalUrl }
     }),
 
   getStatus: protectedProcedure
