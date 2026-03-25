@@ -24,6 +24,7 @@ import { callRouter } from './call-router.js'
 import { eventRouter } from './event-router.js'
 import { safedateRouter } from './safedate-router.js'
 import { consentRouter } from './consent-router.js'
+import { coachRouter } from './coach-router.js'
 
 export const appRouter = router({
   health: {
@@ -185,6 +186,7 @@ export const appRouter = router({
   event: eventRouter,
   safedate: safedateRouter,
   consent: consentRouter,
+  coach: coachRouter,
 })
 
 export type AppRouter = typeof appRouter

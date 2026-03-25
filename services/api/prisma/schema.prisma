@@ -174,6 +174,7 @@ model User {
   consentRecordsParticipated ConsentRecord[]         @relation("consentParticipant")
   recordingAccesses        RecordingAccess[]
   recordingRevocations     RecordingRevocation[]
+  coachSessions            CoachSession[]
 
   @@map("users")
 }
@@ -591,6 +592,7 @@ enum TokenTransactionType {
   GATEKEEPER
   TOPUP
   REFUND
+  COACH_SESSION
 }
 
 model UserBalance {
@@ -993,4 +995,51 @@ model PlaybackLog {
   recording      Recording @relation(fields: [recordingId], references: [id], onDelete: Cascade)
 
   @@map("playback_logs")
+}
+
+enum CoachPersona {
+  COACH
+  PARTNER
+}
+
+enum CoachMode {
+  VOICE
+  TEXT
+}
+
+enum CoachSessionStatus {
+  PENDING
+  ACTIVE
+  ENDED
+}
+
+model CoachSession {
+  id            String             @id @default(uuid()) @db.Uuid
+  userId        String             @map("user_id") @db.Uuid
+  persona       CoachPersona
+  mode          CoachMode
+  status        CoachSessionStatus @default(PENDING)
+  roomName      String             @map("room_name")
+  startedAt     DateTime?          @map("started_at")
+  endedAt       DateTime?          @map("ended_at")
+  durationSecs  Int                @default(0) @map("duration_secs")
+  tokensDebited Int                @default(0) @map("tokens_debited")
+  createdAt     DateTime           @default(now()) @map("created_at")
+  user          User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages      SessionMessage[]
+
+  @@index([userId])
+  @@map("coach_sessions")
+}
+
+model SessionMessage {
+  id        String       @id @default(uuid()) @db.Uuid
+  sessionId String       @map("session_id") @db.Uuid
+  role      String
+  content   String
+  createdAt DateTime     @default(now()) @map("created_at")
+  session   CoachSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@map("session_messages")
 }
