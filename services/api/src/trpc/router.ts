@@ -16,6 +16,7 @@ import { pairRouter } from './pair-router.js'
 import { postRouter } from './post-router.js'
 import { contentFilterRouter } from './content-filter-router.js'
 import { groupRouter } from './group-router.js'
+import { orgRouter } from './org-router.js'
 import { gatekeeperRouter } from './gatekeeper-router.js'
 import { matchRouter } from './match-router.js'
 import { conversationRouter } from './conversation-router.js'
@@ -174,6 +175,7 @@ export const appRouter = router({
   post: postRouter,
   contentFilter: contentFilterRouter,
   group: groupRouter,
+  org: orgRouter,
   gatekeeper: gatekeeperRouter,
   match: matchRouter,
   conversation: conversationRouter,
