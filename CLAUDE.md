@@ -131,6 +131,16 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
 - **Env vars required:**
   - `OPENAI_API_KEY` — OpenAI API key for GPT-4o-mini
 
+## Matching (F08-CONNECT-matching)
+- **Schema:** Swipe, Match, SeenProfile — Prisma models in `services/api/prisma/schema.prisma`
+- **Enums:** SwipeAction (LIKE, PASS)
+- **tRPC Router:** `match` — getDiscoveryStack (filtered, excludes seen/swiped), swipe (mutual match detection), getMatches, search (PostGIS ST_DWithin for radius)
+- **PostGIS:** Profile.location field (`geography(Point,4326)`) with GIST index for distance-based search
+- **Redis seen-list:** `services/api/src/lib/seen-list.ts` — `seen:{userId}` SET with 30-day TTL, DB warmup fallback
+- **Shared components:** `packages/app/src/` — DiscoverScreen (PanResponder swipe cards), MatchesListScreen, SearchScreen, MatchAnimation, useDiscovery hook
+- **Mobile:** Discover tab at `apps/mobile/app/(tabs)/discover.tsx` with sub-tabs (discover/matches/search)
+- **Web:** `/discover` (profile grid + Like/Pass), `/discover/search` (filter sidebar + results), `/discover/matches` (matches grid)
+
 ## Rules
 - All users verified via BankID (Sweden) or Veriff (international)
 - Real names NEVER shown in app — stored encrypted, released only via court order

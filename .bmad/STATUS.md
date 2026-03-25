@@ -14,8 +14,8 @@
 | F04 | SOCIAL | Profiles | 3 | 8 | **DONE** (2026-03-24) |
 | F05 | SOCIAL | Feed | 3 | 8 | **DONE** (2026-03-25) |
 | F06 | SOCIAL | Groups | 2 | 5 | **DONE** (2026-03-25) |
-| F07 | CONNECT | AI Gatekeeper | 3 | 7 | PLANNED |
-| F08 | CONNECT | Matching | 2 | 5 | PLANNED |
+| F07 | CONNECT | AI Gatekeeper | 3 | 7 | **DONE** (2026-03-25) |
+| F08 | CONNECT | Matching | 2 | 5 | **DONE** (2026-03-25) |
 | F09 | CONNECT | Chat | 3 | 7 | PLANNED |
 | F10 | CONNECT | Voice & Video | 2 | 4 | PLANNED |
 | F11 | MEET | Events | 3 | 7 | PLANNED |
