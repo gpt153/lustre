@@ -108,6 +108,16 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
 - **Env vars required:**
   - `SIGHTENGINE_API_USER`, `SIGHTENGINE_API_SECRET`
 
+## Interest Groups (F06-SOCIAL-groups)
+- **Schema:** Group, GroupMember, GroupModerator — Prisma models in `services/api/prisma/schema.prisma`
+- **Enums:** GroupVisibility (OPEN, PRIVATE), MembershipStatus (PENDING, ACTIVE, BANNED), ModeratorRole (MODERATOR, OWNER)
+- **tRPC Router:** `group` — create, get, list, search, join, leave, approve, reject, members, ban, unban, removePost, update, addModerator, removeModerator, pendingMembers
+- **Post.groupId:** Optional field on Post model for group-scoped posts
+- **Moderation:** `assertGroupModerator` helper enforces moderator/owner permissions; OWNER required for settings, adding/removing moderators
+- **Shared components:** `packages/app/src/` — GroupListScreen, GroupDetailScreen, CreateGroupScreen, GroupModerationScreen, GroupCard, useGroups hook
+- **Mobile:** Groups tab at `apps/mobile/app/(tabs)/groups.tsx`
+- **Web:** `/groups`, `/groups/create`, `/groups/[groupId]`, `/groups/[groupId]/moderation`
+
 ## Rules
 - All users verified via BankID (Sweden) or Veriff (international)
 - Real names NEVER shown in app — stored encrypted, released only via court order

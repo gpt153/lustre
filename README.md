@@ -89,6 +89,7 @@ docker compose up        # Starts API, web, PostgreSQL, Redis, Meilisearch, NATS
   - `pair.*` — Pair/poly linking (invite, respond, leave, getMyLinks)
   - `post.*` — Post CRUD (create, get, list, delete), feed algorithm (feed), interactions (like, unlike, showLess)
   - `contentFilter.*` — User content filter preferences (get, update, applyPreset)
+  - `group.*` — Interest groups (create, get, list, search, join, leave, approve, reject, members, ban, unban, removePost, update, addModerator, removeModerator, pendingMembers)
 
 ## CI/CD
 
@@ -112,4 +113,4 @@ Production runs on a 3-node k3s cluster on Hetzner Cloud (Helsinki):
 
 ## Status
 
-F01 scaffolding, F02 auth, F03 database & infrastructure, F04 profiles, F05 social feed complete. See `.bmad/STATUS.md` for full feature roadmap.
+F01 scaffolding, F02 auth, F03 database & infrastructure, F04 profiles, F05 social feed, F06 interest groups complete. See `.bmad/STATUS.md` for full feature roadmap.
