@@ -1,10 +1,30 @@
 import { trpc } from '@lustre/api'
+import { useCallback } from 'react'
 
 export function useLearn() {
   const listQuery = trpc.module.list.useQuery()
+  const toggleSpicyModeMutation = trpc.profile.toggleSpicyMode.useMutation()
+  const queryClient = trpc.useContext()
+
+  const modules = listQuery.data ?? []
+  const vanillaModules = modules.filter((m) => !m.isSpicy)
+  const spicyModules = modules.filter((m) => m.isSpicy)
+
+  const toggleSpicyMode = useCallback(
+    async (enabled: boolean) => {
+      await toggleSpicyModeMutation.mutateAsync({ enabled })
+      // Invalidate modules list to refetch
+      await queryClient.module.list.invalidate()
+    },
+    [toggleSpicyModeMutation, queryClient]
+  )
+
   return {
-    modules: listQuery.data ?? [],
+    modules,
+    vanillaModules,
+    spicyModules,
     isLoading: listQuery.isLoading,
+    toggleSpicyMode,
   }
 }
 

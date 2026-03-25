@@ -50,9 +50,23 @@ export default function LessonPage({
           <Text fontSize="$2" color="$textSecondary">
             Module {module.order} · Lesson {lesson.order}
           </Text>
-          <Text fontSize="$6" fontWeight="700" color="$text">
-            {lesson.title}
-          </Text>
+          <XStack alignItems="center" gap="$2">
+            <Text fontSize="$6" fontWeight="700" color="$text">
+              {lesson.title}
+            </Text>
+            {module.isSpicy && (
+              <YStack
+                backgroundColor="#DC2626"
+                borderRadius="$2"
+                paddingHorizontal="$2"
+                paddingVertical="$1"
+              >
+                <Text fontSize="$1" fontWeight="700" color="white">
+                  18+
+                </Text>
+              </YStack>
+            )}
+          </XStack>
         </YStack>
 
         <XStack gap="$4" flexWrap="wrap">

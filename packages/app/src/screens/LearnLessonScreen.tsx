@@ -79,7 +79,8 @@ export function LearnLessonScreen({
       <XStack
         paddingHorizontal="$4"
         paddingVertical="$3"
-        alignItems="center"
+        alignItems="flex-start"
+        justifyContent="space-between"
         borderBottomWidth={1}
         borderBottomColor="$borderColor"
       >
@@ -88,6 +89,18 @@ export function LearnLessonScreen({
             ← Tillbaka
           </Text>
         </TouchableOpacity>
+        {module?.isSpicy && (
+          <XStack
+            backgroundColor="$red8"
+            borderRadius={12}
+            paddingHorizontal="$2"
+            paddingVertical={2}
+          >
+            <Text fontSize={10} fontWeight="700" color="white">
+              18+
+            </Text>
+          </XStack>
+        )}
       </XStack>
 
       <ScrollView flex={1}>
