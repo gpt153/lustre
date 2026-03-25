@@ -141,6 +141,24 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
 - **Mobile:** Discover tab at `apps/mobile/app/(tabs)/discover.tsx` with sub-tabs (discover/matches/search)
 - **Web:** `/discover` (profile grid + Like/Pass), `/discover/search` (filter sidebar + results), `/discover/matches` (matches grid)
 
+## Chat (F09-CONNECT-chat)
+- **Schema:** Conversation, ConversationParticipant, Message — Prisma models in `services/api/prisma/schema.prisma`
+- **Enums:** MessageType (TEXT, IMAGE, VIDEO), MessageStatus (SENT, DELIVERED, READ)
+- **Relation:** Match has one Conversation (auto-created in `match.swipe` transaction on mutual like)
+- **Real-time service:** Elixir/Phoenix at `services/realtime/` — WebSocket at `/socket`, JWT HS256 auth (`PHX_JWT_SECRET`), channels `conversation:*` and `user:*`
+- **Channel events:** `send_message` → NATS `chat.message.new` → Fastify consumer persists → broadcasts `new_message`; `typing_start`/`typing_stop` → broadcasts `user_typing`; `screenshot_taken` → broadcasts to other participants
+- **NATS consumer:** `services/api/src/lib/chat-consumer.ts` — subscribes `chat.message.new`, persists Message via Prisma
+- **Media upload:** `POST /api/chat/upload?conversationId=` — multipart image/video → R2 (`chat/<convId>/<userId>/<ts>.webp`), fire-and-forget Sightengine classification; `services/api/src/lib/chat-classifier.ts` applies NO_DICK_PICS filter (`isFiltered = true`)
+- **tRPC Router:** `conversation` — list, getMessages (cursor-based, oldest-first), markRead, toggleReadReceipts, updateMessageStatus, revealFilteredMedia, deleteMessage
+- **Shared components:** `packages/app/src/` — ConversationListScreen, ChatRoomScreen, useChat hook, useChatRoom hook (Phoenix WebSocket + tRPC)
+- **Mobile:** Chat tab at `apps/mobile/app/(tabs)/chat/` — index (list) + `[conversationId]` (room); expo-screen-capture FLAG_SECURE prevents screenshots
+- **Web:** 2-column layout at `/chat` and `/chat/[conversationId]`
+- **Helm chart:** `infrastructure/helm/realtime/` — ingress `ws.lovelustre.com`, port 4001
+- **Env vars required:**
+  - `PHX_JWT_SECRET` — same value as `JWT_SECRET` (used by Phoenix to verify Fastify-issued JWTs)
+  - `SECRET_KEY_BASE` — Phoenix secret key base (64-byte hex)
+  - `NATS_URL` — used by both Fastify and Phoenix
+
 ## Rules
 - All users verified via BankID (Sweden) or Veriff (international)
 - Real names NEVER shown in app — stored encrypted, released only via court order
