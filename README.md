@@ -73,17 +73,22 @@ docker compose up        # Starts API, web, PostgreSQL, Redis, Meilisearch, NATS
 | `R2_SECRET_ACCESS_KEY` | — | R2 secret key |
 | `R2_BUCKET_NAME` | `lustre-photos` | R2 bucket for photo storage |
 | `R2_PUBLIC_URL` | — | Public URL for R2 bucket |
+| `SIGHTENGINE_API_USER` | — | Sightengine API user (content classification) |
+| `SIGHTENGINE_API_SECRET` | — | Sightengine API secret |
 
 ## API Endpoints
 
 - `GET /health` — Health check (returns `{ status: "ok"|"degraded", postgres, redis, meilisearch, nats, timestamp }`)
 - `POST /api/photos/upload` — Multipart photo upload (Bearer auth, max 20MB, WebP conversion + 3 thumbnail sizes to R2)
+- `POST /api/posts/upload?postId=` — Multipart post media upload (Bearer auth, max 4 images per post, WebP + thumbnails to R2, auto-classification via Sightengine)
 - `/trpc/*` — tRPC router (type-safe RPC via `@trpc/server`)
   - `profile.*` — Profile CRUD (create, update, get, getPublic)
   - `photo.*` — Photo management (list, delete, reorder)
   - `search.profiles` — Meilisearch-powered profile search with filters
   - `kink.*` — Kink tag listing, search, and assignment
   - `pair.*` — Pair/poly linking (invite, respond, leave, getMyLinks)
+  - `post.*` — Post CRUD (create, get, list, delete), feed algorithm (feed), interactions (like, unlike, showLess)
+  - `contentFilter.*` — User content filter preferences (get, update, applyPreset)
 
 ## CI/CD
 
@@ -107,4 +112,4 @@ Production runs on a 3-node k3s cluster on Hetzner Cloud (Helsinki):
 
 ## Status
 
-F01 scaffolding, F02 auth, F03 database & infrastructure, F04 profiles complete. See `.bmad/STATUS.md` for full feature roadmap.
+F01 scaffolding, F02 auth, F03 database & infrastructure, F04 profiles, F05 social feed complete. See `.bmad/STATUS.md` for full feature roadmap.

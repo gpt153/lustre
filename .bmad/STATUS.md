@@ -12,7 +12,7 @@
 | F02 | CORE | Auth & Verification | 3 | 7 | PLANNED |
 | F03 | CORE | Database & Infrastructure | 2 | 5 | **DONE** (2026-03-24) |
 | F04 | SOCIAL | Profiles | 3 | 8 | **DONE** (2026-03-24) |
-| F05 | SOCIAL | Feed | 3 | 8 | PLANNED |
+| F05 | SOCIAL | Feed | 3 | 8 | **DONE** (2026-03-25) |
 | F06 | SOCIAL | Groups | 2 | 5 | PLANNED |
 | F07 | CONNECT | AI Gatekeeper | 3 | 7 | PLANNED |
 | F08 | CONNECT | Matching | 2 | 5 | PLANNED |
