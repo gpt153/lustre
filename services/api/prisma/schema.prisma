@@ -81,6 +81,11 @@ enum KinkInterestLevel {
   LOVE
 }
 
+enum SwipeAction {
+  LIKE
+  PASS
+}
+
 model User {
   id                 String                   @id @default(uuid()) @db.Uuid
   displayName        String?                  @map("display_name")
@@ -103,6 +108,12 @@ model User {
   gatekeeperReceived GatekeeperConversation[] @relation("gatekeeperReceived")
   userBalance        UserBalance?
   tokenTransactions  TokenTransaction[]
+  swipesSent         Swipe[]                  @relation("swipesSent")
+  swipesReceived     Swipe[]                  @relation("swipesReceived")
+  matchesAsUser1     Match[]                  @relation("matchesAsUser1")
+  matchesAsUser2     Match[]                  @relation("matchesAsUser2")
+  seenProfiles       SeenProfile[]            @relation("seenProfiles")
+  seenProfileTargets SeenProfile[]            @relation("seenProfileTargets")
 
   @@map("users")
 }
@@ -164,6 +175,7 @@ model Profile {
   verified            Boolean           @default(false)
   createdAt           DateTime          @default(now()) @map("created_at")
   updatedAt           DateTime          @updatedAt @map("updated_at")
+  location            Unsupported("geography(Point,4326)")? @map("location")
   user                User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   photos              ProfilePhoto[]
   kinkTags            ProfileKinkTag[]
@@ -541,4 +553,41 @@ model TokenTransaction {
 
   @@index([userId])
   @@map("token_transactions")
+}
+
+model Swipe {
+  id       String      @id @default(uuid()) @db.Uuid
+  userId   String      @map("user_id") @db.Uuid
+  targetId String      @map("target_id") @db.Uuid
+  action   SwipeAction
+  createdAt DateTime    @default(now()) @map("created_at")
+  user     User        @relation("swipesSent", fields: [userId], references: [id], onDelete: Cascade)
+  target   User        @relation("swipesReceived", fields: [targetId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, targetId])
+  @@map("swipes")
+}
+
+model Match {
+  id         String   @id @default(uuid()) @db.Uuid
+  user1Id    String   @map("user1_id") @db.Uuid
+  user2Id    String   @map("user2_id") @db.Uuid
+  createdAt  DateTime @default(now()) @map("created_at")
+  user1      User     @relation("matchesAsUser1", fields: [user1Id], references: [id], onDelete: Cascade)
+  user2      User     @relation("matchesAsUser2", fields: [user2Id], references: [id], onDelete: Cascade)
+
+  @@unique([user1Id, user2Id])
+  @@map("matches")
+}
+
+model SeenProfile {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  targetId  String   @map("target_id") @db.Uuid
+  seenAt    DateTime @default(now()) @map("seen_at")
+  user      User     @relation("seenProfiles", fields: [userId], references: [id], onDelete: Cascade)
+  target    User     @relation("seenProfileTargets", fields: [targetId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, targetId])
+  @@map("seen_profiles")
 }
