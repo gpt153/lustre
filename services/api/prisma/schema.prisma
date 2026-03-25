@@ -175,6 +175,8 @@ model User {
   recordingAccesses        RecordingAccess[]
   recordingRevocations     RecordingRevocation[]
   coachSessions            CoachSession[]
+  moduleProgress           UserModuleProgress[]
+  lessonProgress           UserLessonProgress[]
 
   @@map("users")
 }
@@ -1042,4 +1044,67 @@ model SessionMessage {
 
   @@index([sessionId])
   @@map("session_messages")
+}
+
+model LearnModule {
+  id           String               @id @default(uuid()) @db.Uuid
+  order        Int                  @unique
+  title        String
+  description  String
+  badgeName    String               @map("badge_name")
+  isUnlocked   Boolean              @default(false) @map("is_unlocked")
+  createdAt    DateTime             @default(now()) @map("created_at")
+  lessons      Lesson[]
+  userProgress UserModuleProgress[]
+
+  @@map("learn_modules")
+}
+
+model Lesson {
+  id                  String               @id @default(uuid()) @db.Uuid
+  moduleId            String               @map("module_id") @db.Uuid
+  order               Int
+  title               String
+  coachSystemPrompt   String               @map("coach_system_prompt")
+  partnerSystemPrompt String               @map("partner_system_prompt")
+  assessmentCriteria  String               @map("assessment_criteria")
+  createdAt           DateTime             @default(now()) @map("created_at")
+  module              LearnModule          @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  userProgress        UserLessonProgress[]
+
+  @@unique([moduleId, order])
+  @@index([moduleId])
+  @@map("lessons")
+}
+
+model UserModuleProgress {
+  id             String      @id @default(uuid()) @db.Uuid
+  userId         String      @map("user_id") @db.Uuid
+  moduleId       String      @map("module_id") @db.Uuid
+  completedAt    DateTime?   @map("completed_at")
+  badgeAwardedAt DateTime?   @map("badge_awarded_at")
+  createdAt      DateTime    @default(now()) @map("created_at")
+  user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  module         LearnModule @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, moduleId])
+  @@index([userId])
+  @@map("user_module_progress")
+}
+
+model UserLessonProgress {
+  id          String    @id @default(uuid()) @db.Uuid
+  userId      String    @map("user_id") @db.Uuid
+  lessonId    String    @map("lesson_id") @db.Uuid
+  startedAt   DateTime  @default(now()) @map("started_at")
+  completedAt DateTime? @map("completed_at")
+  passed      Boolean   @default(false)
+  feedback    String?
+  createdAt   DateTime  @default(now()) @map("created_at")
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lesson      Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lessonId])
+  @@index([userId])
+  @@map("user_lesson_progress")
 }
