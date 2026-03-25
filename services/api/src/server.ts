@@ -17,6 +17,7 @@ import { classifyChatMedia } from './lib/chat-classifier.js'
 import { startChatConsumer } from './lib/chat-consumer.js'
 import { startPostEventConsumer } from './lib/post-event-consumer.js'
 import { startEventCompletedConsumer } from './lib/event-completed-consumer.js'
+import { startEscalationService } from './lib/safedate-escalation.js'
 import { callRoutes } from './routes/call.js'
 
 const server = Fastify({
@@ -384,6 +385,8 @@ async function start() {
   startEventCompletedConsumer(prisma, nc).catch((err) => {
     server.log.error('Failed to start event-completed consumer:', err)
   })
+
+  startEscalationService()
 
   await server.register(callRoutes)
 

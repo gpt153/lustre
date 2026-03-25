@@ -22,6 +22,7 @@ import { matchRouter } from './match-router.js'
 import { conversationRouter } from './conversation-router.js'
 import { callRouter } from './call-router.js'
 import { eventRouter } from './event-router.js'
+import { safedateRouter } from './safedate-router.js'
 
 export const appRouter = router({
   health: {
@@ -181,6 +182,7 @@ export const appRouter = router({
   conversation: conversationRouter,
   call: callRouter,
   event: eventRouter,
+  safedate: safedateRouter,
 })
 
 export type AppRouter = typeof appRouter

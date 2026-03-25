@@ -169,6 +169,7 @@ model User {
   eventTickets             EventTicket[]             @relation("eventTickets")
   orgsCreated              Organization[]            @relation("orgsCreated")
   orgMemberships           OrgMember[]
+  safeDates                SafeDate[]
 
   @@map("users")
 }
@@ -842,4 +843,62 @@ model OrgVerification {
   org            Organization          @relation(fields: [orgId], references: [id], onDelete: Cascade)
 
   @@map("org_verifications")
+}
+
+enum SafeDateStatus {
+  ACTIVE
+  CHECKED_IN
+  ESCALATED
+  COMPLETED
+}
+
+model SafeDate {
+  id                  String          @id @default(uuid()) @db.Uuid
+  userId              String          @map("user_id") @db.Uuid
+  targetDescription   String
+  durationMinutes     Int             @map("duration_minutes")
+  pinHash             String          @map("pin_hash")
+  status              SafeDateStatus  @default(ACTIVE)
+  expiresAt           DateTime        @map("expires_at")
+  checkedInAt         DateTime?       @map("checked_in_at")
+  escalatedAt         DateTime?       @map("escalated_at")
+  completedAt         DateTime?       @map("completed_at")
+  deletionScheduledAt DateTime?       @map("deletion_scheduled_at")
+  shareToken          String          @unique @map("share_token")
+  createdAt           DateTime        @default(now()) @map("created_at")
+  updatedAt           DateTime        @updatedAt @map("updated_at")
+  user                User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  safetyContacts      SafetyContact[]
+  gpsLogs             GPSLog[]
+
+  @@index([userId])
+  @@map("safe_dates")
+}
+
+model SafetyContact {
+  id          String    @id @default(uuid()) @db.Uuid
+  safeDateId  String    @map("safe_date_id") @db.Uuid
+  name        String
+  phone       String
+  smsSentAt   DateTime? @map("sms_sent_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  safeDate    SafeDate  @relation(fields: [safeDateId], references: [id], onDelete: Cascade)
+
+  @@index([safeDateId])
+  @@map("safety_contacts")
+}
+
+model GPSLog {
+  id            String   @id @default(uuid()) @db.Uuid
+  safeDateId    String   @map("safe_date_id") @db.Uuid
+  latEncrypted  String   @map("lat_encrypted")
+  lngEncrypted  String   @map("lng_encrypted")
+  accuracy      Float?
+  iv            String
+  recordedAt    DateTime @default(now()) @map("recorded_at")
+  createdAt     DateTime @default(now()) @map("created_at")
+  safeDate      SafeDate @relation(fields: [safeDateId], references: [id], onDelete: Cascade)
+
+  @@index([safeDateId, recordedAt])
+  @@map("gps_logs")
 }
