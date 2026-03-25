@@ -15,9 +15,10 @@ import { trpc } from '@lustre/api'
 interface ChatRoomScreenProps {
   conversationId: string
   displayName: string
+  onInitiateCall?: (callId: string, callType: 'VOICE' | 'VIDEO') => void
 }
 
-export function ChatRoomScreen({ conversationId, displayName }: ChatRoomScreenProps) {
+export function ChatRoomScreen({ conversationId, displayName, onInitiateCall }: ChatRoomScreenProps) {
   const userId = useAuthStore((state) => state.userId)
   const [screenshotBannerTimer, setScreenshotBannerTimer] = useState<NodeJS.Timeout | null>(null)
 
@@ -36,6 +37,7 @@ export function ChatRoomScreen({ conversationId, displayName }: ChatRoomScreenPr
   const flatListRef = useRef<FlatList>(null)
 
   const deleteMessageMutation = trpc.conversation.deleteMessage.useMutation()
+  const initiateMutation = trpc.call.initiate.useMutation()
 
   // Sync local messages with messages from hook
   useEffect(() => {
@@ -75,6 +77,18 @@ export function ChatRoomScreen({ conversationId, displayName }: ChatRoomScreenPr
       }
     },
     [isComposing, sendTyping]
+  )
+
+  const handleInitiateCall = useCallback(
+    async (callType: 'VOICE' | 'VIDEO') => {
+      try {
+        const result = await initiateMutation.mutateAsync({ conversationId, callType })
+        onInitiateCall?.(result.callId, callType)
+      } catch (err) {
+        console.error('Failed to initiate call', err)
+      }
+    },
+    [conversationId, initiateMutation, onInitiateCall]
   )
 
   const handleDeleteMessage = useCallback(
@@ -246,6 +260,19 @@ export function ChatRoomScreen({ conversationId, displayName }: ChatRoomScreenPr
             editable={!sendingMessage}
             multiline
           />
+
+          <TouchableOpacity
+            onPress={() =>
+              Alert.alert('Start call', 'Choose call type', [
+                { text: 'Voice', onPress: () => handleInitiateCall('VOICE') },
+                { text: 'Video', onPress: () => handleInitiateCall('VIDEO') },
+                { text: 'Cancel', style: 'cancel' },
+              ])
+            }
+            style={{ justifyContent: 'center', paddingHorizontal: 4 }}
+          >
+            <Text fontSize={20}>📞</Text>
+          </TouchableOpacity>
 
           <Button
             paddingHorizontal="$4"

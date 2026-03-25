@@ -7,7 +7,9 @@
   "dependencies": {
     "@lustre/ui": "workspace:*",
     "@lustre/api": "workspace:*",
+    "@livekit/react-native": "^2.7.0",
     "@tanstack/react-query": "^5",
+    "livekit-client": "^2.7.0",
     "zustand": "^5",
     "react": "^18.3",
     "phoenix": "^1.7.0"

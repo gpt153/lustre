@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { YStack, XStack, Text, Spinner, Button, Input, ScrollView, Avatar, Image as TamagaUI_Image } from 'tamagui'
 import { trpc } from '@lustre/api'
 import { useAuthStore } from '@lustre/app/stores/authStore'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Socket } from 'phoenix'
 
 interface Message {
@@ -49,6 +50,7 @@ export default function ConversationPage({
 }) {
   const conversationId = params.conversationId
   const { userId } = useAuthStore()
+  const router = useRouter()
 
   const { data: conversations } = trpc.conversation.list.useQuery({})
   const { data: messagesData, isLoading: isLoadingMessages, refetch: refetchMessages } = trpc.conversation.getMessages.useQuery({
@@ -57,10 +59,24 @@ export default function ConversationPage({
   })
   const { refetch: refetchConversations } = trpc.conversation.list.useQuery({})
   const markReadMutation = trpc.conversation.markRead.useMutation()
+  const initiateMutation = trpc.call.initiate.useMutation()
 
   const messages: Message[] = messagesData?.messages ?? []
   const currentConversation = conversations?.find((c) => c.id === conversationId)
   const otherUser = currentConversation?.otherParticipant
+  const otherParticipantName = otherUser?.displayName ?? null
+
+  const handleInitiateCall = useCallback(async (callType: 'VOICE' | 'VIDEO') => {
+    try {
+      const result = await initiateMutation.mutateAsync({
+        conversationId: params.conversationId,
+        callType,
+      })
+      router.push(`/call/${result.callId}?conversationId=${params.conversationId}&displayName=${encodeURIComponent(otherParticipantName ?? 'Unknown')}`)
+    } catch (err) {
+      console.error('Failed to initiate call', err)
+    }
+  }, [initiateMutation, params.conversationId, otherParticipantName, router])
 
   // Mark conversation as read when it loads
   useEffect(() => {
@@ -162,6 +178,14 @@ export default function ConversationPage({
                   {otherUser?.displayName ?? 'Unknown User'}
                 </Text>
               </YStack>
+              <XStack gap="$2">
+                <Button size="$3" onPress={() => handleInitiateCall('VOICE')} chromeless>
+                  📞
+                </Button>
+                <Button size="$3" onPress={() => handleInitiateCall('VIDEO')} chromeless>
+                  🎥
+                </Button>
+              </XStack>
             </XStack>
 
             {/* Messages */}
