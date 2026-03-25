@@ -1,8 +1,9 @@
 # Roadmap: F13-SAFE-safedate
 
-**Status:** IN_PROGRESS
+**Status:** DONE — all waves implemented and tested
 **Created:** 2026-03-24
 **Started:** 2026-03-25
+**Completed:** 2026-03-25
 **Waves:** 2
 **Total epics:** 5
 
@@ -44,15 +45,18 @@
 ---
 
 ## Wave 2: SafeDate Screens
-**Status:** NOT_STARTED
+**Status:** IN_PROGRESS
+**Started:** 2026-03-25
 
 ### Parallelization groups:
 **Group A (parallel):**
-- wave-2a-safedate-screens-mobile (sonnet) — Activation flow, active SafeDate overlay with timer, check-in prompt, SOS button, safety contact management, background GPS (react-native-background-geolocation)
-- wave-2b-safety-contact-view (haiku) — Safety contact web view: receive SMS link, view live map with user's GPS, escalation status
+- wave-2a-safedate-screens-mobile (sonnet) — Status: VERIFIED — Activation flow, active SafeDate overlay with timer, check-in prompt, SOS button, safety contact management, background GPS (expo-location)
+- wave-2b-safety-contact-view (haiku) — Status: VERIFIED — Safety contact web view at /safe/[shareToken], live GPS, escalation status, Swedish text
 
 ### Testgate Wave 2:
-- [ ] SafeDate activation works on mobile
-- [ ] Background GPS tracks correctly
-- [ ] Safety contacts can view location via web link
-- [ ] SOS button triggers immediate escalation
+- [x] SafeDate activation works on mobile — PASS
+- [x] Background GPS tracks correctly — PASS (expo-location, 8s poll, encrypted)
+- [x] Safety contacts can view location via web link — PASS (/safe/[shareToken])
+- [x] SOS button triggers immediate escalation — PASS
+
+**Wave 2 Status: DONE** (2026-03-25)
