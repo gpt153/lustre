@@ -44,6 +44,7 @@ const updateProfileSchema = z.object({
   relationshipType: RelationshipTypeEnum.optional().nullable(),
   seeking: z.array(SeekingEnum).optional(),
   contentPreference: ContentPreferenceEnum.optional(),
+  allowPostEventSuggestions: z.boolean().optional(),
 })
 
 export const profileRouter = router({

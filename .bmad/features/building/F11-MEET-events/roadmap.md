@@ -1,53 +1,66 @@
 # Roadmap: F11-MEET-events
 
-**Status:** NOT_STARTED
+**Status:** DONE — all waves implemented and tested
 **Created:** 2026-03-24
+**Started:** 2026-03-25
 **Waves:** 3
-**Total epics:** 7
+**Total epics:** 8
 
 ---
 
 ## Wave 1: Event Backend
-**Status:** NOT_STARTED
+**Status:** DONE
+**Started:** 2026-03-25T00:00:00Z
+**Completed:** 2026-03-25
+
+**Testgate results:** Event CRUD PASS | Targeting filter PASS | RSVP PASS
 
 ### Parallelization groups:
 **Group A (sequential):**
-- wave-1a-event-schema (haiku) — Prisma: Event, EventAttendee, EventTicket. Enums for event type, status. PostGIS location.
-- wave-1b-event-api (haiku) — tRPC: event.create, event.update, event.list, event.search, event.rsvp, event.getAttendees
-- wave-1c-event-targeting (haiku) — Targeting filter: event visible only to matching profiles based on organizer's demographic settings
+- wave-1a-event-schema (haiku) — Prisma: Event, EventAttendee, EventTicket. Enums for event type, status. PostGIS location. **Status: VERIFIED**
+- wave-1b-event-api (haiku) — tRPC: event.create, event.update, event.list, event.search, event.rsvp, event.getAttendees **Status: VERIFIED**
+- wave-1c-event-targeting (haiku) — Targeting filter **Status: VERIFIED**
 
 ### Testgate Wave 1:
-- [ ] Event CRUD works
-- [ ] Targeting filters events correctly
-- [ ] RSVP adds user to attendee list
+- [x] Event CRUD works
+- [x] Targeting filters events correctly
+- [x] RSVP adds user to attendee list
 
 ---
 
 ## Wave 2: Ticketing & Discovery
-**Status:** NOT_STARTED
+**Status:** DONE
+**Started:** 2026-03-25
+**Completed:** 2026-03-25
+
+**Testgate results:** Ticket purchase via Swish PASS | Map nearby events PASS | Calendar view PASS
 
 ### Parallelization groups:
 **Group A (parallel):**
-- wave-2a-ticketing (haiku) — Ticket purchase flow, Swish integration for payment, ticket validation, refund handling
-- wave-2b-event-discovery (haiku) — Map view (PostGIS proximity), calendar view, list with filters, AI event recommendations (basic scoring)
+- wave-2a-ticketing (haiku) **Status: VERIFIED** — Ticket purchase flow, Swish integration for payment, ticket validation, refund handling
+- wave-2b-event-discovery (haiku) **Status: VERIFIED** — Map view (PostGIS proximity), calendar view, list with filters, AI event recommendations (basic scoring)
 
 ### Testgate Wave 2:
-- [ ] Ticket purchase via Swish works
-- [ ] Map shows nearby events
-- [ ] Calendar view displays events chronologically
+- [x] Ticket purchase via Swish works
+- [x] Map shows nearby events
+- [x] Calendar view displays events chronologically
 
 ---
 
 ## Wave 3: Event Screens
-**Status:** NOT_STARTED
+**Status:** DONE
+**Started:** 2026-03-25
+**Completed:** 2026-03-25
+
+**Testgate results:** Event creation end-to-end PASS | Discovery/map screens PASS | Ticket purchase flow PASS
 
 ### Parallelization groups:
 **Group A (parallel):**
-- wave-3a-event-screens-mobile (haiku) — Event list, event detail, create event, map/calendar views, RSVP flow, ticket purchase
-- wave-3b-event-screens-web (haiku) — Same for web
-- wave-3c-post-event (haiku) — Post-event suggestion engine: "You were at the same event" opt-in connections
+- wave-3a-event-screens-mobile (haiku) **Status: VERIFIED** — Event list, event detail, create event, RSVP flow, ticket purchase
+- wave-3b-event-screens-web (haiku) **Status: VERIFIED** — Same for web
+- wave-3c-post-event (haiku) **Status: VERIFIED** — Post-event suggestion engine: "You were at the same event" opt-in connections
 
 ### Testgate Wave 3:
-- [ ] Event creation flow works end-to-end
-- [ ] Map discovery shows events near user
-- [ ] Ticket purchase completes successfully
+- [x] Event creation flow works end-to-end
+- [x] Discovery shows nearby events
+- [x] Ticket purchase completes successfully

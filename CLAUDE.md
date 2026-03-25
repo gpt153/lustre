@@ -159,6 +159,16 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
   - `SECRET_KEY_BASE` — Phoenix secret key base (64-byte hex)
   - `NATS_URL` — used by both Fastify and Phoenix
 
+## Organizations (F12-MEET-organizations)
+- **Schema:** Organization, OrgMember, OrgVerification — Prisma models in `services/api/prisma/schema.prisma`
+- **Enums:** OrgType (CLUB, ASSOCIATION, BUSINESS, EVENT_COMPANY), OrgMemberRole (OWNER, ADMIN, MODERATOR, MEMBER), OrgVerificationStatus (PENDING, VERIFIED, REJECTED)
+- **tRPC Router:** `org` — create, get, list, update, join, leave, getMembers, addMember, removeMember, requestVerification
+- **Roles:** OWNER (full control), ADMIN (can manage members), MODERATOR/MEMBER (regular members)
+- **Verification:** 500 SEK one-time fee; owner calls `org.requestVerification` → creates OrgVerification(PENDING) for manual review
+- **Shared components:** `packages/app/src/` — OrgCard, OrgListScreen, OrgDetailScreen, OrgAdminScreen, CreateOrgScreen
+- **Mobile:** Orgs tab at `apps/mobile/app/(tabs)/orgs.tsx`; detail at `/orgs/[orgId]`; admin at `/orgs/[orgId]/admin`
+- **Web:** `/orgs`, `/orgs/create`, `/orgs/[orgId]`, `/orgs/[orgId]/admin`; Orgs nav link in layout
+
 ## Rules
 - All users verified via BankID (Sweden) or Veriff (international)
 - Real names NEVER shown in app — stored encrypted, released only via court order
