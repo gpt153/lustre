@@ -190,6 +190,20 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
   - `CLOUDFRONT_KEY_PAIR_ID`, `CLOUDFRONT_PRIVATE_KEY` — CloudFront signing key
   - `VIDEOSEAL_API_URL`, `VIDEOSEAL_API_KEY` — VideoSeal forensic watermarking
 
+## AI Coach Engine (F15-LEARN-coach-engine)
+- **Python service:** `services/coach/` — LiveKit Agents worker (livekit-agents>=0.12), OpenAI Whisper-1 STT, GPT-4o-mini LLM, ElevenLabs TTS, Silero VAD
+- **Personas:** `services/coach/personas.py` — `"coach"` (Axel, supportive older-brother coach, voice `ErXwobaYiN019PkySvjV`) and `"partner"` (Sophia, realistic Swedish practice partner, voice `21m00Tcm4TlvDq8ikWAM`); persona selected via room metadata `"coach_type"`
+- **REST endpoint:** `POST /api/coach/token` — Bearer JWT auth, body `{ mode: 'voice'|'text', persona?: 'coach'|'partner' }`, returns `{ token, wsUrl, roomName, persona }`
+- **Schema:** `CoachSession`, `SessionMessage` Prisma models; `CoachPersona`, `CoachMode`, `CoachSessionStatus` enums; `COACH_SESSION` added to `TokenTransactionType`
+- **tRPC Router:** `coach` — `create`, `start`, `end`, `list`, `get`. Token billing: voice = 15 tokens/min, text = 2 tokens/min, minimum 1 min charged on `coach.end`
+- **Shared components:** `packages/app/src/` — `CoachHistoryScreen`, `CoachStartScreen`, `CoachSessionScreen`, `useCoach` hook
+- **Mobile:** Coach tab at `apps/mobile/app/(tabs)/coach/` — index (history), start, session
+- **Web:** `/coach` (history), `/coach/start` (persona + mode select), `/coach/session` (active session with timer)
+- **Env vars required:**
+  - `LIVEKIT_URL`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET` — LiveKit server (coach service uses `LIVEKIT_URL`, API uses `LIVEKIT_API_KEY`/`LIVEKIT_API_SECRET`/`LIVEKIT_WS_URL`)
+  - `OPENAI_API_KEY` — Whisper STT + GPT-4o-mini LLM
+  - `ELEVENLABS_API_KEY` — TTS voice synthesis
+
 ## Rules
 - All users verified via BankID (Sweden) or Veriff (international)
 - Real names NEVER shown in app — stored encrypted, released only via court order

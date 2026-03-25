@@ -2,7 +2,7 @@
 
 **Project:** Lustre (lovelustre.com)
 **Stack:** Turborepo + Expo + Next.js + Fastify + Elixir + PostgreSQL
-**Next feature number:** F28
+**Next feature number:** F30
 
 ## Planned Features
 
@@ -22,7 +22,7 @@
 | F12 | MEET | Organizations | 2 | 4 | **DONE** (2026-03-25) |
 | F13 | SAFE | SafeDate | 2 | 5 | PLANNED |
 | F14 | SAFE | ConsentVault | 3 | 6 | **DONE** (2026-03-25) |
-| F15 | LEARN | Coach Engine | 2 | 5 | PLANNED |
+| F15 | LEARN | Coach Engine | 2 | 5 | **DONE** (2026-03-25) |
 | F16 | LEARN | Coach Vanilla | 2 | 5 | PLANNED |
 | F17 | LEARN | Coach Spicy | 2 | 4 | PLANNED |
 | F18 | LEARN | Gamification | 2 | 4 | PLANNED |
@@ -35,6 +35,8 @@
 | F25 | UX | Dual Mode (Vanilla/Spicy) | 2 | 4 | PLANNED |
 | F26 | ADMIN | Dashboard | 2 | 5 | PLANNED |
 | F27 | GROWTH | Migration & Onboarding | 2 | 4 | PLANNED |
+| F28 | CONNECT | Kudos / Reputation | 3 | 7 | PLANNED |
+| F29 | CONNECT | Intentions Discovery | 3 | 8 | PLANNED |
 
 ## Build Order (Suggested Phases)
 
