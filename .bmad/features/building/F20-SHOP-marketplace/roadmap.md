@@ -1,6 +1,6 @@
 # Roadmap: F20-SHOP-marketplace
 
-**Status:** IN_PROGRESS
+**Status:** DONE — all waves implemented and tested
 **Created:** 2026-03-24
 **Waves:** 3
 **Total epics:** 6
@@ -50,10 +50,12 @@
 
 ### Parallelization groups:
 **Group A (parallel):**
-- wave-3a-marketplace-mobile (haiku) — Browse listings, listing detail, create listing, order flow, order status **Status:** IN_PROGRESS
-- wave-3b-marketplace-web (haiku) — Same for web **Status:** IN_PROGRESS
+- wave-3a-marketplace-mobile (haiku) — Browse listings, listing detail, create listing, order flow, order status **Status:** VERIFIED
+- wave-3b-marketplace-web (haiku) — Same for web **Status:** VERIFIED
 
 ### Testgate Wave 3:
-- [ ] Listing creation works end-to-end
-- [ ] Purchase flow completes
-- [ ] Order status tracking works
+- [x] Listing creation works end-to-end — PASS
+- [x] Purchase flow completes — PASS
+- [x] Order status tracking works — PASS
+
+**Wave 3 Status:** DONE — 2026-03-26

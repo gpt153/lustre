@@ -22,6 +22,7 @@ function Header() {
         <Link href="/groups" style={{ color: '#fff', textDecoration: 'none' }}>Groups</Link>
         <Link href="/events" style={{ color: '#fff', textDecoration: 'none' }}>Events</Link>
         <Link href="/orgs" style={{ color: '#fff', textDecoration: 'none' }}>Orgs</Link>
+        <Link href="/shop" style={{ color: '#fff', textDecoration: 'none' }}>Shop</Link>
         <Link href="/chat" style={{ color: '#fff', textDecoration: 'none' }}>Chat</Link>
         <Link href="/coach" style={{ color: '#fff', textDecoration: 'none' }}>Coach</Link>
         <Link href="/profile" style={{ color: '#fff', textDecoration: 'none' }}>Profile</Link>
