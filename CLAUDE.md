@@ -281,6 +281,18 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
 - **Budget model:** CPM costs are debited per impression atomically; CPC costs debited on click; delivery stops when `spentSEK >= dailyBudgetSEK`
 - **useAds hook:** `packages/app/src/hooks/useAds.ts` — `useCampaigns`, `useCreateCampaign`, `useUpdateTargeting`, `useAddCreative`, `useActivateCampaign`, `usePauseCampaign`, `useAnalytics`
 
+## Content Moderation (F24-MOD-content-moderation)
+- **Schema:** `MessageContentTag`, `Report`, `ModerationAction` — Prisma models in `services/api/prisma/schema.prisma`; `User` extended with `filteredSentCount`, `warningCount`, `isBanned`, `bannedUntil`
+- **Enums:** `ReportTargetType` (MESSAGE, POST, PROFILE), `ReportCategory` (HARASSMENT, SPAM, UNDERAGE, NON_CONSENSUAL, OTHER), `ReportStatus` (PENDING, REVIEWED, DISMISSED), `ModerationActionType` (WARNING, TEMP_BAN, PERMANENT_BAN)
+- **Sightengine extensions:** `services/api/src/lib/sightengine.ts` — `classifyAndTagMessage(messageId, imageUrl)` stores tags in `MessageContentTag`; `classifyMessageAsync()` fire-and-forget wrapper; `isDickPic(tags)` returns true when GENITALS (confidence>0.3) + FULL/PARTIAL nudity detected
+- **Dick-pic filter:** `services/api/src/lib/chat-classifier.ts` — now persists `MessageContentTag` records per chat image; increments `User.filteredSentCount` each time a message is filtered
+- **Auto-enforcement:** After each `filteredSentCount` increment: count===3 → WARNING, count===5 → 7-day TEMP_BAN, count===10 → PERMANENT_BAN; each creates a `ModerationAction` audit record with `adminId='00000000-0000-0000-0000-000000000001'` (system)
+- **tRPC Router:** `report` — `create` (any user), `list` (admin, paginated, filterable by status), `resolve` (admin, sets REVIEWED/DISMISSED), `getContext` (admin, returns full message/post/profile context), `takeAction` (admin, applies WARNING/TEMP_BAN/PERMANENT_BAN to a user)
+- **Admin access:** Controlled by `ADMIN_USER_IDS` env var (comma-separated UUIDs); procedures throw FORBIDDEN if caller not in list
+- **Migration:** `services/api/prisma/migrations/20260327000000_f24_content_moderation/migration.sql`
+- **Env vars required:**
+  - `ADMIN_USER_IDS` — comma-separated UUIDs of admin users who can access moderation queue
+
 ## Rules
 - All users verified via Swish 10 SEK + SPAR (Sweden); international expansion TBD
 - Real names NEVER shown in app — stored encrypted, released only via court order
