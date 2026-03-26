@@ -1,6 +1,6 @@
 # Roadmap: F27-GROWTH-migration
 
-**Status:** IN_PROGRESS
+**Status:** DONE — all waves implemented and tested
 **Created:** 2026-03-24
 **Started:** 2026-03-26
 **Waves:** 2
