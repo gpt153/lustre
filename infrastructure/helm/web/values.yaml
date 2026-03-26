@@ -19,10 +19,15 @@ ingress:
       paths:
         - path: /
           pathType: Prefix
+    - host: pay.lovelustre.com
+      paths:
+        - path: /
+          pathType: Prefix
   tls:
     - secretName: web-tls
       hosts:
         - app.lovelustre.com
+        - pay.lovelustre.com
 
 resources:
   requests:
