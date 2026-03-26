@@ -9,7 +9,7 @@
 | ID | Group | Name | Waves | Epics | Status |
 |----|-------|------|-------|-------|--------|
 | F01 | CORE | Scaffolding | 3 | 7 | **DONE** (2026-03-24) |
-| F02 | CORE | Auth & Verification | 3 | 7 | PLANNED |
+| F02 | CORE | Auth & Verification | 3 | 7 | SUPERSEDED by F30 |
 | F03 | CORE | Database & Infrastructure | 2 | 5 | **DONE** (2026-03-24) |
 | F04 | SOCIAL | Profiles | 3 | 8 | **DONE** (2026-03-24) |
 | F05 | SOCIAL | Feed | 3 | 8 | **DONE** (2026-03-25) |
@@ -37,7 +37,7 @@
 | F27 | GROWTH | Migration & Onboarding | 2 | 4 | PLANNED |
 | F28 | CONNECT | Kudos / Reputation | 3 | 7 | PLANNED |
 | F29 | CONNECT | Intentions Discovery | 3 | 8 | PLANNED |
-| F30 | CORE | Auth Fix (Swish+SPAR, Email/OAuth) | 3 | 8 | PLANNED |
+| F30 | CORE | Auth Fix (Swish+SPAR, Email/OAuth) | 3 | 8 | **DONE** (2026-03-26) |
 
 ## Build Order (Suggested Phases)
 

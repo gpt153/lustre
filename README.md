@@ -81,11 +81,20 @@ docker compose up        # Starts API, web, PostgreSQL, Redis, Meilisearch, NATS
 | `LIVEKIT_WS_URL` | `wss://livekit.lovelustre.com` | LiveKit WebSocket URL for clients |
 | `ANTHROPIC_API_KEY` | — | Anthropic API key (article generation) |
 | `ELEVENLABS_API_KEY` | — | ElevenLabs API key (podcast TTS generation) |
-| `SWISH_MERCHANT_NUMBER` | — | Swish merchant number (marketplace escrow) |
+| `JWT_SECRET` | — | JWT signing secret (access 24h + refresh 30d tokens) |
+| `ENCRYPTION_KEY` | — | 64 hex chars (32 bytes) for AES-256-GCM PII encryption |
+| `SWISH_MERCHANT_NUMBER` | — | Swish Handel merchant number (registration verification + marketplace) |
 | `SWISH_API_URL` | — | Swish API base URL |
 | `SWISH_CALLBACK_URL` | — | Public URL for Swish payment callbacks |
 | `SWISH_CERT_PATH` | — | Path to Swish mTLS .p12 certificate |
 | `SWISH_CERT_PASSPHRASE` | — | Passphrase for Swish .p12 certificate |
+| `ROARING_API_KEY` | — | Roaring.io API key for SPAR identity/age lookups (registration) |
+| `GOOGLE_CLIENT_ID` | — | Google OAuth2 client ID |
+| `GOOGLE_CLIENT_SECRET` | — | Google OAuth2 client secret |
+| `APPLE_CLIENT_ID` | — | Apple Sign In service ID |
+| `APPLE_TEAM_ID` | — | Apple Developer Team ID |
+| `APPLE_KEY_ID` | — | Apple Sign In key ID |
+| `APPLE_PRIVATE_KEY` | — | Apple Sign In private key (PEM) |
 
 ## API Endpoints
 
@@ -107,6 +116,8 @@ docker compose up        # Starts API, web, PostgreSQL, Redis, Meilisearch, NATS
   - `org.*` — Organizations (create, get, list, update, join, leave, getMembers, addMember, removeMember, requestVerification)
   - `call.*` — Voice/video calls (initiate, accept, reject, end, getStatus)
   - `education.*` — Sexual health education (listTopics, listArticles, getArticle, listPodcasts, listQuizzes, getQuiz, submitQuiz, markArticleRead)
+  - `auth.*` — Authentication: `completeRegistration`, `loginWithEmail`, `loginWithGoogle`, `loginWithApple`, `requestPasswordReset`, `resetPassword`, `logout`, `sessions`, `revokeSession`
+  - `auth.swish.*` — Swish registration: `createPayment`, `checkStatus`, `registrationCallback`
   - `listing.*` — Marketplace listings (create, update, remove, list, getById, getByCategory, getMine)
   - `order.*` — Marketplace orders (create, markShipped, confirmDelivery, getStatus, getMyOrders, initiatePayment, checkPaymentStatus)
   - `seller.*` — Seller tools (registerSwishNumber, getSwishNumber)
@@ -133,4 +144,4 @@ Production runs on a 3-node k3s cluster on Hetzner Cloud (Helsinki):
 
 ## Status
 
-F01 scaffolding, F03 database & infrastructure, F04 profiles, F05 social feed, F06 interest groups, F07 AI gatekeeper, F08 matching, F10 voice & video calls, F12 organizations, F14 ConsentVault, F15 coach engine, F17 spicy coaching, F18 gamification, F19 sexual health education, F20 marketplace complete. See `.bmad/STATUS.md` for full feature roadmap.
+F01 scaffolding, F03 database & infrastructure, F04 profiles, F05 social feed, F06 interest groups, F07 AI gatekeeper, F08 matching, F10 voice & video calls, F12 organizations, F14 ConsentVault, F15 coach engine, F17 spicy coaching, F18 gamification, F19 sexual health education, F20 marketplace, **F30 auth fix** (Swish+SPAR identity verification, email/password login, Google+Apple OAuth — BankID removed) complete. See `.bmad/STATUS.md` for full feature roadmap.
