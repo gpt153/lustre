@@ -1316,6 +1316,48 @@ async function main() {
   }
 
   console.log(`Seeded ${medals.length} medals`)
+
+  // Education topics
+  const educationTopics = [
+    // ANATOMY
+    { slug: 'grundlaggande-anatomi', title: 'Grundläggande anatomi', description: 'Lär dig om kroppens sexuella anatomi och hur den fungerar.', category: 'ANATOMY', order: 1 },
+    { slug: 'klitoris-och-noje', title: 'Klitoris och njutning', description: 'Utforska klitoris roll i sexuell njutning och orgasm.', category: 'ANATOMY', order: 2 },
+    { slug: 'prostata-och-noje', title: 'Prostata och njutning', description: 'Förstå prostatans roll i sexuell njutning för personer med prostata.', category: 'ANATOMY', order: 3 },
+    // PLEASURE
+    { slug: 'orgasm-och-noje', title: 'Orgasm och njutning', description: 'Allt om orgasmer: typer, hur de fungerar och hur du upplever mer njutning.', category: 'PLEASURE', order: 4 },
+    { slug: 'masturbation-och-sjalvkarlek', title: 'Masturbation och självkärlek', description: 'Masturbationens fördelar för hälsa och välmående.', category: 'PLEASURE', order: 5 },
+    { slug: 'erogena-zoner', title: 'Erogena zoner', description: 'Utforska kroppens känsliga zoner för ökad njutning.', category: 'PLEASURE', order: 6 },
+    // STI_PREVENTION
+    { slug: 'sti-testning-och-forebyggande', title: 'STI-testning och förebyggande', description: 'Hur du skyddar dig mot sexuellt överförbara infektioner.', category: 'STI_PREVENTION', order: 7 },
+    { slug: 'kondomanvandning', title: 'Kondomanvändning', description: 'Korrekt användning av kondom för bästa skydd.', category: 'STI_PREVENTION', order: 8 },
+    { slug: 'prep-och-sexuell-halsa', title: 'PrEP och sexuell hälsa', description: 'Information om PrEP och HIV-förebyggande åtgärder.', category: 'STI_PREVENTION', order: 9 },
+    // MENTAL_HEALTH
+    { slug: 'sex-och-sjalvkansla', title: 'Sex och självkänsla', description: 'Sambandet mellan sexualitet och psykisk hälsa.', category: 'MENTAL_HEALTH', order: 10 },
+    { slug: 'hantera-sexuell-angest', title: 'Hantera sexuell ångest', description: 'Verktyg för att hantera prestationsångest och sexuell oro.', category: 'MENTAL_HEALTH', order: 11 },
+    // RELATIONSHIPS
+    { slug: 'kommunikation-om-sex', title: 'Kommunikation om sex', description: 'Hur du pratar med din partner om önskemål och gränser.', category: 'RELATIONSHIPS', order: 12 },
+    { slug: 'granser-och-samtycke', title: 'Gränser och samtycke', description: 'Förstå och kommunicera gränser och samtycke i relationer.', category: 'RELATIONSHIPS', order: 13 },
+    { slug: 'oppna-relationer', title: 'Öppna relationer', description: 'Etisk non-monogami: typer, kommunikation och välmående.', category: 'RELATIONSHIPS', order: 14 },
+    // KINK_SAFETY
+    { slug: 'bdsm-grunderna-och-sakerhet', title: 'BDSM-grunderna och säkerhet', description: 'Introduktion till BDSM med fokus på säkerhet och samtycke.', category: 'KINK_SAFETY', order: 15 },
+    { slug: 'samtycke-och-safewords', title: 'Samtycke och safewords', description: 'Hur safewords fungerar och varför samtycke alltid är grunden.', category: 'KINK_SAFETY', order: 16 },
+    // LGBTQ
+    { slug: 'queer-sexualitet-och-identitet', title: 'Queer-sexualitet och identitet', description: 'Utforska HBTQ+-identiteter och sexuella uttryck.', category: 'LGBTQ', order: 17 },
+    { slug: 'transpersoners-sexuella-halsa', title: 'Transpersoners sexuella hälsa', description: 'Sexuell hälsoinformation specifikt för transpersoner.', category: 'LGBTQ', order: 18 },
+    // AGING
+    { slug: 'sex-och-aldrande', title: 'Sex och åldrande', description: 'Hur sexualitet förändras med åldern och hur du njuter hela livet.', category: 'AGING', order: 19 },
+    { slug: 'klimakteriet-och-sexualitet', title: 'Klimakteriet och sexualitet', description: 'Sexuell hälsa under och efter klimakteriet.', category: 'AGING', order: 20 },
+  ]
+
+  for (const topic of educationTopics) {
+    await prisma.educationTopic.upsert({
+      where: { slug: topic.slug },
+      update: {},
+      create: { ...topic, category: topic.category as any },
+    })
+  }
+
+  console.log(`Seeded ${educationTopics.length} education topics`)
 }
 
 main()

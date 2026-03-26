@@ -27,6 +27,7 @@ import { consentRouter } from './consent-router.js'
 import { coachRouter } from './coach-router.js'
 import { moduleRouter } from './module-router.js'
 import { gamificationRouter } from './gamification-router.js'
+import { educationRouter } from './education-router.js'
 
 export const appRouter = router({
   health: {
@@ -184,13 +185,14 @@ export const appRouter = router({
   gatekeeper: gatekeeperRouter,
   match: matchRouter,
   conversation: conversationRouter,
-  call: callRouter,
+  voiceVideo: callRouter,
   event: eventRouter,
   safedate: safedateRouter,
   consent: consentRouter,
   coach: coachRouter,
   module: moduleRouter,
   gamification: gamificationRouter,
+  education: educationRouter,
 })
 
 export type AppRouter = typeof appRouter

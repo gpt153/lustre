@@ -180,6 +180,8 @@ model User {
   userBadges               UserBadge[]
   userMedals               UserMedal[]
   userStreak               UserStreak?
+  articleReads             UserArticleRead[]
+  quizAttempts             UserQuizAttempt[]
 
   @@map("users")
 }
@@ -1178,4 +1180,129 @@ model UserStreak {
   user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("user_streaks")
+}
+
+enum EducationCategory {
+  ANATOMY
+  PLEASURE
+  STI_PREVENTION
+  MENTAL_HEALTH
+  RELATIONSHIPS
+  KINK_SAFETY
+  LGBTQ
+  AGING
+}
+
+enum EducationAudience {
+  ALL
+  WOMEN
+  MEN
+  NON_BINARY
+  COUPLES
+}
+
+model EducationTopic {
+  id          String            @id @default(uuid()) @db.Uuid
+  slug        String            @unique @map("slug")
+  title       String            @map("title")
+  description String            @map("description")
+  category    EducationCategory @map("category")
+  language    String            @default("sv") @map("language")
+  order       Int               @default(0) @map("order")
+  createdAt   DateTime          @default(now()) @map("created_at")
+
+  articles EducationArticle[]
+  podcasts EducationPodcast[]
+  quizzes  EducationQuiz[]
+
+  @@map("education_topics")
+  @@index([category])
+  @@index([language])
+}
+
+model EducationArticle {
+  id                  String             @id @default(uuid()) @db.Uuid
+  topicId             String             @map("topic_id") @db.Uuid
+  title               String             @map("title")
+  content             String             @map("content") @db.Text
+  audience            EducationAudience  @default(ALL) @map("audience")
+  language            String             @default("sv") @map("language")
+  readingTimeMinutes  Int                @default(5) @map("reading_time_minutes")
+  disclaimer          String             @default("Denna information ersätter inte professionell medicinsk rådgivning.") @map("disclaimer")
+  generatedAt         DateTime?          @map("generated_at")
+  createdAt           DateTime           @default(now()) @map("created_at")
+
+  topic     EducationTopic   @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  readBy    UserArticleRead[]
+
+  @@map("education_articles")
+  @@unique([topicId, audience, language])
+  @@index([topicId])
+  @@index([audience])
+  @@index([language])
+}
+
+model EducationPodcast {
+  id             String            @id @default(uuid()) @db.Uuid
+  topicId        String            @map("topic_id") @db.Uuid
+  title          String            @map("title")
+  description    String            @map("description")
+  audioUrl       String?           @map("audio_url")
+  durationSeconds Int              @default(0) @map("duration_seconds")
+  audience       EducationAudience @default(ALL) @map("audience")
+  language       String            @default("sv") @map("language")
+  host1VoiceId   String            @default("ErXwobaYiN019PkySvjV") @map("host1_voice_id")
+  host2VoiceId   String            @default("21m00Tcm4TlvDq8ikWAM") @map("host2_voice_id")
+  generatedAt    DateTime?         @map("generated_at")
+  createdAt      DateTime          @default(now()) @map("created_at")
+
+  topic EducationTopic @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  @@map("education_podcasts")
+  @@unique([topicId, language])
+  @@index([topicId])
+}
+
+model EducationQuiz {
+  id        String            @id @default(uuid()) @db.Uuid
+  topicId   String            @map("topic_id") @db.Uuid
+  title     String            @map("title")
+  audience  EducationAudience @default(ALL) @map("audience")
+  language  String            @default("sv") @map("language")
+  questions Json              @map("questions")
+  createdAt DateTime          @default(now()) @map("created_at")
+
+  topic    EducationTopic   @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  attempts UserQuizAttempt[]
+
+  @@map("education_quizzes")
+  @@index([topicId])
+}
+
+model UserArticleRead {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  articleId String   @map("article_id") @db.Uuid
+  readAt    DateTime @default(now()) @map("read_at")
+
+  user    User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  article EducationArticle @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  @@map("user_article_reads")
+  @@unique([userId, articleId])
+}
+
+model UserQuizAttempt {
+  id          String   @id @default(uuid()) @db.Uuid
+  userId      String   @map("user_id") @db.Uuid
+  quizId      String   @map("quiz_id") @db.Uuid
+  score       Int      @map("score")
+  answers     Json     @map("answers")
+  completedAt DateTime @default(now()) @map("completed_at")
+
+  user User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quiz EducationQuiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+  @@map("user_quiz_attempts")
+  @@index([userId, quizId])
 }
