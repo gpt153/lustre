@@ -2,7 +2,7 @@
 
 **Project:** Lustre (lovelustre.com)
 **Stack:** Turborepo + Expo + Next.js + Fastify + Elixir + PostgreSQL
-**Next feature number:** F30
+**Next feature number:** F31
 
 ## Planned Features
 
@@ -29,7 +29,7 @@
 | F19 | LEARN | Sexual Health Education | 2 | 5 | **DONE** (2026-03-26) |
 | F20 | SHOP | Marketplace | 3 | 6 | **DONE** (2026-03-26) |
 | F21 | SHOP | Business Shops | 2 | 4 | **DONE** (2026-03-26) |
-| F22 | SHOP | Advertising | 2 | 5 | PLANNED |
+| F22 | SHOP | Advertising | 2 | 5 | **DONE** (2026-03-26) |
 | F23 | PAY | Token System | 3 | 7 | PLANNED |
 | F24 | MOD | Content Moderation | 2 | 5 | PLANNED |
 | F25 | UX | Dual Mode (Vanilla/Spicy) | 2 | 4 | PLANNED |
@@ -37,6 +37,7 @@
 | F27 | GROWTH | Migration & Onboarding | 2 | 4 | PLANNED |
 | F28 | CONNECT | Kudos / Reputation | 3 | 7 | PLANNED |
 | F29 | CONNECT | Intentions Discovery | 3 | 8 | PLANNED |
+| F30 | CORE | Auth Fix (Swish+SPAR, Email/OAuth) | 3 | 8 | PLANNED |
 
 ## Build Order (Suggested Phases)
 

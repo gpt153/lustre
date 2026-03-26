@@ -68,17 +68,21 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
   - `MEILI_MASTER_KEY` — Meilisearch API key
   - `NATS_URL` — NATS server (default: `nats://localhost:4222`)
 
-## Auth (F02-CORE-auth)
-- **BankID:** Criipto/Idura OIDC integration (`services/api/src/auth/bankid.ts`)
-- **Swish:** Swish Handel API for 10 SEK registration payment (`services/api/src/auth/swish.ts`)
+## Auth (F02-CORE-auth → corrected by F30-CORE-auth-fix)
+⚠️ F02 was built with BankID — F30 replaces it with the correct flow below.
+- **Registration:** Swish 10 SEK (`services/api/src/auth/swish.ts`) → Swish Handel API returns name + phone → SPAR lookup via Roaring.io (`services/api/src/auth/spar.ts`) → age 18+ check → account activated
+- **Login:** Email/password OR OAuth (Google, Apple) (`services/api/src/auth/oauth.ts`)
 - **JWT:** `jose` library, HS256, access (24h) + refresh (30d) tokens (`services/api/src/auth/jwt.ts`)
 - **Anonymity:** AES-256-GCM encrypted PII in `encrypted_identities` table (`services/api/src/auth/crypto.ts`)
 - **Auth store:** Zustand in `packages/app/src/stores/authStore.ts`, shared across mobile/web
+- **One-person-one-account:** unique constraint on phone number (from Swish), released 90 days after account deletion
 - **Env vars required:**
   - `JWT_SECRET` — signing key for JWT tokens
   - `ENCRYPTION_KEY` — 64 hex chars (32 bytes) for AES-256-GCM
-  - `CRIIPTO_DOMAIN`, `CRIIPTO_CLIENT_ID`, `CRIIPTO_CLIENT_SECRET`, `CRIIPTO_REDIRECT_URI`
   - `SWISH_MERCHANT_NUMBER`, `SWISH_API_URL`, `SWISH_CALLBACK_URL`, `SWISH_CERT_PATH`, `SWISH_CERT_PASSPHRASE`
+  - `ROARING_API_KEY` — Roaring.io SPAR lookup
+  - `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` — Google OAuth
+  - `APPLE_CLIENT_ID`, `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_PRIVATE_KEY` — Apple Sign In
 
 ## Profiles (F04-SOCIAL-profiles)
 - **Schema:** Profile, ProfilePhoto, KinkTag, ProfileKinkTag, PairInvitation, PairLink, PairLinkMember — Prisma models in `services/api/prisma/schema.prisma`
@@ -265,8 +269,20 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
   - `MEDUSA_PUBLISHABLE_KEY` — Medusa publishable API key for storefront access
   - `MEDUSA_DATABASE_URL` — PostgreSQL connection string for Medusa schema
 
+## Advertising Platform (F22-SHOP-advertising)
+- **Schema:** `AdCampaign`, `AdTargeting`, `AdCreative`, `AdImpression`, `AdClick` — Prisma models in `services/api/prisma/schema.prisma`
+- **Enums:** `CampaignStatus` (DRAFT, ACTIVE, PAUSED, EXHAUSTED, COMPLETED), `AdFormat` (FEED, STORY, EVENT_SPONSOR), `BillingModel` (CPM, CPC)
+- **tRPC Router:** `ad` — `createCampaign`, `updateTargeting`, `addCreative`, `activateCampaign`, `pauseCampaign`, `getCampaigns`, `getAnalytics`, `recordImpression`, `recordClick`
+- **Ad engine:** `services/api/src/lib/ad-engine.ts` — `selectAd(prisma, userId)`: fetches ACTIVE campaigns, matches targeting (gender, orientation, age, relationship type, kink tags — all AND logic), enforces 30-min frequency cap per campaign+user, atomically debits CPM budget via raw SQL (`UPDATE ... WHERE spent_sek + cost <= daily_budget_sek`), returns one random eligible creative or null
+- **Feed injection:** `post.feed` calls `selectAd` and injects a synthetic ad item at position 5 (index 4). Feed items are now typed as `{type: 'post', ...} | {type: 'ad', campaignId, creativeId, headline, body, imageUrl, ctaUrl, sponsor}`
+- **Advertiser dashboard (web):** `apps/web/app/(app)/ads/` — campaign list (`/ads/`), 3-step creation wizard (`/ads/create/`), campaign detail + analytics (`/ads/[campaignId]/`); all Swedish UI
+- **Shared components:** `packages/app/src/` — `AdsManagerScreen`, `AdCreateScreen` (3-step: campaign → targeting → creative), `FeedAdCard` (cross-platform, "Sponsrad" label, fires `onImpression` on mount, fires `onImpression`/`onClick` to record mutations)
+- **Feed ad display:** `FeedAdCard` integrated into `FeedScreen` (mobile) and `apps/web/app/(app)/home/page.tsx` (web); handles null body/imageUrl gracefully
+- **Budget model:** CPM costs are debited per impression atomically; CPC costs debited on click; delivery stops when `spentSEK >= dailyBudgetSEK`
+- **useAds hook:** `packages/app/src/hooks/useAds.ts` — `useCampaigns`, `useCreateCampaign`, `useUpdateTargeting`, `useAddCreative`, `useActivateCampaign`, `usePauseCampaign`, `useAnalytics`
+
 ## Rules
-- All users verified via BankID (Sweden) or Veriff (international)
+- All users verified via Swish 10 SEK + SPAR (Sweden); international expansion TBD
 - Real names NEVER shown in app — stored encrypted, released only via court order
 - Pay-as-you-go token model — no subscriptions, no visible prices in app
 - Safety features (SafeDate, Gatekeeper for recipients) are always FREE
