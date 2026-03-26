@@ -220,6 +220,9 @@ model User {
   sellerSwishNumber        SellerSwishNumber?
   sellerPayouts            SellerPayout[]
   shopCart                 ShopCart?
+  campaigns                AdCampaign[]
+  adImpressions            AdImpression[]
+  adClicks                 AdClick[]
 
   @@map("users")
 }
@@ -1471,4 +1474,115 @@ model ShopCart {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("shop_carts")
+}
+
+// ─── Advertising ─────────────────────────────────────────────────────────────
+
+enum CampaignStatus {
+  DRAFT
+  ACTIVE
+  PAUSED
+  EXHAUSTED
+  COMPLETED
+}
+
+enum AdFormat {
+  FEED
+  STORY
+  EVENT_SPONSOR
+}
+
+enum BillingModel {
+  CPM
+  CPC
+}
+
+model AdCampaign {
+  id              String         @id @default(uuid()) @db.Uuid
+  advertiserId    String         @map("advertiser_id") @db.Uuid
+  name            String
+  status          CampaignStatus @default(DRAFT)
+  format          AdFormat       @default(FEED)
+  billingModel    BillingModel   @default(CPM) @map("billing_model")
+  dailyBudgetSEK  Int            @map("daily_budget_sek")
+  totalBudgetSEK  Int?           @map("total_budget_sek")
+  spentSEK        Int            @default(0) @map("spent_sek")
+  startsAt        DateTime?      @map("starts_at")
+  endsAt          DateTime?      @map("ends_at")
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @updatedAt @map("updated_at")
+
+  advertiser  User           @relation(fields: [advertiserId], references: [id], onDelete: Cascade)
+  targeting   AdTargeting?
+  creatives   AdCreative[]
+  impressions AdImpression[]
+  clicks      AdClick[]
+
+  @@map("ad_campaigns")
+}
+
+model AdTargeting {
+  id                String             @id @default(uuid()) @db.Uuid
+  campaignId        String             @unique @map("campaign_id") @db.Uuid
+  ageMin            Int?               @default(18) @map("age_min")
+  ageMax            Int?               @map("age_max")
+  genders           Gender[]
+  orientations      Orientation[]
+  relationshipTypes RelationshipType[] @map("relationship_types")
+  kinkTagIds        String[]           @map("kink_tag_ids")
+  radiusKm          Int?               @map("radius_km")
+  createdAt         DateTime           @default(now()) @map("created_at")
+  updatedAt         DateTime           @updatedAt @map("updated_at")
+
+  campaign AdCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  @@map("ad_targetings")
+}
+
+model AdCreative {
+  id         String   @id @default(uuid()) @db.Uuid
+  campaignId String   @map("campaign_id") @db.Uuid
+  headline   String   @db.VarChar(80)
+  body       String?  @db.VarChar(200)
+  imageUrl   String?  @map("image_url")
+  ctaUrl     String   @map("cta_url")
+  isActive   Boolean  @default(true) @map("is_active")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  campaign    AdCampaign    @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  impressions AdImpression[]
+  clicks      AdClick[]
+
+  @@map("ad_creatives")
+}
+
+model AdImpression {
+  id         String   @id @default(uuid()) @db.Uuid
+  campaignId String   @map("campaign_id") @db.Uuid
+  creativeId String   @map("creative_id") @db.Uuid
+  userId     String   @map("user_id") @db.Uuid
+  recordedAt DateTime @default(now()) @map("recorded_at")
+
+  campaign AdCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  creative AdCreative @relation(fields: [creativeId], references: [id], onDelete: Cascade)
+  user     User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([campaignId, recordedAt])
+  @@map("ad_impressions")
+}
+
+model AdClick {
+  id         String   @id @default(uuid()) @db.Uuid
+  campaignId String   @map("campaign_id") @db.Uuid
+  creativeId String   @map("creative_id") @db.Uuid
+  userId     String   @map("user_id") @db.Uuid
+  clickedAt  DateTime @default(now()) @map("clicked_at")
+
+  campaign AdCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  creative AdCreative @relation(fields: [creativeId], references: [id], onDelete: Cascade)
+  user     User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([campaignId, clickedAt])
+  @@map("ad_clicks")
 }

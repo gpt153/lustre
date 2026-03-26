@@ -3,6 +3,7 @@ import { Prisma } from '@prisma/client'
 import { TRPCError } from '@trpc/server'
 import { router, protectedProcedure } from './middleware.js'
 import { deleteFromR2, getPostMediaKey } from '../lib/r2.js'
+import { selectAd } from '../lib/ad-engine.js'
 
 export const postRouter = router({
   create: protectedProcedure
@@ -234,7 +235,35 @@ export const postRouter = router({
 
       const profileByUser = new Map(profiles.map(p => [p.userId, p]))
 
-      const feedPosts = posts.map(p => ({
+      type PostFeedItem = {
+        type: 'post'
+        id: string
+        authorId: string
+        text: string | null
+        createdAt: Date
+        updatedAt: Date
+        author: { id: string; displayName: string | null; avatarUrl: string | null }
+        media: typeof media
+        likeCount: number
+        isLiked: boolean
+        relevanceScore: number
+      }
+
+      type AdFeedItem = {
+        type: 'ad'
+        campaignId: string
+        creativeId: string
+        headline: string
+        body: string | null
+        imageUrl: string | null
+        ctaUrl: string
+        sponsor: string | null
+      }
+
+      type FeedItem = PostFeedItem | AdFeedItem
+
+      const feedPosts: FeedItem[] = posts.map(p => ({
+        type: 'post' as const,
         id: p.id,
         authorId: p.author_id,
         text: p.text,
@@ -250,6 +279,14 @@ export const postRouter = router({
         isLiked: p.is_liked,
         relevanceScore: p.relevance_score,
       }))
+
+      const ad = await selectAd(ctx.prisma, userId)
+
+      if (ad) {
+        const adItem: AdFeedItem = { type: 'ad' as const, ...ad }
+        const insertIndex = Math.min(4, feedPosts.length)
+        feedPosts.splice(insertIndex, 0, adItem)
+      }
 
       return { posts: feedPosts, nextCursor }
     }),

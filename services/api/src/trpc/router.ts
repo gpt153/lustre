@@ -32,6 +32,7 @@ import { listingRouter } from './listing-router.js'
 import { orderRouter } from './order-router.js'
 import { sellerRouter } from './seller-router.js'
 import { shopRouter } from './shop-router.js'
+import { adRouter } from './ad-router.js'
 
 export const appRouter = router({
   health: {
@@ -201,6 +202,7 @@ export const appRouter = router({
   order: orderRouter,
   seller: sellerRouter,
   shop: shopRouter,
+  ad: adRouter,
 })
 
 export type AppRouter = typeof appRouter
