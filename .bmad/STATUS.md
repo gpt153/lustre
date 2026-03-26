@@ -32,7 +32,7 @@
 | F22 | SHOP | Advertising | 2 | 5 | **DONE** (2026-03-26) |
 | F23 | PAY | Token System | 3 | 7 | PLANNED |
 | F24 | MOD | Content Moderation | 2 | 5 | **DONE** (2026-03-26) |
-| F25 | UX | Dual Mode (Vanilla/Spicy) | 2 | 4 | PLANNED |
+| F25 | UX | Dual Mode (Vanilla/Spicy) | 2 | 4 | **DONE** (2026-03-26) |
 | F26 | ADMIN | Dashboard | 2 | 5 | PLANNED |
 | F27 | GROWTH | Migration & Onboarding | 2 | 4 | PLANNED |
 | F28 | CONNECT | Kudos / Reputation | 3 | 7 | PLANNED |
