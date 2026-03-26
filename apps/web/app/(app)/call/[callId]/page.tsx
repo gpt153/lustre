@@ -5,7 +5,7 @@ import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import { YStack, XStack, Text, Button } from 'tamagui'
 import { Room, RoomEvent, Track, LocalVideoTrack, type RemoteTrack } from 'livekit-client'
 import { trpc } from '@lustre/api'
-import { useAuthStore } from '@lustre/app/stores/authStore'
+import { useAuthStore } from '@lustre/app'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000'
 

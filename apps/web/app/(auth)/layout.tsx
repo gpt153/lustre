@@ -1,9 +1,20 @@
+'use client'
+
+import { TRPCProvider } from '@lustre/api'
+import { useAuthStore } from '@lustre/app'
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? ''
+
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
+  const getToken = () => useAuthStore.getState().accessToken
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="w-full max-w-md px-4">
-        {children}
+    <TRPCProvider apiUrl={API_URL} getToken={getToken}>
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#FDF8F3' }}>
+        <div style={{ width: '100%', maxWidth: 448, padding: '0 16px' }}>
+          {children}
+        </div>
       </div>
-    </div>
+    </TRPCProvider>
   )
 }

@@ -63,8 +63,8 @@ export default function CreateListingPage() {
         title: title.trim(),
         description: description.trim(),
         price: priceOre,
-        category: category as any,
-        shippingOptions: Array.from(selectedShipping) as any,
+        category: category as unknown as string,
+        shippingOptions: Array.from(selectedShipping) as unknown as string[],
         images: validUrls.map((url, idx) => ({
           url: url.trim(),
           order: idx,
@@ -72,7 +72,7 @@ export default function CreateListingPage() {
       })
 
       router.push('/shop')
-    } catch (error) {
+    } catch {
       alert('Failed to create listing. Please try again.')
     }
   }

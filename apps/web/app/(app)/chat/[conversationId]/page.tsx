@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, use } from 'react'
 import { YStack, XStack, Text, Spinner, Button, Input, ScrollView, Avatar, Image as TamagaUI_Image } from 'tamagui'
 import { trpc } from '@lustre/api'
-import { useAuthStore } from '@lustre/app/stores/authStore'
+import { useAuthStore } from '@lustre/app'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Socket } from 'phoenix'
@@ -46,9 +46,9 @@ interface Conversation {
 export default function ConversationPage({
   params,
 }: {
-  params: { conversationId: string }
+  params: Promise<{ conversationId: string }>
 }) {
-  const conversationId = params.conversationId
+  const { conversationId } = use(params)
   const { userId } = useAuthStore()
   const router = useRouter()
 
@@ -69,14 +69,14 @@ export default function ConversationPage({
   const handleInitiateCall = useCallback(async (callType: 'VOICE' | 'VIDEO') => {
     try {
       const result = await initiateMutation.mutateAsync({
-        conversationId: params.conversationId,
+        conversationId: conversationId,
         callType,
       })
-      router.push(`/call/${result.callId}?conversationId=${params.conversationId}&displayName=${encodeURIComponent(otherParticipantName ?? 'Unknown')}`)
+      router.push(`/call/${result.callId}?conversationId=${conversationId}&displayName=${encodeURIComponent(otherParticipantName ?? 'Unknown')}`)
     } catch (err) {
       console.error('Failed to initiate call', err)
     }
-  }, [initiateMutation, params.conversationId, otherParticipantName, router])
+  }, [initiateMutation, conversationId, otherParticipantName, router])
 
   // Mark conversation as read when it loads
   useEffect(() => {

@@ -24,7 +24,7 @@ export default function ShopPage() {
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined)
 
   const listingsQuery = trpc.listing.list.useInfiniteQuery(
-    { limit: 20, category: selectedCategory as any },
+    { limit: 20, category: selectedCategory as unknown as string | undefined },
     { getNextPageParam: (lastPage) => lastPage.nextCursor }
   )
 

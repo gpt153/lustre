@@ -1,29 +1,30 @@
-import * as Haptics from 'expo-haptics'
 import { Platform } from 'react-native'
+
+let Haptics: any = null
+
+if (Platform.OS !== 'web') {
+  try {
+    Haptics = require('expo-haptics')
+  } catch (e) {
+    Haptics = null
+  }
+}
 
 export function useHaptics() {
   const impactLight = () => {
-    if (Platform.OS !== 'web') {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-    }
+    if (Haptics) Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
   }
 
   const impactMedium = () => {
-    if (Platform.OS !== 'web') {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
-    }
+    if (Haptics) Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
   }
 
   const impactHeavy = () => {
-    if (Platform.OS !== 'web') {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
-    }
+    if (Haptics) Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
   }
 
   const selection = () => {
-    if (Platform.OS !== 'web') {
-      Haptics.selectionAsync()
-    }
+    if (Haptics) Haptics.selectionAsync()
   }
 
   return { impactLight, impactMedium, impactHeavy, selection }

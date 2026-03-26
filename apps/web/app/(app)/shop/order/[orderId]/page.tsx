@@ -29,7 +29,7 @@ export default function OrderStatusPage({ params }: { params: { orderId: string 
     try {
       await confirmDeliveryMutation.mutateAsync({ orderId: params.orderId })
       orderQuery.refetch()
-    } catch (error) {
+    } catch {
       alert('Failed to confirm delivery')
     }
   }

@@ -1,4 +1,5 @@
-import { YStack, Pressable, Text } from 'tamagui'
+import { YStack, Text } from 'tamagui'
+import { Pressable } from 'react-native'
 import Animated from 'react-native-reanimated'
 import { usePressAnimation } from '../hooks/usePressAnimation'
 import { useHaptics } from '../hooks/useHaptics'

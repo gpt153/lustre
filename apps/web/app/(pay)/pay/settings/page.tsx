@@ -1,30 +1,15 @@
 'use client'
 
-import { YStack, XStack, Text, ScrollView, Button, Input, Label, Switch, Spinner } from 'tamagui'
+import { YStack, XStack, Text, ScrollView, Button, Input, Label, Spinner } from 'tamagui'
 import { useState, useEffect } from 'react'
 import { trpc } from '@lustre/api'
 import { useAuth } from '@lustre/app'
 import Link from 'next/link'
 
-interface SwishRecurringStatus {
-  status: string
-  autoTopupAmount: number
-  lowBalanceThreshold: number
-}
-
-interface Card {
-  id: string
-  last4: string
-  expiryMonth: number
-  expiryYear: number
-  isDefault: boolean
-}
-
 export default function PaymentSettingsPage() {
   const { isAuthenticated } = useAuth()
   const [swishAmount, setSwishAmount] = useState('100')
   const [swishThreshold, setSwishThreshold] = useState('200')
-  const [showAddCard, setShowAddCard] = useState(false)
 
   const swishStatusQuery = trpc.swishPayment.getSwishRecurringStatus.useQuery(undefined, {
     enabled: isAuthenticated,
@@ -223,7 +208,9 @@ export default function PaymentSettingsPage() {
                 </Text>
                 <Button
                   backgroundColor="$primary"
-                  onPress={() => setShowAddCard(true)}
+                  onPress={() => {
+                    /* TODO: Implement add card flow */
+                  }}
                 >
                   <Text color="white" fontWeight="600">
                     Lägg till kort
@@ -291,7 +278,9 @@ export default function PaymentSettingsPage() {
 
                 <Button
                   backgroundColor="$primary"
-                  onPress={() => setShowAddCard(true)}
+                  onPress={() => {
+                    /* TODO: Implement add card flow */
+                  }}
                 >
                   <Text color="white" fontWeight="600">
                     Lägg till nytt kort

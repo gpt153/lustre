@@ -1,6 +1,6 @@
 'use client'
 
-import { YStack, XStack, Text, Button, H2 } from 'tamagui'
+import { YStack, Text, Button, H2 } from 'tamagui'
 import Link from 'next/link'
 
 interface InvitePageProps {

@@ -1,18 +1,11 @@
 'use client'
 
-import { YStack, XStack, Text, ScrollView, Button, Input, Spinner, Select } from 'tamagui'
+import { YStack, XStack, Text, ScrollView, Button, Input, Spinner } from 'tamagui'
 import { useState, useEffect } from 'react'
 import { trpc } from '@lustre/api'
 import { useAuth } from '@lustre/app'
 import Link from 'next/link'
 
-interface Card {
-  id: string
-  last4: string
-  expiryMonth: number
-  expiryYear: number
-  isDefault: boolean
-}
 
 export default function TopupPage() {
   const { isAuthenticated } = useAuth()

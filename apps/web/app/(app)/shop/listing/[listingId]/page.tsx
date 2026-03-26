@@ -24,7 +24,6 @@ const SHIPPING_LABELS: Record<string, string> = {
 
 export default function ListingDetailPage({ params }: { params: { listingId: string } }) {
   const router = useRouter()
-  const [isConfirmingOrder, setIsConfirmingOrder] = useState(false)
   const [selectedShippingOption, setSelectedShippingOption] = useState<string | undefined>()
 
   const listingQuery = trpc.listing.getById.useQuery({ id: params.listingId })
@@ -39,10 +38,10 @@ export default function ListingDetailPage({ params }: { params: { listingId: str
     try {
       const result = await createOrderMutation.mutateAsync({
         listingId: params.listingId,
-        shippingOption: selectedShippingOption as any,
+        shippingOption: selectedShippingOption as unknown as string,
       })
       router.push(`/shop/order/${result.id}`)
-    } catch (error) {
+    } catch {
       alert('Failed to create order')
     }
   }

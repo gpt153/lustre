@@ -15,6 +15,6 @@ export { BottomSheetBase } from './BottomSheetBase'
 
 // Font exports
 export { generalSansFont, interFont } from './fonts'
-export { loadLustreFonts, useFonts } from './fonts/expo-loader'
-// Note: next/font loaders must be used directly in the Next.js app (apps/web/app/layout.tsx)
-// They cannot be re-exported from a shared package
+// Note: expo-font loaders must be imported directly from '@lustre/ui/src/fonts/expo-loader'
+// in the Expo app — they cannot be re-exported here as it breaks the Next.js web build.
+// Similarly, next/font loaders must be used directly in apps/web/app/layout.tsx.
