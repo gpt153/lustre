@@ -306,6 +306,21 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
 - **Mobile:** Mode toggle at `apps/mobile/app/(tabs)/profile/spicy-settings.tsx`
 - **Web:** Mode settings at `apps/web/app/(app)/settings/spicy/page.tsx`; mode badge in `settings/layout.tsx`; learn page gates spicy section via `isSpicy`
 
+## Admin Dashboard (F26-ADMIN-dashboard)
+- **Admin app:** Separate Next.js 15 app at `apps/admin/` — runs on port 3001, deployed at `admin.lovelustre.com`
+- **Auth:** Email/password login via `trpc.auth.loginWithEmail`; JWT stored in `localStorage('admin_token')`; `AdminGuard` redirects to `/login` if missing
+- **Admin identity:** Controlled by `ADMIN_USER_IDS` env var (comma-separated UUIDs) — no DB role; `adminProcedure` middleware in `services/api/src/trpc/middleware.ts` enforces this
+- **tRPC router:** `admin` namespace in `services/api/src/trpc/admin-router.ts`:
+  - User management: `searchUsers` (raw SQL, joins profiles), `getUser`, `suspendUser` (TEMP_BAN), `banUser` (PERMANENT_BAN)
+  - Moderation: `getReports`, `resolveReport`
+  - Analytics: `getOverview` (DAU/MAU/totalUsers/pendingReports), `getRegistrations`, `getGenderRatio`, `getRevenue`, `getAiCosts`
+- **Admin pages:** `/login`, `/users` (search + suspend/ban), `/users/[userId]` (detail + history), `/reports` (filter by status + resolve), `/analytics` (stats cards, tables, 7/30/90d selector)
+- **Admin seed:** `services/api/prisma/seed.ts` — seeds admin user via raw SQL (id `00000000-0000-0000-0000-000000000001`, email `admin@lovelustre.com`, password `admin123`)
+- **Umami analytics:** Self-hosted at `umami.lovelustre.com`; Helm chart at `infrastructure/helm/umami/`; tracking script in `apps/web/app/layout.tsx` (env: `NEXT_PUBLIC_UMAMI_URL`, `NEXT_PUBLIC_UMAMI_WEBSITE_ID`)
+- **Note:** `report-router.ts` uses `adminProcedure` from middleware (refactored from local `assertAdmin` helper in F26)
+- **Env vars required:**
+  - `ADMIN_USER_IDS` — comma-separated UUIDs of admin users
+
 ## Rules
 - All users verified via Swish 10 SEK + SPAR (Sweden); international expansion TBD
 - Real names NEVER shown in app — stored encrypted, released only via court order
