@@ -55,7 +55,7 @@ export async function creditTokens(
   prisma: PrismaClient,
   userId: string,
   amount: number,
-  type: 'GATEKEEPER' | 'TOPUP' | 'REFUND',
+  type: 'GATEKEEPER' | 'TOPUP' | 'REFUND' | 'REFERRAL',
   referenceId?: string,
 ): Promise<void> {
   await prisma.$transaction(async (tx) => {

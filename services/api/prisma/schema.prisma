@@ -63,6 +63,9 @@ model User {
   bannedUntil                DateTime?         @map("banned_until")
   reportsMade                Report[]          @relation("reportsMade")
   moderationActions          ModerationAction[] @relation("moderationActions")
+  inviteLinks                InviteLink[]
+  referralRewardsGiven       ReferralReward[]   @relation("ReferralGiven")
+  referralRewardsReceived    ReferralReward[]   @relation("ReferralReceived")
 
   @@map("users")
 }
@@ -1134,6 +1137,7 @@ enum TokenTransactionType {
   TOPUP
   REFUND
   COACH_SESSION
+  REFERRAL
 }
 
 enum MessageType {
@@ -1265,4 +1269,31 @@ model ModerationAction {
 
   @@index([userId, createdAt])
   @@map("moderation_actions")
+}
+
+model InviteLink {
+  id          String          @id @default(cuid())
+  code        String          @unique
+  referrerId  String          @map("referrer_id") @db.Uuid
+  referrer    User            @relation(fields: [referrerId], references: [id])
+  createdAt   DateTime        @default(now()) @map("created_at")
+  usedCount   Int             @default(0) @map("used_count")
+  rewards     ReferralReward[]
+
+  @@map("invite_links")
+}
+
+model ReferralReward {
+  id              String      @id @default(cuid())
+  inviteLinkId    String      @map("invite_link_id")
+  inviteLink      InviteLink  @relation(fields: [inviteLinkId], references: [id])
+  referrerId      String      @map("referrer_id") @db.Uuid
+  referrer        User        @relation("ReferralGiven", fields: [referrerId], references: [id])
+  refereeId       String      @map("referee_id") @db.Uuid
+  referee         User        @relation("ReferralReceived", fields: [refereeId], references: [id])
+  referrerTokens  Int         @map("referrer_tokens")
+  refereeTokens   Int         @map("referee_tokens")
+  createdAt       DateTime    @default(now()) @map("created_at")
+
+  @@map("referral_rewards")
 }

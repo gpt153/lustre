@@ -2,7 +2,11 @@
 
 import { useState, FormEvent } from 'react'
 
-export function WaitlistForm() {
+interface WaitlistFormProps {
+  mode?: 'vanilla' | 'spicy'
+}
+
+export function WaitlistForm({ mode = 'vanilla' }: WaitlistFormProps) {
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [position, setPosition] = useState<number | null>(null)
@@ -13,11 +17,21 @@ export function WaitlistForm() {
 
     setStatus('loading')
 
-    // For now, simulate the waitlist signup
-    // TODO: Replace with actual API endpoint
-    await new Promise(resolve => setTimeout(resolve, 800))
-    setPosition(Math.floor(Math.random() * 400) + 100)
-    setStatus('success')
+    try {
+      const res = await fetch('/api/waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, mode }),
+      })
+
+      if (!res.ok) throw new Error('Failed')
+
+      const data = await res.json()
+      setPosition(data.position)
+      setStatus('success')
+    } catch {
+      setStatus('error')
+    }
   }
 
   if (status === 'success') {
@@ -33,6 +47,18 @@ export function WaitlistForm() {
             Plats #{position} i kön
           </span>
         )}
+      </div>
+    )
+  }
+
+  if (status === 'error') {
+    return (
+      <div className="email-success">
+        <div className="email-success__title">Något gick fel.</div>
+        <div className="email-success__text">Försök igen om en stund.</div>
+        <button className="email-form__button" onClick={() => setStatus('idle')} style={{ marginTop: '1rem' }}>
+          Försök igen
+        </button>
       </div>
     )
   }

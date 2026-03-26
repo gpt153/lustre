@@ -35,6 +35,8 @@ import { segpayRouter } from './segpay-router.js'
 import { reportRouter } from './report-router.js'
 import { adminRouter } from './admin-router.js'
 import { settingsRouter } from './settings-router.js'
+import { migrationRouter } from './migration-router.js'
+import { inviteRouter } from './invite-router.js'
 
 const swishCallbackSchema = z.object({
   id: z.string(),
@@ -324,6 +326,8 @@ export const appRouter = router({
   segpay: segpayRouter,
   admin: adminRouter,
   settings: settingsRouter,
+  migration: migrationRouter,
+  invite: inviteRouter,
 })
 
 export type AppRouter = typeof appRouter
