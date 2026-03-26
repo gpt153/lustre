@@ -162,16 +162,15 @@ export default function DiscoverPage() {
           paddingVertical="$4"
         >
           {profileList.map((profile) => (
+            <Link key={profile.userId} href={`/profile/${profile.userId}`} style={{ textDecoration: 'none', display: 'block', minWidth: 250, maxWidth: 350, width: '100%' }}>
             <YStack
-              key={profile.userId}
-              width={{ '@sm': '100%', '@md': 'calc(50% - 8px)', '@lg': 'calc(33.333% - 11px)' }}
-              minWidth={250}
-              maxWidth={350}
+              width="100%"
               backgroundColor="$background"
               borderRadius="$4"
               overflow="hidden"
               borderWidth={1}
               borderColor="$borderColor"
+              hoverStyle={{ borderColor: '$primary', cursor: 'pointer' }}
             >
               {profile.photos.length > 0 ? (
                 <Image
@@ -212,7 +211,7 @@ export default function DiscoverPage() {
                     backgroundColor="$red9"
                     borderRadius="$3"
                     paddingVertical="$2"
-                    onPress={() => handleSwipe(profile.userId, 'PASS')}
+                    onPress={(e) => { e.preventDefault(); e.stopPropagation(); handleSwipe(profile.userId, 'PASS') }}
                     disabled={swipeMutation.isPending}
                   >
                     <Text color="white" fontWeight="600">Pass</Text>
@@ -222,7 +221,7 @@ export default function DiscoverPage() {
                     backgroundColor="$green9"
                     borderRadius="$3"
                     paddingVertical="$2"
-                    onPress={() => handleSwipe(profile.userId, 'LIKE')}
+                    onPress={(e) => { e.preventDefault(); e.stopPropagation(); handleSwipe(profile.userId, 'LIKE') }}
                     disabled={swipeMutation.isPending}
                   >
                     <Text color="white" fontWeight="600">Like</Text>
@@ -230,6 +229,7 @@ export default function DiscoverPage() {
                 </XStack>
               </YStack>
             </YStack>
+            </Link>
           ))}
         </XStack>
       )}

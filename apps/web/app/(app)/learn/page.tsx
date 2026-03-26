@@ -2,9 +2,11 @@
 
 import { YStack, XStack, Text, Spinner } from 'tamagui'
 import { trpc } from '@lustre/api'
+import { useMode } from '@lustre/app'
 import Link from 'next/link'
 
 export default function LearnPage() {
+  const { isSpicy } = useMode()
   const listQuery = trpc.module.list.useQuery()
   const streakQuery = trpc.gamification.getStreak.useQuery()
 
@@ -168,7 +170,7 @@ export default function LearnPage() {
 
         <XStack justifyContent="space-between" alignItems="center">
           <Text fontSize="$6" fontWeight="700" color="$text">
-            Learn — Social Skills
+            Lär — Sociala färdigheter
           </Text>
         </XStack>
 
@@ -236,7 +238,7 @@ export default function LearnPage() {
             {spicyModules.length > 0 && (
               <YStack gap="$3">
                 <Text fontSize="$5" fontWeight="700" color="$text">
-                  Spicy Modules 🌶️
+                  Spicy-moduler 🌶️
                 </Text>
                 <XStack flexWrap="wrap" gap="$4">
                   {spicyModules.map((module) => (
@@ -258,7 +260,7 @@ export default function LearnPage() {
               </YStack>
             )}
 
-            {spicyModules.length === 0 && (
+            {spicyModules.length === 0 && !isSpicy && (
               <YStack
                 alignItems="stretch"
                 padding="$4"
@@ -284,7 +286,7 @@ export default function LearnPage() {
                   <YStack flex={1} gap="$1">
                     <XStack alignItems="center" gap="$2">
                       <Text fontSize="$4" fontWeight="700" color="$text">
-                        Spicy Modules
+                        Spicy-moduler
                       </Text>
                       <YStack
                         backgroundColor="#DC2626"
@@ -298,7 +300,7 @@ export default function LearnPage() {
                       </YStack>
                     </XStack>
                     <Text fontSize="$3" color="$text" lineHeight={20}>
-                      Requires Spicy Mode + Module 6 completion
+                      Kräver Spicy-läge + slutförande av modul 6
                     </Text>
                   </YStack>
                 </XStack>
@@ -314,7 +316,7 @@ export default function LearnPage() {
                     hoverStyle={{ opacity: 0.9 }}
                   >
                     <Text fontSize="$3" fontWeight="700" color="white">
-                      Enable in Settings
+                      Aktivera i inställningar
                     </Text>
                   </YStack>
                 </Link>

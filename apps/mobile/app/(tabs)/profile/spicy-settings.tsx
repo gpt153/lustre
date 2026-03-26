@@ -1,32 +1,11 @@
-import { ScrollView, YStack, XStack, Text, Switch, Spinner } from 'tamagui'
+import { ScrollView, YStack, XStack, Text, Spinner } from 'tamagui'
 import { useProfile } from '@lustre/app/src/hooks/useProfile'
-import { useLearn } from '@lustre/app/src/hooks/useLearn'
-import { useState, useEffect } from 'react'
+import { useMode } from '@lustre/app'
+import { ModeToggle } from '@lustre/app'
 
 export default function SpicySettingsScreen() {
   const { profile, isLoading } = useProfile()
-  const { toggleSpicyMode } = useLearn()
-  const [enabled, setEnabled] = useState(false)
-  const [isToggling, setIsToggling] = useState(false)
-
-  useEffect(() => {
-    if (profile) {
-      setEnabled(profile.spicyModeEnabled ?? false)
-    }
-  }, [profile])
-
-  async function handleToggle(value: boolean) {
-    setIsToggling(true)
-    try {
-      await toggleSpicyMode(value)
-      setEnabled(value)
-    } catch (error) {
-      // Revert on error
-      setEnabled(!value)
-    } finally {
-      setIsToggling(false)
-    }
-  }
+  const { isSpicy } = useMode()
 
   if (isLoading) {
     return (
@@ -68,39 +47,32 @@ export default function SpicySettingsScreen() {
             padding="$4"
             gap="$3"
           >
-            <YStack gap="$1">
-              <XStack alignItems="center" justifyContent="space-between" gap="$3">
-                <YStack flex={1} gap="$1">
-                  <XStack alignItems="center" gap="$2">
-                    <Text fontSize={16} fontWeight="700" color="$color">
-                      Spicy Mode
-                    </Text>
-                    <XStack
-                      backgroundColor="$red8"
-                      borderRadius={12}
-                      paddingHorizontal="$2"
-                      paddingVertical={2}
-                    >
-                      <Text fontSize={10} fontWeight="700" color="white">
-                        18+
-                      </Text>
-                    </XStack>
-                  </XStack>
-                  <Text fontSize={13} color="$gray10">
-                    Få tillgång till vuxencoachningsmoduler
+            <YStack gap="$2">
+              <YStack gap="$2">
+                <XStack alignItems="center" gap="$2">
+                  <Text fontSize={16} fontWeight="700" color="$color">
+                    Välj läge
                   </Text>
-                </YStack>
+                  <XStack
+                    backgroundColor="$red8"
+                    borderRadius={12}
+                    paddingHorizontal="$2"
+                    paddingVertical={2}
+                  >
+                    <Text fontSize={10} fontWeight="700" color="white">
+                      18+
+                    </Text>
+                  </XStack>
+                </XStack>
+                <Text fontSize={13} color="$gray10">
+                  Spicy Mode ger tillgång till vuxencoachningsmoduler
+                </Text>
+              </YStack>
 
-                <Switch
-                  size="$3"
-                  checked={enabled}
-                  onCheckedChange={handleToggle}
-                  disabled={isToggling}
-                />
-              </XStack>
+              <ModeToggle />
             </YStack>
 
-            {enabled && (
+            {isSpicy && (
               <YStack
                 backgroundColor="$yellow2"
                 borderRadius="$3"
@@ -109,7 +81,7 @@ export default function SpicySettingsScreen() {
                 borderColor="$yellow6"
               >
                 <Text fontSize={12} color="$yellow11" lineHeight={16}>
-                  ⚠️ Spicy Mode innehåller innehål för vuxna (18+). Du måste ha slutfört modul 6 för att komma åt spicy-modul.
+                  ⚠️ Spicy Mode innehåller innehål för vuxna (18+). Du måste ha slutfört modul 6 för att komma åt spicy-moduler.
                 </Text>
               </YStack>
             )}

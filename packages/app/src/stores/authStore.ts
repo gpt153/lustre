@@ -10,12 +10,14 @@ interface AuthState {
   needsPayment: boolean
   needsDisplayName: boolean
   tempRegistrationToken: string | null
+  _hasHydrated: boolean
   setTokens: (access: string, refresh: string) => void
   setUser: (userId: string, displayName: string | null) => void
   setNeedsPayment: (v: boolean) => void
   setNeedsDisplayName: (v: boolean) => void
   setTempRegistrationToken: (token: string | null) => void
   logout: () => void
+  setHasHydrated: (v: boolean) => void
 }
 
 const storage =
@@ -34,6 +36,7 @@ export const useAuthStore = create<AuthState>()(
       needsPayment: false,
       needsDisplayName: false,
       tempRegistrationToken: null,
+      _hasHydrated: false,
       setTokens: (access, refresh) =>
         set({
           accessToken: access,
@@ -49,6 +52,7 @@ export const useAuthStore = create<AuthState>()(
       setNeedsPayment: (v) => set({ needsPayment: v }),
       setNeedsDisplayName: (v) => set({ needsDisplayName: v }),
       setTempRegistrationToken: (token) => set({ tempRegistrationToken: token }),
+      setHasHydrated: (v) => set({ _hasHydrated: v }),
       logout: () =>
         set({
           accessToken: null,
@@ -76,6 +80,9 @@ export const useAuthStore = create<AuthState>()(
         isAuthenticated: state.isAuthenticated,
         tempRegistrationToken: state.tempRegistrationToken,
       }),
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true)
+      },
     }
   )
 )

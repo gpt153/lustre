@@ -3,13 +3,16 @@
 import { YStack, XStack, Text } from 'tamagui'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useModeStore } from '@lustre/app'
 
 export default function SettingsLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
+  const mode = useModeStore((state) => state.mode)
+  const modeEmoji = mode === 'spicy' ? '🌶️' : '🌿'
 
   const settingsLinks = [
     { href: '/settings/gatekeeper', label: 'Gatekeeper' },
-    { href: '/settings/spicy', label: 'Spicy Mode 🌶️' },
+    { href: '/settings/spicy', label: `${modeEmoji} Läge` },
   ]
 
   return (

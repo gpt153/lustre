@@ -1,38 +1,16 @@
 'use client'
 
-import { YStack, XStack, Text, Switch, Label, Spinner, ScrollView } from 'tamagui'
-import { trpc } from '@lustre/api'
-import { useState } from 'react'
+import { YStack, XStack, Text, Spinner, ScrollView } from 'tamagui'
+import { useMode } from '@lustre/app'
+import { ModeToggle } from '@lustre/app'
 
 export default function SpicySettingsPage() {
-  const profileQuery = trpc.profile.get.useQuery()
-  const toggleSpicyModeMutation = trpc.profile.toggleSpicyMode.useMutation()
-  const [isToggling, setIsToggling] = useState(false)
+  const { mode, isSpicy, isLoading } = useMode()
 
-  const handleToggle = async (enabled: boolean) => {
-    setIsToggling(true)
-    try {
-      await toggleSpicyModeMutation.mutateAsync({ enabled })
-    } finally {
-      setIsToggling(false)
-    }
-  }
-
-  if (profileQuery.isLoading) {
+  if (isLoading) {
     return (
       <YStack padding="$4" alignItems="center">
         <Spinner color="$primary" />
-      </YStack>
-    )
-  }
-
-  const profile = profileQuery.data
-  if (!profile) {
-    return (
-      <YStack padding="$4" alignItems="center">
-        <Text color="$textSecondary" fontSize="$4">
-          Profile not found.
-        </Text>
       </YStack>
     )
   }
@@ -42,10 +20,10 @@ export default function SpicySettingsPage() {
       <YStack padding="$4" gap="$6">
         <YStack gap="$2">
           <Text fontSize="$6" fontWeight="700" color="$text">
-            Spicy Mode 🌶️
+            Läge 🌶️
           </Text>
           <Text fontSize="$3" color="$textSecondary">
-            Access adult coaching modules (18+). Requires completion of vanilla module 6.
+            Få tillgång till vuxenmoduler (18+). Kräver slutförande av vaniljmodul 6.
           </Text>
         </YStack>
 
@@ -57,21 +35,9 @@ export default function SpicySettingsPage() {
           borderColor="$borderColor"
           padding="$4"
         >
-          <XStack justifyContent="space-between" alignItems="center">
-            <Label htmlFor="spicy-toggle" color="$text" fontSize="$4" fontWeight="600">
-              Enable Spicy Mode
-            </Label>
-            <Switch
-              id="spicy-toggle"
-              checked={profile.spicyModeEnabled ?? false}
-              onCheckedChange={handleToggle}
-              disabled={isToggling}
-            >
-              <Switch.Thumb animation="quick" />
-            </Switch>
-          </XStack>
+          <ModeToggle />
 
-          {profile.spicyModeEnabled && (
+          {isSpicy && (
             <YStack
               backgroundColor="#E0F2FE"
               borderRadius="$2"
@@ -80,12 +46,12 @@ export default function SpicySettingsPage() {
               borderColor="#BAE6FD"
             >
               <Text fontSize="$2" color="#0369A1" fontWeight="500">
-                ✓ Spicy Mode is enabled. You can now access spicy coaching modules.
+                ✓ Spicy-läge är aktiverat. Du kan nu öppna spicy-moduler.
               </Text>
             </YStack>
           )}
 
-          {!profile.spicyModeEnabled && (
+          {!isSpicy && (
             <YStack
               backgroundColor="#FEF2F2"
               borderRadius="$2"
@@ -94,7 +60,7 @@ export default function SpicySettingsPage() {
               borderColor="#FECACA"
             >
               <Text fontSize="$2" color="#DC2626" fontWeight="500">
-                Spicy modules are locked. Enable Spicy Mode to access them.
+                Spicy-moduler är låsta. Aktivera Spicy-läge för att öppna dem.
               </Text>
             </YStack>
           )}
@@ -107,10 +73,10 @@ export default function SpicySettingsPage() {
           gap="$2"
         >
           <Text fontSize="$3" fontWeight="700" color="$text">
-            ℹ️ About Spicy Mode
+            ℹ️ Om Spicy-läge
           </Text>
           <Text fontSize="$2" color="$textSecondary" lineHeight={18}>
-            Spicy Mode unlocks advanced coaching modules designed for adults 18+. These modules cover mature topics in relationships and sexuality. You must complete vanilla module 6 before accessing spicy content.
+            Spicy-läge låser upp avancerade coachingmoduler designade för vuxna 18+. Dessa moduler täcker mogna ämnen inom relationer och sexualitet. Du måste slutföra vaniljmodul 6 innan du får tillgång till spicy-innehål.
           </Text>
         </YStack>
       </YStack>

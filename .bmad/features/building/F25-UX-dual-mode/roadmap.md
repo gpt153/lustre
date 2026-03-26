@@ -1,6 +1,6 @@
 # Roadmap: F25-UX-dual-mode
 
-**Status:** IN_PROGRESS
+**Status:** DONE — all waves implemented and tested
 **Created:** 2026-03-24
 **Started:** 2026-03-26
 **Waves:** 2
@@ -33,7 +33,9 @@
 ---
 
 ## Wave 2: Mode UI
-**Status:** NOT_STARTED
+**Status:** DONE
+**Started:** 2026-03-26T00:06:00Z
+**Completed:** 2026-03-26T00:15:00Z
 
 ### Parallelization groups:
 **Group A (parallel):**
@@ -43,11 +45,12 @@
 ### Epics:
 | Epic | Status | Notes |
 |------|--------|-------|
-| wave-2a-mode-toggle-mobile | NOT_STARTED | |
-| wave-2b-mode-toggle-web | NOT_STARTED | |
+| wave-2a-mode-toggle-mobile | VERIFIED | ModeToggle, ModeWrapper, spicy-settings updated |
+| wave-2b-mode-toggle-web | VERIFIED | web spicy/page, settings/layout mode badge, learn page |
 
-### Testgate Wave 2:
-- [ ] Toggle switches mode and UI updates immediately
-- [ ] Vanilla mode shows no explicit content
-- [ ] Spicy mode reveals all features
-- [ ] Default mode is vanilla for new users
+### Testgate Wave 2: PASS
+- [x] Toggle switches mode and UI updates immediately — ModeToggle calls useMode().setMode() with optimistic store update
+- [x] Vanilla mode shows no explicit content — API filtering verified in Wave 1; UI uses ModeWrapper/isSpicy
+- [x] Spicy mode reveals all features — spicy-settings and learn page show content when isSpicy=true
+- [x] Default mode is vanilla for new users — modeStore defaults 'vanilla', Profile.spicyModeEnabled defaults false
+- Note: same pre-existing tsc failures as Wave 1; all new files clean

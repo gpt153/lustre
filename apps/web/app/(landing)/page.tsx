@@ -14,26 +14,27 @@ type Mode = 'vanilla' | 'spicy'
 
 const content = {
   vanilla: {
-    heroTitle: 'Dejting designat för dig som',
-    heroGradient: 'förtjänar bättre.',
+    tagline: 'Never lack Lustre.',
+    heroTitle: 'Dejting, community och mer',
+    heroGradient: '\u2014 allt i en app.',
     heroSubtitle:
-      'En plattform där varje meddelande är relevant, varje möte är tryggt, och ingen behöver skämmas för vad de vill ha.',
+      'En plattform där varje meddelande \u00e4r relevant, varje m\u00f6te \u00e4r tryggt, och ingen beh\u00f6ver sk\u00e4mmas f\u00f6r vad de vill ha.',
 
     problems: [
       {
         number: '200',
         text: 'meddelanden. 3 relevanta.',
-        subtext: 'Du förtjänar bättre än att gräva efter nålen i höstacken.',
+        subtext: 'Du f\u00f6rtj\u00e4nar b\u00e4ttre \u00e4n att gr\u00e4va efter n\u00e5len i h\u00f6stacken.',
       },
       {
         number: '0',
         text: 'verifierade. Alla anonyma.',
-        subtext: 'Vi vände på det. Alla verifierade. Helt anonyma.',
+        subtext: 'Vi v\u00e4nde p\u00e5 det. Alla verifierade. Helt anonyma.',
       },
       {
-        number: '1998',
-        text: 'Då byggdes plattformarna du använder idag.',
-        subtext: 'Din telefon hade inte ens kamera då.',
+        number: '5',
+        text: 'appar. Noll sammanhang.',
+        subtext: 'En f\u00f6r dejting. En f\u00f6r kink. En f\u00f6r events. En f\u00f6r community. Ingen som g\u00f6r allt.',
       },
     ],
 
@@ -114,26 +115,27 @@ const content = {
   },
 
   spicy: {
-    heroTitle: 'Sluta gömma halva dig.',
-    heroGradient: 'Hela du är välkommen.',
+    tagline: 'Never lack Lustre.',
+    heroTitle: 'Sluta g\u00f6mma halva dig.',
+    heroGradient: 'Hela du \u00e4r v\u00e4lkommen.',
     heroSubtitle:
-      'En plattform för dig som vet vad du vill \u2014 och vill hitta andra som vill samma sak. Utan ursäkter. Utan skam. Med fullständig kontroll.',
+      'En plattform f\u00f6r dig som vet vad du vill \u2014 och vill hitta andra som vill samma sak. Utan urs\u00e4kter. Utan skam. Med fullst\u00e4ndig kontroll.',
 
     problems: [
       {
         number: '\u221E',
-        text: 'ställen att gömma sig. Noll att vara öppen.',
-        subtext: 'Tinder förstår dig inte. FetLife är dött. Bodycontact är från förra millenniet.',
+        text: 'st\u00e4llen att g\u00f6mma sig. Noll att vara \u00f6ppen.',
+        subtext: 'Feeld har knappt anv\u00e4ndare i Sverige. FetLife \u00e4r d\u00f6tt. Du f\u00f6rtj\u00e4nar en riktig plattform.',
       },
       {
         number: '75%',
-        text: 'män på varje plattform. Kvinnor lämnar.',
-        subtext: 'Inte för att intresset saknas. För att upplevelsen är skit.',
+        text: 'm\u00e4n p\u00e5 varje plattform. Kvinnor l\u00e4mnar.',
+        subtext: 'Inte f\u00f6r att intresset saknas. F\u00f6r att upplevelsen \u00e4r skit.',
       },
       {
         number: '0',
-        text: 'plattformar som tar consent på allvar.',
-        subtext: 'Vi byggde consent-verktyg som skyddar er båda. Inte bara i chatten \u2014 i sovrummet.',
+        text: 'plattformar som tar consent p\u00e5 allvar.',
+        subtext: 'Vi byggde consent-verktyg som skyddar er b\u00e5da. Inte bara i chatten \u2014 i sovrummet.',
       },
     ],
 
@@ -283,6 +285,8 @@ export default function LandingPage() {
         {/* ═══ HERO ═══ */}
         <section className="hero">
           <div className="hero__logo">Lustre</div>
+
+          <div className="hero__tagline">{c.tagline}</div>
 
           <h1 className="hero__title" key={`title-${mode}`}>
             {c.heroTitle}{' '}
