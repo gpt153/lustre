@@ -5,43 +5,51 @@ import { YStack, XStack, Text, Button, Spinner, Image } from 'tamagui'
 import { trpc } from '@lustre/api'
 
 function DiscoverNav({ active }: { active: 'discover' | 'search' | 'matches' }) {
+  const navTabStyle: React.CSSProperties = {
+    paddingBottom: '12px',
+    borderBottom: '2px solid transparent',
+    cursor: 'pointer',
+  }
+
+  const activeTabStyle: React.CSSProperties = {
+    ...navTabStyle,
+    color: '#D4A843',
+    borderBottomColor: '#B87333',
+  }
+
+  const inactiveTabStyle: React.CSSProperties = {
+    ...navTabStyle,
+    color: '#8B7E74',
+  }
+
   return (
-    <XStack gap="$2" marginBottom="$4" borderBottomWidth={1} borderBottomColor="$borderColor">
+    <XStack marginBottom="$4" borderBottomWidth={1} borderBottomColor="#C4956A">
       <Link href="/discover" style={{ textDecoration: 'none' }}>
-        <Button
-          theme={active === 'discover' ? 'primary' : undefined}
-          chromeless={active !== 'discover'}
-          paddingHorizontal="$3"
-          paddingVertical="$2"
+        <Text
+          fontWeight="600"
+          fontSize="$4"
+          style={active === 'discover' ? activeTabStyle : inactiveTabStyle}
         >
-          <Text fontWeight={active === 'discover' ? '600' : '400'} color={active === 'discover' ? '$primary' : '$textSecondary'}>
-            Discover
-          </Text>
-        </Button>
+          Discover
+        </Text>
       </Link>
-      <Link href="/discover/search" style={{ textDecoration: 'none' }}>
-        <Button
-          theme={active === 'search' ? 'primary' : undefined}
-          chromeless={active !== 'search'}
-          paddingHorizontal="$3"
-          paddingVertical="$2"
+      <Link href="/discover/search" style={{ textDecoration: 'none', marginLeft: 24 }}>
+        <Text
+          fontWeight="600"
+          fontSize="$4"
+          style={active === 'search' ? activeTabStyle : inactiveTabStyle}
         >
-          <Text fontWeight={active === 'search' ? '600' : '400'} color={active === 'search' ? '$primary' : '$textSecondary'}>
-            Search
-          </Text>
-        </Button>
+          Search
+        </Text>
       </Link>
-      <Link href="/discover/matches" style={{ textDecoration: 'none' }}>
-        <Button
-          theme={active === 'matches' ? 'primary' : undefined}
-          chromeless={active !== 'matches'}
-          paddingHorizontal="$3"
-          paddingVertical="$2"
+      <Link href="/discover/matches" style={{ textDecoration: 'none', marginLeft: 24 }}>
+        <Text
+          fontWeight="600"
+          fontSize="$4"
+          style={active === 'matches' ? activeTabStyle : inactiveTabStyle}
         >
-          <Text fontWeight={active === 'matches' ? '600' : '400'} color={active === 'matches' ? '$primary' : '$textSecondary'}>
-            Matches
-          </Text>
-        </Button>
+          Matches
+        </Text>
       </Link>
     </XStack>
   )
@@ -73,7 +81,7 @@ export default function MatchesPage() {
 
       {matchList.length === 0 ? (
         <YStack alignItems="center" justifyContent="center" padding="$6" minHeight="60vh">
-          <Text color="$textSecondary" fontSize="$4">No matches yet</Text>
+          <Text color="#8B7E74" fontSize="$4">No matches yet</Text>
         </YStack>
       ) : (
         <XStack
@@ -90,35 +98,53 @@ export default function MatchesPage() {
                 width={{ '@sm': '100%', '@md': 'calc(50% - 8px)', '@lg': 'calc(33.333% - 11px)' }}
                 minWidth={250}
                 maxWidth={350}
-                backgroundColor="$background"
-                borderRadius="$4"
+                backgroundColor="#FDF8F3"
+                borderRadius={16}
                 overflow="hidden"
-                borderWidth={1}
-                borderColor="$borderColor"
+                style={{
+                  boxShadow: '0 2px 8px rgba(184, 115, 51, 0.15)',
+                }}
               >
                 {profile.photos.length > 0 ? (
-                  <Image
-                    source={{ uri: profile.photos[0].thumbnailLarge || profile.photos[0].url }}
-                    width="100%"
-                    height={400}
-                    objectFit="cover"
-                  />
+                  <YStack position="relative" width="100%" height={400}>
+                    <Image
+                      source={{ uri: profile.photos[0].thumbnailLarge || profile.photos[0].url }}
+                      width="100%"
+                      height={400}
+                      objectFit="cover"
+                    />
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        background: 'linear-gradient(transparent 60%, rgba(44,36,33,0.8) 100%)',
+                      }}
+                    />
+                    <YStack
+                      position="absolute"
+                      bottom={0}
+                      left={0}
+                      right={0}
+                      padding="$3"
+                    >
+                      <Text fontSize="$4" fontWeight="600" color="white">
+                        {profile.displayName}, {profile.age}
+                      </Text>
+                    </YStack>
+                  </YStack>
                 ) : (
-                  <YStack width="100%" height={400} backgroundColor="$gray5" alignItems="center" justifyContent="center">
-                    <Text color="$textSecondary">No photo</Text>
+                  <YStack width="100%" height={400} backgroundColor="#F5EDE4" alignItems="center" justifyContent="center">
+                    <Text color="#8B7E74">No photo</Text>
                   </YStack>
                 )}
 
                 <YStack padding="$3" gap="$2">
-                  <XStack alignItems="center" gap="$2">
-                    <Text fontSize="$4" fontWeight="600" color="$text">
-                      {profile.displayName}, {profile.age}
-                    </Text>
-                  </XStack>
-
                   {profile.bio && (
                     <Text
-                      color="$textSecondary"
+                      color="#8B7E74"
                       fontSize="$2"
                       numberOfLines={2}
                     >
@@ -126,13 +152,13 @@ export default function MatchesPage() {
                     </Text>
                   )}
 
-                  <Text color="$textSecondary" fontSize="$1">
+                  <Text color="#C4956A" fontSize="$1">
                     Matched {formatDate(match.createdAt)}
                   </Text>
 
                   <Button
-                    backgroundColor="$primary"
-                    borderRadius="$3"
+                    backgroundColor="#B87333"
+                    borderRadius={8}
                     paddingVertical="$2"
                   >
                     <Text color="white" fontWeight="600">View Profile</Text>

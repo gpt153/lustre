@@ -76,7 +76,11 @@
 ---
 
 ## Wave 4: Discover Screen Redesign
-**Status:** NOT_STARTED
+**Status:** DONE
+**Started:** 2026-03-26
+**Completed:** 2026-03-26
+**Epics:** 4a VERIFIED, 4b VERIFIED
+**Learnings:** @tamagui/linear-gradient works for SwipeCard gradient overlay on RN. Web uses raw CSS linear-gradient div. Tamagui hoverStyle needs Tamagui props (backgroundColor), not CSS style objects.
 
 ### Parallelization groups:
 **Group A (sequential):**
@@ -84,13 +88,13 @@
 - wave-4b-discover-web (haiku) — Update web discover page to match new card styling. Gradient overlay on profile images, copper-tinted action buttons, warm backgrounds. Like/Pass circles with copper border, gold fill on hover/press.
 
 ### Testgate Wave 4:
-- [ ] Swipe cards use Reanimated 3 (no Animated.ValueXY references remain)
-- [ ] Card rotation reaches +/-15 degrees at full swipe
-- [ ] Snap-back animation uses spring physics (not linear/bezier)
-- [ ] Fly-off animation completes in approximately 200ms
-- [ ] Like/Nope stamp overlays appear during swipe with glow
-- [ ] Stacked cards behind current card are visible at reduced scale
-- [ ] Web discover page shows gradient overlay on profile images
+- [x] Swipe cards use Reanimated 3 (no Animated.ValueXY references remain)
+- [x] Card rotation reaches +/-15 degrees at full swipe
+- [x] Snap-back animation uses spring physics (not linear/bezier)
+- [x] Fly-off animation completes in approximately 200ms
+- [x] Like/Nope stamp overlays appear during swipe with glow
+- [x] Stacked cards behind current card are visible at reduced scale
+- [x] Web discover page shows gradient overlay on profile images
 
 ---
 
