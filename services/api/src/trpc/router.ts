@@ -28,6 +28,8 @@ import { coachRouter } from './coach-router.js'
 import { moduleRouter } from './module-router.js'
 import { gamificationRouter } from './gamification-router.js'
 import { educationRouter } from './education-router.js'
+import { listingRouter } from './listing-router.js'
+import { orderRouter } from './order-router.js'
 
 export const appRouter = router({
   health: {
@@ -193,6 +195,8 @@ export const appRouter = router({
   module: moduleRouter,
   gamification: gamificationRouter,
   education: educationRouter,
+  listing: listingRouter,
+  order: orderRouter,
 })
 
 export type AppRouter = typeof appRouter

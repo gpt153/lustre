@@ -18,6 +18,7 @@ import { startChatConsumer } from './lib/chat-consumer.js'
 import { startPostEventConsumer } from './lib/post-event-consumer.js'
 import { startEventCompletedConsumer } from './lib/event-completed-consumer.js'
 import { startEscalationService } from './lib/safedate-escalation.js'
+import { autoConfirmOrders } from './lib/marketplace.js'
 import { callRoutes } from './routes/call.js'
 import { coachRoutes } from './routes/coach.js'
 import { consentRoutes } from './routes/consent.js'
@@ -389,6 +390,12 @@ async function start() {
   })
 
   startEscalationService()
+
+  setInterval(() => {
+    autoConfirmOrders(prisma).catch((err) => {
+      server.log.error('Failed to auto-confirm orders:', err)
+    })
+  }, 60 * 60 * 1000)
 
   await server.register(callRoutes)
   await server.register(coachRoutes)
