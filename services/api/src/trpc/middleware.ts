@@ -26,3 +26,17 @@ const isAuthenticatedMiddleware = t.middleware(({ ctx, next }) => {
 })
 
 export const protectedProcedure = t.procedure.use(isAuthenticatedMiddleware)
+
+const ADMIN_USER_IDS = (process.env.ADMIN_USER_IDS ?? '').split(',').filter(Boolean)
+
+const isAdminMiddleware = t.middleware(({ ctx, next }) => {
+  if (!ctx.userId || !ADMIN_USER_IDS.includes(ctx.userId)) {
+    throw new TRPCError({
+      code: 'FORBIDDEN',
+      message: 'Admin access required',
+    })
+  }
+  return next({ ctx })
+})
+
+export const adminProcedure = t.procedure.use(isAuthenticatedMiddleware).use(isAdminMiddleware)

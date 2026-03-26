@@ -1,15 +1,7 @@
 import { z } from 'zod'
 import { TRPCError } from '@trpc/server'
-import { router, protectedProcedure } from './middleware.js'
+import { router, protectedProcedure, adminProcedure } from './middleware.js'
 import { ReportTargetType, ReportCategory, ReportStatus, ModerationActionType } from '@prisma/client'
-
-const ADMIN_USER_IDS = (process.env.ADMIN_USER_IDS ?? '').split(',').filter(Boolean)
-
-function assertAdmin(userId: string) {
-  if (!ADMIN_USER_IDS.includes(userId)) {
-    throw new TRPCError({ code: 'FORBIDDEN', message: 'Admin access required' })
-  }
-}
 
 export const reportRouter = router({
   create: protectedProcedure
@@ -39,14 +31,13 @@ export const reportRouter = router({
       return { id: report.id }
     }),
 
-  list: protectedProcedure
+  list: adminProcedure
     .input(z.object({
       status: z.nativeEnum(ReportStatus).optional(),
       cursor: z.string().uuid().optional(),
       limit: z.number().min(1).max(100).default(20),
     }))
     .query(async ({ ctx, input }) => {
-      assertAdmin(ctx.userId)
       const reports = await ctx.prisma.report.findMany({
         where: input.status ? { status: input.status } : undefined,
         take: input.limit + 1,
@@ -63,13 +54,12 @@ export const reportRouter = router({
       return { reports, nextCursor }
     }),
 
-  resolve: protectedProcedure
+  resolve: adminProcedure
     .input(z.object({
       reportId: z.string().uuid(),
       status: z.enum(['REVIEWED', 'DISMISSED']),
     }))
     .mutation(async ({ ctx, input }) => {
-      assertAdmin(ctx.userId)
       const report = await ctx.prisma.report.update({
         where: { id: input.reportId },
         data: {
@@ -81,10 +71,9 @@ export const reportRouter = router({
       return report
     }),
 
-  getContext: protectedProcedure
+  getContext: adminProcedure
     .input(z.object({ reportId: z.string().uuid() }))
     .query(async ({ ctx, input }) => {
-      assertAdmin(ctx.userId)
       const report = await ctx.prisma.report.findUniqueOrThrow({
         where: { id: input.reportId },
         include: { reporter: { select: { id: true } } },
@@ -133,7 +122,7 @@ export const reportRouter = router({
       return { report, context }
     }),
 
-  takeAction: protectedProcedure
+  takeAction: adminProcedure
     .input(z.object({
       userId: z.string().uuid(),
       actionType: z.nativeEnum(ModerationActionType),
@@ -141,8 +130,6 @@ export const reportRouter = router({
       durationDays: z.number().min(1).max(365).optional(),
     }))
     .mutation(async ({ ctx, input }) => {
-      assertAdmin(ctx.userId)
-
       const action = await ctx.prisma.moderationAction.create({
         data: {
           userId: input.userId,

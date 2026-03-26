@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client'
+import { hashPassword } from '../src/auth/email.js'
 
 const prisma = new PrismaClient()
 
@@ -1358,6 +1359,27 @@ async function main() {
   }
 
   console.log(`Seeded ${educationTopics.length} education topics`)
+
+  await seedAdminUser()
+}
+
+async function seedAdminUser() {
+  const passwordHash = await hashPassword('admin123')
+  // Use raw SQL because schema.prisma is behind the F30 auth migration
+  // (email/password_hash added, personnummer_hash dropped)
+  await prisma.$executeRaw`
+    INSERT INTO users (id, email, password_hash, status, created_at, updated_at)
+    VALUES (
+      '00000000-0000-0000-0000-000000000001',
+      'admin@lovelustre.com',
+      ${passwordHash},
+      'ACTIVE',
+      NOW(),
+      NOW()
+    )
+    ON CONFLICT (id) DO NOTHING
+  `
+  console.log('Admin user seeded: 00000000-0000-0000-0000-000000000001')
 }
 
 main()
