@@ -1,36 +1,22 @@
 import { createTamagui } from 'tamagui'
-import { createInterFont } from '@tamagui/font-inter'
 import { shorthands } from '@tamagui/shorthands'
-import { themes, tokens as defaultTokens } from '@tamagui/themes'
+import { tokens as defaultTokens } from '@tamagui/themes'
+import { lustreThemes } from './themes'
+import { lustreColorTokens, lustreShadowTokens } from './tokens'
+import { generalSansFont, interFont } from './fonts'
 
-const headingFont = createInterFont({
-  size: { 1: 12, 2: 14, 3: 16, 4: 20, 5: 24, 6: 32, 7: 40, 8: 48 },
-  weight: { 4: '400', 6: '600', 7: '700' },
-})
+const headingFont = generalSansFont
+const bodyFont = interFont
 
-const bodyFont = createInterFont({
-  size: { 1: 12, 2: 14, 3: 16, 4: 18 },
-  weight: { 4: '400', 5: '500', 6: '600' },
-})
-
-const lustreTokens = {
+const tokens = {
   ...defaultTokens,
   color: {
     ...defaultTokens.color,
-    primary: '#E91E63',
-    primaryDark: '#C2185B',
-    primaryLight: '#F48FB1',
-    secondary: '#7C4DFF',
-    secondaryDark: '#651FFF',
-    secondaryLight: '#B388FF',
-    background: '#FFFFFF',
-    backgroundDark: '#121212',
-    surface: '#F5F5F5',
-    surfaceDark: '#1E1E1E',
-    text: '#212121',
-    textDark: '#FAFAFA',
-    textSecondary: '#757575',
-    textSecondaryDark: '#BDBDBD',
+    ...lustreColorTokens,
+  },
+  shadows: {
+    ...defaultTokens.shadows,
+    ...lustreShadowTokens,
   },
 }
 
@@ -40,8 +26,8 @@ export const config = createTamagui({
     heading: headingFont,
     body: bodyFont,
   },
-  themes,
-  tokens: lustreTokens,
+  themes: lustreThemes,
+  tokens,
   shorthands,
   shouldAddPrefersColorThemes: true,
   themeClassNameOnRoot: true,

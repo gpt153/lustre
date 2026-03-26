@@ -11,6 +11,8 @@
     "@tamagui/config": "^1.114",
     "@tamagui/font-inter": "^1.114",
     "@tamagui/shorthands": "^1.114",
+    "@fontsource/inter": "^5.1",
+    "@fontsource-variable/general-sans": "^5.1",
     "react": "^18.3"
   },
   "devDependencies": {
