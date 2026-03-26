@@ -5,9 +5,13 @@ export type { LustreColorTokens, LustreShadowTokens, LustreTokens } from './toke
 export { lustreThemes } from './themes'
 export type { LustreTheme } from './themes'
 export { LustreButton } from './LustreButton'
+export { LustreInput } from './LustreInput'
 export { LogoBrand } from './LogoBrand'
 export { LustreLogo } from './LustreLogo'
 export type { LustreLogoProps } from './LustreLogo'
+export { CardBase } from './CardBase'
+export { ModalBase } from './ModalBase'
+export { BottomSheetBase } from './BottomSheetBase'
 
 // Font exports
 export { generalSansFont, interFont } from './fonts'

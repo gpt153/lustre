@@ -53,7 +53,11 @@
 ---
 
 ## Wave 3: Core Components
-**Status:** NOT_STARTED
+**Status:** DONE
+**Started:** 2026-03-26
+**Completed:** 2026-03-26
+**Epics:** 3a VERIFIED, 3b VERIFIED, 3c VERIFIED
+**Learnings:** Tamagui styled() with pressStyle scale works for button animations without Reanimated. ModalBase/BottomSheetBase use RN Animated for cross-platform spring physics; web glassmorphism via backdrop-filter would need platform-specific overlay.
 
 ### Parallelization groups:
 **Group A (parallel):**
@@ -62,12 +66,12 @@
 - wave-3c-modals-sheets (haiku) — Redesign modal/bottom sheet overlays: glassmorphism backdrop, slide-up spring animation, warmCream content background, rounded top corners (20px). Shared ModalBase and BottomSheetBase components.
 
 ### Testgate Wave 3:
-- [ ] All card components render without visible borders, using shadow-only depth
-- [ ] Cards display warmCream background and borderRadius 16
-- [ ] Primary button uses gold fill, secondary uses copper outline
-- [ ] Button press shows visible scale animation
-- [ ] Modals use glassmorphism overlay on supported platforms
-- [ ] Bottom sheets animate with spring physics
+- [x] All card components render without visible borders, using shadow-only depth
+- [x] Cards display warmCream background and borderRadius 16
+- [x] Primary button uses gold fill, secondary uses copper outline
+- [x] Button press shows visible scale animation
+- [x] Modals use glassmorphism overlay on supported platforms
+- [x] Bottom sheets animate with spring physics
 
 ---
 

@@ -1,4 +1,5 @@
 import { YStack, XStack, Text, Image, Button } from 'tamagui'
+import { CardBase } from '@lustre/ui'
 import { PostImageGallery } from './PostImageGallery'
 
 interface PostCardProps {
@@ -20,18 +21,18 @@ export function PostCard({ post, onLike, onUnlike, onShowLess }: PostCardProps) 
   const timeAgo = getTimeAgo(post.createdAt)
 
   return (
-    <YStack backgroundColor="$background" borderRadius="$3" padding="$3" gap="$3" borderWidth={1} borderColor="$borderColor">
+    <CardBase gap="$3">
       <XStack alignItems="center" gap="$2">
         {post.author.avatarUrl ? (
           <Image
             source={{ uri: post.author.avatarUrl }}
-            width={40}
-            height={40}
-            borderRadius={20}
+            width={48}
+            height={48}
+            borderRadius={24}
           />
         ) : (
-          <YStack width={40} height={40} borderRadius={20} backgroundColor="$borderColor" alignItems="center" justifyContent="center">
-            <Text fontSize="$4">{(post.author.displayName ?? '?')[0]}</Text>
+          <YStack width={48} height={48} borderRadius={24} backgroundColor="$warmGray" alignItems="center" justifyContent="center">
+            <Text fontSize="$4" color="$warmWhite">{(post.author.displayName ?? '?')[0]}</Text>
           </YStack>
         )}
         <YStack flex={1}>
@@ -66,7 +67,7 @@ export function PostCard({ post, onLike, onUnlike, onShowLess }: PostCardProps) 
           </Text>
         </Button>
       </XStack>
-    </YStack>
+    </CardBase>
   )
 }
 

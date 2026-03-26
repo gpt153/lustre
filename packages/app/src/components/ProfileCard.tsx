@@ -1,4 +1,5 @@
 import { YStack, XStack, Text, Image } from 'tamagui'
+import { CardBase } from '@lustre/ui'
 
 interface ProfileCardProps {
   displayName: string
@@ -12,32 +13,30 @@ interface ProfileCardProps {
 
 export function ProfileCard({ displayName, age, gender, orientation, thumbnailUrl, verified, onPress }: ProfileCardProps) {
   return (
-    <XStack
-      backgroundColor="$background"
-      borderRadius={12}
-      padding="$3"
-      gap="$3"
+    <CardBase
+      asChild
+      flexDirection="row"
       alignItems="center"
       pressStyle={{ opacity: 0.8 }}
       onPress={onPress}
       cursor={onPress ? 'pointer' : 'default'}
     >
       {thumbnailUrl ? (
-        <Image source={{ uri: thumbnailUrl }} width={60} height={60} borderRadius={30} />
+        <Image source={{ uri: thumbnailUrl }} width={60} height={60} borderRadius={12} />
       ) : (
-        <YStack width={60} height={60} borderRadius={30} backgroundColor="$backgroundHover" alignItems="center" justifyContent="center">
-          <Text fontSize="$5" color="$textSecondary">{displayName[0]?.toUpperCase()}</Text>
+        <YStack width={60} height={60} borderRadius={12} backgroundColor="$warmGray" alignItems="center" justifyContent="center">
+          <Text fontSize="$5" color="$warmWhite">{displayName[0]?.toUpperCase()}</Text>
         </YStack>
       )}
-      <YStack flex={1}>
+      <YStack flex={1} gap="$1" marginLeft="$3">
         <XStack alignItems="center" gap="$1">
-          <Text fontWeight="600" color="$text">{displayName}</Text>
+          <Text fontWeight="600" color="$color">{displayName}</Text>
           {verified && <Text color="#4CAF50" fontSize="$2">✓</Text>}
         </XStack>
-        <Text color="$textSecondary" fontSize="$2">
+        <Text color="$warmGray" fontSize="$2">
           {age} • {gender.replace(/_/g, ' ').toLowerCase()} • {orientation.toLowerCase()}
         </Text>
       </YStack>
-    </XStack>
+    </CardBase>
   )
 }

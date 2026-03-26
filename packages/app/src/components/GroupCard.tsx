@@ -1,4 +1,5 @@
 import { YStack, XStack, Text, Button } from 'tamagui'
+import { CardBase } from '@lustre/ui'
 
 interface GroupCardProps {
   group: {
@@ -19,14 +20,9 @@ export function GroupCard({ group, onPress }: GroupCardProps) {
     : 'No description'
 
   return (
-    <Button
-      unstyledAll
+    <CardBase
+      asChild
       onPress={() => onPress(group.id)}
-      backgroundColor="$background"
-      borderRadius="$3"
-      padding="$3"
-      borderWidth={1}
-      borderColor="$borderColor"
     >
       <YStack width="100%" gap="$2">
         <XStack justifyContent="space-between" alignItems="center">
@@ -48,6 +44,6 @@ export function GroupCard({ group, onPress }: GroupCardProps) {
           {group._count.members} {group._count.members === 1 ? 'member' : 'members'}
         </Text>
       </YStack>
-    </Button>
+    </CardBase>
   )
 }
