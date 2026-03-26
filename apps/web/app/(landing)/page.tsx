@@ -272,6 +272,7 @@ export default function LandingPage() {
         <div className="ambient-orb ambient-orb--warm" />
         <div className="ambient-orb ambient-orb--rose" />
         <div className="ambient-orb ambient-orb--center" />
+        <div className="ambient-orb ambient-orb--gold" />
       </div>
 
       {/* Grain overlay */}
@@ -285,7 +286,12 @@ export default function LandingPage() {
       <div className="landing-content">
         {/* ═══ HERO ═══ */}
         <section className="hero">
-          <div className="hero__logo">Lustre</div>
+          <div className="hero__logo-container">
+            <div className="hero__logo-glow" />
+            <img src="/logo.png" alt="Lustre" className="hero__logo-img" />
+          </div>
+
+          <div className="hero__brand">LUSTRE</div>
 
           <div className="hero__tagline">{c.tagline}</div>
 
@@ -409,7 +415,7 @@ export default function LandingPage() {
 
         {/* ═══ FOOTER ═══ */}
         <footer className="footer">
-          <div className="footer__logo">LUSTRE</div>
+          <img src="/logo.png" alt="Lustre" className="footer__logo-img" />
           <div className="footer__location">Stockholm, Sverige</div>
           <div className="footer__links">
             <a href="/privacy" className="footer__link">Integritetspolicy</a>

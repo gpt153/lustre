@@ -5,13 +5,14 @@
   "types": "src/index.ts",
   "sideEffects": false,
   "dependencies": {
-    "@trpc/client": "^11",
-    "@trpc/server": "^11",
-    "@trpc/react-query": "^11",
     "@tanstack/react-query": "^5",
-    "zod": "^3.23",
+    "@trpc/client": "^11",
+    "@trpc/react-query": "^11",
+    "@trpc/server": "^11",
+    "cheerio": "^1.0.0",
+    "react": "^18.3",
     "superjson": "^2",
-    "react": "^18.3"
+    "zod": "^3.23"
   },
   "devDependencies": {
     "@types/react": "^18.3",

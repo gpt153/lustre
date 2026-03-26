@@ -321,6 +321,15 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
 - **Env vars required:**
   - `ADMIN_USER_IDS` — comma-separated UUIDs of admin users
 
+## Growth & Migration (F27-GROWTH-migration)
+- **Landing page:** `apps/web/app/(landing)/` — existing page with hero, email signup (waitlist), vanilla/spicy mode toggle. `countdown.tsx` adds countdown timer to 2026-05-01T12:00:00Z with Swedish labels; renders above `WaitlistForm` in the hero section
+- **Waitlist API:** `apps/web/app/api/waitlist/route.ts` — Next.js route handler, POSTs `{ email, mode }` to raw PostgreSQL `waitlist` table, returns `{ position }`
+- **Onboarding tracking:** `packages/app/src/components/OnboardingWizard.tsx` — accepts optional `onStep?: (step: number, stepName: string) => void` callback (steps: 1=basics, 2=identity, 3=preferences, 4=photos, 5=bio, 6=complete). Web onboarding page (`apps/web/app/(app)/onboarding/page.tsx`) fires `window.umami?.track('onboarding_step', { step, stepName })` and `window.umami?.track('onboarding_complete')` via this callback
+- **BodyContact import:** `services/api/src/trpc/migration-router.ts` — `migration.previewBodyContact` (query): fetches `https://www.bodycontact.com/profiles/{username}` with cheerio HTML parsing, returns `{ username, bio, photoUrls[] }`. `migration.importBodyContact` (mutation, requires `consent: true`): updates `Profile.bio`, fetches photos, converts via sharp to WebP (800×800 max), uploads to R2 at `profiles/{userId}/imported-{n}.webp`, creates `ProfilePhoto` records. Web UI at `/settings/migration`
+- **Invite system:** `services/api/src/trpc/invite-router.ts` — `invite.generate` creates `InviteLink` with nanoid(8) code; `invite.claim` credits 100 tokens to referrer + 50 to referee via `creditTokens(…, 'REFERRAL')`; `invite.getMyLinks` + `invite.getRewards` for stats. Schema: `InviteLink`, `ReferralReward` models + `REFERRAL` added to `TokenTransactionType` enum. Migration: `20260327100000_f27_invite_system`. Web: `/invite` (protected), `/invite/[code]` (public landing → `/auth/register?invite=CODE`)
+- **Shared components:** `packages/app/src/` — `MigrationScreen`, `useMigration`, `InviteScreen`, `useInvite`
+- **Deps added:** `cheerio ^1.0.0`, `nanoid ^5.0.0` in `services/api/package.json`
+
 ## Rules
 - All users verified via Swish 10 SEK + SPAR (Sweden); international expansion TBD
 - Real names NEVER shown in app — stored encrypted, released only via court order
