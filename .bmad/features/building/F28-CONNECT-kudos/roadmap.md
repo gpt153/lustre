@@ -1,14 +1,21 @@
 # Roadmap: F28-CONNECT-kudos
 
-**Status:** PLANNED
+**Status:** IN_PROGRESS
 **Created:** 2026-03-25
+**Started:** 2026-03-26
 **Waves:** 3
 **Total epics:** 7
 
 ---
 
 ## Wave 1: Badge Catalog & Kudos Backend
-**Status:** PLANNED
+**Status:** DONE
+**Started:** 2026-03-26
+**Completed:** 2026-03-26
+
+### Epic Status:
+- wave-1a-kudos-schema: VERIFIED
+- wave-1b-kudos-api: VERIFIED
 
 ### Parallelization groups:
 **Group A (sequential):**
@@ -16,11 +23,14 @@
 - wave-1b-kudos-api (haiku) — tRPC: kudos.listBadges, kudos.give, kudos.getProfileKudos. Rate limiting (10/24h). Deduplication per interaction. Redis badge catalog cache.
 
 ### Testgate Wave 1:
-- [ ] Badge catalog seeded and queryable by category
-- [ ] Kudos submission stores badge selections for giver->recipient
-- [ ] Duplicate kudos for same interaction rejected
-- [ ] Rate limit enforced (10 per 24h)
-- [ ] SpicyOnly badges excluded when queried in Vanilla mode
+- [x] Badge catalog seeded and queryable by category — PASS
+- [x] Kudos submission stores badge selections for giver->recipient — PASS
+- [x] Duplicate kudos for same interaction rejected — PASS
+- [x] Rate limit enforced (10 per 24h) — PASS
+- [x] SpicyOnly badges excluded when queried in Vanilla mode — PASS
+
+### Learnings:
+- Used KudosBadge/KudosBadgeCategory naming to avoid conflict with existing F18 gamification Badge model
 
 ---
 
