@@ -32,23 +32,26 @@
 
 ### Parallelization groups:
 **Group A (sequential):**
-- wave-2a-escrow-payment (sonnet) — Swish Handel payment for order, hold funds in Lustre account, commission calculation (10-15%) **Status:** IN_PROGRESS
-- wave-2b-seller-payout (sonnet) — Swish Payout API to seller on delivery confirmation, minus commission **Status:** NOT_STARTED
+- wave-2a-escrow-payment (sonnet) — Swish Handel payment for order, hold funds in Lustre account, commission calculation (10-15%) **Status:** VERIFIED
+- wave-2b-seller-payout (sonnet) — Swish Payout API to seller on delivery confirmation, minus commission **Status:** VERIFIED
 
 ### Testgate Wave 2:
-- [ ] Buyer payment via Swish works
-- [ ] Seller payout on confirmation works
-- [ ] Commission deducted correctly
+- [x] Buyer payment via Swish works — PASS
+- [x] Seller payout on confirmation works — PASS
+- [x] Commission deducted correctly — PASS
+
+**Wave 2 Status:** DONE — 2026-03-26
 
 ---
 
 ## Wave 3: Marketplace Screens
-**Status:** NOT_STARTED
+**Status:** IN_PROGRESS
+**Started:** 2026-03-26T00:00:00Z
 
 ### Parallelization groups:
 **Group A (parallel):**
-- wave-3a-marketplace-mobile (haiku) — Browse listings, listing detail, create listing, order flow, order status
-- wave-3b-marketplace-web (haiku) — Same for web
+- wave-3a-marketplace-mobile (haiku) — Browse listings, listing detail, create listing, order flow, order status **Status:** IN_PROGRESS
+- wave-3b-marketplace-web (haiku) — Same for web **Status:** IN_PROGRESS
 
 ### Testgate Wave 3:
 - [ ] Listing creation works end-to-end

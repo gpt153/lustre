@@ -22,6 +22,7 @@ import { autoConfirmOrders } from './lib/marketplace.js'
 import { callRoutes } from './routes/call.js'
 import { coachRoutes } from './routes/coach.js'
 import { consentRoutes } from './routes/consent.js'
+import { marketplaceCallbackHandler, payoutCallbackHandler } from './routes/marketplace-callback.js'
 
 const server = Fastify({
   logger: {
@@ -104,6 +105,12 @@ async function start() {
     // Swish requires a 200 response to consider the callback delivered.
     return reply.status(200).send()
   })
+
+  // Swish marketplace payment callback — called by Swish servers when a marketplace order payment completes.
+  server.post('/api/marketplace/swish-callback', marketplaceCallbackHandler)
+
+  // Swish payout callback — called by Swish servers when a seller payout completes or fails.
+  server.post('/api/marketplace/payout-callback', payoutCallbackHandler)
 
   // Swish ticket payment callback — called by Swish servers when a ticket payment completes.
   server.post('/api/events/ticket-callback', async (request, reply) => {

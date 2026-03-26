@@ -217,6 +217,8 @@ model User {
   listings                 Listing[]
   buyerOrders              Order[]                @relation("BuyerOrders")
   sellerOrders             Order[]                @relation("SellerOrders")
+  sellerSwishNumber        SellerSwishNumber?
+  sellerPayouts            SellerPayout[]
 
   @@map("users")
 }
@@ -1394,12 +1396,66 @@ model Order {
   createdAt       DateTime      @default(now()) @map("created_at")
   updatedAt       DateTime      @updatedAt @map("updated_at")
 
-  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
-  buyer   User    @relation("BuyerOrders", fields: [buyerId], references: [id], onDelete: Cascade)
-  seller  User    @relation("SellerOrders", fields: [sellerId], references: [id], onDelete: Cascade)
+  listing  Listing              @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  buyer    User                 @relation("BuyerOrders", fields: [buyerId], references: [id], onDelete: Cascade)
+  seller   User                 @relation("SellerOrders", fields: [sellerId], references: [id], onDelete: Cascade)
+  payment  MarketplacePayment?
+  payout   SellerPayout?
 
   @@map("orders")
   @@index([listingId])
   @@index([buyerId])
+  @@index([sellerId])
+}
+
+model MarketplacePayment {
+  id             String        @id @default(uuid()) @db.Uuid
+  orderId        String        @unique @map("order_id") @db.Uuid
+  swishPaymentId String        @unique @map("swish_payment_id")
+  swishToken     String        @map("swish_token")
+  amountSEK      Int           @map("amount_sek")
+  status         PaymentStatus @default(PENDING)
+  payerAlias     String?       @map("payer_alias")
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @updatedAt @map("updated_at")
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("marketplace_payments")
+}
+
+enum PayoutStatus {
+  PENDING
+  PAID
+  FAILED
+}
+
+model SellerSwishNumber {
+  id           String    @id @default(uuid()) @db.Uuid
+  userId       String    @unique @map("user_id") @db.Uuid
+  swishNumber  String    @map("swish_number")
+  verifiedAt   DateTime? @map("verified_at")
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("seller_swish_numbers")
+}
+
+model SellerPayout {
+  id             String       @id @default(uuid()) @db.Uuid
+  orderId        String       @unique @map("order_id") @db.Uuid
+  sellerId       String       @map("seller_id") @db.Uuid
+  swishPayoutId  String?      @unique @map("swish_payout_id")
+  amountSEK      Int          @map("amount_sek")
+  status         PayoutStatus @default(PENDING)
+  errorMessage   String?      @map("error_message")
+  initiatedAt    DateTime     @default(now()) @map("initiated_at")
+  completedAt    DateTime?    @map("completed_at")
+
+  order  Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  seller User  @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+
+  @@map("seller_payouts")
   @@index([sellerId])
 }

@@ -1,6 +1,8 @@
 import { z } from 'zod'
 import { TRPCError } from '@trpc/server'
 import { router, protectedProcedure } from './middleware.js'
+import { createOrderPaymentRequest } from '../lib/marketplace-swish.js'
+import { initiateSellerPayout } from '../lib/seller-payout.js'
 
 const shippingOptionSchema = z.enum(['STANDARD_POST', 'EXPRESS_POST', 'PICKUP'])
 
@@ -140,6 +142,10 @@ export const orderRouter = router({
         },
       })
 
+      initiateSellerPayout(ctx.prisma, input.orderId).catch((err) => {
+        console.error('Seller payout failed:', err)
+      })
+
       return updated
     }),
 
@@ -222,6 +228,83 @@ export const orderRouter = router({
           id: order.seller.id,
           displayName: order.seller.displayName,
         },
+      }
+    }),
+
+  initiatePayment: protectedProcedure
+    .input(
+      z.object({
+        orderId: z.string(),
+        phoneNumber: z.string().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const order = await ctx.prisma.order.findUnique({
+        where: { id: input.orderId },
+      })
+
+      if (!order) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Order not found',
+        })
+      }
+
+      if (order.buyerId !== ctx.userId) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'Only the buyer can initiate payment for this order',
+        })
+      }
+
+      if (order.status !== 'PLACED') {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: `Order must be in PLACED status to initiate payment (current: ${order.status})`,
+        })
+      }
+
+      try {
+        const result = await createOrderPaymentRequest(
+          ctx.prisma,
+          input.orderId,
+          ctx.userId,
+          input.phoneNumber,
+        )
+        return result
+      } catch (err) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: err instanceof Error ? err.message : 'Failed to initiate payment',
+        })
+      }
+    }),
+
+  checkPaymentStatus: protectedProcedure
+    .input(z.object({ orderId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const order = await ctx.prisma.order.findUnique({
+        where: { id: input.orderId },
+        include: { payment: true },
+      })
+
+      if (!order) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Order not found',
+        })
+      }
+
+      if (order.buyerId !== ctx.userId && order.sellerId !== ctx.userId) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'You do not have access to this order',
+        })
+      }
+
+      return {
+        paymentStatus: order.payment?.status ?? null,
+        paidAt: order.paidAt,
       }
     }),
 
