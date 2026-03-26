@@ -1,0 +1,47 @@
+replicaCount: 1
+
+image:
+  repository: ghcr.io/umami-software/umami
+  tag: postgresql-latest
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 3000
+
+ingress:
+  enabled: true
+  className: traefik
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts:
+    - host: umami.lovelustre.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: umami-tls
+      hosts:
+        - umami.lovelustre.com
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+livenessProbe:
+  httpGet:
+    path: /api/heartbeat
+    port: 3000
+  initialDelaySeconds: 15
+  periodSeconds: 30
+
+readinessProbe:
+  httpGet:
+    path: /api/heartbeat
+    port: 3000
+  initialDelaySeconds: 10
+  periodSeconds: 10

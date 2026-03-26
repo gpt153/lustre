@@ -1,8 +1,9 @@
 # Roadmap: F26-ADMIN-dashboard
 
-**Status:** IN_PROGRESS
+**Status:** DONE — all waves implemented and tested
 **Created:** 2026-03-24
 **Started:** 2026-03-26
+**Completed:** 2026-03-26
 **Waves:** 2
 **Total epics:** 5
 
@@ -27,15 +28,17 @@
 ---
 
 ## Wave 2: Admin UI
-**Status:** NOT_STARTED
+**Status:** DONE
+**Started:** 2026-03-26T01:00:00Z
+**Completed:** 2026-03-26T02:00:00Z
 
 ### Parallelization groups:
 **Group A (parallel):**
-- wave-2a-admin-app (haiku) — Next.js admin app: user management table, moderation queue, analytics dashboard (charts), system config
-- wave-2b-umami-integration (haiku) — Umami self-hosted setup, tracking script in web/mobile apps, admin analytics page
+- wave-2a-admin-app (sonnet) — Next.js admin app: user management table, moderation queue, analytics dashboard (charts), system config — VERIFIED
+- wave-2b-umami-integration (haiku) — Umami self-hosted setup, tracking script in web/mobile apps, admin analytics page — VERIFIED
 
 ### Testgate Wave 2:
-- [ ] Admin dashboard loads at admin.lovelustre.com
-- [ ] User management table with search/filter
-- [ ] Moderation queue shows reports
-- [ ] Analytics charts display metrics
+- [x] Admin dashboard loads at admin.lovelustre.com — Next.js app created at apps/admin/, dark theme, sidebar nav
+- [x] User management table with search/filter — debounced search, suspend/ban actions
+- [x] Moderation queue shows reports — status filter tabs, resolve actions
+- [x] Analytics charts display metrics — overview stats, registrations, gender ratio, revenue, AI costs
