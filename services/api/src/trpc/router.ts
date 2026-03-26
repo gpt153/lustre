@@ -2,7 +2,6 @@ import { z } from 'zod'
 import { TRPCError } from '@trpc/server'
 import { router, publicProcedure, protectedProcedure } from './middleware.js'
 import { revokeSession, getActiveSessions } from '../auth/session.js'
-import { getAuthorizationUrl } from '../auth/bankid.js'
 import { createPaymentRequest } from '../auth/swish.js'
 import { userRouter } from './user-router.js'
 import { profileRouter } from './profile-router.js'
@@ -31,6 +30,8 @@ import { sellerRouter } from './seller-router.js'
 import { shopRouter } from './shop-router.js'
 import { adRouter } from './ad-router.js'
 import { tokenRouter } from './token-router.js'
+import { swishPaymentRouter } from './swish-payment-router.js'
+import { segpayRouter } from './segpay-router.js'
 
 const swishCallbackSchema = z.object({
   id: z.string(),
@@ -122,24 +123,171 @@ export const appRouter = router({
         }),
     },
 
-    bankid: {
-      // Initiate BankID login — returns the Criipto authorization URL and a state token
-      init: publicProcedure.mutation(() => {
-        const state = crypto.randomUUID()
-        const authUrl = getAuthorizationUrl(state)
-        return { authUrl, state }
+    completeRegistration: publicProcedure
+      .input(z.object({
+        tempToken: z.string(),
+        email: z.string().email(),
+        password: z.string().min(8),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const { jwtVerify } = await import('jose')
+        const secret = new TextEncoder().encode(process.env.JWT_SECRET!)
+        let payload: { sub?: string; type?: unknown }
+        try {
+          const result = await jwtVerify(input.tempToken, secret)
+          payload = result.payload as { sub?: string; type?: unknown }
+        } catch {
+          throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid or expired registration token' })
+        }
+        if (payload.type !== 'registration' || !payload.sub) {
+          throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid token type' })
+        }
+        const userId = payload.sub as string
+
+        const user = await ctx.prisma.user.findUnique({ where: { id: userId } })
+        if (!user || user.status !== 'PENDING_EMAIL') {
+          throw new TRPCError({ code: 'BAD_REQUEST', message: 'Invalid registration state' })
+        }
+
+        const existing = await ctx.prisma.user.findUnique({ where: { email: input.email } })
+        if (existing) {
+          throw new TRPCError({ code: 'CONFLICT', message: 'Email already in use' })
+        }
+
+        const { hashPassword } = await import('../auth/email.js')
+        const passwordHash = await hashPassword(input.password)
+        await ctx.prisma.user.update({
+          where: { id: userId },
+          data: { email: input.email, passwordHash, status: 'ACTIVE' },
+        })
+
+        const { generateAccessToken, generateRefreshToken } = await import('../auth/jwt.js')
+        const { createSession } = await import('../auth/session.js')
+        const accessToken = await generateAccessToken(userId)
+        const refreshToken = await generateRefreshToken(userId)
+        await createSession(ctx.prisma, userId, accessToken, ctx.req)
+        return { accessToken, refreshToken }
       }),
 
-      // BankID is no longer supported — removed in F30-CORE-auth-fix
-      callback: publicProcedure
-        .input(z.object({ code: z.string(), state: z.string() }))
-        .mutation(() => {
+    loginWithEmail: publicProcedure
+      .input(z.object({
+        email: z.string().email(),
+        password: z.string(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const user = await ctx.prisma.user.findUnique({ where: { email: input.email } })
+        if (!user || !user.passwordHash || user.status !== 'ACTIVE') {
+          throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid credentials' })
+        }
+        const { verifyPassword } = await import('../auth/email.js')
+        const valid = await verifyPassword(input.password, user.passwordHash)
+        if (!valid) {
+          throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid credentials' })
+        }
+        const { generateAccessToken, generateRefreshToken } = await import('../auth/jwt.js')
+        const { createSession } = await import('../auth/session.js')
+        const accessToken = await generateAccessToken(user.id)
+        const refreshToken = await generateRefreshToken(user.id)
+        await createSession(ctx.prisma, user.id, accessToken, ctx.req)
+        return { accessToken, refreshToken }
+      }),
+
+    requestPasswordReset: publicProcedure
+      .input(z.object({ email: z.string().email() }))
+      .mutation(async ({ ctx, input }) => {
+        const user = await ctx.prisma.user.findUnique({ where: { email: input.email } })
+        if (!user || !user.email) return { success: true }
+        const { generateResetToken } = await import('../auth/email.js')
+        const { token, tokenHash, expiresAt } = generateResetToken()
+        console.log(`[DEV] Password reset token for ${input.email}: ${token}`)
+        await ctx.prisma.session.create({
+          data: {
+            userId: user.id,
+            tokenHash: `reset:${tokenHash}`,
+            expiresAt,
+            deviceInfo: 'password-reset',
+          },
+        })
+        return { success: true }
+      }),
+
+    resetPassword: publicProcedure
+      .input(z.object({
+        token: z.string(),
+        newPassword: z.string().min(8),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const { hashResetToken, hashPassword } = await import('../auth/email.js')
+        const tokenHash = hashResetToken(input.token)
+        const session = await ctx.prisma.session.findUnique({
+          where: { tokenHash: `reset:${tokenHash}` },
+        })
+        if (!session || session.expiresAt < new Date() || session.revokedAt) {
+          throw new TRPCError({ code: 'BAD_REQUEST', message: 'Invalid or expired reset token' })
+        }
+        const passwordHash = await hashPassword(input.newPassword)
+        await ctx.prisma.$transaction([
+          ctx.prisma.user.update({
+            where: { id: session.userId },
+            data: { passwordHash },
+          }),
+          ctx.prisma.session.update({
+            where: { id: session.id },
+            data: { revokedAt: new Date() },
+          }),
+        ])
+        return { success: true }
+      }),
+
+    loginWithGoogle: publicProcedure
+      .input(z.object({ idToken: z.string() }))
+      .mutation(async ({ ctx, input }) => {
+        const { verifyGoogleToken, findOrLinkOAuthAccount } = await import('../auth/oauth.js')
+        let oauthPayload
+        try {
+          oauthPayload = await verifyGoogleToken(input.idToken)
+        } catch {
+          throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid Google token' })
+        }
+        const result = await findOrLinkOAuthAccount(ctx.prisma, 'google', oauthPayload)
+        if ('registrationRequired' in result) {
           throw new TRPCError({
-            code: 'METHOD_NOT_SUPPORTED',
-            message: 'BankID authentication has been replaced by Swish+SPAR verification',
+            code: 'FORBIDDEN',
+            message: 'REGISTRATION_REQUIRED',
           })
-        }),
-    },
+        }
+        const { generateAccessToken, generateRefreshToken } = await import('../auth/jwt.js')
+        const { createSession } = await import('../auth/session.js')
+        const accessToken = await generateAccessToken(result.userId)
+        const refreshToken = await generateRefreshToken(result.userId)
+        await createSession(ctx.prisma, result.userId, accessToken, ctx.req)
+        return { accessToken, refreshToken }
+      }),
+
+    loginWithApple: publicProcedure
+      .input(z.object({ identityToken: z.string() }))
+      .mutation(async ({ ctx, input }) => {
+        const { verifyAppleToken, findOrLinkOAuthAccount } = await import('../auth/oauth.js')
+        let oauthPayload
+        try {
+          oauthPayload = await verifyAppleToken(input.identityToken)
+        } catch {
+          throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid Apple token' })
+        }
+        const result = await findOrLinkOAuthAccount(ctx.prisma, 'apple', oauthPayload)
+        if ('registrationRequired' in result) {
+          throw new TRPCError({
+            code: 'FORBIDDEN',
+            message: 'REGISTRATION_REQUIRED',
+          })
+        }
+        const { generateAccessToken, generateRefreshToken } = await import('../auth/jwt.js')
+        const { createSession } = await import('../auth/session.js')
+        const accessToken = await generateAccessToken(result.userId)
+        const refreshToken = await generateRefreshToken(result.userId)
+        await createSession(ctx.prisma, result.userId, accessToken, ctx.req)
+        return { accessToken, refreshToken }
+      }),
   },
   user: userRouter,
   profile: profileRouter,
@@ -168,6 +316,8 @@ export const appRouter = router({
   shop: shopRouter,
   ad: adRouter,
   token: tokenRouter,
+  swishPayment: swishPaymentRouter,
+  segpay: segpayRouter,
 })
 
 export type AppRouter = typeof appRouter

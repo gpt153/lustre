@@ -23,6 +23,8 @@ import { callRoutes } from './routes/call.js'
 import { coachRoutes } from './routes/coach.js'
 import { consentRoutes } from './routes/consent.js'
 import { marketplaceCallbackHandler, payoutCallbackHandler } from './routes/marketplace-callback.js'
+import { handleRecurringCallback, type RecurringCallbackPayload } from './lib/swish-recurring.js'
+import { handleSegpayCallback } from './lib/segpay.js'
 
 const server = Fastify({
   logger: {
@@ -111,6 +113,33 @@ async function start() {
 
   // Swish payout callback — called by Swish servers when a seller payout completes or fails.
   server.post('/api/marketplace/payout-callback', payoutCallbackHandler)
+
+  // Swish recurring payment callback — called by Swish servers when a recurring auto-topup payment completes.
+  server.post('/api/payments/swish-recurring-callback', async (request, reply) => {
+    const body = request.body as RecurringCallbackPayload
+
+    if (!body || !body.status || !body.payeePaymentReference) {
+      return reply.status(400).send({ error: 'Invalid callback body' })
+    }
+
+    await handleRecurringCallback(prisma, body)
+
+    // Swish requires a 200 response to consider the callback delivered.
+    return reply.status(200).send()
+  })
+
+  // Segpay payment callback — called by Segpay servers when a card payment completes.
+  server.post('/api/payments/segpay-callback', async (request, reply) => {
+    const body = request.body as Record<string, unknown>
+
+    if (!body || typeof body.status !== 'string') {
+      return reply.status(400).send({ error: 'Invalid callback body' })
+    }
+
+    await handleSegpayCallback(prisma, body as { status: string; [key: string]: unknown })
+
+    return reply.status(200).send()
+  })
 
   // Swish ticket payment callback — called by Swish servers when a ticket payment completes.
   server.post('/api/events/ticket-callback', async (request, reply) => {
@@ -407,6 +436,41 @@ async function start() {
   await server.register(callRoutes)
   await server.register(coachRoutes)
   await server.register(consentRoutes)
+
+  // Dev-only: quick login for local testing
+  if (process.env.NODE_ENV !== 'production') {
+    server.post('/api/dev/login', async (request, reply) => {
+      const { displayName = 'Testuser' } = (request.body as Record<string, string>) || {}
+      const { generateAccessToken, generateRefreshToken, hashToken } = await import('./auth/jwt.js')
+
+      let user = await prisma.user.findFirst({ where: { displayName } })
+      if (!user) {
+        user = await prisma.user.create({
+          data: {
+            displayName,
+            personnummer_hash: `dev-${displayName}-${Date.now()}`,
+            status: 'ACTIVE',
+          },
+        })
+      }
+
+      const accessToken = await generateAccessToken(user.id)
+      const refreshToken = await generateRefreshToken(user.id)
+      await prisma.session.create({
+        data: {
+          userId: user.id,
+          tokenHash: hashToken(refreshToken),
+          expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        },
+      })
+
+      return reply.send({
+        accessToken,
+        refreshToken,
+        user: { id: user.id, displayName: user.displayName },
+      })
+    })
+  }
 
   await server.register(fastifyTRPCPlugin, {
     prefix: '/trpc',

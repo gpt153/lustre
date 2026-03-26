@@ -9,9 +9,891 @@ datasource db {
   extensions = [postgis, vector]
 }
 
+model User {
+  id                         String                    @id @default(uuid()) @db.Uuid
+  displayName                String?                   @map("display_name")
+  personnummer_hash          String                    @unique
+  status                     UserStatus                @default(PENDING)
+  createdAt                  DateTime                  @default(now()) @map("created_at")
+  updatedAt                  DateTime                  @updatedAt @map("updated_at")
+  initiatedCalls             CallSession[]             @relation("CallInitiator")
+  receivedCalls              CallSession[]             @relation("CallReceiver")
+  coachSessions              CoachSession[]
+  consentRecordsInitiated    ConsentRecord[]           @relation("consentInitiator")
+  consentRecordsParticipated ConsentRecord[]           @relation("consentParticipant")
+  conversationParticipants   ConversationParticipant[]
+  encryptedIdentity          EncryptedIdentity?
+  eventAttendances           EventAttendee[]
+  eventTickets               EventTicket[]             @relation("eventTickets")
+  eventsCreated              Event[]                   @relation("eventsCreated")
+  feedInteractions           FeedInteraction[]
+  gatekeeperConfig           GatekeeperConfig?         @relation("gatekeeperConfig")
+  gatekeeperReceived         GatekeeperConversation[]  @relation("gatekeeperReceived")
+  gatekeeperSent             GatekeeperConversation[]  @relation("gatekeeperSent")
+  groupMemberships           GroupMember[]
+  groupModerators            GroupModerator[]
+  groupsCreated              Group[]                   @relation("groupsCreated")
+  matchesAsUser1             Match[]                   @relation("matchesAsUser1")
+  matchesAsUser2             Match[]                   @relation("matchesAsUser2")
+  messagesSent               Message[]
+  orgMemberships             OrgMember[]
+  orgsCreated                Organization[]            @relation("orgsCreated")
+  payments                   Payment[]
+  posts                      Post[]
+  profile                    Profile?
+  recordingAccesses          RecordingAccess[]
+  recordingRevocations       RecordingRevocation[]
+  safeDates                  SafeDate[]
+  seenProfileTargets         SeenProfile[]             @relation("seenProfileTargets")
+  seenProfiles               SeenProfile[]             @relation("seenProfiles")
+  sessions                   Session[]
+  swipesReceived             Swipe[]                   @relation("swipesReceived")
+  swipesSent                 Swipe[]                   @relation("swipesSent")
+  tokenTransactions          TokenTransaction[]
+  userBadges                 UserBadge[]
+  userBalance                UserBalance?
+  contentFilter              UserContentFilter?
+  lessonProgress             UserLessonProgress[]
+  userMedals                 UserMedal[]
+  moduleProgress             UserModuleProgress[]
+  userStreak                 UserStreak?
+
+  @@map("users")
+}
+
+model EncryptedIdentity {
+  id                    String   @id @default(uuid()) @db.Uuid
+  userId                String   @unique @map("user_id") @db.Uuid
+  encryptedFirstName    String   @map("encrypted_first_name")
+  encryptedLastName     String   @map("encrypted_last_name")
+  encryptedPersonnummer String   @map("encrypted_personnummer")
+  iv                    String
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("encrypted_identities")
+}
+
+model Session {
+  id         String    @id @default(uuid()) @db.Uuid
+  userId     String    @map("user_id") @db.Uuid
+  tokenHash  String    @unique @map("token_hash")
+  deviceInfo String?   @map("device_info")
+  ipAddress  String?   @map("ip_address")
+  expiresAt  DateTime  @map("expires_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  revokedAt  DateTime? @map("revoked_at")
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model Payment {
+  id             String        @id @default(uuid()) @db.Uuid
+  userId         String        @map("user_id") @db.Uuid
+  swishPaymentId String?       @unique @map("swish_payment_id")
+  amount         Decimal       @db.Decimal(10, 2)
+  currency       String        @default("SEK")
+  status         PaymentStatus @default(PENDING)
+  swishToken     String?       @map("swish_token")
+  createdAt      DateTime      @default(now()) @map("created_at")
+  completedAt    DateTime?     @map("completed_at")
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+}
+
+model Profile {
+  id                        String                    @id @default(uuid()) @db.Uuid
+  userId                    String                    @unique @map("user_id") @db.Uuid
+  displayName               String                    @map("display_name")
+  bio                       String?
+  age                       Int
+  gender                    Gender
+  orientation               Orientation
+  relationshipType          RelationshipType?         @map("relationship_type")
+  seeking                   Seeking[]
+  contentPreference         ContentPreference         @map("content_preference")
+  verified                  Boolean                   @default(false)
+  allowPostEventSuggestions Boolean                   @default(false) @map("allow_post_event_suggestions")
+  spicyModeEnabled          Boolean                   @default(false) @map("spicy_mode_enabled")
+  createdAt                 DateTime                  @default(now()) @map("created_at")
+  updatedAt                 DateTime                  @updatedAt @map("updated_at")
+  location                  Unsupported("geography")? @map("location")
+  invitationsSent           PairInvitation[]          @relation("invitationsSent")
+  invitationsReceived       PairInvitation[]          @relation("invitationsReceived")
+  pairLinkMembers           PairLinkMember[]
+  kinkTags                  ProfileKinkTag[]
+  photos                    ProfilePhoto[]
+  user                      User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("profiles")
+}
+
+model ProfilePhoto {
+  id              String   @id @default(uuid()) @db.Uuid
+  profileId       String   @map("profile_id") @db.Uuid
+  url             String
+  thumbnailSmall  String?  @map("thumbnail_small")
+  thumbnailMedium String?  @map("thumbnail_medium")
+  thumbnailLarge  String?  @map("thumbnail_large")
+  position        Int      @default(0)
+  isPublic        Boolean  @default(true) @map("is_public")
+  createdAt       DateTime @default(now()) @map("created_at")
+  profile         Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@map("profile_photos")
+}
+
+model KinkTag {
+  id        String           @id @default(uuid()) @db.Uuid
+  name      String           @unique
+  category  String
+  createdAt DateTime         @default(now()) @map("created_at")
+  profiles  ProfileKinkTag[]
+
+  @@map("kink_tags")
+}
+
+model ProfileKinkTag {
+  id            String            @id @default(uuid()) @db.Uuid
+  profileId     String            @map("profile_id") @db.Uuid
+  kinkTagId     String            @map("kink_tag_id") @db.Uuid
+  interestLevel KinkInterestLevel @map("interest_level")
+  isPublic      Boolean           @default(true) @map("is_public")
+  kinkTag       KinkTag           @relation(fields: [kinkTagId], references: [id], onDelete: Cascade)
+  profile       Profile           @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, kinkTagId])
+  @@map("profile_kink_tags")
+}
+
+model PairInvitation {
+  id            String           @id @default(uuid()) @db.Uuid
+  fromProfileId String           @map("from_profile_id") @db.Uuid
+  toProfileId   String           @map("to_profile_id") @db.Uuid
+  status        InvitationStatus @default(PENDING)
+  createdAt     DateTime         @default(now()) @map("created_at")
+  expiresAt     DateTime         @map("expires_at")
+  fromProfile   Profile          @relation("invitationsSent", fields: [fromProfileId], references: [id], onDelete: Cascade)
+  toProfile     Profile          @relation("invitationsReceived", fields: [toProfileId], references: [id], onDelete: Cascade)
+
+  @@map("pair_invitations")
+}
+
+model PairLink {
+  id        String           @id @default(uuid()) @db.Uuid
+  createdAt DateTime         @default(now()) @map("created_at")
+  members   PairLinkMember[]
+
+  @@map("pair_links")
+}
+
+model PairLinkMember {
+  id         String   @id @default(uuid()) @db.Uuid
+  pairLinkId String   @map("pair_link_id") @db.Uuid
+  profileId  String   @map("profile_id") @db.Uuid
+  joinedAt   DateTime @default(now()) @map("joined_at")
+  pairLink   PairLink @relation(fields: [pairLinkId], references: [id], onDelete: Cascade)
+  profile    Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@unique([pairLinkId, profileId])
+  @@map("pair_link_members")
+}
+
+model Post {
+  id           String            @id @default(uuid()) @db.Uuid
+  authorId     String            @map("author_id") @db.Uuid
+  text         String?           @db.VarChar(2000)
+  groupId      String?           @map("group_id") @db.Uuid
+  createdAt    DateTime          @default(now()) @map("created_at")
+  updatedAt    DateTime          @updatedAt @map("updated_at")
+  interactions FeedInteraction[]
+  media        PostMedia[]
+  author       User              @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  group        Group?            @relation("groupPosts", fields: [groupId], references: [id])
+
+  @@map("posts")
+}
+
+model PostMedia {
+  id              String       @id @default(uuid()) @db.Uuid
+  postId          String       @map("post_id") @db.Uuid
+  url             String
+  thumbnailSmall  String?      @map("thumbnail_small")
+  thumbnailMedium String?      @map("thumbnail_medium")
+  thumbnailLarge  String?      @map("thumbnail_large")
+  position        Int          @default(0)
+  createdAt       DateTime     @default(now()) @map("created_at")
+  tags            ContentTag[]
+  post            Post         @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@map("post_media")
+}
+
+model ContentTag {
+  id          String              @id @default(uuid()) @db.Uuid
+  postMediaId String              @map("post_media_id") @db.Uuid
+  dimension   ContentTagDimension
+  value       String
+  confidence  Float               @default(1.0)
+  createdAt   DateTime            @default(now()) @map("created_at")
+  postMedia   PostMedia           @relation(fields: [postMediaId], references: [id], onDelete: Cascade)
+
+  @@map("content_tags")
+}
+
+model UserContentFilter {
+  id                 String                  @id @default(uuid()) @db.Uuid
+  userId             String                  @unique @map("user_id") @db.Uuid
+  nudityLevel        NudityLevel[]           @map("nudity_level")
+  bodyPart           BodyPartTag[]           @map("body_part")
+  activity           ActivityTag[]
+  vibe               VibeTag[]
+  genderPresentation GenderPresentationTag[] @map("gender_presentation")
+  preset             ContentPreference
+  updatedAt          DateTime                @updatedAt @map("updated_at")
+  user               User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_content_filters")
+}
+
+model FeedInteraction {
+  id        String              @id @default(uuid()) @db.Uuid
+  userId    String              @map("user_id") @db.Uuid
+  postId    String              @map("post_id") @db.Uuid
+  type      FeedInteractionType
+  createdAt DateTime            @default(now()) @map("created_at")
+  post      Post                @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId, type])
+  @@map("feed_interactions")
+}
+
+model Group {
+  id            String           @id @default(uuid()) @db.Uuid
+  name          String           @db.VarChar(100)
+  description   String?          @db.VarChar(2000)
+  category      String           @db.VarChar(100)
+  visibility    GroupVisibility  @default(OPEN)
+  coverImageUrl String?          @map("cover_image_url")
+  createdById   String           @map("created_by_id") @db.Uuid
+  createdAt     DateTime         @default(now()) @map("created_at")
+  updatedAt     DateTime         @updatedAt @map("updated_at")
+  members       GroupMember[]
+  moderators    GroupModerator[]
+  creator       User             @relation("groupsCreated", fields: [createdById], references: [id], onDelete: Cascade)
+  posts         Post[]           @relation("groupPosts")
+
+  @@map("groups")
+}
+
+model GroupMember {
+  id       String           @id @default(uuid()) @db.Uuid
+  groupId  String           @map("group_id") @db.Uuid
+  userId   String           @map("user_id") @db.Uuid
+  status   MembershipStatus @default(ACTIVE)
+  joinedAt DateTime         @default(now()) @map("joined_at")
+  group    Group            @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user     User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([groupId, userId])
+  @@map("group_members")
+}
+
+model GroupModerator {
+  id         String        @id @default(uuid()) @db.Uuid
+  groupId    String        @map("group_id") @db.Uuid
+  userId     String        @map("user_id") @db.Uuid
+  role       ModeratorRole
+  assignedAt DateTime      @default(now()) @map("assigned_at")
+  group      Group         @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([groupId, userId])
+  @@map("group_moderators")
+}
+
+model GatekeeperConfig {
+  id              String                   @id @default(uuid()) @db.Uuid
+  userId          String                   @unique @map("user_id") @db.Uuid
+  enabled         Boolean                  @default(true)
+  strictness      GatekeeperStrictness     @default(STANDARD)
+  customQuestions String[]                 @map("custom_questions")
+  dealbreakers    String[]
+  aiTone          GatekeeperTone           @default(CASUAL) @map("ai_tone")
+  createdAt       DateTime                 @default(now()) @map("created_at")
+  updatedAt       DateTime                 @updatedAt @map("updated_at")
+  user            User                     @relation("gatekeeperConfig", fields: [userId], references: [id], onDelete: Cascade)
+  conversations   GatekeeperConversation[]
+
+  @@map("gatekeeper_configs")
+}
+
+model GatekeeperConversation {
+  id          String              @id @default(uuid()) @db.Uuid
+  senderId    String              @map("sender_id") @db.Uuid
+  recipientId String              @map("recipient_id") @db.Uuid
+  configId    String              @map("config_id") @db.Uuid
+  status      GatekeeperStatus    @default(ACTIVE)
+  summary     String?
+  tokensCost  Int                 @default(0) @map("tokens_cost")
+  createdAt   DateTime            @default(now()) @map("created_at")
+  updatedAt   DateTime            @updatedAt @map("updated_at")
+  config      GatekeeperConfig    @relation(fields: [configId], references: [id], onDelete: Cascade)
+  recipient   User                @relation("gatekeeperReceived", fields: [recipientId], references: [id], onDelete: Cascade)
+  sender      User                @relation("gatekeeperSent", fields: [senderId], references: [id], onDelete: Cascade)
+  messages    GatekeeperMessage[]
+
+  @@index([senderId])
+  @@index([recipientId])
+  @@map("gatekeeper_conversations")
+}
+
+model GatekeeperMessage {
+  id             String                 @id @default(uuid()) @db.Uuid
+  conversationId String                 @map("conversation_id") @db.Uuid
+  role           GatekeeperMessageRole
+  content        String
+  createdAt      DateTime               @default(now()) @map("created_at")
+  conversation   GatekeeperConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId])
+  @@map("gatekeeper_messages")
+}
+
+model UserBalance {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @unique @map("user_id") @db.Uuid
+  balance   Int      @default(0)
+  updatedAt DateTime @updatedAt @map("updated_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_balances")
+}
+
+model TokenTransaction {
+  id          String               @id @default(uuid()) @db.Uuid
+  userId      String               @map("user_id") @db.Uuid
+  amount      Int
+  type        TokenTransactionType
+  referenceId String?              @map("reference_id") @db.Uuid
+  createdAt   DateTime             @default(now()) @map("created_at")
+  user        User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("token_transactions")
+}
+
+model Swipe {
+  id        String      @id @default(uuid()) @db.Uuid
+  userId    String      @map("user_id") @db.Uuid
+  targetId  String      @map("target_id") @db.Uuid
+  action    SwipeAction
+  createdAt DateTime    @default(now()) @map("created_at")
+  target    User        @relation("swipesReceived", fields: [targetId], references: [id], onDelete: Cascade)
+  user      User        @relation("swipesSent", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, targetId])
+  @@map("swipes")
+}
+
+model Match {
+  id           String        @id @default(uuid()) @db.Uuid
+  user1Id      String        @map("user1_id") @db.Uuid
+  user2Id      String        @map("user2_id") @db.Uuid
+  createdAt    DateTime      @default(now()) @map("created_at")
+  conversation Conversation?
+  user1        User          @relation("matchesAsUser1", fields: [user1Id], references: [id], onDelete: Cascade)
+  user2        User          @relation("matchesAsUser2", fields: [user2Id], references: [id], onDelete: Cascade)
+
+  @@unique([user1Id, user2Id])
+  @@map("matches")
+}
+
+model SeenProfile {
+  id       String   @id @default(uuid()) @db.Uuid
+  userId   String   @map("user_id") @db.Uuid
+  targetId String   @map("target_id") @db.Uuid
+  seenAt   DateTime @default(now()) @map("seen_at")
+  target   User     @relation("seenProfileTargets", fields: [targetId], references: [id], onDelete: Cascade)
+  user     User     @relation("seenProfiles", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, targetId])
+  @@map("seen_profiles")
+}
+
+model Conversation {
+  id           String                    @id @default(uuid()) @db.Uuid
+  matchId      String                    @unique @map("match_id") @db.Uuid
+  createdAt    DateTime                  @default(now()) @map("created_at")
+  callSessions CallSession[]
+  participants ConversationParticipant[]
+  match        Match                     @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  messages     Message[]
+
+  @@map("conversations")
+}
+
+model ConversationParticipant {
+  id             String       @id @default(uuid()) @db.Uuid
+  conversationId String       @map("conversation_id") @db.Uuid
+  userId         String       @map("user_id") @db.Uuid
+  joinedAt       DateTime     @default(now()) @map("joined_at")
+  lastReadAt     DateTime?    @map("last_read_at")
+  readReceipts   Boolean      @default(true) @map("read_receipts")
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId, userId])
+  @@map("conversation_participants")
+}
+
+model Message {
+  id             String        @id @default(uuid()) @db.Uuid
+  conversationId String        @map("conversation_id") @db.Uuid
+  senderId       String        @map("sender_id") @db.Uuid
+  content        String?
+  type           MessageType   @default(TEXT)
+  status         MessageStatus @default(SENT)
+  mediaUrl       String?       @map("media_url")
+  isFiltered     Boolean       @default(false) @map("is_filtered")
+  deletedAt      DateTime?     @map("deleted_at")
+  createdAt      DateTime      @default(now()) @map("created_at")
+  conversation   Conversation  @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender         User          @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId, createdAt])
+  @@map("messages")
+}
+
+model CallSession {
+  id             String       @id @default(uuid()) @db.Uuid
+  conversationId String       @map("conversation_id") @db.Uuid
+  initiatorId    String       @map("initiator_id") @db.Uuid
+  receiverId     String       @map("receiver_id") @db.Uuid
+  callType       CallType     @map("call_type")
+  status         CallStatus   @default(RINGING)
+  roomName       String       @map("room_name")
+  startedAt      DateTime?    @map("started_at")
+  endedAt        DateTime?    @map("ended_at")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  initiator      User         @relation("CallInitiator", fields: [initiatorId], references: [id])
+  receiver       User         @relation("CallReceiver", fields: [receiverId], references: [id])
+
+  @@index([conversationId])
+  @@map("call_sessions")
+}
+
+model Event {
+  id                 String                    @id @default(uuid()) @db.Uuid
+  createdById        String                    @map("created_by_id") @db.Uuid
+  title              String                    @db.VarChar(200)
+  description        String?                   @db.VarChar(4000)
+  type               EventType
+  status             EventStatus               @default(DRAFT)
+  startsAt           DateTime                  @map("starts_at")
+  endsAt             DateTime?                 @map("ends_at")
+  locationName       String?                   @map("location_name") @db.VarChar(500)
+  location           Unsupported("geography")? @map("location")
+  capacity           Int?
+  price              Decimal?                  @db.Decimal(10, 2)
+  currency           String                    @default("SEK")
+  coverImageUrl      String?                   @map("cover_image_url")
+  targetGenders      Gender[]                  @map("target_genders")
+  targetOrientations Orientation[]             @map("target_orientations")
+  targetMinAge       Int?                      @map("target_min_age")
+  targetMaxAge       Int?                      @map("target_max_age")
+  createdAt          DateTime                  @default(now()) @map("created_at")
+  updatedAt          DateTime                  @updatedAt @map("updated_at")
+  attendees          EventAttendee[]
+  tickets            EventTicket[]
+  creator            User                      @relation("eventsCreated", fields: [createdById], references: [id], onDelete: Cascade)
+
+  @@index([startsAt])
+  @@map("events")
+}
+
+model EventAttendee {
+  id       String         @id @default(uuid()) @db.Uuid
+  eventId  String         @map("event_id") @db.Uuid
+  userId   String         @map("user_id") @db.Uuid
+  status   AttendeeStatus @default(GOING)
+  joinedAt DateTime       @default(now()) @map("joined_at")
+  event    Event          @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user     User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, userId])
+  @@map("event_attendees")
+}
+
+model EventTicket {
+  id             String       @id @default(uuid()) @db.Uuid
+  eventId        String       @map("event_id") @db.Uuid
+  userId         String       @map("user_id") @db.Uuid
+  status         TicketStatus @default(VALID)
+  swishPaymentId String?      @unique @map("swish_payment_id")
+  pricePaid      Decimal      @map("price_paid") @db.Decimal(10, 2)
+  currency       String       @default("SEK")
+  purchasedAt    DateTime     @default(now()) @map("purchased_at")
+  usedAt         DateTime?    @map("used_at")
+  refundedAt     DateTime?    @map("refunded_at")
+  event          Event        @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user           User         @relation("eventTickets", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, userId])
+  @@map("event_tickets")
+}
+
+model Organization {
+  id            String           @id @default(uuid()) @db.Uuid
+  name          String           @db.VarChar(200)
+  description   String?          @db.VarChar(4000)
+  type          OrgType
+  locationName  String?          @map("location_name") @db.VarChar(500)
+  contactEmail  String?          @map("contact_email")
+  contactPhone  String?          @map("contact_phone")
+  websiteUrl    String?          @map("website_url")
+  coverImageUrl String?          @map("cover_image_url")
+  verified      Boolean          @default(false)
+  createdById   String           @map("created_by_id") @db.Uuid
+  createdAt     DateTime         @default(now()) @map("created_at")
+  updatedAt     DateTime         @updatedAt @map("updated_at")
+  members       OrgMember[]
+  verification  OrgVerification?
+  creator       User             @relation("orgsCreated", fields: [createdById], references: [id], onDelete: Cascade)
+
+  @@map("organizations")
+}
+
+model OrgMember {
+  id       String        @id @default(uuid()) @db.Uuid
+  orgId    String        @map("org_id") @db.Uuid
+  userId   String        @map("user_id") @db.Uuid
+  role     OrgMemberRole @default(MEMBER)
+  joinedAt DateTime      @default(now()) @map("joined_at")
+  org      Organization  @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([orgId, userId])
+  @@map("org_members")
+}
+
+model OrgVerification {
+  id             String                @id @default(uuid()) @db.Uuid
+  orgId          String                @unique @map("org_id") @db.Uuid
+  status         OrgVerificationStatus @default(PENDING)
+  swishPaymentId String?               @unique @map("swish_payment_id")
+  reviewNotes    String?               @map("review_notes")
+  requestedAt    DateTime              @default(now()) @map("requested_at")
+  reviewedAt     DateTime?             @map("reviewed_at")
+  org            Organization          @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@map("org_verifications")
+}
+
+model SafeDate {
+  id                  String          @id @default(uuid()) @db.Uuid
+  userId              String          @map("user_id") @db.Uuid
+  targetDescription   String
+  durationMinutes     Int             @map("duration_minutes")
+  pinHash             String          @map("pin_hash")
+  status              SafeDateStatus  @default(ACTIVE)
+  expiresAt           DateTime        @map("expires_at")
+  checkedInAt         DateTime?       @map("checked_in_at")
+  escalatedAt         DateTime?       @map("escalated_at")
+  completedAt         DateTime?       @map("completed_at")
+  deletionScheduledAt DateTime?       @map("deletion_scheduled_at")
+  shareToken          String          @unique @map("share_token")
+  createdAt           DateTime        @default(now()) @map("created_at")
+  updatedAt           DateTime        @updatedAt @map("updated_at")
+  gpsLogs             GPSLog[]
+  user                User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  safetyContacts      SafetyContact[]
+
+  @@index([userId])
+  @@map("safe_dates")
+}
+
+model SafetyContact {
+  id         String    @id @default(uuid()) @db.Uuid
+  safeDateId String    @map("safe_date_id") @db.Uuid
+  name       String
+  phone      String
+  smsSentAt  DateTime? @map("sms_sent_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  safeDate   SafeDate  @relation(fields: [safeDateId], references: [id], onDelete: Cascade)
+
+  @@index([safeDateId])
+  @@map("safety_contacts")
+}
+
+model GPSLog {
+  id           String   @id @default(uuid()) @db.Uuid
+  safeDateId   String   @map("safe_date_id") @db.Uuid
+  latEncrypted String   @map("lat_encrypted")
+  lngEncrypted String   @map("lng_encrypted")
+  accuracy     Float?
+  iv           String
+  recordedAt   DateTime @default(now()) @map("recorded_at")
+  createdAt    DateTime @default(now()) @map("created_at")
+  safeDate     SafeDate @relation(fields: [safeDateId], references: [id], onDelete: Cascade)
+
+  @@index([safeDateId, recordedAt])
+  @@map("gps_logs")
+}
+
+model ConsentRecord {
+  id             String        @id @default(uuid()) @db.Uuid
+  initiatorId    String        @map("initiator_id") @db.Uuid
+  participantId  String        @map("participant_id") @db.Uuid
+  status         ConsentStatus @default(PENDING)
+  gpsLat         Float?        @map("gps_lat")
+  gpsLng         Float?        @map("gps_lng")
+  bluetoothProof String?       @map("bluetooth_proof")
+  timestamp      DateTime      @map("timestamp")
+  expiresAt      DateTime      @map("expires_at")
+  createdAt      DateTime      @default(now()) @map("created_at")
+  initiator      User          @relation("consentInitiator", fields: [initiatorId], references: [id], onDelete: Cascade)
+  participant    User          @relation("consentParticipant", fields: [participantId], references: [id], onDelete: Cascade)
+  recording      Recording?
+
+  @@map("consent_records")
+}
+
+model Recording {
+  id              String                @id @default(uuid()) @db.Uuid
+  consentRecordId String                @unique @map("consent_record_id") @db.Uuid
+  s3Key           String?               @map("s3_key")
+  drmContentId    String?               @map("drm_content_id")
+  drmUrl          String?               @map("drm_url")
+  durationSeconds Int?                  @map("duration_seconds")
+  sizeBytes       BigInt?               @map("size_bytes")
+  status          RecordingStatus       @default(PROCESSING)
+  createdAt       DateTime              @default(now()) @map("created_at")
+  deletedAt       DateTime?             @map("deleted_at")
+  playbackLogs    PlaybackLog[]
+  accesses        RecordingAccess[]
+  revocations     RecordingRevocation[]
+  consentRecord   ConsentRecord         @relation(fields: [consentRecordId], references: [id], onDelete: Cascade)
+
+  @@map("recordings")
+}
+
+model RecordingAccess {
+  id          String    @id @default(uuid()) @db.Uuid
+  recordingId String    @map("recording_id") @db.Uuid
+  userId      String    @map("user_id") @db.Uuid
+  isActive    Boolean   @default(true) @map("is_active")
+  revokedAt   DateTime? @map("revoked_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  recording   Recording @relation(fields: [recordingId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([recordingId, userId])
+  @@map("recording_accesses")
+}
+
+model RecordingRevocation {
+  id              String    @id @default(uuid()) @db.Uuid
+  recordingId     String    @map("recording_id") @db.Uuid
+  revokedByUserId String    @map("revoked_by_user_id") @db.Uuid
+  reason          String?
+  createdAt       DateTime  @default(now()) @map("created_at")
+  recording       Recording @relation(fields: [recordingId], references: [id], onDelete: Cascade)
+  revokedBy       User      @relation(fields: [revokedByUserId], references: [id], onDelete: Cascade)
+
+  @@map("recording_revocations")
+}
+
+model PlaybackLog {
+  id             String    @id @default(uuid()) @db.Uuid
+  recordingId    String    @map("recording_id") @db.Uuid
+  userId         String    @map("user_id") @db.Uuid
+  sessionId      String    @map("session_id")
+  watermarkedUrl String?   @map("watermarked_url")
+  startedAt      DateTime  @default(now()) @map("started_at")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  recording      Recording @relation(fields: [recordingId], references: [id], onDelete: Cascade)
+
+  @@map("playback_logs")
+}
+
+model CoachSession {
+  id            String             @id @default(uuid()) @db.Uuid
+  userId        String             @map("user_id") @db.Uuid
+  persona       CoachPersona
+  mode          CoachMode
+  status        CoachSessionStatus @default(PENDING)
+  roomName      String             @map("room_name")
+  startedAt     DateTime?          @map("started_at")
+  endedAt       DateTime?          @map("ended_at")
+  durationSecs  Int                @default(0) @map("duration_secs")
+  tokensDebited Int                @default(0) @map("tokens_debited")
+  createdAt     DateTime           @default(now()) @map("created_at")
+  user          User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages      SessionMessage[]
+
+  @@index([userId])
+  @@map("coach_sessions")
+}
+
+model SessionMessage {
+  id        String       @id @default(uuid()) @db.Uuid
+  sessionId String       @map("session_id") @db.Uuid
+  role      String
+  content   String
+  createdAt DateTime     @default(now()) @map("created_at")
+  session   CoachSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@map("session_messages")
+}
+
+model LearnModule {
+  id           String               @id @default(uuid()) @db.Uuid
+  order        Int                  @unique
+  title        String
+  description  String
+  badgeName    String               @map("badge_name")
+  isUnlocked   Boolean              @default(false) @map("is_unlocked")
+  isSpicy      Boolean              @default(false) @map("is_spicy")
+  createdAt    DateTime             @default(now()) @map("created_at")
+  lessons      Lesson[]
+  userProgress UserModuleProgress[]
+
+  @@map("learn_modules")
+}
+
+model Lesson {
+  id                  String               @id @default(uuid()) @db.Uuid
+  moduleId            String               @map("module_id") @db.Uuid
+  order               Int
+  title               String
+  coachSystemPrompt   String               @map("coach_system_prompt")
+  partnerSystemPrompt String               @map("partner_system_prompt")
+  assessmentCriteria  String               @map("assessment_criteria")
+  createdAt           DateTime             @default(now()) @map("created_at")
+  module              LearnModule          @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  userProgress        UserLessonProgress[]
+
+  @@unique([moduleId, order])
+  @@index([moduleId])
+  @@map("lessons")
+}
+
+model UserModuleProgress {
+  id             String      @id @default(uuid()) @db.Uuid
+  userId         String      @map("user_id") @db.Uuid
+  moduleId       String      @map("module_id") @db.Uuid
+  completedAt    DateTime?   @map("completed_at")
+  badgeAwardedAt DateTime?   @map("badge_awarded_at")
+  createdAt      DateTime    @default(now()) @map("created_at")
+  module         LearnModule @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, moduleId])
+  @@index([userId])
+  @@map("user_module_progress")
+}
+
+model UserLessonProgress {
+  id          String    @id @default(uuid()) @db.Uuid
+  userId      String    @map("user_id") @db.Uuid
+  lessonId    String    @map("lesson_id") @db.Uuid
+  startedAt   DateTime  @default(now()) @map("started_at")
+  completedAt DateTime? @map("completed_at")
+  passed      Boolean   @default(false)
+  feedback    String?
+  createdAt   DateTime  @default(now()) @map("created_at")
+  lesson      Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lessonId])
+  @@index([userId])
+  @@map("user_lesson_progress")
+}
+
+model Badge {
+  id          String      @id @default(uuid()) @db.Uuid
+  moduleOrder Int         @unique @map("module_order")
+  name        String
+  icon        String
+  description String
+  isSpicy     Boolean     @default(false) @map("is_spicy")
+  createdAt   DateTime    @default(now()) @map("created_at")
+  userBadges  UserBadge[]
+
+  @@map("badges")
+}
+
+model Medal {
+  id          String      @id @default(uuid()) @db.Uuid
+  key         String      @unique
+  name        String
+  icon        String
+  description String
+  criteria    String
+  createdAt   DateTime    @default(now()) @map("created_at")
+  userMedals  UserMedal[]
+
+  @@map("medals")
+}
+
+model UserBadge {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  badgeId   String   @map("badge_id") @db.Uuid
+  awardedAt DateTime @map("awarded_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  badge     Badge    @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, badgeId])
+  @@index([userId])
+  @@map("user_badges")
+}
+
+model UserMedal {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  medalId   String   @map("medal_id") @db.Uuid
+  awardedAt DateTime @map("awarded_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  medal     Medal    @relation(fields: [medalId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, medalId])
+  @@index([userId])
+  @@map("user_medals")
+}
+
+model UserStreak {
+  id             String    @id @default(uuid()) @db.Uuid
+  userId         String    @unique @map("user_id") @db.Uuid
+  currentStreak  Int       @default(0) @map("current_streak")
+  longestStreak  Int       @default(0) @map("longest_streak")
+  lastActivityAt DateTime? @map("last_activity_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_streaks")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model spatial_ref_sys {
+  srid      Int     @id
+  auth_name String? @db.VarChar(256)
+  auth_srid Int?
+  srtext    String? @db.VarChar(2048)
+  proj4text String? @db.VarChar(2048)
+}
+
 enum UserStatus {
   PENDING
-  PENDING_EMAIL
   ACTIVE
   SUSPENDED
   DELETED
@@ -133,265 +1015,11 @@ enum OrgVerificationStatus {
   REJECTED
 }
 
-enum ListingCategory {
-  UNDERWEAR
-  TOYS
-  FETISH_ITEMS
-  HANDMADE_GOODS
-  ACCESSORIES
-  CLOTHING
-  OTHER
-}
-
-enum ShippingOption {
-  STANDARD_POST
-  EXPRESS_POST
-  PICKUP
-}
-
-enum OrderStatus {
-  PLACED
-  PAID
-  SHIPPED
-  DELIVERED
-  COMPLETED
-  CANCELLED
-  DISPUTED
-}
-
-enum ListingStatus {
-  ACTIVE
-  SOLD
-  REMOVED
-}
-
-model User {
-  id                       String                    @id @default(uuid()) @db.Uuid
-  displayName              String?                   @map("display_name")
-  email                    String?                   @unique
-  passwordHash             String?                   @map("password_hash")
-  phone                    String?                   @unique
-  phoneHash                String?                   @unique @map("phone_hash")
-  status                   UserStatus                @default(PENDING)
-  createdAt                DateTime                  @default(now()) @map("created_at")
-  updatedAt                DateTime                  @updatedAt @map("updated_at")
-  encryptedIdentity        EncryptedIdentity?
-  sessions                 Session[]
-  payments                 Payment[]
-  profile                  Profile?
-  posts                    Post[]
-  contentFilter            UserContentFilter?
-  feedInteractions         FeedInteraction[]
-  groupsCreated            Group[]                   @relation("groupsCreated")
-  groupMemberships         GroupMember[]
-  groupModerators          GroupModerator[]
-  gatekeeperConfig         GatekeeperConfig?         @relation("gatekeeperConfig")
-  gatekeeperSent           GatekeeperConversation[]  @relation("gatekeeperSent")
-  gatekeeperReceived       GatekeeperConversation[]  @relation("gatekeeperReceived")
-  userBalance              UserBalance?
-  tokenTransactions        TokenTransaction[]
-  swipesSent               Swipe[]                   @relation("swipesSent")
-  swipesReceived           Swipe[]                   @relation("swipesReceived")
-  matchesAsUser1           Match[]                   @relation("matchesAsUser1")
-  matchesAsUser2           Match[]                   @relation("matchesAsUser2")
-  seenProfiles             SeenProfile[]             @relation("seenProfiles")
-  seenProfileTargets       SeenProfile[]             @relation("seenProfileTargets")
-  conversationParticipants ConversationParticipant[]
-  messagesSent             Message[]
-  initiatedCalls           CallSession[]             @relation("CallInitiator")
-  receivedCalls            CallSession[]             @relation("CallReceiver")
-  eventsCreated            Event[]                   @relation("eventsCreated")
-  eventAttendances         EventAttendee[]
-  eventTickets             EventTicket[]             @relation("eventTickets")
-  orgsCreated              Organization[]            @relation("orgsCreated")
-  orgMemberships           OrgMember[]
-  safeDates                SafeDate[]
-  consentRecordsInitiated  ConsentRecord[]           @relation("consentInitiator")
-  consentRecordsParticipated ConsentRecord[]         @relation("consentParticipant")
-  recordingAccesses        RecordingAccess[]
-  recordingRevocations     RecordingRevocation[]
-  coachSessions            CoachSession[]
-  moduleProgress           UserModuleProgress[]
-  lessonProgress           UserLessonProgress[]
-  userBadges               UserBadge[]
-  userMedals               UserMedal[]
-  userStreak               UserStreak?
-  articleReads             UserArticleRead[]
-  quizAttempts             UserQuizAttempt[]
-  listings                 Listing[]
-  buyerOrders              Order[]                @relation("BuyerOrders")
-  sellerOrders             Order[]                @relation("SellerOrders")
-  sellerSwishNumber        SellerSwishNumber?
-  sellerPayouts            SellerPayout[]
-  shopCart                 ShopCart?
-  campaigns                AdCampaign[]
-  adImpressions            AdImpression[]
-  adClicks                 AdClick[]
-  oauthAccounts            OAuthAccount[]
-
-  @@map("users")
-}
-
-model EncryptedIdentity {
-  id                    String   @id @default(uuid()) @db.Uuid
-  userId                String   @unique @map("user_id") @db.Uuid
-  encryptedFirstName    String   @map("encrypted_first_name")
-  encryptedLastName     String   @map("encrypted_last_name")
-  encryptedPersonnummer String   @map("encrypted_personnummer")
-  iv                    String
-  createdAt             DateTime @default(now()) @map("created_at")
-  updatedAt             DateTime @updatedAt @map("updated_at")
-  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("encrypted_identities")
-}
-
-model OAuthAccount {
-  id         String   @id @default(uuid()) @db.Uuid
-  userId     String   @map("user_id") @db.Uuid
-  provider   String
-  providerId String   @map("provider_id")
-  email      String?
-  createdAt  DateTime @default(now()) @map("created_at")
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerId])
-  @@map("oauth_accounts")
-}
-
-model Session {
-  id         String    @id @default(uuid()) @db.Uuid
-  userId     String    @map("user_id") @db.Uuid
-  tokenHash  String    @unique @map("token_hash")
-  deviceInfo String?   @map("device_info")
-  ipAddress  String?   @map("ip_address")
-  expiresAt  DateTime  @map("expires_at")
-  createdAt  DateTime  @default(now()) @map("created_at")
-  revokedAt  DateTime? @map("revoked_at")
-  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("sessions")
-}
-
-model Payment {
-  id             String        @id @default(uuid()) @db.Uuid
-  userId         String        @map("user_id") @db.Uuid
-  swishPaymentId String?       @unique @map("swish_payment_id")
-  amount         Decimal       @db.Decimal(10, 2)
-  currency       String        @default("SEK")
-  status         PaymentStatus @default(PENDING)
-  swishToken     String?       @map("swish_token")
-  createdAt      DateTime      @default(now()) @map("created_at")
-  completedAt    DateTime?     @map("completed_at")
-  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("payments")
-}
-
-model Profile {
-  id                        String                                @id @default(uuid()) @db.Uuid
-  userId                    String                                @unique @map("user_id") @db.Uuid
-  displayName               String                                @map("display_name")
-  bio                       String?
-  age                       Int
-  gender                    Gender
-  orientation               Orientation
-  relationshipType          RelationshipType?                     @map("relationship_type")
-  seeking                   Seeking[]
-  contentPreference         ContentPreference                     @map("content_preference")
-  verified                  Boolean                               @default(false)
-  allowPostEventSuggestions Boolean                               @default(false) @map("allow_post_event_suggestions")
-  spicyModeEnabled          Boolean                               @default(false) @map("spicy_mode_enabled")
-  createdAt                 DateTime                              @default(now()) @map("created_at")
-  updatedAt                 DateTime                              @updatedAt @map("updated_at")
-  location                  Unsupported("geography(Point,4326)")? @map("location")
-  user                      User                                  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  photos                    ProfilePhoto[]
-  kinkTags                  ProfileKinkTag[]
-  invitationsSent           PairInvitation[]                      @relation("invitationsSent")
-  invitationsReceived       PairInvitation[]                      @relation("invitationsReceived")
-  pairLinkMembers           PairLinkMember[]
-
-  @@map("profiles")
-}
-
-model ProfilePhoto {
-  id              String   @id @default(uuid()) @db.Uuid
-  profileId       String   @map("profile_id") @db.Uuid
-  url             String
-  thumbnailSmall  String?  @map("thumbnail_small")
-  thumbnailMedium String?  @map("thumbnail_medium")
-  thumbnailLarge  String?  @map("thumbnail_large")
-  position        Int      @default(0)
-  isPublic        Boolean  @default(true) @map("is_public")
-  createdAt       DateTime @default(now()) @map("created_at")
-  profile         Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
-
-  @@map("profile_photos")
-}
-
-model KinkTag {
-  id        String           @id @default(uuid()) @db.Uuid
-  name      String           @unique
-  category  String
-  createdAt DateTime         @default(now()) @map("created_at")
-  profiles  ProfileKinkTag[]
-
-  @@map("kink_tags")
-}
-
-model ProfileKinkTag {
-  id            String            @id @default(uuid()) @db.Uuid
-  profileId     String            @map("profile_id") @db.Uuid
-  kinkTagId     String            @map("kink_tag_id") @db.Uuid
-  interestLevel KinkInterestLevel @map("interest_level")
-  isPublic      Boolean           @default(true) @map("is_public")
-  profile       Profile           @relation(fields: [profileId], references: [id], onDelete: Cascade)
-  kinkTag       KinkTag           @relation(fields: [kinkTagId], references: [id], onDelete: Cascade)
-
-  @@unique([profileId, kinkTagId])
-  @@map("profile_kink_tags")
-}
-
 enum InvitationStatus {
   PENDING
   ACCEPTED
   DECLINED
   EXPIRED
-}
-
-model PairInvitation {
-  id            String           @id @default(uuid()) @db.Uuid
-  fromProfileId String           @map("from_profile_id") @db.Uuid
-  toProfileId   String           @map("to_profile_id") @db.Uuid
-  status        InvitationStatus @default(PENDING)
-  createdAt     DateTime         @default(now()) @map("created_at")
-  expiresAt     DateTime         @map("expires_at")
-  fromProfile   Profile          @relation("invitationsSent", fields: [fromProfileId], references: [id], onDelete: Cascade)
-  toProfile     Profile          @relation("invitationsReceived", fields: [toProfileId], references: [id], onDelete: Cascade)
-
-  @@map("pair_invitations")
-}
-
-model PairLink {
-  id        String           @id @default(uuid()) @db.Uuid
-  createdAt DateTime         @default(now()) @map("created_at")
-  members   PairLinkMember[]
-
-  @@map("pair_links")
-}
-
-model PairLinkMember {
-  id         String   @id @default(uuid()) @db.Uuid
-  pairLinkId String   @map("pair_link_id") @db.Uuid
-  profileId  String   @map("profile_id") @db.Uuid
-  joinedAt   DateTime @default(now()) @map("joined_at")
-  pairLink   PairLink @relation(fields: [pairLinkId], references: [id], onDelete: Cascade)
-  profile    Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
-
-  @@unique([pairLinkId, profileId])
-  @@map("pair_link_members")
 }
 
 enum NudityLevel {
@@ -447,79 +1075,9 @@ enum ContentTagDimension {
   GENDER_PRESENTATION
 }
 
-model Post {
-  id           String            @id @default(uuid()) @db.Uuid
-  authorId     String            @map("author_id") @db.Uuid
-  text         String?           @db.VarChar(2000)
-  groupId      String?           @map("group_id") @db.Uuid
-  createdAt    DateTime          @default(now()) @map("created_at")
-  updatedAt    DateTime          @updatedAt @map("updated_at")
-  author       User              @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  group        Group?            @relation("groupPosts", fields: [groupId], references: [id], onDelete: SetNull)
-  media        PostMedia[]
-  interactions FeedInteraction[]
-
-  @@map("posts")
-}
-
-model PostMedia {
-  id              String       @id @default(uuid()) @db.Uuid
-  postId          String       @map("post_id") @db.Uuid
-  url             String
-  thumbnailSmall  String?      @map("thumbnail_small")
-  thumbnailMedium String?      @map("thumbnail_medium")
-  thumbnailLarge  String?      @map("thumbnail_large")
-  position        Int          @default(0)
-  createdAt       DateTime     @default(now()) @map("created_at")
-  post            Post         @relation(fields: [postId], references: [id], onDelete: Cascade)
-  tags            ContentTag[]
-
-  @@map("post_media")
-}
-
-model ContentTag {
-  id          String              @id @default(uuid()) @db.Uuid
-  postMediaId String              @map("post_media_id") @db.Uuid
-  dimension   ContentTagDimension
-  value       String
-  confidence  Float               @default(1.0)
-  createdAt   DateTime            @default(now()) @map("created_at")
-  postMedia   PostMedia           @relation(fields: [postMediaId], references: [id], onDelete: Cascade)
-
-  @@map("content_tags")
-}
-
-model UserContentFilter {
-  id                 String                  @id @default(uuid()) @db.Uuid
-  userId             String                  @unique @map("user_id") @db.Uuid
-  nudityLevel        NudityLevel[]           @map("nudity_level")
-  bodyPart           BodyPartTag[]           @map("body_part")
-  activity           ActivityTag[]
-  vibe               VibeTag[]
-  genderPresentation GenderPresentationTag[] @map("gender_presentation")
-  preset             ContentPreference
-  updatedAt          DateTime                @updatedAt @map("updated_at")
-  user               User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("user_content_filters")
-}
-
 enum FeedInteractionType {
   LIKE
   SHOW_LESS
-}
-
-model FeedInteraction {
-  id        String              @id @default(uuid()) @db.Uuid
-  userId    String              @map("user_id") @db.Uuid
-  postId    String              @map("post_id") @db.Uuid
-  type      FeedInteractionType
-  createdAt DateTime            @default(now()) @map("created_at")
-  user      User                @relation(fields: [userId], references: [id], onDelete: Cascade)
-  post      Post                @relation(fields: [postId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, postId, type])
-  @@map("feed_interactions")
 }
 
 enum GroupVisibility {
@@ -536,50 +1094,6 @@ enum MembershipStatus {
 enum ModeratorRole {
   MODERATOR
   OWNER
-}
-
-model Group {
-  id            String           @id @default(uuid()) @db.Uuid
-  name          String           @db.VarChar(100)
-  description   String?          @db.VarChar(2000)
-  category      String           @db.VarChar(100)
-  visibility    GroupVisibility  @default(OPEN)
-  coverImageUrl String?          @map("cover_image_url")
-  createdById   String           @map("created_by_id") @db.Uuid
-  createdAt     DateTime         @default(now()) @map("created_at")
-  updatedAt     DateTime         @updatedAt @map("updated_at")
-  creator       User             @relation("groupsCreated", fields: [createdById], references: [id], onDelete: Cascade)
-  members       GroupMember[]
-  moderators    GroupModerator[]
-  posts         Post[]           @relation("groupPosts")
-
-  @@map("groups")
-}
-
-model GroupMember {
-  id       String           @id @default(uuid()) @db.Uuid
-  groupId  String           @map("group_id") @db.Uuid
-  userId   String           @map("user_id") @db.Uuid
-  status   MembershipStatus @default(ACTIVE)
-  joinedAt DateTime         @default(now()) @map("joined_at")
-  group    Group            @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  user     User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([groupId, userId])
-  @@map("group_members")
-}
-
-model GroupModerator {
-  id         String        @id @default(uuid()) @db.Uuid
-  groupId    String        @map("group_id") @db.Uuid
-  userId     String        @map("user_id") @db.Uuid
-  role       ModeratorRole
-  assignedAt DateTime      @default(now()) @map("assigned_at")
-  group      Group         @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([groupId, userId])
-  @@map("group_moderators")
 }
 
 enum GatekeeperStrictness {
@@ -608,135 +1122,11 @@ enum GatekeeperMessageRole {
   SYSTEM
 }
 
-model GatekeeperConfig {
-  id              String                   @id @default(uuid()) @db.Uuid
-  userId          String                   @unique @map("user_id") @db.Uuid
-  enabled         Boolean                  @default(true)
-  strictness      GatekeeperStrictness     @default(STANDARD)
-  customQuestions String[]                 @map("custom_questions")
-  dealbreakers    String[]
-  aiTone          GatekeeperTone           @default(CASUAL) @map("ai_tone")
-  createdAt       DateTime                 @default(now()) @map("created_at")
-  updatedAt       DateTime                 @updatedAt @map("updated_at")
-  user            User                     @relation("gatekeeperConfig", fields: [userId], references: [id], onDelete: Cascade)
-  conversations   GatekeeperConversation[]
-
-  @@map("gatekeeper_configs")
-}
-
-model GatekeeperConversation {
-  id          String              @id @default(uuid()) @db.Uuid
-  senderId    String              @map("sender_id") @db.Uuid
-  recipientId String              @map("recipient_id") @db.Uuid
-  configId    String              @map("config_id") @db.Uuid
-  status      GatekeeperStatus    @default(ACTIVE)
-  summary     String?
-  tokensCost  Int                 @default(0) @map("tokens_cost")
-  createdAt   DateTime            @default(now()) @map("created_at")
-  updatedAt   DateTime            @updatedAt @map("updated_at")
-  sender      User                @relation("gatekeeperSent", fields: [senderId], references: [id], onDelete: Cascade)
-  recipient   User                @relation("gatekeeperReceived", fields: [recipientId], references: [id], onDelete: Cascade)
-  config      GatekeeperConfig    @relation(fields: [configId], references: [id], onDelete: Cascade)
-  messages    GatekeeperMessage[]
-
-  @@index([senderId])
-  @@index([recipientId])
-  @@map("gatekeeper_conversations")
-}
-
-model GatekeeperMessage {
-  id             String                 @id @default(uuid()) @db.Uuid
-  conversationId String                 @map("conversation_id") @db.Uuid
-  role           GatekeeperMessageRole
-  content        String
-  createdAt      DateTime               @default(now()) @map("created_at")
-  conversation   GatekeeperConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-
-  @@index([conversationId])
-  @@map("gatekeeper_messages")
-}
-
 enum TokenTransactionType {
   GATEKEEPER
   TOPUP
   REFUND
   COACH_SESSION
-}
-
-model UserBalance {
-  id        String   @id @default(uuid()) @db.Uuid
-  userId    String   @unique @map("user_id") @db.Uuid
-  balance   Decimal  @default(0) @db.Decimal(20, 5)
-  updatedAt DateTime @updatedAt @map("updated_at")
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("user_balances")
-}
-
-model TokenTransaction {
-  id          String               @id @default(uuid()) @db.Uuid
-  userId      String               @map("user_id") @db.Uuid
-  amount      Decimal              @db.Decimal(20, 5)
-  type        TokenTransactionType
-  referenceId String?              @map("reference_id") @db.Uuid
-  description String?
-  serviceRef  String?              @map("service_ref")
-  createdAt   DateTime             @default(now()) @map("created_at")
-  user        User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@map("token_transactions")
-}
-
-model SpreadConfig {
-  id        String   @id @default(uuid()) @db.Uuid
-  segment   String?
-  market    String?
-  multiplier Decimal  @db.Decimal(10, 5)
-  isDefault Boolean  @default(false) @map("is_default")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@unique([segment, market])
-  @@map("spread_configs")
-}
-
-model Swipe {
-  id        String      @id @default(uuid()) @db.Uuid
-  userId    String      @map("user_id") @db.Uuid
-  targetId  String      @map("target_id") @db.Uuid
-  action    SwipeAction
-  createdAt DateTime    @default(now()) @map("created_at")
-  user      User        @relation("swipesSent", fields: [userId], references: [id], onDelete: Cascade)
-  target    User        @relation("swipesReceived", fields: [targetId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, targetId])
-  @@map("swipes")
-}
-
-model Match {
-  id           String        @id @default(uuid()) @db.Uuid
-  user1Id      String        @map("user1_id") @db.Uuid
-  user2Id      String        @map("user2_id") @db.Uuid
-  createdAt    DateTime      @default(now()) @map("created_at")
-  user1        User          @relation("matchesAsUser1", fields: [user1Id], references: [id], onDelete: Cascade)
-  user2        User          @relation("matchesAsUser2", fields: [user2Id], references: [id], onDelete: Cascade)
-  conversation Conversation?
-
-  @@unique([user1Id, user2Id])
-  @@map("matches")
-}
-
-model SeenProfile {
-  id       String   @id @default(uuid()) @db.Uuid
-  userId   String   @map("user_id") @db.Uuid
-  targetId String   @map("target_id") @db.Uuid
-  seenAt   DateTime @default(now()) @map("seen_at")
-  user     User     @relation("seenProfiles", fields: [userId], references: [id], onDelete: Cascade)
-  target   User     @relation("seenProfileTargets", fields: [targetId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, targetId])
-  @@map("seen_profiles")
 }
 
 enum MessageType {
@@ -751,50 +1141,6 @@ enum MessageStatus {
   READ
 }
 
-model Conversation {
-  id           String                    @id @default(uuid()) @db.Uuid
-  matchId      String                    @unique @map("match_id") @db.Uuid
-  createdAt    DateTime                  @default(now()) @map("created_at")
-  match        Match                     @relation(fields: [matchId], references: [id], onDelete: Cascade)
-  participants ConversationParticipant[]
-  messages     Message[]
-  callSessions CallSession[]
-
-  @@map("conversations")
-}
-
-model ConversationParticipant {
-  id             String       @id @default(uuid()) @db.Uuid
-  conversationId String       @map("conversation_id") @db.Uuid
-  userId         String       @map("user_id") @db.Uuid
-  joinedAt       DateTime     @default(now()) @map("joined_at")
-  lastReadAt     DateTime?    @map("last_read_at")
-  readReceipts   Boolean      @default(true) @map("read_receipts")
-  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([conversationId, userId])
-  @@map("conversation_participants")
-}
-
-model Message {
-  id             String        @id @default(uuid()) @db.Uuid
-  conversationId String        @map("conversation_id") @db.Uuid
-  senderId       String        @map("sender_id") @db.Uuid
-  content        String?
-  type           MessageType   @default(TEXT)
-  status         MessageStatus @default(SENT)
-  mediaUrl       String?       @map("media_url")
-  isFiltered     Boolean       @default(false) @map("is_filtered")
-  deletedAt      DateTime?     @map("deleted_at")
-  createdAt      DateTime      @default(now()) @map("created_at")
-  conversation   Conversation  @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  sender         User          @relation(fields: [senderId], references: [id], onDelete: Cascade)
-
-  @@index([conversationId, createdAt])
-  @@map("messages")
-}
-
 enum CallType {
   VOICE
   VIDEO
@@ -806,132 +1152,6 @@ enum CallStatus {
   ENDED
   REJECTED
   MISSED
-}
-
-model CallSession {
-  id             String       @id @default(uuid()) @db.Uuid
-  conversationId String       @map("conversation_id") @db.Uuid
-  initiatorId    String       @map("initiator_id") @db.Uuid
-  receiverId     String       @map("receiver_id") @db.Uuid
-  callType       CallType     @map("call_type")
-  status         CallStatus   @default(RINGING)
-  roomName       String       @map("room_name")
-  startedAt      DateTime?    @map("started_at")
-  endedAt        DateTime?    @map("ended_at")
-  createdAt      DateTime     @default(now()) @map("created_at")
-  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  initiator      User         @relation("CallInitiator", fields: [initiatorId], references: [id])
-  receiver       User         @relation("CallReceiver", fields: [receiverId], references: [id])
-
-  @@index([conversationId])
-  @@map("call_sessions")
-}
-
-model Event {
-  id                 String                                @id @default(uuid()) @db.Uuid
-  createdById        String                                @map("created_by_id") @db.Uuid
-  title              String                                @db.VarChar(200)
-  description        String?                               @db.VarChar(4000)
-  type               EventType
-  status             EventStatus                           @default(DRAFT)
-  startsAt           DateTime                              @map("starts_at")
-  endsAt             DateTime?                             @map("ends_at")
-  locationName       String?                               @map("location_name") @db.VarChar(500)
-  location           Unsupported("geography(Point,4326)")? @map("location")
-  capacity           Int?
-  price              Decimal?                              @db.Decimal(10, 2)
-  currency           String                                @default("SEK")
-  coverImageUrl      String?                               @map("cover_image_url")
-  targetGenders      Gender[]                              @map("target_genders")
-  targetOrientations Orientation[]                         @map("target_orientations")
-  targetMinAge       Int?                                  @map("target_min_age")
-  targetMaxAge       Int?                                  @map("target_max_age")
-  createdAt          DateTime                              @default(now()) @map("created_at")
-  updatedAt          DateTime                              @updatedAt @map("updated_at")
-  creator            User                                  @relation("eventsCreated", fields: [createdById], references: [id], onDelete: Cascade)
-  attendees          EventAttendee[]
-  tickets            EventTicket[]
-
-  @@index([startsAt])
-  @@map("events")
-}
-
-model EventAttendee {
-  id       String         @id @default(uuid()) @db.Uuid
-  eventId  String         @map("event_id") @db.Uuid
-  userId   String         @map("user_id") @db.Uuid
-  status   AttendeeStatus @default(GOING)
-  joinedAt DateTime       @default(now()) @map("joined_at")
-  event    Event          @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  user     User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([eventId, userId])
-  @@map("event_attendees")
-}
-
-model EventTicket {
-  id             String       @id @default(uuid()) @db.Uuid
-  eventId        String       @map("event_id") @db.Uuid
-  userId         String       @map("user_id") @db.Uuid
-  status         TicketStatus @default(VALID)
-  swishPaymentId String?      @unique @map("swish_payment_id")
-  pricePaid      Decimal      @map("price_paid") @db.Decimal(10, 2)
-  currency       String       @default("SEK")
-  purchasedAt    DateTime     @default(now()) @map("purchased_at")
-  usedAt         DateTime?    @map("used_at")
-  refundedAt     DateTime?    @map("refunded_at")
-  event          Event        @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  user           User         @relation("eventTickets", fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([eventId, userId])
-  @@map("event_tickets")
-}
-
-model Organization {
-  id            String           @id @default(uuid()) @db.Uuid
-  name          String           @db.VarChar(200)
-  description   String?          @db.VarChar(4000)
-  type          OrgType
-  locationName  String?          @map("location_name") @db.VarChar(500)
-  contactEmail  String?          @map("contact_email")
-  contactPhone  String?          @map("contact_phone")
-  websiteUrl    String?          @map("website_url")
-  coverImageUrl String?          @map("cover_image_url")
-  verified      Boolean          @default(false)
-  createdById   String           @map("created_by_id") @db.Uuid
-  createdAt     DateTime         @default(now()) @map("created_at")
-  updatedAt     DateTime         @updatedAt @map("updated_at")
-  creator       User             @relation("orgsCreated", fields: [createdById], references: [id], onDelete: Cascade)
-  members       OrgMember[]
-  verification  OrgVerification?
-
-  @@map("organizations")
-}
-
-model OrgMember {
-  id       String        @id @default(uuid()) @db.Uuid
-  orgId    String        @map("org_id") @db.Uuid
-  userId   String        @map("user_id") @db.Uuid
-  role     OrgMemberRole @default(MEMBER)
-  joinedAt DateTime      @default(now()) @map("joined_at")
-  org      Organization  @relation(fields: [orgId], references: [id], onDelete: Cascade)
-  user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([orgId, userId])
-  @@map("org_members")
-}
-
-model OrgVerification {
-  id             String                @id @default(uuid()) @db.Uuid
-  orgId          String                @unique @map("org_id") @db.Uuid
-  status         OrgVerificationStatus @default(PENDING)
-  swishPaymentId String?               @unique @map("swish_payment_id")
-  reviewNotes    String?               @map("review_notes")
-  requestedAt    DateTime              @default(now()) @map("requested_at")
-  reviewedAt     DateTime?             @map("reviewed_at")
-  org            Organization          @relation(fields: [orgId], references: [id], onDelete: Cascade)
-
-  @@map("org_verifications")
 }
 
 enum SafeDateStatus {
@@ -953,133 +1173,6 @@ enum RecordingStatus {
   DELETED
 }
 
-model SafeDate {
-  id                  String          @id @default(uuid()) @db.Uuid
-  userId              String          @map("user_id") @db.Uuid
-  targetDescription   String
-  durationMinutes     Int             @map("duration_minutes")
-  pinHash             String          @map("pin_hash")
-  status              SafeDateStatus  @default(ACTIVE)
-  expiresAt           DateTime        @map("expires_at")
-  checkedInAt         DateTime?       @map("checked_in_at")
-  escalatedAt         DateTime?       @map("escalated_at")
-  completedAt         DateTime?       @map("completed_at")
-  deletionScheduledAt DateTime?       @map("deletion_scheduled_at")
-  shareToken          String          @unique @map("share_token")
-  createdAt           DateTime        @default(now()) @map("created_at")
-  updatedAt           DateTime        @updatedAt @map("updated_at")
-  user                User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  safetyContacts      SafetyContact[]
-  gpsLogs             GPSLog[]
-
-  @@index([userId])
-  @@map("safe_dates")
-}
-
-model SafetyContact {
-  id          String    @id @default(uuid()) @db.Uuid
-  safeDateId  String    @map("safe_date_id") @db.Uuid
-  name        String
-  phone       String
-  smsSentAt   DateTime? @map("sms_sent_at")
-  createdAt   DateTime  @default(now()) @map("created_at")
-  safeDate    SafeDate  @relation(fields: [safeDateId], references: [id], onDelete: Cascade)
-
-  @@index([safeDateId])
-  @@map("safety_contacts")
-}
-
-model GPSLog {
-  id            String   @id @default(uuid()) @db.Uuid
-  safeDateId    String   @map("safe_date_id") @db.Uuid
-  latEncrypted  String   @map("lat_encrypted")
-  lngEncrypted  String   @map("lng_encrypted")
-  accuracy      Float?
-  iv            String
-  recordedAt    DateTime @default(now()) @map("recorded_at")
-  createdAt     DateTime @default(now()) @map("created_at")
-  safeDate      SafeDate @relation(fields: [safeDateId], references: [id], onDelete: Cascade)
-
-  @@index([safeDateId, recordedAt])
-  @@map("gps_logs")
-}
-
-model ConsentRecord {
-  id             String           @id @default(uuid()) @db.Uuid
-  initiatorId    String           @map("initiator_id") @db.Uuid
-  participantId  String           @map("participant_id") @db.Uuid
-  status         ConsentStatus    @default(PENDING)
-  gpsLat         Float?           @map("gps_lat")
-  gpsLng         Float?           @map("gps_lng")
-  bluetoothProof String?          @map("bluetooth_proof")
-  timestamp      DateTime         @map("timestamp")
-  expiresAt      DateTime         @map("expires_at")
-  createdAt      DateTime         @default(now()) @map("created_at")
-  initiator      User             @relation("consentInitiator", fields: [initiatorId], references: [id], onDelete: Cascade)
-  participant    User             @relation("consentParticipant", fields: [participantId], references: [id], onDelete: Cascade)
-  recording      Recording?
-
-  @@map("consent_records")
-}
-
-model Recording {
-  id             String                  @id @default(uuid()) @db.Uuid
-  consentRecordId String                 @unique @map("consent_record_id") @db.Uuid
-  s3Key          String?                 @map("s3_key")
-  drmContentId   String?                 @map("drm_content_id")
-  drmUrl         String?                 @map("drm_url")
-  durationSeconds Int?                   @map("duration_seconds")
-  sizeBytes      BigInt?                 @map("size_bytes")
-  status         RecordingStatus         @default(PROCESSING)
-  createdAt      DateTime                @default(now()) @map("created_at")
-  deletedAt      DateTime?               @map("deleted_at")
-  consentRecord  ConsentRecord           @relation(fields: [consentRecordId], references: [id], onDelete: Cascade)
-  accesses       RecordingAccess[]
-  revocations    RecordingRevocation[]
-  playbackLogs   PlaybackLog[]
-
-  @@map("recordings")
-}
-
-model RecordingAccess {
-  id         String      @id @default(uuid()) @db.Uuid
-  recordingId String      @map("recording_id") @db.Uuid
-  userId     String      @map("user_id") @db.Uuid
-  isActive   Boolean     @default(true) @map("is_active")
-  revokedAt  DateTime?   @map("revoked_at")
-  createdAt  DateTime    @default(now()) @map("created_at")
-  recording  Recording   @relation(fields: [recordingId], references: [id], onDelete: Cascade)
-  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([recordingId, userId])
-  @@map("recording_accesses")
-}
-
-model RecordingRevocation {
-  id           String    @id @default(uuid()) @db.Uuid
-  recordingId  String    @map("recording_id") @db.Uuid
-  revokedByUserId String  @map("revoked_by_user_id") @db.Uuid
-  reason       String?
-  createdAt    DateTime  @default(now()) @map("created_at")
-  recording    Recording @relation(fields: [recordingId], references: [id], onDelete: Cascade)
-  revokedBy    User      @relation(fields: [revokedByUserId], references: [id], onDelete: Cascade)
-
-  @@map("recording_revocations")
-}
-
-model PlaybackLog {
-  id             String    @id @default(uuid()) @db.Uuid
-  recordingId    String    @map("recording_id") @db.Uuid
-  userId         String    @map("user_id") @db.Uuid
-  sessionId      String    @map("session_id")
-  watermarkedUrl String?   @map("watermarked_url")
-  startedAt      DateTime  @default(now()) @map("started_at")
-  createdAt      DateTime  @default(now()) @map("created_at")
-  recording      Recording @relation(fields: [recordingId], references: [id], onDelete: Cascade)
-
-  @@map("playback_logs")
-}
-
 enum CoachPersona {
   COACH
   PARTNER
@@ -1094,529 +1187,4 @@ enum CoachSessionStatus {
   PENDING
   ACTIVE
   ENDED
-}
-
-model CoachSession {
-  id            String             @id @default(uuid()) @db.Uuid
-  userId        String             @map("user_id") @db.Uuid
-  persona       CoachPersona
-  mode          CoachMode
-  status        CoachSessionStatus @default(PENDING)
-  roomName      String             @map("room_name")
-  startedAt     DateTime?          @map("started_at")
-  endedAt       DateTime?          @map("ended_at")
-  durationSecs  Int                @default(0) @map("duration_secs")
-  tokensDebited Int                @default(0) @map("tokens_debited")
-  createdAt     DateTime           @default(now()) @map("created_at")
-  user          User               @relation(fields: [userId], references: [id], onDelete: Cascade)
-  messages      SessionMessage[]
-
-  @@index([userId])
-  @@map("coach_sessions")
-}
-
-model SessionMessage {
-  id        String       @id @default(uuid()) @db.Uuid
-  sessionId String       @map("session_id") @db.Uuid
-  role      String
-  content   String
-  createdAt DateTime     @default(now()) @map("created_at")
-  session   CoachSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-
-  @@index([sessionId])
-  @@map("session_messages")
-}
-
-model LearnModule {
-  id           String               @id @default(uuid()) @db.Uuid
-  order        Int                  @unique
-  title        String
-  description  String
-  badgeName    String               @map("badge_name")
-  isUnlocked   Boolean              @default(false) @map("is_unlocked")
-  isSpicy      Boolean              @default(false) @map("is_spicy")
-  createdAt    DateTime             @default(now()) @map("created_at")
-  lessons      Lesson[]
-  userProgress UserModuleProgress[]
-
-  @@map("learn_modules")
-}
-
-model Lesson {
-  id                  String               @id @default(uuid()) @db.Uuid
-  moduleId            String               @map("module_id") @db.Uuid
-  order               Int
-  title               String
-  coachSystemPrompt   String               @map("coach_system_prompt")
-  partnerSystemPrompt String               @map("partner_system_prompt")
-  assessmentCriteria  String               @map("assessment_criteria")
-  createdAt           DateTime             @default(now()) @map("created_at")
-  module              LearnModule          @relation(fields: [moduleId], references: [id], onDelete: Cascade)
-  userProgress        UserLessonProgress[]
-
-  @@unique([moduleId, order])
-  @@index([moduleId])
-  @@map("lessons")
-}
-
-model UserModuleProgress {
-  id             String      @id @default(uuid()) @db.Uuid
-  userId         String      @map("user_id") @db.Uuid
-  moduleId       String      @map("module_id") @db.Uuid
-  completedAt    DateTime?   @map("completed_at")
-  badgeAwardedAt DateTime?   @map("badge_awarded_at")
-  createdAt      DateTime    @default(now()) @map("created_at")
-  user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  module         LearnModule @relation(fields: [moduleId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, moduleId])
-  @@index([userId])
-  @@map("user_module_progress")
-}
-
-model UserLessonProgress {
-  id          String    @id @default(uuid()) @db.Uuid
-  userId      String    @map("user_id") @db.Uuid
-  lessonId    String    @map("lesson_id") @db.Uuid
-  startedAt   DateTime  @default(now()) @map("started_at")
-  completedAt DateTime? @map("completed_at")
-  passed      Boolean   @default(false)
-  feedback    String?
-  createdAt   DateTime  @default(now()) @map("created_at")
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  lesson      Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, lessonId])
-  @@index([userId])
-  @@map("user_lesson_progress")
-}
-
-model Badge {
-  id           String      @id @default(uuid()) @db.Uuid
-  moduleOrder  Int         @unique @map("module_order")
-  name         String
-  icon         String
-  description  String
-  isSpicy      Boolean     @default(false) @map("is_spicy")
-  createdAt    DateTime    @default(now()) @map("created_at")
-  userBadges   UserBadge[]
-
-  @@map("badges")
-}
-
-model Medal {
-  id         String       @id @default(uuid()) @db.Uuid
-  key        String       @unique
-  name       String
-  icon       String
-  description String
-  criteria   String
-  createdAt  DateTime     @default(now()) @map("created_at")
-  userMedals UserMedal[]
-
-  @@map("medals")
-}
-
-model UserBadge {
-  id        String   @id @default(uuid()) @db.Uuid
-  userId    String   @map("user_id") @db.Uuid
-  badgeId   String   @map("badge_id") @db.Uuid
-  awardedAt DateTime @map("awarded_at")
-  createdAt DateTime @default(now()) @map("created_at")
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  badge     Badge    @relation(fields: [badgeId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, badgeId])
-  @@index([userId])
-  @@map("user_badges")
-}
-
-model UserMedal {
-  id        String   @id @default(uuid()) @db.Uuid
-  userId    String   @map("user_id") @db.Uuid
-  medalId   String   @map("medal_id") @db.Uuid
-  awardedAt DateTime @map("awarded_at")
-  createdAt DateTime @default(now()) @map("created_at")
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  medal     Medal    @relation(fields: [medalId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, medalId])
-  @@index([userId])
-  @@map("user_medals")
-}
-
-model UserStreak {
-  id             String   @id @default(uuid()) @db.Uuid
-  userId         String   @unique @map("user_id") @db.Uuid
-  currentStreak  Int      @default(0) @map("current_streak")
-  longestStreak  Int      @default(0) @map("longest_streak")
-  lastActivityAt DateTime? @map("last_activity_at")
-  updatedAt      DateTime @updatedAt @map("updated_at")
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("user_streaks")
-}
-
-enum EducationCategory {
-  ANATOMY
-  PLEASURE
-  STI_PREVENTION
-  MENTAL_HEALTH
-  RELATIONSHIPS
-  KINK_SAFETY
-  LGBTQ
-  AGING
-}
-
-enum EducationAudience {
-  ALL
-  WOMEN
-  MEN
-  NON_BINARY
-  COUPLES
-}
-
-model EducationTopic {
-  id          String            @id @default(uuid()) @db.Uuid
-  slug        String            @unique @map("slug")
-  title       String            @map("title")
-  description String            @map("description")
-  category    EducationCategory @map("category")
-  language    String            @default("sv") @map("language")
-  order       Int               @default(0) @map("order")
-  createdAt   DateTime          @default(now()) @map("created_at")
-
-  articles EducationArticle[]
-  podcasts EducationPodcast[]
-  quizzes  EducationQuiz[]
-
-  @@map("education_topics")
-  @@index([category])
-  @@index([language])
-}
-
-model EducationArticle {
-  id                  String             @id @default(uuid()) @db.Uuid
-  topicId             String             @map("topic_id") @db.Uuid
-  title               String             @map("title")
-  content             String             @map("content") @db.Text
-  audience            EducationAudience  @default(ALL) @map("audience")
-  language            String             @default("sv") @map("language")
-  readingTimeMinutes  Int                @default(5) @map("reading_time_minutes")
-  disclaimer          String             @default("Denna information ersätter inte professionell medicinsk rådgivning.") @map("disclaimer")
-  generatedAt         DateTime?          @map("generated_at")
-  createdAt           DateTime           @default(now()) @map("created_at")
-
-  topic     EducationTopic   @relation(fields: [topicId], references: [id], onDelete: Cascade)
-  readBy    UserArticleRead[]
-
-  @@map("education_articles")
-  @@unique([topicId, audience, language])
-  @@index([topicId])
-  @@index([audience])
-  @@index([language])
-}
-
-model EducationPodcast {
-  id             String            @id @default(uuid()) @db.Uuid
-  topicId        String            @map("topic_id") @db.Uuid
-  title          String            @map("title")
-  description    String            @map("description")
-  audioUrl       String?           @map("audio_url")
-  durationSeconds Int              @default(0) @map("duration_seconds")
-  audience       EducationAudience @default(ALL) @map("audience")
-  language       String            @default("sv") @map("language")
-  host1VoiceId   String            @default("ErXwobaYiN019PkySvjV") @map("host1_voice_id")
-  host2VoiceId   String            @default("21m00Tcm4TlvDq8ikWAM") @map("host2_voice_id")
-  generatedAt    DateTime?         @map("generated_at")
-  createdAt      DateTime          @default(now()) @map("created_at")
-
-  topic EducationTopic @relation(fields: [topicId], references: [id], onDelete: Cascade)
-
-  @@map("education_podcasts")
-  @@unique([topicId, language])
-  @@index([topicId])
-}
-
-model EducationQuiz {
-  id        String            @id @default(uuid()) @db.Uuid
-  topicId   String            @map("topic_id") @db.Uuid
-  title     String            @map("title")
-  audience  EducationAudience @default(ALL) @map("audience")
-  language  String            @default("sv") @map("language")
-  questions Json              @map("questions")
-  createdAt DateTime          @default(now()) @map("created_at")
-
-  topic    EducationTopic   @relation(fields: [topicId], references: [id], onDelete: Cascade)
-  attempts UserQuizAttempt[]
-
-  @@map("education_quizzes")
-  @@index([topicId])
-}
-
-model UserArticleRead {
-  id        String   @id @default(uuid()) @db.Uuid
-  userId    String   @map("user_id") @db.Uuid
-  articleId String   @map("article_id") @db.Uuid
-  readAt    DateTime @default(now()) @map("read_at")
-
-  user    User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  article EducationArticle @relation(fields: [articleId], references: [id], onDelete: Cascade)
-
-  @@map("user_article_reads")
-  @@unique([userId, articleId])
-}
-
-model UserQuizAttempt {
-  id          String   @id @default(uuid()) @db.Uuid
-  userId      String   @map("user_id") @db.Uuid
-  quizId      String   @map("quiz_id") @db.Uuid
-  score       Int      @map("score")
-  answers     Json     @map("answers")
-  completedAt DateTime @default(now()) @map("completed_at")
-
-  user User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  quiz EducationQuiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
-
-  @@map("user_quiz_attempts")
-  @@index([userId, quizId])
-}
-
-model Listing {
-  id               String            @id @default(uuid()) @db.Uuid
-  sellerId         String            @map("seller_id") @db.Uuid
-  title            String
-  description      String            @db.Text
-  price            Int
-  category         ListingCategory
-  shippingOptions  ShippingOption[]  @default([])
-  status           ListingStatus     @default(ACTIVE)
-  createdAt        DateTime          @default(now()) @map("created_at")
-  updatedAt        DateTime          @updatedAt @map("updated_at")
-
-  seller User           @relation(fields: [sellerId], references: [id], onDelete: Cascade)
-  images ListingImage[]
-  orders Order[]
-
-  @@map("listings")
-  @@index([sellerId])
-}
-
-model ListingImage {
-  id        String   @id @default(uuid()) @db.Uuid
-  listingId String   @map("listing_id") @db.Uuid
-  url       String
-  order     Int      @default(0)
-  createdAt DateTime @default(now()) @map("created_at")
-
-  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
-
-  @@map("listing_images")
-  @@index([listingId])
-}
-
-model Order {
-  id              String        @id @default(uuid()) @db.Uuid
-  listingId       String        @map("listing_id") @db.Uuid
-  buyerId         String        @map("buyer_id") @db.Uuid
-  sellerId        String        @map("seller_id") @db.Uuid
-  status          OrderStatus   @default(PLACED)
-  amountSEK       Int           @map("amount_sek")
-  commissionSEK   Int           @map("commission_sek")
-  shippingOption  ShippingOption
-  trackingNumber  String?       @map("tracking_number")
-  placedAt        DateTime      @default(now()) @map("placed_at")
-  paidAt          DateTime?     @map("paid_at")
-  shippedAt       DateTime?     @map("shipped_at")
-  deliveredAt     DateTime?     @map("delivered_at")
-  completedAt     DateTime?     @map("completed_at")
-  autoConfirmAt   DateTime?     @map("auto_confirm_at")
-  createdAt       DateTime      @default(now()) @map("created_at")
-  updatedAt       DateTime      @updatedAt @map("updated_at")
-
-  listing  Listing              @relation(fields: [listingId], references: [id], onDelete: Cascade)
-  buyer    User                 @relation("BuyerOrders", fields: [buyerId], references: [id], onDelete: Cascade)
-  seller   User                 @relation("SellerOrders", fields: [sellerId], references: [id], onDelete: Cascade)
-  payment  MarketplacePayment?
-  payout   SellerPayout?
-
-  @@map("orders")
-  @@index([listingId])
-  @@index([buyerId])
-  @@index([sellerId])
-}
-
-model MarketplacePayment {
-  id             String        @id @default(uuid()) @db.Uuid
-  orderId        String        @unique @map("order_id") @db.Uuid
-  swishPaymentId String        @unique @map("swish_payment_id")
-  swishToken     String        @map("swish_token")
-  amountSEK      Int           @map("amount_sek")
-  status         PaymentStatus @default(PENDING)
-  payerAlias     String?       @map("payer_alias")
-  createdAt      DateTime      @default(now()) @map("created_at")
-  updatedAt      DateTime      @updatedAt @map("updated_at")
-
-  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
-
-  @@map("marketplace_payments")
-}
-
-enum PayoutStatus {
-  PENDING
-  PAID
-  FAILED
-}
-
-model SellerSwishNumber {
-  id           String    @id @default(uuid()) @db.Uuid
-  userId       String    @unique @map("user_id") @db.Uuid
-  swishNumber  String    @map("swish_number")
-  verifiedAt   DateTime? @map("verified_at")
-  createdAt    DateTime  @default(now()) @map("created_at")
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("seller_swish_numbers")
-}
-
-model SellerPayout {
-  id             String       @id @default(uuid()) @db.Uuid
-  orderId        String       @unique @map("order_id") @db.Uuid
-  sellerId       String       @map("seller_id") @db.Uuid
-  swishPayoutId  String?      @unique @map("swish_payout_id")
-  amountSEK      Int          @map("amount_sek")
-  status         PayoutStatus @default(PENDING)
-  errorMessage   String?      @map("error_message")
-  initiatedAt    DateTime     @default(now()) @map("initiated_at")
-  completedAt    DateTime?    @map("completed_at")
-
-  order  Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  seller User  @relation(fields: [sellerId], references: [id], onDelete: Cascade)
-
-  @@map("seller_payouts")
-  @@index([sellerId])
-}
-
-model ShopCart {
-  id        String   @id @default(uuid()) @db.Uuid
-  userId    String   @unique @map("user_id") @db.Uuid
-  cartId    String   @map("cart_id")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("shop_carts")
-}
-
-// ─── Advertising ─────────────────────────────────────────────────────────────
-
-enum CampaignStatus {
-  DRAFT
-  ACTIVE
-  PAUSED
-  EXHAUSTED
-  COMPLETED
-}
-
-enum AdFormat {
-  FEED
-  STORY
-  EVENT_SPONSOR
-}
-
-enum BillingModel {
-  CPM
-  CPC
-}
-
-model AdCampaign {
-  id              String         @id @default(uuid()) @db.Uuid
-  advertiserId    String         @map("advertiser_id") @db.Uuid
-  name            String
-  status          CampaignStatus @default(DRAFT)
-  format          AdFormat       @default(FEED)
-  billingModel    BillingModel   @default(CPM) @map("billing_model")
-  dailyBudgetSEK  Int            @map("daily_budget_sek")
-  totalBudgetSEK  Int?           @map("total_budget_sek")
-  spentSEK        Int            @default(0) @map("spent_sek")
-  startsAt        DateTime?      @map("starts_at")
-  endsAt          DateTime?      @map("ends_at")
-  createdAt       DateTime       @default(now()) @map("created_at")
-  updatedAt       DateTime       @updatedAt @map("updated_at")
-
-  advertiser  User           @relation(fields: [advertiserId], references: [id], onDelete: Cascade)
-  targeting   AdTargeting?
-  creatives   AdCreative[]
-  impressions AdImpression[]
-  clicks      AdClick[]
-
-  @@map("ad_campaigns")
-}
-
-model AdTargeting {
-  id                String             @id @default(uuid()) @db.Uuid
-  campaignId        String             @unique @map("campaign_id") @db.Uuid
-  ageMin            Int?               @default(18) @map("age_min")
-  ageMax            Int?               @map("age_max")
-  genders           Gender[]
-  orientations      Orientation[]
-  relationshipTypes RelationshipType[] @map("relationship_types")
-  kinkTagIds        String[]           @map("kink_tag_ids")
-  radiusKm          Int?               @map("radius_km")
-  createdAt         DateTime           @default(now()) @map("created_at")
-  updatedAt         DateTime           @updatedAt @map("updated_at")
-
-  campaign AdCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
-
-  @@map("ad_targetings")
-}
-
-model AdCreative {
-  id         String   @id @default(uuid()) @db.Uuid
-  campaignId String   @map("campaign_id") @db.Uuid
-  headline   String   @db.VarChar(80)
-  body       String?  @db.VarChar(200)
-  imageUrl   String?  @map("image_url")
-  ctaUrl     String   @map("cta_url")
-  isActive   Boolean  @default(true) @map("is_active")
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
-
-  campaign    AdCampaign    @relation(fields: [campaignId], references: [id], onDelete: Cascade)
-  impressions AdImpression[]
-  clicks      AdClick[]
-
-  @@map("ad_creatives")
-}
-
-model AdImpression {
-  id         String   @id @default(uuid()) @db.Uuid
-  campaignId String   @map("campaign_id") @db.Uuid
-  creativeId String   @map("creative_id") @db.Uuid
-  userId     String   @map("user_id") @db.Uuid
-  recordedAt DateTime @default(now()) @map("recorded_at")
-
-  campaign AdCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
-  creative AdCreative @relation(fields: [creativeId], references: [id], onDelete: Cascade)
-  user     User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([campaignId, recordedAt])
-  @@map("ad_impressions")
-}
-
-model AdClick {
-  id         String   @id @default(uuid()) @db.Uuid
-  campaignId String   @map("campaign_id") @db.Uuid
-  creativeId String   @map("creative_id") @db.Uuid
-  userId     String   @map("user_id") @db.Uuid
-  clickedAt  DateTime @default(now()) @map("clicked_at")
-
-  campaign AdCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
-  creative AdCreative @relation(fields: [creativeId], references: [id], onDelete: Cascade)
-  user     User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([campaignId, clickedAt])
-  @@map("ad_clicks")
 }

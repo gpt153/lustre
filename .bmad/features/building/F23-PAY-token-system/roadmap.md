@@ -8,8 +8,9 @@
 ---
 
 ## Wave 1: Token Core
-**Status:** IN_PROGRESS
+**Status:** DONE
 **Started:** 2026-03-26T00:00:00Z
+**Completed:** 2026-03-26
 
 ### Parallelization groups:
 **Group A (sequential):**
@@ -28,17 +29,19 @@
 ---
 
 ## Wave 2: Payment Integration
-**Status:** NOT_STARTED
+**Status:** DONE
+**Started:** 2026-03-26
+**Completed:** 2026-03-26
 
 ### Parallelization groups:
 **Group A (parallel):**
-- wave-2a-swish-topup (sonnet) — Swish Recurring API: setup recurring payment, trigger on low balance, handle callback, credit tokens
-- wave-2b-segpay-topup (sonnet) — Segpay API: card registration, one-time payment, recurring setup, handle callback, credit tokens
+- wave-2a-swish-topup (sonnet) — Swish Recurring API: setup recurring payment, trigger on low balance, handle callback, credit tokens **Status: VERIFIED**
+- wave-2b-segpay-topup (sonnet) — Segpay API: card registration, one-time payment, recurring setup, handle callback, credit tokens **Status: VERIFIED**
 
-### Testgate Wave 2:
-- [ ] Swish auto-topup triggers on low balance
-- [ ] Segpay card payment credits tokens
-- [ ] Payment callbacks handled correctly
+### Testgate Wave 2: PASS (18/18)
+- [x] Swish auto-topup triggers on low balance — PASS
+- [x] Segpay card payment credits tokens — PASS
+- [x] Payment callbacks handled correctly — PASS
 
 ---
 
