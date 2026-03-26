@@ -172,6 +172,32 @@ export default function LearnPage() {
           </Text>
         </XStack>
 
+        <Link href="/learn/sexual-health" style={{ textDecoration: 'none' }}>
+          <YStack
+            minWidth={280}
+            flex={1}
+            backgroundColor="$background"
+            borderRadius="$4"
+            borderWidth={1}
+            borderColor="$borderColor"
+            padding="$4"
+            gap="$3"
+            hoverStyle={{ borderColor: '$primary' }}
+            cursor="pointer"
+          >
+            <XStack alignItems="center" gap="$3">
+              <Text fontSize="$6">🔬</Text>
+              <Text fontSize="$4" fontWeight="700" color="$text">
+                Sexuell hälsa
+              </Text>
+            </XStack>
+
+            <Text fontSize="$3" color="$textSecondary" numberOfLines={3} lineHeight={20}>
+              Lär dig om sex, säkerhet, hälsa och relationer genom artiklar, podcast och interaktiva quiz.
+            </Text>
+          </YStack>
+        </Link>
+
         {vanillaModules.length === 0 && spicyModules.length === 0 ? (
           <YStack
             alignItems="center"
