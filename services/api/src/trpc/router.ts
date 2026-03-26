@@ -1,11 +1,8 @@
 import { z } from 'zod'
 import { TRPCError } from '@trpc/server'
 import { router, publicProcedure, protectedProcedure } from './middleware.js'
-import { revokeSession, getActiveSessions, createSession } from '../auth/session.js'
-import { generateAccessToken, generateRefreshToken } from '../auth/jwt.js'
-import { getAuthorizationUrl, exchangeCodeForIdentity } from '../auth/bankid.js'
-import { hashPersonnummer, validateAge } from '../auth/personnummer.js'
-import { encryptIdentity } from '../auth/crypto.js'
+import { revokeSession, getActiveSessions } from '../auth/session.js'
+import { getAuthorizationUrl } from '../auth/bankid.js'
 import { createPaymentRequest } from '../auth/swish.js'
 import { userRouter } from './user-router.js'
 import { profileRouter } from './profile-router.js'
@@ -33,6 +30,25 @@ import { orderRouter } from './order-router.js'
 import { sellerRouter } from './seller-router.js'
 import { shopRouter } from './shop-router.js'
 import { adRouter } from './ad-router.js'
+import { tokenRouter } from './token-router.js'
+
+const swishCallbackSchema = z.object({
+  id: z.string(),
+  payeePaymentReference: z.string(),
+  paymentReference: z.string().optional(),
+  callbackUrl: z.string(),
+  payerAlias: z.string().optional(),
+  payeeAlias: z.string(),
+  amount: z.number(),
+  currency: z.string(),
+  message: z.string().optional(),
+  status: z.enum(['CREATED', 'PAID', 'DECLINED', 'ERROR']),
+  dateCreated: z.string(),
+  datePaid: z.string().optional(),
+  errorCode: z.string().optional(),
+  errorMessage: z.string().optional(),
+  payerName: z.string().optional(),
+})
 
 export const appRouter = router({
   health: {
@@ -93,6 +109,17 @@ export const appRouter = router({
         })
         return { status: payment?.status ?? null, paidAt: payment?.completedAt ?? null }
       }),
+
+      registrationCallback: publicProcedure
+        .input(swishCallbackSchema)
+        .mutation(async ({ ctx, input }) => {
+          const { handleRegistrationCallback } = await import('../auth/swish.js')
+          const result = await handleRegistrationCallback(ctx.prisma, input)
+          if (!result || 'alreadyProcessed' in result) {
+            return { success: true, tempToken: null }
+          }
+          return { success: true, tempToken: result.tempToken }
+        }),
     },
 
     bankid: {
@@ -103,77 +130,14 @@ export const appRouter = router({
         return { authUrl, state }
       }),
 
-      // Handle the callback after the user completes BankID authentication
+      // BankID is no longer supported — removed in F30-CORE-auth-fix
       callback: publicProcedure
         .input(z.object({ code: z.string(), state: z.string() }))
-        .mutation(async ({ ctx, input }) => {
-          // 1. Exchange authorization code for identity claims from Criipto
-          const identity = await exchangeCodeForIdentity(input.code)
-
-          // 2. Validate age — must be 18 or older
-          if (!validateAge(identity.personnummer)) {
-            throw new TRPCError({
-              code: 'FORBIDDEN',
-              message: 'Must be 18 or older to use this service',
-            })
-          }
-
-          // 3. Hash personnummer for database uniqueness lookup
-          const pnrHash = hashPersonnummer(identity.personnummer)
-
-          // 4. Look up existing user by personnummer hash
-          let user = await ctx.prisma.user.findUnique({
-            where: { personnummerHash: pnrHash },
+        .mutation(() => {
+          throw new TRPCError({
+            code: 'METHOD_NOT_SUPPORTED',
+            message: 'BankID authentication has been replaced by Swish+SPAR verification',
           })
-
-          // Reject deleted accounts
-          if (user && user.status === 'DELETED') {
-            throw new TRPCError({
-              code: 'FORBIDDEN',
-              message: 'Account deleted. Contact support.',
-            })
-          }
-
-          const isNewUser = !user
-
-          if (!user) {
-            // 5. Create a new user with PENDING status
-            user = await ctx.prisma.user.create({
-              data: {
-                personnummerHash: pnrHash,
-                status: 'PENDING',
-              },
-            })
-
-            // 6. Encrypt and store PII — real names and personnummer never stored in plaintext
-            const encData = encryptIdentity(identity)
-            await ctx.prisma.encryptedIdentity.create({
-              data: {
-                userId: user.id,
-                encryptedFirstName: encData.encryptedFirstName,
-                encryptedLastName: encData.encryptedLastName,
-                encryptedPersonnummer: encData.encryptedPersonnummer,
-                iv: encData.iv,
-              },
-            })
-          }
-
-          // 7. Generate access and refresh tokens
-          const accessToken = await generateAccessToken(user.id)
-          const refreshToken = await generateRefreshToken(user.id)
-
-          // 8. Persist the session (keyed by access token hash)
-          await createSession(ctx.prisma, user.id, accessToken, ctx.req)
-
-          return {
-            accessToken,
-            refreshToken,
-            user: {
-              id: user.id,
-              displayName: user.displayName ?? null,
-            },
-            isNewUser,
-          }
         }),
     },
   },
@@ -203,6 +167,7 @@ export const appRouter = router({
   seller: sellerRouter,
   shop: shopRouter,
   ad: adRouter,
+  token: tokenRouter,
 })
 
 export type AppRouter = typeof appRouter

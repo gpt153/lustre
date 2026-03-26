@@ -7,15 +7,17 @@ export async function checkBalance(prisma: PrismaClient, userId: string): Promis
   const balance = await prisma.userBalance.findUnique({
     where: { userId },
   })
-  return balance?.balance ?? 0
+  return balance?.balance.toNumber() ?? 0
 }
 
 export async function debitTokens(
   prisma: PrismaClient,
   userId: string,
   amount: number,
-  type: 'GATEKEEPER' | 'TOPUP' | 'REFUND',
+  type: 'GATEKEEPER' | 'TOPUP' | 'REFUND' | 'COACH_SESSION',
   referenceId?: string,
+  description?: string,
+  serviceRef?: string,
 ): Promise<void> {
   await prisma.$transaction(async (tx) => {
     const balance = await tx.userBalance.upsert({
@@ -24,7 +26,7 @@ export async function debitTokens(
       update: {},
     })
 
-    if (balance.balance < amount) {
+    if (balance.balance.toNumber() < amount) {
       throw new TRPCError({
         code: 'PRECONDITION_FAILED',
         message: 'Insufficient tokens',
@@ -42,6 +44,8 @@ export async function debitTokens(
         amount: -amount,
         type,
         referenceId: referenceId ?? null,
+        description: description ?? null,
+        serviceRef: serviceRef ?? null,
       },
     })
   })

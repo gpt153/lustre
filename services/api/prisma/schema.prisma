@@ -11,6 +11,7 @@ datasource db {
 
 enum UserStatus {
   PENDING
+  PENDING_EMAIL
   ACTIVE
   SUSPENDED
   DELETED
@@ -167,7 +168,10 @@ enum ListingStatus {
 model User {
   id                       String                    @id @default(uuid()) @db.Uuid
   displayName              String?                   @map("display_name")
-  personnummerHash         String                    @unique @map("personnummer_hash")
+  email                    String?                   @unique
+  passwordHash             String?                   @map("password_hash")
+  phone                    String?                   @unique
+  phoneHash                String?                   @unique @map("phone_hash")
   status                   UserStatus                @default(PENDING)
   createdAt                DateTime                  @default(now()) @map("created_at")
   updatedAt                DateTime                  @updatedAt @map("updated_at")
@@ -223,6 +227,7 @@ model User {
   campaigns                AdCampaign[]
   adImpressions            AdImpression[]
   adClicks                 AdClick[]
+  oauthAccounts            OAuthAccount[]
 
   @@map("users")
 }
@@ -239,6 +244,20 @@ model EncryptedIdentity {
   user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("encrypted_identities")
+}
+
+model OAuthAccount {
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String   @map("user_id") @db.Uuid
+  provider   String
+  providerId String   @map("provider_id")
+  email      String?
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerId])
+  @@map("oauth_accounts")
 }
 
 model Session {
@@ -647,7 +666,7 @@ enum TokenTransactionType {
 model UserBalance {
   id        String   @id @default(uuid()) @db.Uuid
   userId    String   @unique @map("user_id") @db.Uuid
-  balance   Int      @default(0)
+  balance   Decimal  @default(0) @db.Decimal(20, 5)
   updatedAt DateTime @updatedAt @map("updated_at")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -657,14 +676,29 @@ model UserBalance {
 model TokenTransaction {
   id          String               @id @default(uuid()) @db.Uuid
   userId      String               @map("user_id") @db.Uuid
-  amount      Int
+  amount      Decimal              @db.Decimal(20, 5)
   type        TokenTransactionType
   referenceId String?              @map("reference_id") @db.Uuid
+  description String?
+  serviceRef  String?              @map("service_ref")
   createdAt   DateTime             @default(now()) @map("created_at")
   user        User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@map("token_transactions")
+}
+
+model SpreadConfig {
+  id        String   @id @default(uuid()) @db.Uuid
+  segment   String?
+  market    String?
+  multiplier Decimal  @db.Decimal(10, 5)
+  isDefault Boolean  @default(false) @map("is_default")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([segment, market])
+  @@map("spread_configs")
 }
 
 model Swipe {
