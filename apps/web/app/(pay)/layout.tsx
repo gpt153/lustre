@@ -1,7 +1,6 @@
 'use client'
 
 import { Providers } from '../(app)/providers'
-import { AuthGuard } from '../(app)/auth-guard'
 import Link from 'next/link'
 
 function Header() {
@@ -26,10 +25,8 @@ function Header() {
 export default function PayLayout({ children }: { children: React.ReactNode }) {
   return (
     <Providers>
-      <AuthGuard>
-        <Header />
-        <main>{children}</main>
-      </AuthGuard>
+      <Header />
+      <main>{children}</main>
     </Providers>
   )
 }
