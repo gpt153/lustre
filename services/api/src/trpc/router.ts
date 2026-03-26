@@ -32,6 +32,7 @@ import { adRouter } from './ad-router.js'
 import { tokenRouter } from './token-router.js'
 import { swishPaymentRouter } from './swish-payment-router.js'
 import { segpayRouter } from './segpay-router.js'
+import { reportRouter } from './report-router.js'
 
 const swishCallbackSchema = z.object({
   id: z.string(),
@@ -292,6 +293,7 @@ export const appRouter = router({
   user: userRouter,
   profile: profileRouter,
   photo: photoRouter,
+  report: reportRouter,
   search: searchRouter,
   kink: kinkRouter,
   pair: pairRouter,

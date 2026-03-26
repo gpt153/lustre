@@ -160,3 +160,40 @@ export async function classifyAndTagMedia(postMediaId: string, imageUrl: string)
     console.warn('Failed to classify media:', error)
   }
 }
+
+// Classify and store content tags for a message image
+export async function classifyAndTagMessage(
+  messageId: string,
+  imageUrl: string
+): Promise<Array<{ dimension: string; value: string; confidence: number }>> {
+  const tags = await classifyImage(imageUrl)
+  if (tags.length === 0) return []
+
+  await prisma.messageContentTag.createMany({
+    data: tags.map((t) => ({
+      messageId,
+      dimension: t.dimension,
+      value: t.value,
+      confidence: t.confidence,
+    })),
+  })
+  return tags
+}
+
+// Fire-and-forget wrapper
+export function classifyMessageAsync(messageId: string, imageUrl: string): void {
+  classifyAndTagMessage(messageId, imageUrl).catch((err) => {
+    console.warn('[sightengine] classifyMessageAsync error:', err)
+  })
+}
+
+// Returns true if tags indicate a penis-in-focus image (dick-pic)
+export function isDickPic(tags: Array<{ dimension: string; value: string; confidence: number }>): boolean {
+  const hasGenital = tags.some(
+    (t) => t.dimension === 'BODY_PART' && t.value === 'GENITALS' && t.confidence > 0.3
+  )
+  const hasNudity = tags.some(
+    (t) => t.dimension === 'NUDITY' && ['FULL', 'PARTIAL'].includes(t.value)
+  )
+  return hasGenital && hasNudity
+}

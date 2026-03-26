@@ -57,6 +57,12 @@ model User {
   userMedals                 UserMedal[]
   moduleProgress             UserModuleProgress[]
   userStreak                 UserStreak?
+  filteredSentCount          Int               @default(0) @map("filtered_sent_count")
+  warningCount               Int               @default(0) @map("warning_count")
+  isBanned                   Boolean           @default(false) @map("is_banned")
+  bannedUntil                DateTime?         @map("banned_until")
+  reportsMade                Report[]          @relation("reportsMade")
+  moderationActions          ModerationAction[] @relation("moderationActions")
 
   @@map("users")
 }
@@ -462,8 +468,9 @@ model Message {
   isFiltered     Boolean       @default(false) @map("is_filtered")
   deletedAt      DateTime?     @map("deleted_at")
   createdAt      DateTime      @default(now()) @map("created_at")
-  conversation   Conversation  @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  sender         User          @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  conversation   Conversation        @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender         User                @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  contentTags    MessageContentTag[]
 
   @@index([conversationId, createdAt])
   @@map("messages")
@@ -1187,4 +1194,75 @@ enum CoachSessionStatus {
   PENDING
   ACTIVE
   ENDED
+}
+
+enum ReportTargetType {
+  MESSAGE
+  POST
+  PROFILE
+}
+
+enum ReportCategory {
+  HARASSMENT
+  SPAM
+  UNDERAGE
+  NON_CONSENSUAL
+  OTHER
+}
+
+enum ReportStatus {
+  PENDING
+  REVIEWED
+  DISMISSED
+}
+
+enum ModerationActionType {
+  WARNING
+  TEMP_BAN
+  PERMANENT_BAN
+}
+
+model MessageContentTag {
+  id        String              @id @default(uuid()) @db.Uuid
+  messageId String              @map("message_id") @db.Uuid
+  dimension ContentTagDimension
+  value     String
+  confidence Float              @default(1.0)
+  createdAt  DateTime           @default(now()) @map("created_at")
+  message   Message             @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@map("message_content_tags")
+}
+
+model Report {
+  id           String           @id @default(uuid()) @db.Uuid
+  reporterId   String           @map("reporter_id") @db.Uuid
+  targetId     String           @map("target_id") @db.Uuid
+  targetType   ReportTargetType @map("target_type")
+  category     ReportCategory
+  description  String?          @db.VarChar(500)
+  status       ReportStatus     @default(PENDING)
+  reviewedBy   String?          @map("reviewed_by") @db.Uuid
+  reviewedAt   DateTime?        @map("reviewed_at")
+  createdAt    DateTime         @default(now()) @map("created_at")
+  updatedAt    DateTime         @updatedAt @map("updated_at")
+  reporter     User             @relation("reportsMade", fields: [reporterId], references: [id], onDelete: Cascade)
+
+  @@index([targetId, targetType])
+  @@index([status, createdAt])
+  @@map("reports")
+}
+
+model ModerationAction {
+  id         String               @id @default(uuid()) @db.Uuid
+  userId     String               @map("user_id") @db.Uuid
+  adminId    String               @map("admin_id") @db.Uuid
+  actionType ModerationActionType @map("action_type")
+  reason     String?              @db.VarChar(500)
+  expiresAt  DateTime?            @map("expires_at")
+  createdAt  DateTime             @default(now()) @map("created_at")
+  user       User                 @relation("moderationActions", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@map("moderation_actions")
 }
