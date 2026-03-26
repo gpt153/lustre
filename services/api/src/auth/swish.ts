@@ -62,6 +62,7 @@ export interface SwishCallbackBody {
   datePaid?: string
   errorCode?: string
   errorMessage?: string
+  payerName?: string
 }
 
 // ---------------------------------------------------------------------------
@@ -139,6 +140,39 @@ async function callSwishApi(
   }
 
   return { id, paymentRequestToken }
+}
+
+// ---------------------------------------------------------------------------
+// Refund helper (best-effort)
+// ---------------------------------------------------------------------------
+
+async function issueRefund(config: SwishConfig, paymentReference: string): Promise<void> {
+  const { readFileSync } = await import('fs')
+  const https = await import('https')
+  const cert = readFileSync(config.certPath)
+  const agent = new https.Agent({
+    pfx: cert,
+    passphrase: config.certPassphrase,
+    ...(process.env.SWISH_CA_PATH ? { ca: readFileSync(process.env.SWISH_CA_PATH) } : {}),
+  })
+  const instructionUUID = crypto.randomUUID().replace(/-/g, '').toUpperCase()
+  const refundUrl = `${config.apiUrl}/refunds/${instructionUUID}`
+  try {
+    await fetch(refundUrl, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        originalPaymentReference: paymentReference,
+        amount: '10.00',
+        currency: 'SEK',
+        message: 'Age verification failed - refund',
+      }),
+      // @ts-expect-error — undici agent
+      agent,
+    })
+  } catch (err) {
+    console.error('Swish refund failed (best effort):', err)
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -234,4 +268,119 @@ export async function handleSwishCallback(
   }
 
   return true
+}
+
+/**
+ * Handles a Swish callback for the registration flow.
+ * Extracts payer name + phone, runs SPAR age verification, updates the user
+ * with phone identity, stores encrypted real name, and returns a short-lived
+ * registration JWT.
+ */
+export async function handleRegistrationCallback(
+  prisma: PrismaClient,
+  body: SwishCallbackBody,
+): Promise<{ tempToken: string } | { alreadyProcessed: true } | null> {
+  const config = getConfig()
+
+  // 1. Find payment by swishPaymentId
+  const payment = await prisma.payment.findUnique({
+    where: { swishPaymentId: body.id },
+  })
+  if (!payment) {
+    return null
+  }
+
+  // 2. Idempotency check
+  if (payment.status !== 'PENDING') {
+    return { alreadyProcessed: true }
+  }
+
+  // 3. Non-PAID status — decline/error the payment
+  if (body.status !== 'PAID') {
+    const newStatus = body.status === 'DECLINED' ? 'DECLINED' : 'ERROR'
+    await prisma.payment.update({
+      where: { id: payment.id },
+      data: { status: newStatus },
+    })
+    return null
+  }
+
+  // 4. Extract payer identity
+  const phone = body.payerAlias
+  const name = body.payerName
+  if (!phone || !name) {
+    throw new Error('Missing payer phone or name in Swish callback')
+  }
+
+  // 5. Hash phone for uniqueness check
+  const { createHash } = await import('crypto')
+  const phoneHash = createHash('sha256').update(phone).digest('hex')
+
+  const existingUser = await prisma.user.findUnique({ where: { phoneHash } })
+  if (existingUser) {
+    throw new Error('Phone number already registered')
+  }
+
+  // 6. SPAR age verification
+  const { lookupSpar } = await import('./spar.js')
+  const sparResult = await lookupSpar(name, phone)
+
+  // 7. Under-18 → refund and reject
+  if (!sparResult.isAdult) {
+    await issueRefund(config, body.paymentReference ?? '')
+    await prisma.payment.update({
+      where: { id: payment.id },
+      data: { status: 'DECLINED' },
+    })
+    throw new Error('Age verification failed: must be 18 or older')
+  }
+
+  // 8. Encrypt real name (phone stored as personnummer field)
+  const { encryptIdentity } = await import('./crypto.js')
+  const encData = encryptIdentity({
+    firstName: sparResult.firstName,
+    lastName: sparResult.lastName,
+    personnummer: phone,
+  })
+
+  // 9. Atomic transaction: update payment + user + encrypted identity
+  await prisma.$transaction([
+    prisma.payment.update({
+      where: { id: payment.id },
+      data: { status: 'PAID', completedAt: new Date() },
+    }),
+    prisma.user.update({
+      where: { id: payment.userId },
+      data: { phone, phoneHash, status: 'PENDING_EMAIL' },
+    }),
+  ])
+
+  // Upsert encrypted identity outside the batch transaction (upsert not batchable)
+  await prisma.encryptedIdentity.upsert({
+    where: { userId: payment.userId },
+    create: {
+      userId: payment.userId,
+      encryptedFirstName: encData.encryptedFirstName,
+      encryptedLastName: encData.encryptedLastName,
+      encryptedPersonnummer: encData.encryptedPersonnummer,
+      iv: encData.iv,
+    },
+    update: {
+      encryptedFirstName: encData.encryptedFirstName,
+      encryptedLastName: encData.encryptedLastName,
+      encryptedPersonnummer: encData.encryptedPersonnummer,
+      iv: encData.iv,
+    },
+  })
+
+  // 10. Generate 15-min registration JWT
+  const { SignJWT } = await import('jose')
+  const secret = new TextEncoder().encode(process.env.JWT_SECRET!)
+  const tempToken = await new SignJWT({ sub: payment.userId, type: 'registration' })
+    .setProtectedHeader({ alg: 'HS256' })
+    .setExpirationTime('15m')
+    .setIssuedAt()
+    .sign(secret)
+
+  return { tempToken }
 }

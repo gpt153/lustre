@@ -1,8 +1,8 @@
-# PRD: Auth & Verification — BankID, Swish, Account Creation, Anonymity
+# PRD: Auth & Verification — Swish+SPAR, Email/OAuth Login, Account Creation, Anonymity
 
 ## Overview
 
-Implement the complete authentication and identity verification system for Lustre. Users verify their identity via Swedish BankID (through Criipto/Idura), pay a 10 SEK registration fee via Swish, and receive a verified account. Real names are stored AES-256 encrypted and never displayed. The system supports age verification (18+), one-person-one-account enforcement, and anonymous display names.
+Implement the complete authentication and identity verification system for Lustre. New users register by paying 10 SEK via Swish — the Swish Handel API returns their name and phone number, which is cross-referenced against SPAR (via Roaring.io) for age verification (18+). Daily login uses email/password or OAuth (Google, Apple). Real names are stored AES-256 encrypted and never displayed. No BankID required.
 
 ## Target Audience
 
@@ -10,48 +10,61 @@ All Lustre users (Swedish market at launch)
 
 ## Functional Requirements (FR)
 
-### FR-1: BankID Authentication
+### FR-1: Swish Registration & Verification
 - Priority: Must
 - Acceptance criteria:
-  - Given a new user, when they tap "Create Account", then the BankID app launches for authentication
-  - Given successful BankID auth, then the system receives the user's personnummer and full name
-  - Given a personnummer, when the user is under 18, then registration is denied with a clear message
+  - Given a new user, when they tap "Create Account", then the Swish app opens with a pre-filled 10 SEK payment
+  - Given successful Swish payment, then the Swish Handel API returns the user's name and phone number
+  - Given name + phone, then an automatic SPAR lookup via Roaring.io retrieves the user's birthdate
+  - Given a user under 18, then registration is denied and the 10 SEK is refunded
+  - Given a user 18+, then the account is activated and a verification badge is assigned
+  - Given a phone number already linked to an account, then registration is denied (one-person-one-account)
 
-### FR-2: Swish Registration Payment
+### FR-2: Email/Password Login
 - Priority: Must
 - Acceptance criteria:
-  - Given a verified BankID user, when prompted to pay 10 SEK, then the Swish app opens with pre-filled payment
-  - Given successful Swish payment, then the account is activated and marked as verified
+  - Given a registered user, when they log in with email + password, then a JWT access token (24h) and refresh token (30d) are issued
+  - Given an incorrect password, then login is rejected with rate limiting after 5 failed attempts
+  - Given a refresh token, when valid and not expired, then a new access token is issued without re-login
 
-### FR-3: Anonymity Layer
+### FR-3: OAuth Login
+- Priority: Must
+- Acceptance criteria:
+  - Given a registered user, when they tap "Continue with Google" or "Continue with Apple", then OAuth flow completes and a session is issued
+  - Given an OAuth login for an unregistered email, then the user is directed to the Swish registration flow first
+  - Given Apple Sign In on iOS, then it is available as a login option (App Store requirement)
+
+### FR-4: Anonymity Layer
 - Priority: Must
 - Acceptance criteria:
   - Given a verified user, when creating their profile, then they choose a display name (not their real name)
   - Given the database, when querying user data, then real names are stored AES-256 encrypted in a separate table
   - Given any API endpoint, then real names are never included in responses
 
-### FR-4: Session Management
+### FR-5: Session Management
 - Priority: Must
 - Acceptance criteria:
-  - Given a logged-in user, when their session expires after 30 days, then they re-authenticate via BankID
+  - Given a logged-in user, when their access token expires after 24h, then the refresh token silently renews it
   - Given a user on multiple devices, then all sessions are tracked and revocable
+  - Given logout, then the session is invalidated server-side
 
-### FR-5: One-Person-One-Account
+### FR-6: One-Person-One-Account
 - Priority: Must
 - Acceptance criteria:
-  - Given a personnummer already linked to an account, when attempting to register again, then registration is denied
-  - Given a deleted account, then the personnummer is released after 90 days
+  - Given a phone number already linked to an active account, when attempting to register again, then registration is denied
+  - Given a deleted account, then the phone number is released after 90 days
 
 ## Non-Functional Requirements (NFR)
 
-- BankID authentication must complete in under 15 seconds
-- AES-256 encryption key stored in HSM or Kubernetes secrets (never in code)
+- Swish payment callback must be handled idempotently (network retries)
+- AES-256 encryption key stored in Kubernetes secrets (never in code)
 - All auth endpoints rate-limited to prevent brute force
 - GDPR Art. 9 consent collected before storing sexual orientation data
+- SPAR lookup via Roaring.io: < 3 seconds response time
 
 ## Affected Systems
 
-- services/api (new auth module)
+- services/api (auth module)
 - packages/api (auth schemas)
 - apps/mobile (auth screens)
 - apps/web (auth pages)
@@ -59,11 +72,12 @@ All Lustre users (Swedish market at launch)
 
 ## MVP Scope
 
-FR-1, FR-2, FR-3, FR-4 are MVP. FR-5 can be enforced with a simple unique constraint.
+FR-1, FR-2, FR-3, FR-4, FR-5 are MVP. FR-6 enforced with unique constraint on phone number.
 
 ## Risks and Dependencies
 
-- Criipto/Idura account required (~2 SEK/auth)
-- Swish Handel merchant agreement required (weeks to set up)
-- BankID test environment needed for development
-- SPAR register access via Roaring.io for age verification fallback
+- Swish Handel merchant agreement required (weeks to set up — start early)
+- Roaring.io API key required for SPAR lookups (~1-2 SEK/lookup)
+- Apple Sign In required for iOS App Store compliance
+- Google OAuth app approval needed
+- NOTE: BankID deliberately excluded — cost ~2 SEK per auth call makes it unviable for daily login at scale. Can be revisited as optional premium trust layer later.

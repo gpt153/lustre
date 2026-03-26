@@ -38,7 +38,7 @@ All Lustre users
 ### FR-5: Profile Verification Badge
 - Priority: Must
 - Acceptance criteria:
-  - Given BankID-verified user, then a verification badge is visible on their profile
+  - Given Swish-verified user (completed Swish+SPAR registration), then a verification badge is visible on their profile
 
 ## Non-Functional Requirements (NFR)
 

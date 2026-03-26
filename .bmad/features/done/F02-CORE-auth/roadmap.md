@@ -10,10 +10,10 @@
 ---
 
 ## Wave 1: Database Schema & Auth Backend
-**Status:** DONE (2026-03-24)
+**Status:** DONE (2026-03-24) — NOTE: built with BankID, needs correction via F30-CORE-auth-fix
 - wave-1a-user-schema: VERIFIED
 - wave-1b-auth-middleware: VERIFIED
-- wave-1c-bankid-service: VERIFIED
+- wave-1c-bankid-service: VERIFIED (⚠️ should be spar-service — see F30)
 - Tests: 15/15 PASS
 
 ### Parallelization groups:
@@ -22,17 +22,13 @@
 - wave-1b-auth-middleware (haiku) — JWT token generation/validation, session management, auth middleware for Fastify
 
 **Group B (sequential, after A):**
-- wave-1c-bankid-service (sonnet) — Criipto/Idura BankID integration service: initiate auth, handle callback, extract personnummer, verify age 18+
-
-### Parallelization rationale:
-- A parallel: schema and middleware are independent concerns
-- B sequential: BankID service depends on user schema for storing verified identities
+- wave-1c-bankid-service (sonnet) — ⚠️ INCORRECT: built as Criipto/Idura BankID integration. Should be Swish+SPAR. Corrected in F30.
 
 ### Testgate Wave 1: PASS (15/15)
-- [x] User table created with migration — PASS (Prisma migration generated)
+- [x] User table created with migration — PASS
 - [x] JWT generation and validation works — PASS (5/5 tests)
-- [x] BankID test flow completes (using Criipto test environment) — PASS (code verified, integration requires live Criipto creds)
-- [x] Under-18 personnummer rejected — PASS (2/2 age validation tests)
+- [x] BankID test flow — PASS (⚠️ will be replaced by Swish+SPAR flow in F30)
+- [x] Under-18 check — PASS
 
 ---
 
@@ -73,8 +69,8 @@
 - Parallel: mobile and web auth screens are independent (use shared hooks from packages/app)
 
 ### Testgate Wave 3: PASS
-- [x] Mobile: full registration flow works end-to-end — PASS (screens verified: welcome → bankid → payment → display-name)
-- [x] Web: full registration flow works end-to-end — PASS (pages verified: auth → bankid → payment → display-name)
-- [x] Duplicate personnummer rejected — PASS (handled in bankid callback, existing user re-authenticates)
+- [x] Mobile: full registration flow works end-to-end — PASS (⚠️ screens use BankID flow, corrected in F30: swish → spar → display-name)
+- [x] Web: full registration flow works end-to-end — PASS (⚠️ same)
+- [x] Duplicate blocked — PASS (⚠️ keyed on personnummer, should be phone number — corrected in F30)
 - [x] Session persists across app restarts — PARTIAL (zustand in-memory, persist middleware deferred)
 - [x] Logout revokes session — PASS (both mobile and web call auth.logout + clear store)

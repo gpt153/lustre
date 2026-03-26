@@ -1,12 +1,24 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
+import { useAuthStore } from '@lustre/app'
 
 export default function AuthPage() {
   const router = useRouter()
+  const { setTokens, setUser } = useAuthStore()
 
   const handleStartAuth = () => {
-    router.push('/auth/bankid')
+    router.push('/register')
+  }
+
+  const handleDevLogin = async () => {
+    const res = await fetch('/api/dev-login', {
+      method: 'POST',
+    })
+    const data = await res.json()
+    setTokens(data.accessToken, data.refreshToken)
+    setUser(data.user.id, data.user.displayName)
+    router.push('/home')
   }
 
   return (
@@ -60,7 +72,7 @@ export default function AuthPage() {
         </button>
 
         <button
-          onClick={handleStartAuth}
+          onClick={() => router.push('/login')}
           style={{
             padding: '12px 24px',
             fontSize: '16px',
@@ -93,8 +105,26 @@ export default function AuthPage() {
           lineHeight: '1.6',
         }}
       >
-        Du verifieras via BankID för att säkerställa att du är över 18 år
+        Du verifieras via Swish för att säkerställa att du är över 18 år
       </p>
+
+      {process.env.NODE_ENV !== 'production' && (
+        <button
+          onClick={handleDevLogin}
+          style={{
+            marginTop: '32px',
+            padding: '8px 16px',
+            fontSize: '12px',
+            color: '#888',
+            backgroundColor: 'transparent',
+            border: '1px dashed #444',
+            borderRadius: '6px',
+            cursor: 'pointer',
+          }}
+        >
+          Dev login
+        </button>
+      )}
     </div>
   )
 }

@@ -7,9 +7,14 @@ export default function WelcomeScreen() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleStartAuth = () => {
+  const handleSignup = () => {
     setIsLoading(true)
-    router.push('/(auth)/bankid')
+    router.push('/(auth)/swish-verify')
+  }
+
+  const handleLogin = () => {
+    setIsLoading(true)
+    router.push('/(auth)/login')
   }
 
   return (
@@ -36,7 +41,7 @@ export default function WelcomeScreen() {
       <YStack width="100%" gap="$3">
         <LustreButton
           width="100%"
-          onPress={handleStartAuth}
+          onPress={handleSignup}
           disabled={isLoading}
           flexDirection="row"
           justifyContent="center"
@@ -52,7 +57,7 @@ export default function WelcomeScreen() {
         <LustreButton
           width="100%"
           variant="outline"
-          onPress={handleStartAuth}
+          onPress={handleLogin}
           disabled={isLoading}
         >
           <Text color="$primary" fontWeight="600" fontSize="$4">
@@ -68,7 +73,7 @@ export default function WelcomeScreen() {
         textAlign="center"
         maxWidth="100%"
       >
-        Du verifieras via BankID
+        Vi verifierar din identitet via Swish
       </Text>
     </YStack>
   )

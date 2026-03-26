@@ -46,13 +46,14 @@
 ---
 
 ## Wave 3: Payment Page & App Integration
-**Status:** NOT_STARTED
+**Status:** IN_PROGRESS
+**Started:** 2026-03-26
 
 ### Parallelization groups:
 **Group A (parallel):**
-- wave-3a-payment-page (haiku) — Next.js app at pay.lovelustre.com: login via code from app, balance display, topup history, daily summaries, settings (auto-topup level, payment method)
-- wave-3b-app-integration-mobile (haiku) — Token deduction hooks in services (Gatekeeper, Coach, Video), insufficient balance prompt, deep link to payment page
-- wave-3c-app-integration-web (haiku) — Same token integration for web
+- wave-3a-payment-page (haiku) — Next.js app at pay.lovelustre.com: login via code from app, balance display, topup history, daily summaries, settings (auto-topup level, payment method) **Status: IN_PROGRESS**
+- wave-3b-app-integration-mobile (haiku) — Token deduction hooks in services (Gatekeeper, Coach, Video), insufficient balance prompt, deep link to payment page **Status: IN_PROGRESS**
+- wave-3c-app-integration-web (haiku) — Same token integration for web **Status: IN_PROGRESS**
 
 ### Testgate Wave 3:
 - [ ] Payment page accessible and shows balance
