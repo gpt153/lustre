@@ -118,6 +118,7 @@ docker compose up        # Starts API, web, PostgreSQL, Redis, Meilisearch, NATS
   - `education.*` — Sexual health education (listTopics, listArticles, getArticle, listPodcasts, listQuizzes, getQuiz, submitQuiz, markArticleRead)
   - `auth.*` — Authentication: `completeRegistration`, `loginWithEmail`, `loginWithGoogle`, `loginWithApple`, `requestPasswordReset`, `resetPassword`, `logout`, `sessions`, `revokeSession`
   - `auth.swish.*` — Swish registration: `createPayment`, `checkStatus`, `registrationCallback`
+  - `settings.*` — User mode settings (getMode, setMode — vanilla/spicy toggle backed by Profile.spicyModeEnabled)
   - `listing.*` — Marketplace listings (create, update, remove, list, getById, getByCategory, getMine)
   - `order.*` — Marketplace orders (create, markShipped, confirmDelivery, getStatus, getMyOrders, initiatePayment, checkPaymentStatus)
   - `seller.*` — Seller tools (registerSwishNumber, getSwishNumber)
@@ -144,4 +145,4 @@ Production runs on a 3-node k3s cluster on Hetzner Cloud (Helsinki):
 
 ## Status
 
-F01 scaffolding, F03 database & infrastructure, F04 profiles, F05 social feed, F06 interest groups, F07 AI gatekeeper, F08 matching, F10 voice & video calls, F12 organizations, F14 ConsentVault, F15 coach engine, F17 spicy coaching, F18 gamification, F19 sexual health education, F20 marketplace, **F30 auth fix** (Swish+SPAR identity verification, email/password login, Google+Apple OAuth — BankID removed) complete. See `.bmad/STATUS.md` for full feature roadmap.
+F01 scaffolding, F03 database & infrastructure, F04 profiles, F05 social feed, F06 interest groups, F07 AI gatekeeper, F08 matching, F10 voice & video calls, F12 organizations, F14 ConsentVault, F15 coach engine, F17 spicy coaching, F18 gamification, F19 sexual health education, F20 marketplace, F25 dual mode (Vanilla/Spicy toggle), **F30 auth fix** (Swish+SPAR identity verification, email/password login, Google+Apple OAuth — BankID removed) complete. See `.bmad/STATUS.md` for full feature roadmap.

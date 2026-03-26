@@ -293,6 +293,19 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
 - **Env vars required:**
   - `ADMIN_USER_IDS` — comma-separated UUIDs of admin users who can access moderation queue
 
+## Dual Mode — Vanilla/Spicy (F25-UX-dual-mode)
+- **Mode field:** `Profile.spicyModeEnabled Boolean @default(false)` — source of truth (no separate model)
+- **tRPC Router:** `settings` — `getMode` (query, returns `{ mode: 'vanilla' | 'spicy' }`), `setMode` (mutation, input `{ mode }`) — both protectedProcedure, reads/writes `Profile.spicyModeEnabled`
+- **Zustand store:** `packages/app/src/stores/modeStore.ts` — `useModeStore` with `mode: 'vanilla' | 'spicy'` (default `'vanilla'`), persisted to `localStorage` via `'lustre-mode'` key
+- **Hook:** `packages/app/src/hooks/useMode.ts` — `useMode()` returns `{ mode, setMode, isSpicy, isLoading }`; syncs remote→store on load; optimistic store update before tRPC mutation
+- **API-level filtering:** Vanilla callers get SFW content only:
+  - `post.feed` — excludes posts with any media having `nudityLevel IN (MEDIUM, HIGH)` via raw SQL
+  - `match.getDiscoveryStack` — excludes profiles where `spicyModeEnabled = true` from discovery stack
+  - `profile.getPublic` — returns `kinkTags: []` (hides kink tags) for vanilla callers
+- **UI components:** `packages/app/src/components/ModeToggle.tsx` — pill toggle (🌿 Vanilla / 🌶️ Spicy, green/pink); `ModeWrapper.tsx` — conditional render by mode (uses `useModeStore` directly)
+- **Mobile:** Mode toggle at `apps/mobile/app/(tabs)/profile/spicy-settings.tsx`
+- **Web:** Mode settings at `apps/web/app/(app)/settings/spicy/page.tsx`; mode badge in `settings/layout.tsx`; learn page gates spicy section via `isSpicy`
+
 ## Rules
 - All users verified via Swish 10 SEK + SPAR (Sweden); international expansion TBD
 - Real names NEVER shown in app — stored encrypted, released only via court order
