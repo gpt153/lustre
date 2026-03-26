@@ -216,6 +216,17 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
 - **Web:** `/learn` (module grid), `/learn/[moduleId]` (lesson table with Axel/Sophia action buttons), `/learn/[moduleId]/lesson/[lessonId]` (dual persona cards + assessment criteria)
 - **Session integration:** lesson screens launch into existing F15 coach session — mobile via `router.push('/(tabs)/coach/start', { persona, lessonContext })`, web via `/coach/start?persona=X&context=Y`
 
+## Spicy Coaching Modules (F17-LEARN-coach-spicy)
+- **Gating:** Requires `Profile.spicyModeEnabled = true` AND completion of vanilla module 6 (badge awarded). Without both, spicy modules are hidden from `module.list` and `startLesson` throws FORBIDDEN.
+- **Schema additions:** `Profile.spicyModeEnabled Boolean @default(false)` — `LearnModule.isSpicy Boolean @default(false)` — Migration: `services/api/prisma/migrations/20260325110000_add_spicy_mode/migration.sql`
+- **Module data:** 8 spicy modules (orders 101-108, `isSpicy: true`, `isUnlocked: false`): Consent as Flirt, Dirty Talk (Basic + Advanced), Dominance with Respect, Physical Intimacy, BDSM Intro, Fantasy Communication, Giving Pleasure
+- **Lesson data:** 19 lessons seeded — 3 per module for S1-S3 (full content with consent hesitation moments), 2 per module for S4-S8 (stub content); S6 lesson 2 includes full safeword drill ("röd" stops all roleplay; user must ask aftercare questions)
+- **Consent integration:** S1-S3 partner prompts embed hesitation moments (Sophia pauses with "vänta lite", "hmm, jag vet inte"); Axel coach prompts evaluate whether user caught and responded to consent cues. Safeword drill in S6 requires immediate stop + two-question aftercare.
+- **tRPC Router:** `module.list` filters isSpicy modules when spicyModeEnabled=false; `module.startLesson` checks spicy gating (not isUnlocked) for spicy modules; `profile.toggleSpicyMode` mutation enables/disables spicy mode
+- **Shared components:** `SpicyGateBanner` (`packages/app/src/components/`) — shown when spicy is locked; `useLearn` hook updated with `vanillaModules`, `spicyModules`, `toggleSpicyMode`
+- **Mobile:** `LearnModuleListScreen` has spicy section with gate banner or spicy module cards (🌶️ 18+ tag); `LearnLessonScreen` shows 18+ pill on spicy lessons; spicy toggle at `apps/mobile/app/(tabs)/profile/spicy-settings.tsx`
+- **Web:** `/learn` spicy section with gate banner; `/learn/[moduleId]` and `/learn/.../lesson/[lessonId]` show 18+ badge when isSpicy; toggle at `/settings/spicy`; settings nav via `apps/web/app/(app)/settings/layout.tsx`
+
 ## Rules
 - All users verified via BankID (Sweden) or Veriff (international)
 - Real names NEVER shown in app — stored encrypted, released only via court order
