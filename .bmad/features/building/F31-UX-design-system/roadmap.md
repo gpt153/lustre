@@ -99,7 +99,11 @@
 ---
 
 ## Wave 5: Profile Redesign
-**Status:** NOT_STARTED
+**Status:** DONE
+**Started:** 2026-03-26
+**Completed:** 2026-03-26
+**Epics:** 5a VERIFIED, 5b VERIFIED, 5c VERIFIED
+**Learnings:** PROMPT_OPTIONS duplicated in services/api (backend) and packages/api (frontend) — both needed since they serve different contexts. BottomSheetBase from @lustre/ui reused for PromptPicker.
 
 ### Parallelization groups:
 **Group A (sequential):**
@@ -110,13 +114,13 @@
 - wave-5c-profile-edit (haiku) — Rebuild profile edit: prompt selector (choose 3 from list), drag-to-reorder photos and prompts, preview mode. Photo upload unchanged (existing R2 pipeline). Deprecate free-text bio field in UI (keep in API).
 
 ### Testgate Wave 5:
-- [ ] ProfilePrompt model exists with all fields and migration applies
-- [ ] User can set up to 3 prompts via tRPC
-- [ ] Profile view renders as scrollable page with photos and prompts interspersed
-- [ ] Each photo and prompt section has a working like button
-- [ ] Liking a prompt or photo includes context in conversation initiation
-- [ ] Profile edit allows selecting and reordering 3 prompts
-- [ ] Free-text bio field is hidden in new UI but API still returns it
+- [x] ProfilePrompt model exists with all fields and migration applies
+- [x] User can set up to 3 prompts via tRPC
+- [x] Profile view renders as scrollable page with photos and prompts interspersed
+- [x] Each photo and prompt section has a working like button
+- [x] Liking a prompt or photo includes context in conversation initiation
+- [x] Profile edit allows selecting and reordering 3 prompts
+- [x] Free-text bio field is hidden in new UI but API still returns it
 
 ---
 

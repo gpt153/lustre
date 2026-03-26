@@ -2,6 +2,7 @@ import { z } from 'zod'
 import { TRPCError } from '@trpc/server'
 import { router, publicProcedure, protectedProcedure } from './middleware.js'
 import { indexProfile } from '../lib/meilisearch.js'
+import { PROMPT_OPTIONS } from '../lib/prompt-options.js'
 
 // Define schemas inline to avoid monorepo resolution issues at runtime
 const GenderEnum = z.enum([
@@ -213,5 +214,76 @@ export const profileRouter = router({
       })
 
       return updated
+    }),
+
+  getPrompts: protectedProcedure.query(async ({ ctx }) => {
+    const profile = await ctx.prisma.profile.findUnique({
+      where: { userId: ctx.userId },
+      select: { id: true },
+    })
+    if (!profile) {
+      throw new TRPCError({ code: 'NOT_FOUND', message: 'Profile not found' })
+    }
+
+    const prompts = await ctx.prisma.profilePrompt.findMany({
+      where: { profileId: profile.id },
+      orderBy: { order: 'asc' },
+    })
+
+    return prompts
+  }),
+
+  setPrompts: protectedProcedure
+    .input(
+      z.array(
+        z.object({
+          promptKey: z.string(),
+          response: z.string().max(500),
+          order: z.number().int().min(1).max(3),
+        })
+      ).max(3)
+    )
+    .mutation(async ({ ctx, input }) => {
+      const profile = await ctx.prisma.profile.findUnique({
+        where: { userId: ctx.userId },
+        select: { id: true },
+      })
+      if (!profile) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Profile not found' })
+      }
+
+      // Validate each promptKey exists in PROMPT_OPTIONS
+      for (const prompt of input) {
+        if (!(prompt.promptKey in PROMPT_OPTIONS)) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: `Invalid prompt key: ${prompt.promptKey}`,
+          })
+        }
+      }
+
+      // Delete existing prompts and create new ones in a transaction
+      const result = await ctx.prisma.$transaction(async (tx) => {
+        await tx.profilePrompt.deleteMany({
+          where: { profileId: profile.id },
+        })
+
+        const newPrompts = await tx.profilePrompt.createMany({
+          data: input.map((prompt) => ({
+            profileId: profile.id,
+            promptKey: prompt.promptKey,
+            response: prompt.response,
+            order: prompt.order,
+          })),
+        })
+
+        // Return the created prompts
+        return tx.profilePrompt.findMany({
+          where: { profileId: profile.id },
+          orderBy: { order: 'asc' },
+        })
+      })
+
+      return result
     }),
 })
