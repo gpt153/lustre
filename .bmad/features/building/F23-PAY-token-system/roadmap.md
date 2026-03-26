@@ -1,6 +1,6 @@
 # Roadmap: F23-PAY-token-system
 
-**Status:** IN_PROGRESS
+**Status:** DONE
 **Created:** 2026-03-24
 **Waves:** 3
 **Total epics:** 7
@@ -46,17 +46,18 @@
 ---
 
 ## Wave 3: Payment Page & App Integration
-**Status:** IN_PROGRESS
+**Status:** DONE
 **Started:** 2026-03-26
+**Completed:** 2026-03-26
 
 ### Parallelization groups:
 **Group A (parallel):**
-- wave-3a-payment-page (haiku) — Next.js app at pay.lovelustre.com: login via code from app, balance display, topup history, daily summaries, settings (auto-topup level, payment method) **Status: IN_PROGRESS**
-- wave-3b-app-integration-mobile (haiku) — Token deduction hooks in services (Gatekeeper, Coach, Video), insufficient balance prompt, deep link to payment page **Status: IN_PROGRESS**
-- wave-3c-app-integration-web (haiku) — Same token integration for web **Status: IN_PROGRESS**
+- wave-3a-payment-page (haiku) — Next.js app at pay.lovelustre.com: login via code from app, balance display, topup history, daily summaries, settings (auto-topup level, payment method) **Status: VERIFIED**
+- wave-3b-app-integration-mobile (haiku) — Token deduction hooks in services (Gatekeeper, Coach, Video), insufficient balance prompt, deep link to payment page **Status: VERIFIED**
+- wave-3c-app-integration-web (haiku) — Same token integration for web **Status: VERIFIED**
 
-### Testgate Wave 3:
-- [ ] Payment page accessible and shows balance
-- [ ] Gatekeeper deducts tokens on conversation
-- [ ] Insufficient balance shows topup prompt
-- [ ] No prices visible anywhere in main app
+### Testgate Wave 3: PASS (13/13 new + 150/150 total)
+- [x] Payment page accessible and shows balance — PASS
+- [x] Gatekeeper deducts tokens on conversation — PASS
+- [x] Insufficient balance shows topup prompt — PASS
+- [x] No prices visible anywhere in main app — PASS

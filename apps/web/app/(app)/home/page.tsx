@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { YStack, XStack, Text, Spinner, Button, Image, TextArea } from 'tamagui'
 import { trpc } from '@lustre/api'
-import { FeedAdCard } from '@lustre/app/components/FeedAdCard'
+import { FeedAdCard } from '@lustre/app'
 
 type FeedPost = {
   type: 'post'

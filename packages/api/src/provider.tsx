@@ -7,9 +7,10 @@ import { trpc, createTRPCClient } from './trpc-client'
 interface TRPCProviderProps {
   children: React.ReactNode
   apiUrl?: string
+  getToken?: () => string | null
 }
 
-export function TRPCProvider({ children, apiUrl = 'http://localhost:4000' }: TRPCProviderProps) {
+export function TRPCProvider({ children, apiUrl = 'http://localhost:4000', getToken }: TRPCProviderProps) {
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: {
       queries: {
@@ -18,7 +19,7 @@ export function TRPCProvider({ children, apiUrl = 'http://localhost:4000' }: TRP
       },
     },
   }))
-  const [trpcClient] = useState(() => createTRPCClient(apiUrl))
+  const [trpcClient] = useState(() => createTRPCClient(apiUrl, getToken))
 
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>

@@ -1,5 +1,6 @@
 import { useCallback } from 'react'
 import { trpc } from '@lustre/api'
+import { TRPCClientError } from '@trpc/client'
 import { useAuthStore } from '../stores/authStore'
 
 const API_URL =
@@ -17,20 +18,27 @@ export function useCoach() {
     async (
       persona: 'COACH' | 'PARTNER',
       mode: 'VOICE' | 'TEXT'
-    ): Promise<{ session: { id: string; roomName: string }; token: string; wsUrl: string; roomName: string }> => {
-      const tokenRes = await fetch(`${API_URL}/api/coach/token`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ persona, mode }),
-      })
-      const { token, wsUrl, roomName } = await tokenRes.json()
+    ): Promise<{ session?: { id: string; roomName: string }; token?: string; wsUrl?: string; roomName?: string; error?: 'INSUFFICIENT_BALANCE' }> => {
+      try {
+        const tokenRes = await fetch(`${API_URL}/api/coach/token`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ persona, mode }),
+        })
+        const { token, wsUrl, roomName } = await tokenRes.json()
 
-      const session = await createMutation.mutateAsync({ persona, mode, roomName })
+        const session = await createMutation.mutateAsync({ persona, mode, roomName })
 
-      return { session, token, wsUrl, roomName }
+        return { session, token, wsUrl, roomName }
+      } catch (error) {
+        if (error instanceof TRPCClientError && error.data?.code === 'PRECONDITION_FAILED') {
+          return { error: 'INSUFFICIENT_BALANCE' as const }
+        }
+        throw error
+      }
     },
     [accessToken, createMutation]
   )

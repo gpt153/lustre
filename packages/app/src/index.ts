@@ -73,3 +73,5 @@ export { ListingCard } from './components/ListingCard'
 export { useProducts, useProduct, useAddToCart, useCheckout } from './hooks/useShop'
 export { BusinessShopScreen } from './screens/BusinessShopScreen'
 export { BusinessProductDetailScreen } from './screens/BusinessProductDetailScreen'
+
+export { FeedAdCard } from './components/FeedAdCard'

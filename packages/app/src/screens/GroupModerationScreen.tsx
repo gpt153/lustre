@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
-import { ScrollView, FlatList, YStack, XStack, Text, Button, Spinner, Input, TextArea } from 'tamagui'
-import { RefreshControl } from 'react-native'
+import { ScrollView, YStack, XStack, Text, Button, Spinner, Input, TextArea } from 'tamagui'
+import { FlatList, RefreshControl } from 'react-native'
 import { trpc } from '@lustre/api'
 
 interface GroupModerationScreenProps {

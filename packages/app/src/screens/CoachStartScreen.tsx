@@ -3,6 +3,7 @@ import { TouchableOpacity } from 'react-native'
 import { YStack, XStack, Text, Button, Spinner } from 'tamagui'
 import { trpc } from '@lustre/api'
 import { useCoach } from '../hooks/useCoach'
+import { InsufficientBalanceModal } from '../components/InsufficientBalanceModal'
 
 interface CoachStartScreenProps {
   onSessionStarted: (
@@ -39,6 +40,7 @@ export function CoachStartScreen({ onSessionStarted, onBack }: CoachStartScreenP
   const [selectedMode, setSelectedMode] = useState<'VOICE' | 'TEXT'>('VOICE')
   const [isStarting, setIsStarting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [showBalanceModal, setShowBalanceModal] = useState(false)
 
   const { createSession } = useCoach()
   const startMutation = trpc.coach.start.useMutation()
@@ -47,9 +49,17 @@ export function CoachStartScreen({ onSessionStarted, onBack }: CoachStartScreenP
     setIsStarting(true)
     setError(null)
     try {
-      const { session, token, wsUrl, roomName } = await createSession(selectedPersona, selectedMode)
-      await startMutation.mutateAsync({ sessionId: session.id })
-      onSessionStarted(session.id, token, wsUrl, roomName, selectedMode, selectedPersona)
+      const result = await createSession(selectedPersona, selectedMode)
+      if ('error' in result && result.error === 'INSUFFICIENT_BALANCE') {
+        setShowBalanceModal(true)
+        return
+      }
+      if (!result.session || !result.token || !result.wsUrl || !result.roomName) {
+        setError('Kunde inte starta sessionen. Försök igen.')
+        return
+      }
+      await startMutation.mutateAsync({ sessionId: result.session.id })
+      onSessionStarted(result.session.id, result.token, result.wsUrl, result.roomName, selectedMode, selectedPersona)
     } catch {
       setError('Kunde inte starta sessionen. Försök igen.')
     } finally {
@@ -173,6 +183,11 @@ export function CoachStartScreen({ onSessionStarted, onBack }: CoachStartScreenP
       >
         {isStarting ? 'Startar…' : 'Starta session'}
       </Button>
+
+      <InsufficientBalanceModal
+        isOpen={showBalanceModal}
+        onClose={() => setShowBalanceModal(false)}
+      />
     </YStack>
   )
 }

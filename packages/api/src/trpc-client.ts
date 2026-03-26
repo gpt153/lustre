@@ -6,12 +6,22 @@ import type { AppRouter } from '../../../services/api/src/trpc/router'
 
 export const trpc: CreateTRPCReact<AppRouter, unknown> = createTRPCReact<AppRouter>()
 
-export function createTRPCClient(apiUrl: string): ReturnType<typeof trpc.createClient> {
+export function createTRPCClient(
+  apiUrl: string,
+  getToken?: () => string | null
+): ReturnType<typeof trpc.createClient> {
   return trpc.createClient({
     links: [
       httpBatchLink({
         url: `${apiUrl}/trpc`,
         transformer: superjson,
+        headers: () => {
+          const token = getToken?.()
+          if (token) {
+            return { Authorization: `Bearer ${token}` }
+          }
+          return {}
+        },
       }),
     ],
   })

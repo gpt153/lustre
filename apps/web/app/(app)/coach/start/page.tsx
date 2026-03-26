@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { YStack, XStack, Text, Spinner, Button } from 'tamagui'
 import { trpc } from '@lustre/api'
+import { TRPCClientError } from '@trpc/client'
 import { useRouter } from 'next/navigation'
 import { useAuthStore } from '@lustre/app/src/stores/authStore'
 
@@ -19,6 +20,7 @@ export default function CoachStartPage() {
   const [selectedMode, setSelectedMode] = useState<Mode>('VOICE')
   const [isStarting, setIsStarting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [balanceError, setBalanceError] = useState(false)
 
   const createSession = trpc.coach.create.useMutation()
   const startSession = trpc.coach.start.useMutation()
@@ -27,6 +29,7 @@ export default function CoachStartPage() {
     if (isStarting) return
     setIsStarting(true)
     setError(null)
+    setBalanceError(false)
 
     try {
       // 1. Fetch LiveKit token from REST endpoint
@@ -54,11 +57,24 @@ export default function CoachStartPage() {
       }
 
       // 2. Create the session record
-      const session = await createSession.mutateAsync({
-        persona: selectedPersona,
-        mode: selectedMode,
-        roomName: data.roomName,
-      })
+      let session
+      try {
+        session = await createSession.mutateAsync({
+          persona: selectedPersona,
+          mode: selectedMode,
+          roomName: data.roomName,
+        })
+      } catch (err) {
+        if (
+          err instanceof TRPCClientError &&
+          err.data?.code === 'PRECONDITION_FAILED'
+        ) {
+          setBalanceError(true)
+          setIsStarting(false)
+          return
+        }
+        throw err
+      }
 
       // 3. Mark session as started
       await startSession.mutateAsync({ sessionId: session.id })
@@ -84,6 +100,45 @@ export default function CoachStartPage() {
     <YStack flex={1} alignItems="center" padding="$4">
       <YStack width="100%" maxWidth={600} gap="$6">
         <Text fontSize="$6" fontWeight="700" color="$text">New Coach Session</Text>
+
+        {balanceError && (
+          <XStack
+            backgroundColor="#fff3cd"
+            padding="$3"
+            borderRadius="$2"
+            alignItems="center"
+            justifyContent="space-between"
+            marginBottom="$4"
+          >
+            <YStack flex={1} gap="$1">
+              <Text fontSize="$3" color="#333">
+                Otillräckliga tokens.{' '}
+                <Text
+                  as="a"
+                  href="https://pay.lovelustre.com/pay"
+                  target="_blank"
+                  rel="noreferrer"
+                  color="#0066cc"
+                  textDecorationLine="underline"
+                  cursor="pointer"
+                >
+                  Fyll på ditt konto →
+                </Text>
+              </Text>
+            </YStack>
+            <Button
+              onPress={() => setBalanceError(false)}
+              backgroundColor="transparent"
+              borderWidth={0}
+              padding="$0"
+              minHeight="auto"
+              height="auto"
+              cursor="pointer"
+            >
+              <Text fontSize="$4" color="#999">✕</Text>
+            </Button>
+          </XStack>
+        )}
 
         {/* Persona selection */}
         <YStack gap="$3">

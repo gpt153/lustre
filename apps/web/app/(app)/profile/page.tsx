@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { YStack, Spinner } from 'tamagui'
 import { trpc } from '@lustre/api'
@@ -18,6 +18,12 @@ export default function ProfilePage() {
   const logoutMutation = trpc.auth.logout.useMutation()
   const updateMutation = trpc.profile.update.useMutation()
 
+  useEffect(() => {
+    if (!isLoading && (needsOnboarding || !profile)) {
+      router.push('/onboarding')
+    }
+  }, [isLoading, needsOnboarding, profile, router])
+
   if (isLoading) {
     return (
       <YStack flex={1} alignItems="center" justifyContent="center" minHeight="80vh">
@@ -27,7 +33,6 @@ export default function ProfilePage() {
   }
 
   if (needsOnboarding || !profile) {
-    router.push('/onboarding')
     return null
   }
 

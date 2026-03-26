@@ -1,4 +1,5 @@
 import { trpc } from '@lustre/api'
+import { TRPCClientError } from '@trpc/client'
 
 export function useGatekeeper() {
   const configQuery = trpc.gatekeeper.getConfig.useQuery()
@@ -31,8 +32,16 @@ export function useGatekeeper() {
       checkRequired.mutateAsync({ recipientId }),
     initiate: (recipientId: string, message: string) =>
       initiate.mutateAsync({ recipientId, message }),
-    respond: (conversationId: string, message: string) =>
-      respond.mutateAsync({ conversationId, message }),
+    respond: async (conversationId: string, message: string) => {
+      try {
+        return await respond.mutateAsync({ conversationId, message })
+      } catch (error) {
+        if (error instanceof TRPCClientError && error.data?.code === 'PRECONDITION_FAILED') {
+          return { error: 'INSUFFICIENT_BALANCE' as const }
+        }
+        throw error
+      }
+    },
     isUpdating: updateConfig.isPending || toggle.isPending,
     isInitiating: initiate.isPending,
     isResponding: respond.isPending,
