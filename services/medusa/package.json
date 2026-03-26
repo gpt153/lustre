@@ -1,0 +1,22 @@
+{
+  "name": "lustre-medusa",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "medusa develop",
+    "start": "medusa start",
+    "build": "medusa build",
+    "seed": "medusa exec ./scripts/seed.ts"
+  },
+  "dependencies": {
+    "@medusajs/medusa": "^2.0.0",
+    "@medusajs/framework": "^2.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "@types/node": "^20.11.5"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

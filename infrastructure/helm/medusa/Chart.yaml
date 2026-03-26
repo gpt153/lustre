@@ -1,0 +1,6 @@
+apiVersion: v2
+name: medusa
+description: Medusa.js v2 headless e-commerce server with built-in admin dashboard
+type: application
+version: 0.1.0
+appVersion: "2.0"
