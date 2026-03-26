@@ -21,13 +21,16 @@ interface MatchAnimationProps {
 }
 
 let LottieView: any = null
+let lottieAnimationData: any = null
 
 try {
   if (Platform.OS !== 'web') {
     LottieView = require('lottie-react-native').default
+    lottieAnimationData = require('../assets/animations/match-celebration.json')
   }
 } catch (e) {
   LottieView = null
+  lottieAnimationData = null
 }
 
 const ANIMATION_COLORS = {
@@ -161,8 +164,6 @@ export function MatchAnimation({ visible, matchedProfile, onDismiss }: MatchAnim
     opacity: cardOpacity,
   }
 
-  const lottieAnimationPath = require('../assets/animations/match-celebration.json')
-
   return (
     <Animated.View style={backdropStyle}>
       <TouchableWithoutFeedback onPress={handleDismiss}>
@@ -190,10 +191,10 @@ export function MatchAnimation({ visible, matchedProfile, onDismiss }: MatchAnim
                 shadowOpacity={0.15}
                 shadowRadius={8}
               >
-                {/* Lottie Animation */}
-                {LottieView && (
+                {/* Lottie Animation — only on native */}
+                {LottieView && lottieAnimationData && Platform.OS !== 'web' && (
                   <LottieView
-                    source={lottieAnimationPath}
+                    source={lottieAnimationData}
                     autoPlay
                     loop={false}
                     speed={1}

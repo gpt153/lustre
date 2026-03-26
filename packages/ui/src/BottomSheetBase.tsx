@@ -1,3 +1,5 @@
+'use client'
+
 import { useEffect, useRef } from 'react'
 import { Animated, Dimensions, TouchableWithoutFeedback, StyleSheet } from 'react-native'
 import { YStack, XStack } from 'tamagui'

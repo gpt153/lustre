@@ -42,4 +42,5 @@ export default withTamagui({
   config: './tamagui.config.ts',
   components: ['tamagui'],
   appDir: true,
+  disableExtraction: true,
 })(nextConfig)
