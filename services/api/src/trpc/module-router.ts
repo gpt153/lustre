@@ -163,6 +163,23 @@ export const moduleRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      const now = new Date()
+      const existingStreak = await ctx.prisma.userStreak.findUnique({
+        where: { userId: ctx.userId },
+      })
+      let currentStreak = 1
+      if (existingStreak?.lastActivityAt) {
+        const daysDiff = Math.floor((now.getTime() - existingStreak.lastActivityAt.getTime()) / 86400000)
+        if (daysDiff === 0) currentStreak = existingStreak.currentStreak
+        else if (daysDiff === 1) currentStreak = existingStreak.currentStreak + 1
+      }
+      const longestStreak = Math.max(currentStreak, existingStreak?.longestStreak ?? 0)
+      await ctx.prisma.userStreak.upsert({
+        where: { userId: ctx.userId },
+        update: { currentStreak, longestStreak, lastActivityAt: now },
+        create: { userId: ctx.userId, currentStreak, longestStreak, lastActivityAt: now },
+      })
+
       const lesson = await ctx.prisma.lesson.findUnique({
         where: { id: input.lessonId },
         include: {
@@ -229,6 +246,19 @@ export const moduleRouter = router({
           where: { order: lesson.module.order + 1 },
           data: { isUnlocked: true },
         })
+
+        // Award badge if one exists for this module
+        const badge = await ctx.prisma.badge.findFirst({
+          where: { moduleOrder: lesson.module.order },
+        })
+
+        if (badge) {
+          await ctx.prisma.userBadge.upsert({
+            where: { userId_badgeId: { userId: ctx.userId, badgeId: badge.id } },
+            update: {},
+            create: { userId: ctx.userId, badgeId: badge.id, awardedAt: new Date() },
+          })
+        }
       }
 
       return { lessonProgress, moduleProgress, moduleCompleted }

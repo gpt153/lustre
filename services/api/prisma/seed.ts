@@ -1033,6 +1033,289 @@ async function main() {
   }
 
   console.log(`Seeded ${spicyLessons.length} spicy lessons`)
+
+  console.log('Seeding badges...')
+
+  const badges: {
+    moduleOrder: number
+    name: string
+    icon: string
+    description: string
+    isSpicy: boolean
+  }[] = [
+    {
+      moduleOrder: 1,
+      name: 'Fear Conqueror',
+      icon: '🏆',
+      description: 'Conquered social fear and approach anxiety',
+      isSpicy: false,
+    },
+    {
+      moduleOrder: 2,
+      name: 'Ice Breaker',
+      icon: '❄️',
+      description: 'Mastered the art of opening any conversation',
+      isSpicy: false,
+    },
+    {
+      moduleOrder: 3,
+      name: 'Smooth Talker',
+      icon: '💬',
+      description: 'Keeps any conversation alive and engaging',
+      isSpicy: false,
+    },
+    {
+      moduleOrder: 4,
+      name: 'Signal Reader',
+      icon: '📡',
+      description: 'Accurately decodes attraction cues and body language',
+      isSpicy: false,
+    },
+    {
+      moduleOrder: 5,
+      name: 'Presence Master',
+      icon: '⚡',
+      description: 'Projects unshakeable confidence and grounded presence',
+      isSpicy: false,
+    },
+    {
+      moduleOrder: 6,
+      name: 'Connection Maker',
+      icon: '🤝',
+      description: 'Creates genuine emotional rapport and deep connection',
+      isSpicy: false,
+    },
+    {
+      moduleOrder: 7,
+      name: 'Playful Pro',
+      icon: '🎭',
+      description: 'Masters playful banter and creates chemistry',
+      isSpicy: false,
+    },
+    {
+      moduleOrder: 8,
+      name: 'Smooth Mover',
+      icon: '🌊',
+      description: 'Navigates physical escalation naturally within consent',
+      isSpicy: false,
+    },
+    {
+      moduleOrder: 9,
+      name: 'Resilient Man',
+      icon: '💪',
+      description: 'Turns rejection into resilience and growth',
+      isSpicy: false,
+    },
+    {
+      moduleOrder: 10,
+      name: 'Leader of Men',
+      icon: '👑',
+      description: 'Commands decisive masculine leadership',
+      isSpicy: false,
+    },
+    {
+      moduleOrder: 101,
+      name: 'Consent Artist',
+      icon: '🎨',
+      description: 'Makes consent feel natural and attractive',
+      isSpicy: true,
+    },
+    {
+      moduleOrder: 102,
+      name: 'Voice Awakened',
+      icon: '🔥',
+      description: 'Awakened the power of vocal expression',
+      isSpicy: true,
+    },
+    {
+      moduleOrder: 103,
+      name: 'Word Weaver',
+      icon: '✨',
+      description: 'Masters the art of advanced dirty talk',
+      isSpicy: true,
+    },
+    {
+      moduleOrder: 104,
+      name: 'Respectful Dom',
+      icon: '⚖️',
+      description: 'Leads with power while honoring boundaries',
+      isSpicy: true,
+    },
+    {
+      moduleOrder: 105,
+      name: 'Touch Master',
+      icon: '🫶',
+      description: 'Navigates physical intimacy with confidence',
+      isSpicy: true,
+    },
+    {
+      moduleOrder: 106,
+      name: 'Safe Explorer',
+      icon: '🔒',
+      description: 'Explores BDSM safely with full consent',
+      isSpicy: true,
+    },
+    {
+      moduleOrder: 107,
+      name: 'Dream Speaker',
+      icon: '💭',
+      description: 'Communicates fantasies with confidence',
+      isSpicy: true,
+    },
+    {
+      moduleOrder: 108,
+      name: 'Generous Lover',
+      icon: '💝',
+      description: 'Masters the art of giving pleasure',
+      isSpicy: true,
+    },
+  ]
+
+  for (const badge of badges) {
+    await prisma.badge.upsert({
+      where: { moduleOrder: badge.moduleOrder },
+      update: {
+        name: badge.name,
+        icon: badge.icon,
+        description: badge.description,
+        isSpicy: badge.isSpicy,
+      },
+      create: badge,
+    })
+  }
+
+  console.log(`Seeded ${badges.length} badges`)
+
+  console.log('Seeding medals...')
+
+  const medals: {
+    key: string
+    name: string
+    icon: string
+    description: string
+    criteria: string
+  }[] = [
+    {
+      key: 'brave_first_step',
+      name: 'Brave First Step',
+      icon: '👣',
+      description: 'Completed your first lesson',
+      criteria: 'Complete 1 lesson total',
+    },
+    {
+      key: 'triple_flame',
+      name: 'Triple Flame',
+      icon: '🔥',
+      description: '3 days in a row',
+      criteria: 'Achieve a 3-day streak',
+    },
+    {
+      key: 'week_warrior',
+      name: 'Week Warrior',
+      icon: '⚔️',
+      description: '7 days without stopping',
+      criteria: 'Achieve a 7-day streak',
+    },
+    {
+      key: 'monthly_master',
+      name: 'Monthly Master',
+      icon: '📅',
+      description: '30 days of dedication',
+      criteria: 'Achieve a 30-day streak',
+    },
+    {
+      key: 'century_club',
+      name: 'Century Club',
+      icon: '💯',
+      description: '100 days of mastery',
+      criteria: 'Achieve a 100-day streak',
+    },
+    {
+      key: 'fast_learner',
+      name: 'Fast Learner',
+      icon: '⚡',
+      description: 'Completed a module in 24 hours',
+      criteria: 'Complete all lessons in a module within 24 hours',
+    },
+    {
+      key: 'perfectionist',
+      name: 'Perfectionist',
+      icon: '🎯',
+      description: 'Passed all lessons on first attempt',
+      criteria: 'Pass all lessons first-attempt in any module',
+    },
+    {
+      key: 'lesson_hunter',
+      name: 'Lesson Hunter',
+      icon: '🎖️',
+      description: 'Completed 10 lessons',
+      criteria: 'Complete 10 lessons total',
+    },
+    {
+      key: 'lesson_master',
+      name: 'Lesson Master',
+      icon: '🏅',
+      description: 'Completed 25 lessons',
+      criteria: 'Complete 25 lessons total',
+    },
+    {
+      key: 'dawn_trainer',
+      name: 'Dawn Trainer',
+      icon: '🌅',
+      description: 'Trains at dawn',
+      criteria: 'Complete 5 sessions before 8am',
+    },
+    {
+      key: 'night_owl',
+      name: 'Night Owl',
+      icon: '🦉',
+      description: 'Trains after dark',
+      criteria: 'Complete 5 sessions after 10pm',
+    },
+    {
+      key: 'weekend_warrior',
+      name: 'Weekend Warrior',
+      icon: '🏋️',
+      description: 'Never misses a weekend',
+      criteria: 'Practice on 5 different weekends',
+    },
+    {
+      key: 'comeback_kid',
+      name: 'Comeback Kid',
+      icon: '🔄',
+      description: 'Returned after a break',
+      criteria: 'Return after 7+ days and complete a lesson',
+    },
+    {
+      key: 'deep_dive',
+      name: 'Deep Dive',
+      icon: '🤿',
+      description: 'Intensive single-day training',
+      criteria: 'Complete 3+ lessons in a single day',
+    },
+    {
+      key: 'graduation_day',
+      name: 'Graduation Day',
+      icon: '🎓',
+      description: 'Completed the full vanilla programme',
+      criteria: 'Complete all 10 vanilla modules',
+    },
+  ]
+
+  for (const medal of medals) {
+    await prisma.medal.upsert({
+      where: { key: medal.key },
+      update: {
+        name: medal.name,
+        icon: medal.icon,
+        description: medal.description,
+        criteria: medal.criteria,
+      },
+      create: medal,
+    })
+  }
+
+  console.log(`Seeded ${medals.length} medals`)
 }
 
 main()
