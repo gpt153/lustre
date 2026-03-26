@@ -33,6 +33,8 @@ const nextConfig: NextConfig = {
       'expo-image-picker': path.resolve(__dirname, 'stubs/expo-image-picker.js'),
       'expo-haptics': path.resolve(__dirname, 'stubs/expo-haptics.js'),
       'lottie-react-native': path.resolve(__dirname, 'stubs/lottie-react-native.js'),
+      'react-native-gesture-handler': path.resolve(__dirname, 'stubs/react-native-gesture-handler.js'),
+      'expo-router': path.resolve(__dirname, 'stubs/expo-router.js'),
     }
     return config
   },
