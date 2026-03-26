@@ -3,6 +3,31 @@
 import { useState, useEffect, useRef } from 'react'
 import { YStack, XStack, Text, Spinner, Button, Image, TextArea } from 'tamagui'
 import { trpc } from '@lustre/api'
+import { FeedAdCard } from '@lustre/app/components/FeedAdCard'
+
+type FeedPost = {
+  type: 'post'
+  id: string
+  text: string | null
+  createdAt: Date
+  author: { id: string; displayName: string | null; avatarUrl: string | null }
+  media: Array<{ id: string; url: string; thumbnailMedium: string | null }>
+  likeCount: number
+  isLiked: boolean
+}
+
+type FeedAd = {
+  type: 'ad'
+  campaignId: string
+  creativeId: string
+  headline: string
+  body: string | null
+  imageUrl: string | null
+  ctaUrl: string
+  sponsor: string | null
+}
+
+type FeedItem = FeedPost | FeedAd
 
 export default function HomePage() {
   const [showCreate, setShowCreate] = useState(false)
@@ -15,8 +40,10 @@ export default function HomePage() {
   const likeMutation = trpc.post.like.useMutation()
   const unlikeMutation = trpc.post.unlike.useMutation()
   const showLessMutation = trpc.post.showLess.useMutation()
+  const recordImpression = trpc.ad.recordImpression.useMutation()
+  const recordClick = trpc.ad.recordClick.useMutation()
 
-  const posts = feedQuery.data?.pages.flatMap((page) => page.posts) ?? []
+  const items = (feedQuery.data?.pages.flatMap((page) => page.posts) ?? []) as unknown as FeedItem[]
 
   const handleLike = async (postId: string) => {
     await likeMutation.mutateAsync({ postId })
@@ -31,6 +58,14 @@ export default function HomePage() {
   const handleShowLess = async (postId: string) => {
     await showLessMutation.mutateAsync({ postId })
     feedQuery.refetch()
+  }
+
+  const handleAdImpression = (campaignId: string, creativeId: string) => {
+    recordImpression.mutate({ campaignId, creativeId })
+  }
+
+  const handleAdClick = (campaignId: string, creativeId: string) => {
+    recordClick.mutate({ campaignId, creativeId })
   }
 
   const loadMoreRef = useRef<HTMLDivElement>(null)
@@ -80,20 +115,38 @@ export default function HomePage() {
           />
         )}
 
-        {posts.length === 0 ? (
+        {items.length === 0 ? (
           <YStack alignItems="center" padding="$6">
             <Text color="$textSecondary">No posts yet. Be the first!</Text>
           </YStack>
         ) : (
-          posts.map((post) => (
-            <WebPostCard
-              key={post.id}
-              post={post}
-              onLike={handleLike}
-              onUnlike={handleUnlike}
-              onShowLess={handleShowLess}
-            />
-          ))
+          items.map((item) => {
+            if (item.type === 'ad') {
+              return (
+                <FeedAdCard
+                  key={`ad-${item.campaignId}-${item.creativeId}`}
+                  campaignId={item.campaignId}
+                  creativeId={item.creativeId}
+                  headline={item.headline}
+                  body={item.body}
+                  imageUrl={item.imageUrl}
+                  ctaUrl={item.ctaUrl}
+                  sponsor={item.sponsor}
+                  onImpression={() => handleAdImpression(item.campaignId, item.creativeId)}
+                  onClick={() => handleAdClick(item.campaignId, item.creativeId)}
+                />
+              )
+            }
+            return (
+              <WebPostCard
+                key={item.id}
+                post={item}
+                onLike={handleLike}
+                onUnlike={handleUnlike}
+                onShowLess={handleShowLess}
+              />
+            )
+          })
         )}
 
         <div ref={loadMoreRef} style={{ height: 1 }} />
@@ -155,15 +208,7 @@ function CreatePostInline({ onSuccess }: { onSuccess: () => void }) {
 }
 
 function WebPostCard({ post, onLike, onUnlike, onShowLess }: {
-  post: {
-    id: string
-    text: string | null
-    createdAt: Date
-    author: { id: string; displayName: string | null; avatarUrl: string | null }
-    media: Array<{ id: string; url: string; thumbnailMedium: string | null }>
-    likeCount: number
-    isLiked: boolean
-  }
+  post: FeedPost
   onLike: (id: string) => void
   onUnlike: (id: string) => void
   onShowLess: (id: string) => void
