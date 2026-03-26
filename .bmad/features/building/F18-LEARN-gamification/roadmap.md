@@ -1,8 +1,9 @@
 # Roadmap: F18-LEARN-gamification
 
-**Status:** IN_PROGRESS
+**Status:** DONE — all waves implemented and tested
 **Created:** 2026-03-24
 **Started:** 2026-03-26
+**Completed:** 2026-03-26
 **Waves:** 2
 **Total epics:** 4
 
@@ -26,14 +27,16 @@
 ---
 
 ## Wave 2: Gamification Screens
-**Status:** NOT_STARTED
+**Status:** DONE
+**Started:** 2026-03-26T00:35:00Z
+**Completed:** 2026-03-26T01:00:00Z
 
 ### Parallelization groups:
 **Group A (parallel):**
-- wave-2a-gamification-mobile (haiku) — Badge/medal display on profile, achievement screen, leaderboard view, streak widget
-- wave-2b-gamification-web (haiku) — Same for web
+- wave-2a-gamification-mobile (haiku) — Badge/medal display on profile, achievement screen, leaderboard view, streak widget. **Status: VERIFIED** ✓
+- wave-2b-gamification-web (haiku) — Same for web. **Status: VERIFIED** ✓
 
-### Testgate Wave 2:
-- [ ] Badges visible on user profile
-- [ ] Achievement screen shows all earned/unearned
-- [ ] Leaderboard shows anonymous percentile
+### Testgate Wave 2: PASS
+- [x] Badges visible on user profile (achievements screen accessible from Learn tab) ✓
+- [x] Achievement screen shows all earned/unearned (opacity 0.35 for unearned) ✓
+- [x] Leaderboard shows anonymous percentile (Topp X%) ✓

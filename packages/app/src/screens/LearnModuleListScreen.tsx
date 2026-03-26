@@ -7,9 +7,10 @@ import { SpicyGateBanner } from '../components/SpicyGateBanner'
 interface LearnModuleListScreenProps {
   onModulePress: (moduleId: string) => void
   onSpicySettings: () => void
+  onAchievementsPress?: () => void
 }
 
-export function LearnModuleListScreen({ onModulePress, onSpicySettings }: LearnModuleListScreenProps) {
+export function LearnModuleListScreen({ onModulePress, onSpicySettings, onAchievementsPress }: LearnModuleListScreenProps) {
   const { vanillaModules, spicyModules, isLoading } = useLearn()
   const { profile } = useProfile()
 
@@ -27,12 +28,18 @@ export function LearnModuleListScreen({ onModulePress, onSpicySettings }: LearnM
         paddingHorizontal="$4"
         paddingVertical="$3"
         alignItems="center"
+        justifyContent="space-between"
         borderBottomWidth={1}
         borderBottomColor="$borderColor"
       >
         <Text fontSize={20} fontWeight="700" color="$color">
           Lär dig
         </Text>
+        {onAchievementsPress && (
+          <TouchableOpacity onPress={onAchievementsPress}>
+            <Text fontSize={20}>🏆</Text>
+          </TouchableOpacity>
+        )}
       </XStack>
 
       <ScrollView flex={1}>

@@ -6,6 +6,8 @@ export default function LearnTab() {
   return (
     <LearnModuleListScreen
       onModulePress={(moduleId) => router.push(`/(tabs)/learn/${moduleId}`)}
+      onSpicySettings={() => router.push('/(tabs)/profile/spicy-settings')}
+      onAchievementsPress={() => router.push('/(tabs)/learn/achievements')}
     />
   )
 }

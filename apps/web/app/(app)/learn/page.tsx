@@ -6,6 +6,7 @@ import Link from 'next/link'
 
 export default function LearnPage() {
   const listQuery = trpc.module.list.useQuery()
+  const streakQuery = trpc.gamification.getStreak.useQuery()
 
   if (listQuery.isLoading) {
     return (
@@ -124,6 +125,47 @@ export default function LearnPage() {
   return (
     <YStack flex={1} alignItems="center" padding="$4">
       <YStack width="100%" maxWidth={900} gap="$6">
+        <XStack gap="$4" alignItems="center" justifyContent="space-between" flexWrap="wrap">
+          <XStack
+            backgroundColor="$gray2"
+            borderRadius="$4"
+            paddingHorizontal="$3"
+            paddingVertical="$2"
+            gap="$2"
+            alignItems="center"
+          >
+            <Text fontSize={20}>{(streakQuery.data?.currentStreak ?? 0) > 0 ? '🔥' : '💤'}</Text>
+            <YStack>
+              <Text fontSize="$3" fontWeight="700" color="$text">
+                {(streakQuery.data?.currentStreak ?? 0) > 0
+                  ? `${streakQuery.data!.currentStreak} dagar i rad`
+                  : 'Ingen streak'}
+              </Text>
+              <Text fontSize="$1" color="$textSecondary">
+                Bäst: {streakQuery.data?.longestStreak ?? 0} dagar
+              </Text>
+            </YStack>
+          </XStack>
+
+          <Link href="/learn/achievements" style={{ textDecoration: 'none' }}>
+            <XStack
+              backgroundColor="$background"
+              borderRadius="$3"
+              borderWidth={1}
+              borderColor="$borderColor"
+              paddingHorizontal="$3"
+              paddingVertical="$2"
+              gap="$2"
+              alignItems="center"
+              cursor="pointer"
+              hoverStyle={{ borderColor: '$primary' }}
+            >
+              <Text fontSize="$3">🏆</Text>
+              <Text fontSize="$3" color="$text">Prestationer</Text>
+            </XStack>
+          </Link>
+        </XStack>
+
         <XStack justifyContent="space-between" alignItems="center">
           <Text fontSize="$6" fontWeight="700" color="$text">
             Learn — Social Skills
