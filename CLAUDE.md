@@ -227,6 +227,17 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
 - **Mobile:** `LearnModuleListScreen` has spicy section with gate banner or spicy module cards (🌶️ 18+ tag); `LearnLessonScreen` shows 18+ pill on spicy lessons; spicy toggle at `apps/mobile/app/(tabs)/profile/spicy-settings.tsx`
 - **Web:** `/learn` spicy section with gate banner; `/learn/[moduleId]` and `/learn/.../lesson/[lessonId]` show 18+ badge when isSpicy; toggle at `/settings/spicy`; settings nav via `apps/web/app/(app)/settings/layout.tsx`
 
+## Gamification (F18-LEARN-gamification)
+- **Schema:** `Badge`, `Medal`, `UserBadge`, `UserMedal`, `UserStreak` — Prisma models in `services/api/prisma/schema.prisma`
+- **Badge data:** 18 badges — one per module (10 vanilla orders 1-10, 8 spicy orders 101-108). Seeded via `services/api/prisma/seed.ts`. Badge keyed by `moduleOrder`.
+- **Medal data:** 15 medals for individual merit achievements (streaks, volume, speed, behavioral). Keyed by `key` string (e.g. `brave_first_step`, `week_warrior`, `century_club`).
+- **Award triggers:** `module.completeLesson` awards `UserBadge` on module completion (finds Badge by `moduleOrder`) and upserts `UserStreak` on every call (daysDiff=0 same day, daysDiff=1 increment, >1 reset).
+- **tRPC Router:** `gamification` — `getBadges` (all badges + earned status), `getMedals` (all medals + earned status), `getLeaderboard` (anonymous percentile by badge count), `getStreak` (currentStreak, longestStreak, lastActivityAt)
+- **Shared components:** `packages/app/src/` — `AchievementScreen`, `StreakWidget`, `useGamification` hook
+- **Mobile:** Achievements page at `apps/mobile/app/(tabs)/learn/achievements.tsx`; trophy button in `LearnModuleListScreen` header navigates to it; streak widget shown on Learn tab
+- **Web:** `/learn/achievements` — full achievements page; streak widget + link added to `/learn` page
+- **Migration:** `services/api/prisma/migrations/20260326000000_add_gamification/migration.sql`
+
 ## Rules
 - All users verified via BankID (Sweden) or Veriff (international)
 - Real names NEVER shown in app — stored encrypted, released only via court order

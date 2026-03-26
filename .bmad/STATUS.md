@@ -25,7 +25,7 @@
 | F15 | LEARN | Coach Engine | 2 | 5 | **DONE** (2026-03-25) |
 | F16 | LEARN | Coach Vanilla | 2 | 5 | PLANNED |
 | F17 | LEARN | Coach Spicy | 2 | 4 | **DONE** (2026-03-26) |
-| F18 | LEARN | Gamification | 2 | 4 | PLANNED |
+| F18 | LEARN | Gamification | 2 | 4 | **DONE** (2026-03-26) |
 | F19 | LEARN | Sexual Health Education | 2 | 5 | PLANNED |
 | F20 | SHOP | Marketplace | 3 | 6 | PLANNED |
 | F21 | SHOP | Business Shops | 2 | 4 | PLANNED |
