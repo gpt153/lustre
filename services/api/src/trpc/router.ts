@@ -33,6 +33,7 @@ import { tokenRouter } from './token-router.js'
 import { swishPaymentRouter } from './swish-payment-router.js'
 import { segpayRouter } from './segpay-router.js'
 import { reportRouter } from './report-router.js'
+import { settingsRouter } from './settings-router.js'
 
 const swishCallbackSchema = z.object({
   id: z.string(),
@@ -320,6 +321,7 @@ export const appRouter = router({
   token: tokenRouter,
   swishPayment: swishPaymentRouter,
   segpay: segpayRouter,
+  settings: settingsRouter,
 })
 
 export type AppRouter = typeof appRouter

@@ -125,6 +125,14 @@ export const profileRouter = router({
   getPublic: publicProcedure
     .input(z.object({ userId: z.string().uuid() }))
     .query(async ({ ctx, input }) => {
+      const callerProfile = ctx.userId
+        ? await ctx.prisma.profile.findUnique({
+            where: { userId: ctx.userId },
+            select: { spicyModeEnabled: true },
+          })
+        : null
+      const isVanilla = !callerProfile?.spicyModeEnabled
+
       const profile = await ctx.prisma.profile.findUnique({
         where: { userId: input.userId },
         include: {
@@ -182,7 +190,7 @@ export const profileRouter = router({
           }))
       )
 
-      return { ...publicProfile, linkedPartners }
+      return { ...publicProfile, kinkTags: isVanilla ? [] : publicProfile.kinkTags, linkedPartners }
     }),
 
   toggleSpicyMode: protectedProcedure

@@ -47,6 +47,12 @@ export const matchRouter = router({
   getDiscoveryStack: protectedProcedure
     .input(getDiscoveryStackSchema)
     .query(async ({ ctx, input }) => {
+      const callerProfile = await ctx.prisma.profile.findUnique({
+        where: { userId: ctx.userId },
+        select: { spicyModeEnabled: true },
+      })
+      const isVanilla = !callerProfile?.spicyModeEnabled
+
       const profiles = await ctx.prisma.profile.findMany({
         where: {
           userId: {
@@ -55,6 +61,7 @@ export const matchRouter = router({
           user: {
             status: 'ACTIVE',
           },
+          ...(isVanilla ? { spicyModeEnabled: false } : {}),
         },
         select: {
           id: true,

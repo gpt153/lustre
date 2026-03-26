@@ -104,6 +104,12 @@ export const postRouter = router({
       const { cursor, limit } = input
       const userId = ctx.userId
 
+      const callerProfile = await ctx.prisma.profile.findUnique({
+        where: { userId: ctx.userId },
+        select: { spicyModeEnabled: true },
+      })
+      const isVanilla = !callerProfile?.spicyModeEnabled
+
       const filter = await ctx.prisma.userContentFilter.findUnique({
         where: { userId },
       })
@@ -175,6 +181,11 @@ export const postRouter = router({
             OR (ct.dimension = 'GENDER_PRESENTATION' AND ct.value NOT IN (${Prisma.join(allowedGender)}))
           )
         )
+        ${isVanilla ? Prisma.sql`AND NOT EXISTS (
+          SELECT 1 FROM post_media pm
+          WHERE pm.post_id = p.id
+          AND pm.nudity_level IN ('MEDIUM', 'HIGH')
+        )` : Prisma.empty}
       `
 
       const posts = cursorDate
