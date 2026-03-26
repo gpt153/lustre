@@ -16,7 +16,7 @@ const STATUS_LABELS: Record<CampaignStatus, string> = {
 
 const STATUS_COLORS: Record<CampaignStatus, string> = {
   DRAFT: '#9E9E9E',
-  ACTIVE: '#4CAF50',
+  ACTIVE: '#D4A843',
   PAUSED: '#FF9800',
   EXHAUSTED: '#F44336',
   COMPLETED: '#607D8B',
@@ -28,7 +28,7 @@ function StatCard({ label, value }: { label: string; value: string | number }) {
       style={{
         flex: 1,
         minWidth: 140,
-        backgroundColor: '#fff',
+        backgroundColor: '#FDF8F3',
         borderRadius: 12,
         border: '1px solid #e5e5e5',
         padding: '20px 24px',
@@ -139,7 +139,7 @@ export default function CampaignDetailPage() {
       {/* Campaign header */}
       <div
         style={{
-          backgroundColor: '#fff',
+          backgroundColor: '#FDF8F3',
           borderRadius: 12,
           border: '1px solid #e5e5e5',
           padding: 24,
@@ -150,7 +150,7 @@ export default function CampaignDetailPage() {
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12 }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <h2 style={{ margin: 0, fontSize: 22, fontWeight: 700, color: '#1a1a1a' }}>
+            <h2 style={{ margin: 0, fontSize: 22, fontWeight: 700, color: '#2C2421' }}>
               {campaign.name}
             </h2>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -181,8 +181,8 @@ export default function CampaignDetailPage() {
                 onClick={handleActivate}
                 disabled={activateCampaign.isPending}
                 style={{
-                  backgroundColor: '#4CAF50',
-                  color: 'white',
+                  backgroundColor: '#D4A843',
+                  color: '#2C2421',
                   border: 'none',
                   borderRadius: 8,
                   padding: '10px 20px',
@@ -235,7 +235,7 @@ export default function CampaignDetailPage() {
       {/* Analytics section */}
       <div
         style={{
-          backgroundColor: '#fff',
+          backgroundColor: '#FDF8F3',
           borderRadius: 12,
           border: '1px solid #e5e5e5',
           padding: 24,
@@ -244,7 +244,7 @@ export default function CampaignDetailPage() {
           gap: 20,
         }}
       >
-        <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: '#1a1a1a' }}>
+        <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: '#2C2421' }}>
           Statistik
         </h3>
 
@@ -271,7 +271,7 @@ export default function CampaignDetailPage() {
       {campaign.creatives && campaign.creatives.length > 0 && (
         <div
           style={{
-            backgroundColor: '#fff',
+            backgroundColor: '#FDF8F3',
             borderRadius: 12,
             border: '1px solid #e5e5e5',
             padding: 24,
@@ -280,7 +280,7 @@ export default function CampaignDetailPage() {
             gap: 16,
           }}
         >
-          <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: '#1a1a1a' }}>
+          <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: '#2C2421' }}>
             Annonser ({campaign.creatives.length})
           </h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -296,7 +296,7 @@ export default function CampaignDetailPage() {
                   gap: 6,
                 }}
               >
-                <span style={{ fontWeight: 700, fontSize: 15, color: '#1a1a1a' }}>
+                <span style={{ fontWeight: 700, fontSize: 15, color: '#2C2421' }}>
                   {creative.headline}
                 </span>
                 {creative.body && (

@@ -80,6 +80,8 @@ export function GroupListScreen({ onGroupPress, onCreatePress }: GroupListScreen
                 searchResults.refetch()
               }
             }}
+            tintColor="#B87333"
+            colors={['#B87333']}
           />
         }
         ListFooterComponent={

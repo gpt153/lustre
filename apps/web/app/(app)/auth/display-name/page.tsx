@@ -91,7 +91,7 @@ export default function DisplayNamePage() {
           }}
           onFocus={(e) => {
             if (!error) {
-              e.currentTarget.style.borderColor = '#E91E63'
+              e.currentTarget.style.borderColor = '#B87333'
             }
           }}
           onBlur={(e) => {
@@ -141,7 +141,7 @@ export default function DisplayNamePage() {
               !displayName.trim() ||
               displayName.length < 3
                 ? '#666'
-                : '#E91E63',
+                : '#B87333',
             border: 'none',
             borderRadius: '8px',
             cursor:
@@ -160,7 +160,7 @@ export default function DisplayNamePage() {
               displayName.length >= 3
             ) {
               (e.currentTarget as HTMLButtonElement).style.backgroundColor =
-                '#c2185b'
+                '#A85D2C'
             }
           }}
           onMouseLeave={(e) => {
@@ -170,7 +170,7 @@ export default function DisplayNamePage() {
               displayName.length >= 3
             ) {
               (e.currentTarget as HTMLButtonElement).style.backgroundColor =
-                '#E91E63'
+                '#B87333'
             }
           }}
         >

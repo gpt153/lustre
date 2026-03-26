@@ -73,7 +73,7 @@ export default function PaymentPage() {
               display: 'inline-block',
               width: '40px',
               height: '40px',
-              border: '4px solid #E91E63',
+              border: '4px solid #B87333',
               borderTop: '4px solid transparent',
               borderRadius: '50%',
               animation: 'spin 1s linear infinite',
@@ -141,7 +141,7 @@ export default function PaymentPage() {
               fontSize: '16px',
               fontWeight: 600,
               color: '#fff',
-              backgroundColor: '#E91E63',
+              backgroundColor: '#B87333',
               border: 'none',
               borderRadius: '8px',
               cursor: 'pointer',
@@ -151,11 +151,11 @@ export default function PaymentPage() {
             }}
             onMouseEnter={(e) => {
               (e.currentTarget as HTMLButtonElement).style.backgroundColor =
-                '#c2185b'
+                '#A85D2C'
             }}
             onMouseLeave={(e) => {
               (e.currentTarget as HTMLButtonElement).style.backgroundColor =
-                '#E91E63'
+                '#B87333'
             }}
           >
             Öppna Swish

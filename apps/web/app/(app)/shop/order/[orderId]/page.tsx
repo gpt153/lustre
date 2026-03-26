@@ -110,7 +110,7 @@ export default function OrderStatusPage({ params }: { params: { orderId: string 
                       <div style={{
                         width: 2,
                         height: 60,
-                        backgroundColor: idx < currentStatusIndex ? '#E91E63' : '#E5E5E5',
+                        backgroundColor: idx < currentStatusIndex ? '#B87333' : '#E5E5E5',
                       }} />
                     )}
                   </YStack>

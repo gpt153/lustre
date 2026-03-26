@@ -66,7 +66,7 @@ export default function SetCredentialsScreen() {
         color="$text"
         borderRadius={8}
         borderWidth={1}
-        borderColor={error ? '#E53935' : '$secondary'}
+        borderColor={error ? '#E05A33' : '$secondary'}
         paddingHorizontal="$3"
         paddingVertical="$3"
         fontSize="$4"
@@ -82,14 +82,14 @@ export default function SetCredentialsScreen() {
         color="$text"
         borderRadius={8}
         borderWidth={1}
-        borderColor={error ? '#E53935' : '$secondary'}
+        borderColor={error ? '#E05A33' : '$secondary'}
         paddingHorizontal="$3"
         paddingVertical="$3"
         fontSize="$4"
       />
 
       {error && (
-        <Text color="#E53935" textAlign="center">
+        <Text color="#E05A33" textAlign="center">
           {error}
         </Text>
       )}

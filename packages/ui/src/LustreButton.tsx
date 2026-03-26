@@ -47,7 +47,7 @@ export const LustreButton = styled(TamaguiButton, {
       },
       danger: {
         backgroundColor: '#E05A33',  // ember
-        color: '#FFFFFF',
+        color: '#FDF8F3',  // warmWhite
         pressStyle: {
           backgroundColor: '#C84A28',
           scale: 0.95,

@@ -122,7 +122,7 @@ export default function PaymentScreen() {
         )}
 
         {pollError && (
-          <Text color="#E53935" textAlign="center" marginTop="$4">
+          <Text color="#E05A33" textAlign="center" marginTop="$4">
             {pollError}
           </Text>
         )}

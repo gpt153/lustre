@@ -92,7 +92,7 @@ export function OrgAdminScreen({ orgId }: OrgAdminScreenProps) {
                       item.role === 'OWNER'
                         ? '#F57C00'
                         : item.role === 'ADMIN'
-                          ? '#1976D2'
+                          ? '$primary'
                           : '#424242'
                     }
                   >

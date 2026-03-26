@@ -149,6 +149,8 @@ export function SearchScreen() {
           <RefreshControl
             refreshing={searchQuery.isRefetching}
             onRefresh={() => searchQuery.refetch()}
+            tintColor="#B87333"
+            colors={['#B87333']}
           />
         }
         ListFooterComponent={

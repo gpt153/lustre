@@ -101,6 +101,8 @@ export function FeedScreen() {
         <RefreshControl
           refreshing={false}
           onRefresh={() => feed.refetch()}
+          tintColor="#B87333"
+          colors={['#B87333']}
         />
       }
       ListFooterComponent={

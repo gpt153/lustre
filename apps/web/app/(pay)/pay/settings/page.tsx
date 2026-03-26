@@ -111,8 +111,8 @@ export default function PaymentSettingsPage() {
     <ScrollView>
       <YStack padding="$4" gap="$6" maxWidth={600} alignSelf="center" width="100%">
         <YStack gap="$2">
-          <Link href="/pay" style={{ color: '#E91E63', textDecoration: 'none', marginBottom: 16 }}>
-            <Text fontSize="$3" color="#E91E63">
+          <Link href="/pay" style={{ color: '#B87333', textDecoration: 'none', marginBottom: 16 }}>
+            <Text fontSize="$3" color="#B87333">
               ← Tillbaka
             </Text>
           </Link>

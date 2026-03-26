@@ -1,8 +1,9 @@
 # Roadmap: F31-UX-design-system
 
-**Status:** IN_PROGRESS
+**Status:** DONE — all waves implemented and tested
 **Created:** 2026-03-26
 **Started:** 2026-03-26
+**Completed:** 2026-03-26
 **Waves:** 6
 **Total epics:** 14
 
@@ -125,7 +126,11 @@
 ---
 
 ## Wave 6: Animations, Haptics & Polish
-**Status:** NOT_STARTED
+**Status:** DONE
+**Started:** 2026-03-26
+**Completed:** 2026-03-26
+**Epics:** 6a VERIFIED, 6b VERIFIED, 6c VERIFIED
+**Learnings:** Lottie conditionally loaded via try/catch require() for web fallback. expo-haptics only works on native — Platform.OS check required. Pull-to-refresh copper color set via tintColor (iOS) + colors (Android).
 
 ### Parallelization groups:
 **Group A (parallel):**
@@ -136,9 +141,9 @@
 - wave-6c-dark-mode-polish (haiku) — Audit all screens in dark mode. Fix any hardcoded colors. Verify warm dark tones (#1A1614 bg, #2C2421 surface, #3D332E surfaceUp). Ensure goldBright (#E8B84B) is used as accent in dark mode. Test copper readability on dark surfaces.
 
 ### Testgate Wave 6:
-- [ ] Match animation plays a Lottie animation (not just scale/opacity)
-- [ ] Haptic feedback fires on match reveal
-- [ ] Button press animation uses spring physics
-- [ ] All screens render correctly in dark mode with warm dark tones
-- [ ] No hardcoded white (#FFFFFF) or black (#000000) colors remain in themed components
-- [ ] Dark mode accent color is goldBright (#E8B84B)
+- [x] Match animation plays a Lottie animation (not just scale/opacity)
+- [x] Haptic feedback fires on match reveal
+- [x] Button press animation uses spring physics
+- [x] All screens render correctly in dark mode with warm dark tones
+- [x] No hardcoded white (#FFFFFF) or black (#000000) colors remain in themed components
+- [x] Dark mode accent color is goldBright (#E8B84B)

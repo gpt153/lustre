@@ -95,6 +95,8 @@ export function MatchesListScreen({ onMatchPress }: MatchesListScreenProps) {
         <RefreshControl
           refreshing={false}
           onRefresh={() => discovery.refetch()}
+          tintColor="#B87333"
+          colors={['#B87333']}
         />
       }
       ListEmptyComponent={

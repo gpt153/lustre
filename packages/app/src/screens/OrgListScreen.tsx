@@ -83,6 +83,8 @@ export function OrgListScreen({ onOrgPress, onCreatePress }: OrgListScreenProps)
                 searchResults.refetch()
               }
             }}
+            tintColor="#B87333"
+            colors={['#B87333']}
           />
         }
         ListFooterComponent={

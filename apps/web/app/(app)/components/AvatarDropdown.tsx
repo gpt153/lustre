@@ -230,7 +230,7 @@ export function AvatarDropdown({ avatarUrl, userName = 'User', onLogout }: Avata
               }}
               onMouseEnter={(e) => {
                 (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(233, 30, 99, 0.15)'
-                ;(e.currentTarget as HTMLElement).style.color = '#E91E63'
+                ;(e.currentTarget as HTMLElement).style.color = '#B87333'
               }}
               onMouseLeave={(e) => {
                 (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent'

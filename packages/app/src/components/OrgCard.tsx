@@ -39,7 +39,7 @@ export function OrgCard({ org, onPress }: OrgCardProps) {
             <Text
               fontSize="$1"
               fontWeight="600"
-              color="#1976D2"
+              color="$primary"
             >
               {org.type}
             </Text>
@@ -55,7 +55,7 @@ export function OrgCard({ org, onPress }: OrgCardProps) {
             {org._count.members} {org._count.members === 1 ? 'member' : 'members'}
           </Text>
           {org.verified && (
-            <Text color="$green400" fontSize="$1" fontWeight="600">
+            <Text color="#D4A843" fontSize="$1" fontWeight="600">
               ✓ Verified
             </Text>
           )}

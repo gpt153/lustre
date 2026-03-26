@@ -87,7 +87,7 @@ export default function PayPage() {
         </YStack>
 
         <YStack
-          backgroundColor="#E91E63"
+          backgroundColor="#B87333"
           borderRadius="$3"
           padding="$6"
           gap="$4"

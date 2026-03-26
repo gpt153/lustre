@@ -11,7 +11,7 @@ function Header() {
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '16px 24px',
-        backgroundColor: '#E91E63',
+        backgroundColor: '#B87333',
         color: '#fff',
       }}
     >

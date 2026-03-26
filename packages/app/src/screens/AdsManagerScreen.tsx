@@ -14,7 +14,7 @@ const STATUS_LABELS: Record<CampaignStatus, string> = {
 
 const STATUS_COLORS: Record<CampaignStatus, string> = {
   DRAFT: '#9E9E9E',
-  ACTIVE: '#4CAF50',
+  ACTIVE: '#D4A843',
   PAUSED: '#FF9800',
   EXHAUSTED: '#F44336',
   COMPLETED: '#607D8B',

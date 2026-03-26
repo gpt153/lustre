@@ -27,7 +27,7 @@ export default function AuthPage() {
         style={{
           fontSize: '48px',
           fontWeight: 700,
-          color: '#E91E63',
+          color: '#B87333',
           margin: '0 0 16px 0',
         }}
       >
@@ -53,7 +53,7 @@ export default function AuthPage() {
             fontSize: '16px',
             fontWeight: 600,
             color: '#fff',
-            backgroundColor: '#E91E63',
+            backgroundColor: '#B87333',
             border: 'none',
             borderRadius: '8px',
             cursor: 'pointer',
@@ -61,11 +61,11 @@ export default function AuthPage() {
           }}
           onMouseEnter={(e) => {
             (e.currentTarget as HTMLButtonElement).style.backgroundColor =
-              '#c2185b'
+              '#A85D2C'
           }}
           onMouseLeave={(e) => {
             (e.currentTarget as HTMLButtonElement).style.backgroundColor =
-              '#E91E63'
+              '#B87333'
           }}
         >
           Skapa konto

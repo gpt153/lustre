@@ -31,7 +31,7 @@ export function ProfileCard({ displayName, age, gender, orientation, thumbnailUr
       <YStack flex={1} gap="$1" marginLeft="$3">
         <XStack alignItems="center" gap="$1">
           <Text fontWeight="600" color="$color">{displayName}</Text>
-          {verified && <Text color="#4CAF50" fontSize="$2">✓</Text>}
+          {verified && <Text color="#D4A843" fontSize="$2">✓</Text>}
         </XStack>
         <Text color="$warmGray" fontSize="$2">
           {age} • {gender.replace(/_/g, ' ').toLowerCase()} • {orientation.toLowerCase()}

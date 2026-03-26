@@ -145,6 +145,8 @@ export function ConversationListScreen() {
         <RefreshControl
           refreshing={isLoading}
           onRefresh={() => refetch()}
+          tintColor="#B87333"
+          colors={['#B87333']}
         />
       }
       ListEmptyComponent={

@@ -106,7 +106,7 @@ export function MarketplaceListScreen({ onListingPress, onCreatePress }: Marketp
         )}
         onEndReached={handleEndReached}
         onEndReachedThreshold={0.5}
-        refreshControl={<RefreshControl refreshing={false} onRefresh={() => refetch()} />}
+        refreshControl={<RefreshControl refreshing={false} onRefresh={() => refetch()} tintColor="#B87333" colors={['#B87333']} />}
         ListFooterComponent={
           isFetchingNextPage ? (
             <YStack padding="$4" alignItems="center">

@@ -56,7 +56,7 @@ export function OrgDetailScreen({ orgId, onAdminPress }: OrgDetailScreenProps) {
               <H2 color="$text">{org.name}</H2>
               <XStack gap="$2" alignItems="center" marginTop="$2">
                 <XStack backgroundColor="$blue100" paddingHorizontal="$2" paddingVertical="$1" borderRadius={6}>
-                  <Text fontSize="$1" fontWeight="600" color="#1976D2">
+                  <Text fontSize="$1" fontWeight="600" color="$primary">
                     {org.type}
                   </Text>
                 </XStack>
@@ -64,7 +64,7 @@ export function OrgDetailScreen({ orgId, onAdminPress }: OrgDetailScreenProps) {
                   {org._count.members} {org._count.members === 1 ? 'member' : 'members'}
                 </Text>
                 {org.verified && (
-                  <Text color="$green400" fontSize="$2" fontWeight="600">
+                  <Text color="#D4A843" fontSize="$2" fontWeight="600">
                     ✓ Verified
                   </Text>
                 )}
