@@ -79,6 +79,8 @@ docker compose up        # Starts API, web, PostgreSQL, Redis, Meilisearch, NATS
 | `LIVEKIT_API_KEY` | — | LiveKit server API key (for token signing) |
 | `LIVEKIT_API_SECRET` | — | LiveKit server API secret (for token signing) |
 | `LIVEKIT_WS_URL` | `wss://livekit.lovelustre.com` | LiveKit WebSocket URL for clients |
+| `ANTHROPIC_API_KEY` | — | Anthropic API key (article generation) |
+| `ELEVENLABS_API_KEY` | — | ElevenLabs API key (podcast TTS generation) |
 
 ## API Endpoints
 
@@ -97,6 +99,7 @@ docker compose up        # Starts API, web, PostgreSQL, Redis, Meilisearch, NATS
   - `group.*` — Interest groups (create, get, list, search, join, leave, approve, reject, members, ban, unban, removePost, update, addModerator, removeModerator, pendingMembers)
   - `org.*` — Organizations (create, get, list, update, join, leave, getMembers, addMember, removeMember, requestVerification)
   - `call.*` — Voice/video calls (initiate, accept, reject, end, getStatus)
+  - `education.*` — Sexual health education (listTopics, listArticles, getArticle, listPodcasts, listQuizzes, getQuiz, submitQuiz, markArticleRead)
 
 ## CI/CD
 
@@ -120,4 +123,4 @@ Production runs on a 3-node k3s cluster on Hetzner Cloud (Helsinki):
 
 ## Status
 
-F01 scaffolding, F03 database & infrastructure, F04 profiles, F05 social feed, F06 interest groups, F07 AI gatekeeper, F08 matching, F10 voice & video calls, F12 organizations complete. See `.bmad/STATUS.md` for full feature roadmap.
+F01 scaffolding, F03 database & infrastructure, F04 profiles, F05 social feed, F06 interest groups, F07 AI gatekeeper, F08 matching, F10 voice & video calls, F12 organizations, F14 ConsentVault, F15 coach engine, F17 spicy coaching, F18 gamification, F19 sexual health education complete. See `.bmad/STATUS.md` for full feature roadmap.
