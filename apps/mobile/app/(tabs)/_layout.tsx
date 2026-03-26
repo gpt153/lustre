@@ -4,37 +4,23 @@ import { useChat } from '@lustre/app/src/hooks/useChat'
 
 export default function TabLayout() {
   const { totalUnread } = useChat()
-
-  const chatTabBadge = useMemo(() => {
-    return totalUnread > 0 ? totalUnread : null
-  }, [totalUnread])
+  const connectBadge = useMemo(() => totalUnread > 0 ? totalUnread : undefined, [totalUnread])
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: '#E91E63',
-        headerStyle: { backgroundColor: '#E91E63' },
-        headerTintColor: '#fff',
+        tabBarActiveTintColor: '#B87333',
+        tabBarInactiveTintColor: '#8B7E74',
+        headerStyle: { backgroundColor: '#2C2421' },
+        headerTintColor: '#F5EDE4',
+        tabBarStyle: { backgroundColor: '#FDF8F3', borderTopColor: '#C4956A' },
       }}
     >
-      <Tabs.Screen name="index" options={{ title: 'Home' }} />
-      <Tabs.Screen name="discover" options={{ title: 'Discover' }} />
-      <Tabs.Screen name="groups" options={{ title: 'Groups' }} />
-      <Tabs.Screen name="events" options={{ title: 'Events' }} />
-      <Tabs.Screen name="orgs" options={{ title: 'Orgs' }} />
-      <Tabs.Screen name="safedate" options={{ title: 'SafeDate' }} />
-      <Tabs.Screen name="coach" options={{ title: 'Coach' }} />
-      <Tabs.Screen name="learn" options={{ title: 'Learn' }} />
-      <Tabs.Screen name="consent" options={{ title: 'Vault' }} />
-      <Tabs.Screen name="shop" options={{ title: 'Shop' }} />
-      <Tabs.Screen
-        name="chat"
-        options={{
-          title: 'Chat',
-          tabBarBadge: chatTabBadge,
-        }}
-      />
-      <Tabs.Screen name="profile" options={{ title: 'Profile' }} />
+      <Tabs.Screen name="discover" options={{ title: 'Discover', headerShown: false }} />
+      <Tabs.Screen name="connect" options={{ title: 'Connect', headerShown: false, tabBarBadge: connectBadge }} />
+      <Tabs.Screen name="explore" options={{ title: 'Explore', headerShown: false }} />
+      <Tabs.Screen name="learn" options={{ title: 'Learn', headerShown: false }} />
+      <Tabs.Screen name="profile" options={{ title: 'Profile', headerShown: false }} />
     </Tabs>
   )
 }

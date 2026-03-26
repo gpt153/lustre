@@ -31,7 +31,11 @@
 ---
 
 ## Wave 2: Navigation Redesign
-**Status:** NOT_STARTED
+**Status:** DONE
+**Started:** 2026-03-26
+**Completed:** 2026-03-26
+**Epics:** 2a VERIFIED (mobile 5 tabs), 2b VERIFIED (web glassmorphism header)
+**Learnings:** Old tab files kept for safety — cleanup in later wave if needed.
 
 ### Parallelization groups:
 **Group A (parallel):**
