@@ -81,6 +81,11 @@ docker compose up        # Starts API, web, PostgreSQL, Redis, Meilisearch, NATS
 | `LIVEKIT_WS_URL` | `wss://livekit.lovelustre.com` | LiveKit WebSocket URL for clients |
 | `ANTHROPIC_API_KEY` | — | Anthropic API key (article generation) |
 | `ELEVENLABS_API_KEY` | — | ElevenLabs API key (podcast TTS generation) |
+| `SWISH_MERCHANT_NUMBER` | — | Swish merchant number (marketplace escrow) |
+| `SWISH_API_URL` | — | Swish API base URL |
+| `SWISH_CALLBACK_URL` | — | Public URL for Swish payment callbacks |
+| `SWISH_CERT_PATH` | — | Path to Swish mTLS .p12 certificate |
+| `SWISH_CERT_PASSPHRASE` | — | Passphrase for Swish .p12 certificate |
 
 ## API Endpoints
 
@@ -88,6 +93,8 @@ docker compose up        # Starts API, web, PostgreSQL, Redis, Meilisearch, NATS
 - `POST /api/photos/upload` — Multipart photo upload (Bearer auth, max 20MB, WebP conversion + 3 thumbnail sizes to R2)
 - `POST /api/posts/upload?postId=` — Multipart post media upload (Bearer auth, max 4 images per post, WebP + thumbnails to R2, auto-classification via Sightengine)
 - `POST /api/call/token` — Generate LiveKit JWT for a call room (Bearer auth, body: `{ conversationId }`, returns `{ token, wsUrl, roomName, receiverId }`)
+- `POST /api/marketplace/swish-callback` — Swish payment callback (buyer order payment confirmation)
+- `POST /api/marketplace/payout-callback` — Swish payout callback (seller payout confirmation)
 - `/trpc/*` — tRPC router (type-safe RPC via `@trpc/server`)
   - `profile.*` — Profile CRUD (create, update, get, getPublic)
   - `photo.*` — Photo management (list, delete, reorder)
@@ -100,6 +107,9 @@ docker compose up        # Starts API, web, PostgreSQL, Redis, Meilisearch, NATS
   - `org.*` — Organizations (create, get, list, update, join, leave, getMembers, addMember, removeMember, requestVerification)
   - `call.*` — Voice/video calls (initiate, accept, reject, end, getStatus)
   - `education.*` — Sexual health education (listTopics, listArticles, getArticle, listPodcasts, listQuizzes, getQuiz, submitQuiz, markArticleRead)
+  - `listing.*` — Marketplace listings (create, update, remove, list, getById, getByCategory, getMine)
+  - `order.*` — Marketplace orders (create, markShipped, confirmDelivery, getStatus, getMyOrders, initiatePayment, checkPaymentStatus)
+  - `seller.*` — Seller tools (registerSwishNumber, getSwishNumber)
 
 ## CI/CD
 
@@ -123,4 +133,4 @@ Production runs on a 3-node k3s cluster on Hetzner Cloud (Helsinki):
 
 ## Status
 
-F01 scaffolding, F03 database & infrastructure, F04 profiles, F05 social feed, F06 interest groups, F07 AI gatekeeper, F08 matching, F10 voice & video calls, F12 organizations, F14 ConsentVault, F15 coach engine, F17 spicy coaching, F18 gamification, F19 sexual health education complete. See `.bmad/STATUS.md` for full feature roadmap.
+F01 scaffolding, F03 database & infrastructure, F04 profiles, F05 social feed, F06 interest groups, F07 AI gatekeeper, F08 matching, F10 voice & video calls, F12 organizations, F14 ConsentVault, F15 coach engine, F17 spicy coaching, F18 gamification, F19 sexual health education, F20 marketplace complete. See `.bmad/STATUS.md` for full feature roadmap.
