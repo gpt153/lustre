@@ -8,7 +8,13 @@ const pool = new Pool({
   max: 3,
 })
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+let _resend: Resend | null = null
+function getResend() {
+  if (!_resend && process.env.RESEND_API_KEY) {
+    _resend = new Resend(process.env.RESEND_API_KEY)
+  }
+  return _resend
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -40,7 +46,8 @@ export async function POST(req: NextRequest) {
     const position = parseInt(countResult.rows[0].count, 10)
 
     // Send welcome email only for new signups
-    if (isNew && process.env.RESEND_API_KEY) {
+    const resend = getResend()
+    if (isNew && resend) {
       resend.emails.send({
         from: 'Lustre <hej@lovelustre.com>',
         to: normalizedEmail,
