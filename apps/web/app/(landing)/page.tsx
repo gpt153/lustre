@@ -5,6 +5,7 @@ import './landing.css'
 import { WaitlistForm } from './waitlist-form'
 import { ScrollReveal } from './scroll-reveal'
 import { ModeToggle } from './mode-toggle'
+import { Countdown } from './countdown'
 
 type Mode = 'vanilla' | 'spicy'
 
@@ -298,7 +299,10 @@ export default function LandingPage() {
           </p>
 
           <div className="hero__cta-area">
-            <WaitlistForm />
+            <Countdown />
+            <div style={{ marginTop: '32px' }}>
+              <WaitlistForm mode={mode} />
+            </div>
           </div>
 
           <div className="hero__scroll-hint">
@@ -399,7 +403,7 @@ export default function LandingPage() {
             </span>
           </div>
           <div className="waitlist__form-wrapper">
-            <WaitlistForm />
+            <WaitlistForm mode={mode} />
           </div>
         </section>
 

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { YStack, XStack, Text, H2, Button, Input, TextArea, ScrollView } from 'tamagui'
 
 const GENDERS = ['MAN', 'WOMAN', 'NON_BINARY', 'TRANS_MAN', 'TRANS_WOMAN', 'GENDERQUEER', 'GENDERFLUID', 'AGENDER', 'BIGENDER', 'TWO_SPIRIT', 'OTHER']
@@ -6,6 +6,14 @@ const ORIENTATIONS = ['STRAIGHT', 'GAY', 'LESBIAN', 'BISEXUAL', 'PANSEXUAL', 'QU
 const CONTENT_PREFS = ['SOFT', 'OPEN', 'EXPLICIT', 'NO_DICK_PICS']
 const RELATIONSHIP_TYPES = ['SINGLE', 'PARTNERED', 'MARRIED', 'OPEN_RELATIONSHIP', 'POLYAMOROUS', 'OTHER']
 const SEEKING_OPTIONS = ['FRIENDSHIP', 'DATING', 'CASUAL', 'RELATIONSHIP', 'PLAY_PARTNER', 'NETWORKING', 'OTHER']
+
+const STEP_NAMES: Record<number, string> = {
+  1: 'basics',
+  2: 'identity',
+  3: 'preferences',
+  4: 'photos',
+  5: 'bio',
+}
 
 interface OnboardingWizardProps {
   onComplete: (data: {
@@ -19,9 +27,10 @@ interface OnboardingWizardProps {
     seeking: string[]
   }) => void
   isSubmitting?: boolean
+  onStep?: (step: number, stepName: string) => void
 }
 
-export function OnboardingWizard({ onComplete, isSubmitting = false }: OnboardingWizardProps) {
+export function OnboardingWizard({ onComplete, isSubmitting = false, onStep }: OnboardingWizardProps) {
   const [step, setStep] = useState(1)
   const [displayName, setDisplayName] = useState('')
   const [age, setAge] = useState('')
@@ -31,6 +40,13 @@ export function OnboardingWizard({ onComplete, isSubmitting = false }: Onboardin
   const [relationshipType, setRelationshipType] = useState('')
   const [bio, setBio] = useState('')
   const [seeking, setSeeking] = useState<string[]>([])
+
+  useEffect(() => {
+    if (onStep) {
+      const stepName = STEP_NAMES[step]
+      onStep(step, stepName)
+    }
+  }, [step, onStep])
 
   const toggleSeeking = (s: string) => {
     setSeeking(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s])
@@ -50,6 +66,9 @@ export function OnboardingWizard({ onComplete, isSubmitting = false }: Onboardin
   const handleNext = () => {
     if (step < 5) setStep(step + 1)
     else {
+      if (onStep) {
+        onStep(6, 'complete')
+      }
       onComplete({
         displayName,
         age: parseInt(age, 10),
