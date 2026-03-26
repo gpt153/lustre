@@ -238,6 +238,19 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
 - **Web:** `/learn/achievements` — full achievements page; streak widget + link added to `/learn` page
 - **Migration:** `services/api/prisma/migrations/20260326000000_add_gamification/migration.sql`
 
+## Sexual Health Education (F19-LEARN-sexual-health)
+- **Schema:** `EducationTopic`, `EducationArticle`, `EducationPodcast`, `EducationQuiz`, `UserArticleRead`, `UserQuizAttempt` — Prisma models in `services/api/prisma/schema.prisma`
+- **Enums:** `EducationCategory` (8: ANATOMY, PLEASURE, STI_PREVENTION, MENTAL_HEALTH, RELATIONSHIPS, KINK_SAFETY, LGBTQ, AGING), `EducationAudience` (5: ALL, WOMEN, MEN, NON_BINARY, COUPLES)
+- **Seed data:** 20 topics across all 8 categories seeded via `services/api/prisma/seed.ts` (Swedish titles/descriptions)
+- **AI generation:** `services/api/src/lib/education-ai.ts` — Anthropic claude-sonnet-4-6 article generation; `services/api/scripts/generate-articles.ts` — batch-3 script, upserts by `topicId_audience_language`
+- **Podcast generation:** `services/api/src/lib/podcast-generator.ts` — Claude script generation + ElevenLabs TTS (dual-voice, eleven_multilingual_v2) + R2 upload; `services/api/scripts/generate-podcasts.ts` — generates 1 test episode
+- **tRPC Router:** `education` — `listTopics`, `listArticles`, `getArticle`, `listPodcasts`, `listQuizzes`, `getQuiz`, `submitQuiz` (score = correct/total × 100), `markArticleRead`
+- **Shared components:** `packages/app/src/` — `EducationTopicListScreen`, `EducationArticleScreen`, `EducationPodcastScreen`, `EducationQuizScreen`, `useEducation` hook
+- **Mobile:** Learn tab → `/learn/sexual-health` (topic browser with category filter); article at `/learn/article/[articleId]`
+- **Web:** `/learn/sexual-health` (topic grid + category filter), `/learn/sexual-health/[topicSlug]` (articles + podcast tabs), `/learn/sexual-health/article/[articleId]` (reader), `/learn/sexual-health/quiz/[quizId]` (quiz); "Sexuell hälsa" card added to `/learn`
+- **Migration:** `services/api/prisma/migrations/20260326120000_add_education_schema/migration.sql`
+- **Env vars required:** `ANTHROPIC_API_KEY` — for article generation; `ELEVENLABS_API_KEY` — for podcast TTS
+
 ## Rules
 - All users verified via BankID (Sweden) or Veriff (international)
 - Real names NEVER shown in app — stored encrypted, released only via court order
