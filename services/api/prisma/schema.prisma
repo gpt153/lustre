@@ -68,6 +68,8 @@ model User {
   referralRewardsReceived    ReferralReward[]          @relation("ReferralReceived")
   kudosGiven                 Kudos[]                   @relation("kudosGiven")
   kudosReceived              Kudos[]                   @relation("kudosReceived")
+  kudosPromptsAsUser         KudosPrompt[]             @relation("kudosPromptUser")
+  kudosPromptsAsRecipient    KudosPrompt[]             @relation("kudosPromptRecipient")
 
   @@map("users")
 }
@@ -433,6 +435,7 @@ model Match {
   createdAt    DateTime      @default(now()) @map("created_at")
   conversation Conversation?
   kudos        Kudos[]
+  kudosPrompts KudosPrompt[]
   user1        User          @relation("matchesAsUser1", fields: [user1Id], references: [id], onDelete: Cascade)
   user2        User          @relation("matchesAsUser2", fields: [user2Id], references: [id], onDelete: Cascade)
 
@@ -1244,6 +1247,12 @@ enum ModerationActionType {
   PERMANENT_BAN
 }
 
+enum KudosPromptStatus {
+  PENDING
+  COMPLETED
+  DISMISSED
+}
+
 model MessageContentTag {
   id         String              @id @default(uuid()) @db.Uuid
   messageId  String              @map("message_id") @db.Uuid
@@ -1369,4 +1378,21 @@ model KudosBadgeSelection {
 
   @@unique([kudosId, badgeId])
   @@map("kudos_badge_selections")
+}
+
+model KudosPrompt {
+  id          String             @id @default(uuid()) @db.Uuid
+  userId      String             @map("user_id") @db.Uuid
+  recipientId String             @map("recipient_id") @db.Uuid
+  matchId     String?            @map("match_id") @db.Uuid
+  status      KudosPromptStatus  @default(PENDING)
+  createdAt   DateTime           @default(now()) @map("created_at")
+  expiresAt   DateTime           @map("expires_at")
+  user        User               @relation("kudosPromptUser", fields: [userId], references: [id], onDelete: Cascade)
+  recipient   User               @relation("kudosPromptRecipient", fields: [recipientId], references: [id], onDelete: Cascade)
+  match       Match?             @relation(fields: [matchId], references: [id], onDelete: SetNull)
+
+  @@unique([userId, recipientId, matchId])
+  @@index([userId, status])
+  @@map("kudos_prompts")
 }

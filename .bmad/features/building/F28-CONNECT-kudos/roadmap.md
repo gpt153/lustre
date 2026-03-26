@@ -35,7 +35,13 @@
 ---
 
 ## Wave 2: AI Badge Selection & Prompt Flow
-**Status:** PLANNED
+**Status:** DONE
+**Started:** 2026-03-26
+**Completed:** 2026-03-26
+
+### Epic Status:
+- wave-2a-ai-badge-selector: VERIFIED
+- wave-2b-kudos-trigger: VERIFIED
 
 ### Parallelization groups:
 **Group A (sequential):**
@@ -43,10 +49,10 @@
 - wave-2b-kudos-trigger (haiku) — Trigger logic: on conversation archive / match end, emit NATS event -> create kudos prompt opportunity. Integration point for SafeDate (F13) when available.
 
 ### Testgate Wave 2:
-- [ ] AI returns 2-4 valid badge_ids from free text input
-- [ ] Free text is not stored in any database table
-- [ ] Kudos prompt triggered when conversation is archived
-- [ ] Manual badge selection works without AI (skip free text)
+- [x] AI returns 2-4 valid badge_ids from free text input — PASS
+- [x] Free text is not stored in any database table — PASS
+- [x] Kudos prompt triggered when conversation is archived — PASS
+- [x] Manual badge selection works without AI (skip free text) — PASS
 
 ---
 

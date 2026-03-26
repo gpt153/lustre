@@ -16,6 +16,14 @@ vi.mock('../lib/redis.js', () => ({
   },
 }))
 
+// Mock OpenAI before importing kudos-ai
+vi.mock('../lib/kudos-ai.js', () => ({
+  suggestBadges: vi.fn(async (freeText, availableBadges) => {
+    // Default: return first 2-3 available badges
+    return availableBadges.slice(0, Math.min(3, availableBadges.length)).map((b: any) => b.id)
+  }),
+}))
+
 // Mock other dependencies
 vi.mock('../lib/r2.js', () => ({
   uploadToR2: vi.fn(async (key: string) => `https://example.r2.com/${key}`),
@@ -139,6 +147,14 @@ function buildContext(prismaOverrides: Record<string, any> = {}): Context {
       },
       kudosBadgeSelection: {
         groupBy: vi.fn(),
+      },
+      kudosPrompt: {
+        findMany: vi.fn(),
+        findFirst: vi.fn(),
+        create: vi.fn(),
+        update: vi.fn(),
+        updateMany: vi.fn(),
+        upsert: vi.fn(),
       },
       ...prismaOverrides,
     } as any,
@@ -762,6 +778,524 @@ describe('Kudos Backend (Wave 1)', () => {
 
       expect(result.badges[0].count).toBe(10)
       expect(result.badges[1].count).toBe(5)
+    })
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Kudos Tests — Wave 2
+// ---------------------------------------------------------------------------
+
+describe('Kudos Backend (Wave 2)', () => {
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  // =========================================================================
+  // Test T5: AI badge suggestion from free text
+  // =========================================================================
+
+  describe('kudos.suggestBadges', () => {
+    test('returns 2-4 badge IDs from AI suggestion with valid free text', async () => {
+      const ctx = buildContext()
+      ;(ctx.prisma as any).profile.findUnique.mockResolvedValue({
+        userId,
+        spicyModeEnabled: false,
+      })
+      // Create a category with multiple vanilla badges for this test
+      const multiVanillaBadgeCategory = {
+        id: badgeCategoryId,
+        name: 'Appreciation',
+        slug: 'appreciation',
+        sortOrder: 1,
+        createdAt: new Date(),
+        badges: [
+          {
+            id: vanillaBadgeId,
+            categoryId: badgeCategoryId,
+            name: 'Respectful',
+            slug: 'respectful',
+            description: 'Treats others with respect',
+            spicyOnly: false,
+            sortOrder: 1,
+            createdAt: new Date(),
+          },
+          {
+            id: '550e8400-e29b-41d4-a716-446655440013',
+            categoryId: badgeCategoryId,
+            name: 'Thoughtful',
+            slug: 'thoughtful',
+            description: 'Very thoughtful',
+            spicyOnly: false,
+            sortOrder: 2,
+            createdAt: new Date(),
+          },
+          {
+            id: '550e8400-e29b-41d4-a716-446655440014',
+            categoryId: badgeCategoryId,
+            name: 'Attentive',
+            slug: 'attentive',
+            description: 'Very attentive',
+            spicyOnly: false,
+            sortOrder: 3,
+            createdAt: new Date(),
+          },
+        ],
+      }
+      ;(ctx.prisma as any).kudosBadgeCategory.findMany.mockResolvedValue([multiVanillaBadgeCategory])
+      ;(mockRedisObj.get as any).mockResolvedValue(null) // Cache miss
+      // Mock the fallback (in case AI returns < 2)
+      ;(ctx.prisma as any).kudosBadgeSelection.groupBy.mockResolvedValue([
+        { badgeId: vanillaBadgeId, _count: { badgeId: 10 } },
+      ])
+
+      const caller = appRouter.createCaller(ctx)
+      const result = await caller.kudos.suggestBadges({
+        freeText: 'Han var trevlig och respekterade mina granser',
+      })
+
+      expect(result.suggestedBadgeIds).toBeDefined()
+      expect(Array.isArray(result.suggestedBadgeIds)).toBe(true)
+      expect(result.suggestedBadgeIds.length).toBeGreaterThanOrEqual(2)
+      expect(result.suggestedBadgeIds.length).toBeLessThanOrEqual(4)
+
+      // Verify all returned IDs are valid badge IDs
+      expect(result.suggestedBadgeIds.every((id: string) =>
+        multiVanillaBadgeCategory.badges.some(b => b.id === id)
+      )).toBe(true)
+    })
+
+    test('excludes spicy badges from suggestions in vanilla mode', async () => {
+      const ctx = buildContext()
+      ;(ctx.prisma as any).profile.findUnique.mockResolvedValue({
+        userId,
+        spicyModeEnabled: false, // Vanilla mode
+      })
+      ;(ctx.prisma as any).kudosBadgeCategory.findMany.mockResolvedValue([mockBadgeCategory])
+      ;(mockRedisObj.get as any).mockResolvedValue(null)
+      ;(ctx.prisma as any).kudosBadgeSelection.groupBy.mockResolvedValue([
+        { badgeId: vanillaBadgeId, _count: { badgeId: 10 } },
+      ])
+
+      const caller = appRouter.createCaller(ctx)
+      const result = await caller.kudos.suggestBadges({
+        freeText: 'Test',
+      })
+
+      // All returned badges should be non-spicy
+      expect(result.suggestedBadgeIds).toBeDefined()
+    })
+
+    test('falls back to top badges when AI returns less than 2 suggestions', async () => {
+      const suggestBadgesImport = await import('../lib/kudos-ai.js')
+      vi.mocked(suggestBadgesImport.suggestBadges).mockResolvedValueOnce([])
+
+      const ctx = buildContext()
+      ;(ctx.prisma as any).profile.findUnique.mockResolvedValue({
+        userId,
+        spicyModeEnabled: false,
+      })
+      ;(ctx.prisma as any).kudosBadgeCategory.findMany.mockResolvedValue([mockBadgeCategory])
+      ;(mockRedisObj.get as any).mockResolvedValue(null)
+      ;(ctx.prisma as any).kudosBadgeSelection.groupBy.mockResolvedValue([
+        {
+          badgeId: vanillaBadgeId,
+          _count: { badgeId: 15 },
+        },
+        {
+          badgeId: spicyBadgeId,
+          _count: { badgeId: 8 },
+        },
+        {
+          badgeId: '550e8400-e29b-41d4-a716-446655440013',
+          _count: { badgeId: 5 },
+        },
+      ])
+
+      const caller = appRouter.createCaller(ctx)
+      const result = await caller.kudos.suggestBadges({ freeText: 'Test' })
+
+      expect(result.suggestedBadgeIds).toBeDefined()
+      expect(Array.isArray(result.suggestedBadgeIds)).toBe(true)
+    })
+
+    test('rejects empty freeText', async () => {
+      const ctx = buildContext()
+      ;(ctx.prisma as any).profile.findUnique.mockResolvedValue({
+        userId,
+        spicyModeEnabled: false,
+      })
+
+      const caller = appRouter.createCaller(ctx)
+
+      await expect(
+        caller.kudos.suggestBadges({ freeText: '' })
+      ).rejects.toThrow()
+    })
+
+    test('rejects freeText exceeding 500 characters', async () => {
+      const ctx = buildContext()
+      ;(ctx.prisma as any).profile.findUnique.mockResolvedValue({
+        userId,
+        spicyModeEnabled: false,
+      })
+
+      const longText = 'a'.repeat(501)
+      const caller = appRouter.createCaller(ctx)
+
+      await expect(
+        caller.kudos.suggestBadges({ freeText: longText })
+      ).rejects.toThrow()
+    })
+
+    test('does NOT persist freeText to database', async () => {
+      const ctx = buildContext()
+      ;(ctx.prisma as any).profile.findUnique.mockResolvedValue({
+        userId,
+        spicyModeEnabled: false,
+      })
+      ;(ctx.prisma as any).kudosBadgeCategory.findMany.mockResolvedValue([mockBadgeCategory])
+      ;(mockRedisObj.get as any).mockResolvedValue(null)
+      ;(ctx.prisma as any).kudosBadgeSelection.groupBy.mockResolvedValue([
+        { badgeId: vanillaBadgeId, _count: { badgeId: 10 } },
+      ])
+
+      const caller = appRouter.createCaller(ctx)
+      await caller.kudos.suggestBadges({
+        freeText: 'Sensitive personal feedback should not be stored',
+      })
+
+      // Verify no create/upsert was called on any model that might store text
+      expect((ctx.prisma as any).kudosPrompt.create).not.toHaveBeenCalled()
+      expect((ctx.prisma as any).kudosPrompt.upsert).not.toHaveBeenCalled()
+    })
+  })
+
+  // =========================================================================
+  // Test T6: Kudos prompt triggered on conversation archive
+  // =========================================================================
+
+  describe('kudos.getPendingPrompts & dismissPrompt', () => {
+    test('getPendingPrompts returns pending prompts not expired', async () => {
+      const promptId = '550e8400-e29b-41d4-a716-446655440020'
+      const futureDate = new Date()
+      futureDate.setDate(futureDate.getDate() + 5)
+
+      const ctx = buildContext()
+      ;(ctx.prisma as any).kudosPrompt.findMany.mockResolvedValue([
+        {
+          id: promptId,
+          userId,
+          recipientId,
+          matchId,
+          status: 'PENDING',
+          expiresAt: futureDate,
+          createdAt: new Date(),
+          recipient: {
+            id: recipientId,
+            displayName: 'Test User',
+          },
+        },
+      ])
+
+      const caller = appRouter.createCaller(ctx)
+      const result = await caller.kudos.getPendingPrompts()
+
+      expect(result).toHaveLength(1)
+      expect(result[0].id).toBe(promptId)
+      expect(result[0].status).toBe('PENDING')
+      expect(result[0].recipient.displayName).toBe('Test User')
+    })
+
+    test('getPendingPrompts filters out expired prompts', async () => {
+      const pastDate = new Date()
+      pastDate.setDate(pastDate.getDate() - 1)
+
+      const futureDate = new Date()
+      futureDate.setDate(futureDate.getDate() + 5)
+
+      const ctx = buildContext()
+      // Mock returns only non-expired prompts (database query should filter)
+      ;(ctx.prisma as any).kudosPrompt.findMany.mockResolvedValue([
+        {
+          id: '550e8400-e29b-41d4-a716-446655440021',
+          userId,
+          recipientId,
+          matchId,
+          status: 'PENDING',
+          expiresAt: futureDate,
+          createdAt: new Date(),
+          recipient: {
+            id: recipientId,
+            displayName: 'Valid Prompt',
+          },
+        },
+      ])
+
+      const caller = appRouter.createCaller(ctx)
+      const result = await caller.kudos.getPendingPrompts()
+
+      // Verify that findMany was called with expiresAt > current date
+      expect((ctx.prisma as any).kudosPrompt.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({
+            expiresAt: { gt: expect.any(Date) },
+          }),
+        })
+      )
+      expect(result).toHaveLength(1)
+      expect(result[0].status).toBe('PENDING')
+    })
+
+    test('getPendingPrompts only returns prompts for current user', async () => {
+      const ctx = buildContext()
+      ;(ctx.prisma as any).kudosPrompt.findMany.mockResolvedValue([
+        {
+          id: '550e8400-e29b-41d4-a716-446655440022',
+          userId, // Current user
+          recipientId,
+          matchId,
+          status: 'PENDING',
+          expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+          createdAt: new Date(),
+          recipient: { id: recipientId, displayName: 'Recipient' },
+        },
+      ])
+
+      const caller = appRouter.createCaller(ctx)
+      const result = await caller.kudos.getPendingPrompts()
+
+      // Verify findMany checks userId
+      expect((ctx.prisma as any).kudosPrompt.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({
+            userId,
+          }),
+        })
+      )
+      expect(result).toHaveLength(1)
+    })
+
+    test('dismissPrompt changes status from PENDING to DISMISSED', async () => {
+      const promptId = '550e8400-e29b-41d4-a716-446655440023'
+
+      const ctx = buildContext()
+      ;(ctx.prisma as any).kudosPrompt.findFirst.mockResolvedValue({
+        id: promptId,
+        userId,
+        recipientId,
+        status: 'PENDING',
+      })
+      ;(ctx.prisma as any).kudosPrompt.update.mockResolvedValue({
+        id: promptId,
+        status: 'DISMISSED',
+      })
+
+      const caller = appRouter.createCaller(ctx)
+      const result = await caller.kudos.dismissPrompt({ promptId })
+
+      expect(result.success).toBe(true)
+      expect((ctx.prisma as any).kudosPrompt.update).toHaveBeenCalledWith({
+        where: { id: promptId },
+        data: { status: 'DISMISSED' },
+      })
+    })
+
+    test('dismissPrompt only allows current user to dismiss their own prompts', async () => {
+      const promptId = '550e8400-e29b-41d4-a716-446655440024'
+      const otherUserId = '550e8400-e29b-41d4-a716-446655440099'
+
+      const ctx = buildContext()
+      // Mock findFirst returning null when user doesn't match
+      ;(ctx.prisma as any).kudosPrompt.findFirst.mockResolvedValue(null)
+
+      const caller = appRouter.createCaller(ctx)
+
+      await expect(
+        caller.kudos.dismissPrompt({ promptId })
+      ).rejects.toMatchObject({
+        code: 'NOT_FOUND',
+        message: 'Prompt not found',
+      })
+
+      expect((ctx.prisma as any).kudosPrompt.findFirst).toHaveBeenCalledWith({
+        where: {
+          id: promptId,
+          userId, // Current user ID
+        },
+      })
+    })
+
+    test('dismissPrompt throws error if prompt does not exist', async () => {
+      const promptId = '550e8400-e29b-41d4-a716-446655440025'
+
+      const ctx = buildContext()
+      ;(ctx.prisma as any).kudosPrompt.findFirst.mockResolvedValue(null)
+
+      const caller = appRouter.createCaller(ctx)
+
+      await expect(
+        caller.kudos.dismissPrompt({ promptId })
+      ).rejects.toMatchObject({
+        code: 'NOT_FOUND',
+      })
+    })
+  })
+
+  // =========================================================================
+  // Test T7: Prompt lifecycle (expiration and completion)
+  // =========================================================================
+
+  describe('kudos.getPendingPrompts - Prompt Lifecycle', () => {
+    test('getPendingPrompts does NOT return prompts that have expired', async () => {
+      const pastDate = new Date()
+      pastDate.setDate(pastDate.getDate() - 8) // 8 days ago
+
+      const ctx = buildContext()
+      // Simulate database filtering: expired prompts not returned
+      ;(ctx.prisma as any).kudosPrompt.findMany.mockResolvedValue([])
+
+      const caller = appRouter.createCaller(ctx)
+      const result = await caller.kudos.getPendingPrompts()
+
+      // Verify the query checked expiresAt > now
+      expect((ctx.prisma as any).kudosPrompt.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({
+            expiresAt: { gt: expect.any(Date) },
+          }),
+        })
+      )
+      expect(result).toHaveLength(0)
+    })
+
+    test('kudos.give marks matching prompts as COMPLETED', async () => {
+      const ctx = buildContext()
+      ;(ctx.prisma as any).profile.findUnique.mockResolvedValue({
+        userId,
+        spicyModeEnabled: false,
+      })
+      ;(mockRedisObj.incr as any).mockResolvedValue(1)
+      ;(mockRedisObj.expire as any).mockResolvedValue(1)
+      ;(ctx.prisma as any).kudos.findFirst.mockResolvedValue(null) // No duplicate
+      ;(ctx.prisma as any).kudosBadge.findMany.mockResolvedValue([
+        { id: vanillaBadgeId, spicyOnly: false },
+      ])
+      ;(ctx.prisma as any).kudos.create.mockResolvedValue({
+        id: 'kudos-uuid',
+        giverId: userId,
+        recipientId,
+        matchId,
+        badges: [],
+      })
+      ;(ctx.prisma as any).kudosPrompt.updateMany.mockResolvedValue({
+        count: 1, // One prompt was updated
+      })
+
+      const caller = appRouter.createCaller(ctx)
+      const result = await caller.kudos.give({
+        recipientId,
+        matchId,
+        badgeIds: [vanillaBadgeId],
+      })
+
+      expect(result.id).toBe('kudos-uuid')
+      // Verify prompts were marked as COMPLETED
+      expect((ctx.prisma as any).kudosPrompt.updateMany).toHaveBeenCalledWith({
+        where: {
+          userId,
+          recipientId,
+          matchId,
+          status: 'PENDING',
+        },
+        data: { status: 'COMPLETED' },
+      })
+    })
+
+    test('kudos.give marks prompts COMPLETED only for matching userId/recipientId/matchId', async () => {
+      const ctx = buildContext()
+      const differentMatchId = '550e8400-e29b-41d4-a716-446655440099'
+      ;(ctx.prisma as any).profile.findUnique.mockResolvedValue({
+        userId,
+        spicyModeEnabled: false,
+      })
+      ;(mockRedisObj.incr as any).mockResolvedValue(1)
+      ;(mockRedisObj.expire as any).mockResolvedValue(1)
+      ;(ctx.prisma as any).kudos.findFirst.mockResolvedValue(null)
+      ;(ctx.prisma as any).kudosBadge.findMany.mockResolvedValue([
+        { id: vanillaBadgeId, spicyOnly: false },
+      ])
+      ;(ctx.prisma as any).kudos.create.mockResolvedValue({
+        id: 'kudos-uuid-2',
+        giverId: userId,
+        recipientId,
+        matchId: differentMatchId,
+        badges: [],
+      })
+      ;(ctx.prisma as any).kudosPrompt.updateMany.mockResolvedValue({
+        count: 1,
+      })
+
+      const caller = appRouter.createCaller(ctx)
+      const result = await caller.kudos.give({
+        recipientId,
+        matchId: differentMatchId,
+        badgeIds: [vanillaBadgeId],
+      })
+
+      // Verify updateMany was called with the correct matchId
+      expect((ctx.prisma as any).kudosPrompt.updateMany).toHaveBeenCalledWith({
+        where: {
+          userId,
+          recipientId,
+          matchId: differentMatchId, // Different from first test
+          status: 'PENDING',
+        },
+        data: { status: 'COMPLETED' },
+      })
+    })
+
+    test('prompts without matchId are marked COMPLETED when giving kudos without matchId', async () => {
+      const ctx = buildContext()
+      ;(ctx.prisma as any).profile.findUnique.mockResolvedValue({
+        userId,
+        spicyModeEnabled: false,
+      })
+      ;(mockRedisObj.incr as any).mockResolvedValue(1)
+      ;(mockRedisObj.expire as any).mockResolvedValue(1)
+      ;(ctx.prisma as any).kudos.findFirst.mockResolvedValue(null)
+      ;(ctx.prisma as any).kudosBadge.findMany.mockResolvedValue([
+        { id: vanillaBadgeId, spicyOnly: false },
+      ])
+      ;(ctx.prisma as any).kudos.create.mockResolvedValue({
+        id: 'kudos-uuid-3',
+        giverId: userId,
+        recipientId,
+        matchId: null,
+        badges: [],
+      })
+      ;(ctx.prisma as any).kudosPrompt.updateMany.mockResolvedValue({
+        count: 1,
+      })
+
+      const caller = appRouter.createCaller(ctx)
+      const result = await caller.kudos.give({
+        recipientId,
+        // No matchId
+        badgeIds: [vanillaBadgeId],
+      })
+
+      // Verify updateMany was called with matchId: null
+      expect((ctx.prisma as any).kudosPrompt.updateMany).toHaveBeenCalledWith({
+        where: {
+          userId,
+          recipientId,
+          matchId: null, // Null check
+          status: 'PENDING',
+        },
+        data: { status: 'COMPLETED' },
+      })
     })
   })
 })

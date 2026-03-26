@@ -2,6 +2,7 @@ import { z } from 'zod'
 import { TRPCError } from '@trpc/server'
 import { router, protectedProcedure } from './middleware.js'
 import { getCachedBadgeCatalog, checkRateLimit } from '../lib/kudos.js'
+import { suggestBadges } from '../lib/kudos-ai.js'
 
 export const kudosRouter = router({
   listBadges: protectedProcedure
@@ -81,6 +82,16 @@ export const kudosRouter = router({
         include: { badges: { include: { badge: true } } },
       })
 
+      await ctx.prisma.kudosPrompt.updateMany({
+        where: {
+          userId: ctx.userId,
+          recipientId: input.recipientId,
+          matchId: input.matchId ?? null,
+          status: 'PENDING',
+        },
+        data: { status: 'COMPLETED' },
+      })
+
       return kudos
     }),
 
@@ -123,5 +134,68 @@ export const kudosRouter = router({
       })
 
       return { totalCount, badges: result }
+    }),
+
+  suggestBadges: protectedProcedure
+    .input(z.object({ freeText: z.string().min(1).max(500) }))
+    .mutation(async ({ ctx, input }) => {
+      const profile = await ctx.prisma.profile.findUnique({ where: { userId: ctx.userId } })
+      const isSpicy = profile?.spicyModeEnabled ?? false
+
+      const categories = await getCachedBadgeCatalog(ctx.prisma)
+
+      const availableBadges = categories.flatMap((c: any) =>
+        c.badges
+          .filter((b: any) => isSpicy || !b.spicyOnly)
+          .map((b: any) => ({ id: b.id, name: b.name, category: c.name }))
+      )
+
+      const suggestedIds = await suggestBadges(input.freeText, availableBadges)
+
+      if (suggestedIds.length < 2) {
+        const topBadges = await ctx.prisma.kudosBadgeSelection.groupBy({
+          by: ['badgeId'],
+          _count: { badgeId: true },
+          orderBy: { _count: { badgeId: 'desc' } },
+          take: 3,
+        })
+        return { suggestedBadgeIds: topBadges.map((b) => b.badgeId) }
+      }
+
+      return { suggestedBadgeIds: suggestedIds }
+    }),
+
+  getPendingPrompts: protectedProcedure
+    .query(async ({ ctx }) => {
+      const prompts = await ctx.prisma.kudosPrompt.findMany({
+        where: {
+          userId: ctx.userId,
+          status: 'PENDING',
+          expiresAt: { gt: new Date() },
+        },
+        include: {
+          recipient: {
+            select: { id: true, displayName: true },
+          },
+        },
+        orderBy: { createdAt: 'desc' },
+      })
+      return prompts
+    }),
+
+  dismissPrompt: protectedProcedure
+    .input(z.object({ promptId: z.string().uuid() }))
+    .mutation(async ({ ctx, input }) => {
+      const prompt = await ctx.prisma.kudosPrompt.findFirst({
+        where: { id: input.promptId, userId: ctx.userId },
+      })
+      if (!prompt) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Prompt not found' })
+      }
+      await ctx.prisma.kudosPrompt.update({
+        where: { id: input.promptId },
+        data: { status: 'DISMISSED' },
+      })
+      return { success: true }
     }),
 })
