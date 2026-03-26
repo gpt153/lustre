@@ -251,6 +251,20 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
 - **Migration:** `services/api/prisma/migrations/20260326120000_add_education_schema/migration.sql`
 - **Env vars required:** `ANTHROPIC_API_KEY` — for article generation; `ELEVENLABS_API_KEY` — for podcast TTS
 
+## Business Webshops (F21-SHOP-business)
+- **Medusa.js v2:** Separate service at `services/medusa/` — headless e-commerce backend, admin dashboard at `shop-admin.lovelustre.com`
+- **Helm chart:** `infrastructure/helm/medusa/` — deploys Medusa on k3s, port 9000, secrets from `lustre-secrets` (`database-url`, `redis-url`, `jwt-secret`)
+- **Medusa client:** `services/api/src/lib/medusa-client.ts` — typed fetch wrapper calling `http://medusa:9000/store` with `x-publishable-api-key`
+- **tRPC Router:** `shop` — `product.list` (public), `product.get` (public), `cart.add` (protected, upserts Medusa cart), `cart.checkout` (protected, completes Medusa cart)
+- **Schema:** `ShopCart` model maps Lustre `userId` → Medusa `cartId` (one cart per user); migration `20260326230000_add_shop_cart`
+- **Shared components:** `packages/app/src/` — `BusinessShopScreen` (product grid), `BusinessProductDetailScreen` (image gallery + add to cart), `useShop` hook (`useProducts`, `useProduct`, `useAddToCart`, `useCheckout`)
+- **Mobile:** `apps/mobile/app/(tabs)/shop/business/` — `_layout.tsx` (Stack), `index.tsx` (grid), `[productId].tsx` (detail)
+- **Web:** `apps/web/app/(app)/shop/business/` — `page.tsx` (grid + search), `[productId]/page.tsx` (detail), `layout.tsx` (floating cart button), `CartSidebar.tsx` (Swish checkout)
+- **Env vars required:**
+  - `MEDUSA_INTERNAL_URL` — internal URL for Medusa service (default: `http://medusa:9000`)
+  - `MEDUSA_PUBLISHABLE_KEY` — Medusa publishable API key for storefront access
+  - `MEDUSA_DATABASE_URL` — PostgreSQL connection string for Medusa schema
+
 ## Rules
 - All users verified via BankID (Sweden) or Veriff (international)
 - Real names NEVER shown in app — stored encrypted, released only via court order

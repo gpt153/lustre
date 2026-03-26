@@ -28,7 +28,7 @@
 | F18 | LEARN | Gamification | 2 | 4 | **DONE** (2026-03-26) |
 | F19 | LEARN | Sexual Health Education | 2 | 5 | **DONE** (2026-03-26) |
 | F20 | SHOP | Marketplace | 3 | 6 | **DONE** (2026-03-26) |
-| F21 | SHOP | Business Shops | 2 | 4 | PLANNED |
+| F21 | SHOP | Business Shops | 2 | 4 | **DONE** (2026-03-26) |
 | F22 | SHOP | Advertising | 2 | 5 | PLANNED |
 | F23 | PAY | Token System | 3 | 7 | PLANNED |
 | F24 | MOD | Content Moderation | 2 | 5 | PLANNED |
