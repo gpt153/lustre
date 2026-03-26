@@ -1,8 +1,10 @@
 'use client'
 
-import { YStack, XStack, Text, Spinner, ScrollView, Avatar } from 'tamagui'
+import { useState } from 'react'
+import { YStack, XStack, Text, Spinner, ScrollView, Avatar, Button, Dialog } from 'tamagui'
 import { trpc } from '@lustre/api'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 interface Conversation {
   id: string
@@ -24,29 +26,103 @@ interface Conversation {
 }
 
 export default function ChatPage() {
+  const router = useRouter()
+  const [modalOpen, setModalOpen] = useState(false)
   const { data: conversations, isLoading } = trpc.conversation.list.useQuery({})
   const conversationList = conversations ?? []
+  const pendingPromptsQuery = trpc.kudos.getPendingPrompts.useQuery()
+  const dismissMutation = trpc.kudos.dismissPrompt.useMutation()
+  const utils = trpc.useUtils()
+
+  const pendingPrompt = (pendingPromptsQuery.data ?? [])[0] ?? null
+
+  const handleGiveKudos = () => {
+    if (pendingPrompt) {
+      router.push(`/kudos/give/${pendingPrompt.recipientId}`)
+      setModalOpen(false)
+    }
+  }
+
+  const handleDismiss = async () => {
+    if (pendingPrompt) {
+      await dismissMutation.mutateAsync({ promptId: pendingPrompt.id })
+      utils.kudos.getPendingPrompts.invalidate()
+      setModalOpen(false)
+    }
+  }
+
+  if (pendingPrompt && !modalOpen) {
+    setModalOpen(true)
+  }
 
   return (
-    <XStack flex={1} height="100vh">
-      {/* Left sidebar - conversation list */}
-      <YStack
-        width={320}
-        borderRightWidth={1}
-        borderColor="$borderColor"
-        overflow="hidden"
-        backgroundColor="$background"
-      >
-        <ConversationListView conversations={conversationList} isLoading={isLoading} />
-      </YStack>
+    <>
+      <XStack flex={1} height="100vh">
+        {/* Left sidebar - conversation list */}
+        <YStack
+          width={320}
+          borderRightWidth={1}
+          borderColor="$borderColor"
+          overflow="hidden"
+          backgroundColor="$background"
+        >
+          <ConversationListView conversations={conversationList} isLoading={isLoading} />
+        </YStack>
 
-      {/* Right panel - empty state on /chat */}
-      <YStack flex={1} alignItems="center" justifyContent="center" backgroundColor="$background">
-        <Text color="$textSecondary" fontSize="$4">
-          Select a conversation to start chatting
-        </Text>
-      </YStack>
-    </XStack>
+        {/* Right panel - empty state on /chat */}
+        <YStack flex={1} alignItems="center" justifyContent="center" backgroundColor="$background">
+          <Text color="$textSecondary" fontSize="$4">
+            Välj en konversation för att börja chatta
+          </Text>
+        </YStack>
+      </XStack>
+
+      <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+        <Dialog.Portal>
+          <Dialog.Overlay />
+          <Dialog.Content
+            bordered
+            elevate
+            animation="quick"
+            animateOnly={['transform', 'opacity']}
+            enterStyle={{ x: 0, y: -20, opacity: 0 }}
+            exitStyle={{ x: 0, y: -20, opacity: 0 }}
+            gap="$4"
+            padding="$5"
+            maxWidth={400}
+          >
+            <YStack gap="$3">
+              <Text fontSize="$5" fontWeight="bold">
+                Du möttes!
+              </Text>
+              <Text fontSize="$4" color="$gray11">
+                Vill du ge kudos till{' '}
+                <Text fontWeight="600">{pendingPrompt?.recipientDisplayName}</Text>?
+              </Text>
+            </YStack>
+
+            <XStack gap="$3" justifyContent="flex-end">
+              <Button
+                flex={1}
+                theme="gray"
+                onPress={handleDismiss}
+                disabled={dismissMutation.isPending}
+              >
+                Inte nu
+              </Button>
+              <Button
+                flex={1}
+                theme="active"
+                onPress={handleGiveKudos}
+                disabled={dismissMutation.isPending}
+              >
+                Ge kudos
+              </Button>
+            </XStack>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog>
+    </>
   )
 }
 

@@ -12,6 +12,7 @@ export type { LustreLogoProps } from './LustreLogo'
 export { CardBase } from './CardBase'
 export { ModalBase } from './ModalBase'
 export { BottomSheetBase } from './BottomSheetBase'
+export { KudosBadgeTag } from './KudosBadgeTag'
 
 // Font exports
 export { generalSansFont, interFont } from './fonts'

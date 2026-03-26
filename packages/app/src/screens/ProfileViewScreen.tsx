@@ -3,9 +3,11 @@ import { CardBase, LustreButton } from '@lustre/ui'
 import { PROMPT_OPTIONS } from '@lustre/api'
 import { ProfilePhotoSection } from '../components/ProfilePhotoSection'
 import { ProfilePromptSection } from '../components/ProfilePromptSection'
+import { ProfileKudosSection } from '../components/ProfileKudosSection'
 
 interface ProfileViewProps {
   profile: {
+    userId: string
     displayName: string
     age: number
     gender: string
@@ -200,6 +202,8 @@ export function ProfileViewScreen({ profile, isOwnProfile = false, onEdit, onLog
               </XStack>
             </CardBase>
           )}
+
+          <ProfileKudosSection userId={profile.userId} />
 
           {isOwnProfile && onLogout && (
             <LustreButton

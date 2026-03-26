@@ -1,4 +1,5 @@
 import { redis } from './redis.js'
+import { publishEvent } from './events.js'
 import type { PrismaClient } from '@prisma/client'
 
 const BADGE_CACHE_KEY = 'kudos:badges:catalog'
@@ -32,4 +33,42 @@ export async function checkRateLimit(userId: string): Promise<{ allowed: boolean
   }
   const allowed = count <= RATE_LIMIT_MAX
   return { allowed, remaining: Math.max(0, RATE_LIMIT_MAX - count) }
+}
+
+export async function getKudosScore(prisma: PrismaClient, userId: string): Promise<number> {
+  const totalCount = await prisma.kudos.count({
+    where: { recipientId: userId },
+  })
+
+  const uniqueBadges = await prisma.kudosBadgeSelection.findMany({
+    where: { kudos: { recipientId: userId } },
+    distinct: ['badgeId'],
+    select: { badgeId: true },
+  })
+
+  const rawScore = totalCount * 2 + uniqueBadges.length * 3
+  return Math.min(100, rawScore)
+}
+
+const MILESTONES = [1, 10, 50] as const
+
+export async function checkAndEmitMilestone(prisma: PrismaClient, userId: string): Promise<void> {
+  const totalCount = await prisma.kudos.count({
+    where: { recipientId: userId },
+  })
+
+  for (const milestone of MILESTONES) {
+    if (totalCount === milestone) {
+      const subject = milestone === 1
+        ? 'lustre.kudos.milestone.first'
+        : `lustre.kudos.milestone.${milestone}`
+
+      await publishEvent(subject, {
+        userId,
+        milestone,
+        totalCount,
+      })
+      break
+    }
+  }
 }

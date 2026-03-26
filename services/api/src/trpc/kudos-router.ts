@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { TRPCError } from '@trpc/server'
 import { router, protectedProcedure } from './middleware.js'
-import { getCachedBadgeCatalog, checkRateLimit } from '../lib/kudos.js'
+import { getCachedBadgeCatalog, checkRateLimit, checkAndEmitMilestone } from '../lib/kudos.js'
 import { suggestBadges } from '../lib/kudos-ai.js'
 
 export const kudosRouter = router({
@@ -91,6 +91,8 @@ export const kudosRouter = router({
         },
         data: { status: 'COMPLETED' },
       })
+
+      await checkAndEmitMilestone(ctx.prisma, input.recipientId)
 
       return kudos
     }),

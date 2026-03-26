@@ -4,6 +4,7 @@ import { router, protectedProcedure } from './middleware.js'
 import { buildSystemPrompt, getAIResponse } from '../lib/gatekeeper-ai.js'
 import type { ConversationMessage } from '../lib/gatekeeper-ai.js'
 import { checkBalance, debitTokens, GATEKEEPER_COST } from '../lib/tokens.js'
+import { getKudosScore } from '../lib/kudos.js'
 
 const updateConfigSchema = z.object({
   strictness: z.enum(['MILD', 'STANDARD', 'STRICT']).optional(),
@@ -132,7 +133,9 @@ export const gatekeeperRouter = router({
         return { required: false, alreadyPassed: true }
       }
 
-      return { required: true }
+      const kudosScore = await getKudosScore(ctx.prisma, ctx.userId)
+
+      return { required: true, kudosScore }
     }),
 
   initiate: protectedProcedure
@@ -250,6 +253,8 @@ export const gatekeeperRouter = router({
         relationshipType: profile.relationshipType,
       }
 
+      const senderKudosScore = await getKudosScore(ctx.prisma, ctx.userId)
+
       const systemPrompt = buildSystemPrompt(
         {
           strictness: config.strictness as 'MILD' | 'STANDARD' | 'STRICT',
@@ -258,6 +263,7 @@ export const gatekeeperRouter = router({
           dealbreakers: config.dealbreakers as string[],
         },
         recipientProfile,
+        senderKudosScore,
       )
 
       const conversation = await ctx.prisma.gatekeeperConversation.create({
@@ -358,6 +364,8 @@ export const gatekeeperRouter = router({
 
       const config = conversation.config
 
+      const senderKudosScore = await getKudosScore(ctx.prisma, conversation.senderId)
+
       const systemPrompt = buildSystemPrompt(
         {
           strictness: config.strictness as 'MILD' | 'STANDARD' | 'STRICT',
@@ -374,6 +382,7 @@ export const gatekeeperRouter = router({
           seeking: profile.seeking,
           relationshipType: profile.relationshipType,
         },
+        senderKudosScore,
       )
 
       const history: ConversationMessage[] = conversation.messages.map(m => ({

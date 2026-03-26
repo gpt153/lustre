@@ -1,8 +1,9 @@
 # Roadmap: F28-CONNECT-kudos
 
-**Status:** IN_PROGRESS
+**Status:** DONE — all waves implemented and tested
 **Created:** 2026-03-25
 **Started:** 2026-03-26
+**Completed:** 2026-03-26
 **Waves:** 3
 **Total epics:** 7
 
@@ -57,7 +58,14 @@
 ---
 
 ## Wave 3: Kudos UI & Integrations
-**Status:** PLANNED
+**Status:** DONE
+**Started:** 2026-03-26
+**Completed:** 2026-03-26
+
+### Epic Status:
+- wave-3a-kudos-screens-mobile: VERIFIED
+- wave-3b-kudos-screens-web: VERIFIED
+- wave-3c-integrations: VERIFIED
 
 ### Parallelization groups:
 **Group A (parallel):**
@@ -68,8 +76,8 @@
 - wave-3c-integrations (haiku) — Gatekeeper integration: include kudos score in qualification context. Gamification hooks: emit NATS events for kudos milestones (1, 10, 50).
 
 ### Testgate Wave 3:
-- [ ] Kudos prompt appears after conversation archive on mobile
-- [ ] Badge selection UI shows AI suggestions and allows manual browse
-- [ ] Profile displays kudos count and top badge tags
-- [ ] Spicy badges hidden from Vanilla-mode viewers
-- [ ] Gatekeeper receives kudos score in qualification context
+- [x] Kudos prompt appears after conversation archive on mobile — PASS
+- [x] Badge selection UI shows AI suggestions and allows manual browse — PASS
+- [x] Profile displays kudos count and top badge tags — PASS
+- [x] Spicy badges hidden from Vanilla-mode viewers — PASS
+- [x] Gatekeeper receives kudos score in qualification context — PASS

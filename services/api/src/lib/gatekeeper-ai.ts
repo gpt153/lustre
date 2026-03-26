@@ -115,7 +115,7 @@ function strictnessInstructions(strictness: GatekeeperAIConfig['strictness']): s
   }
 }
 
-export function buildSystemPrompt(config: GatekeeperAIConfig, recipient: RecipientProfile): string {
+export function buildSystemPrompt(config: GatekeeperAIConfig, recipient: RecipientProfile, kudosScore?: number): string {
   const { strictness, aiTone, customQuestions, dealbreakers } = config
   const seekingStr = formatSeeking(recipient.seeking)
   const genderStr = formatGender(recipient.gender)
@@ -138,6 +138,9 @@ export function buildSystemPrompt(config: GatekeeperAIConfig, recipient: Recipie
   }
   if (recipient.bio) {
     lines.push(`A bit about them: "${recipient.bio}"`)
+  }
+  if (kudosScore !== undefined && kudosScore > 50) {
+    lines.push(`\nDenna person har hög kudos (trusted community member) — var lite mer välvillig i bedömningen.`)
   }
   lines.push('')
 
