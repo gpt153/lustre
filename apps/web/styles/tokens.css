@@ -1,116 +1,317 @@
-/* @property registrations for animatable CSS custom properties */
-/* These enable smooth HSL color interpolation on vanilla→spicy transitions */
+/*
+ * Lustre Design Tokens
+ * CSS Custom Properties — the single source of truth for every visual decision.
+ *
+ * Sections:
+ *   1. Color Primitives (HSL components)
+ *   2. Semantic Colors (theme-aware aliases)
+ *   3. Accent System (Vanilla / Spicy mode)
+ *   4. Spacing Scale
+ *   5. Border Radius
+ *   6. Shadow Scale
+ *   7. Z-Index Scale
+ *   8. Spring Animations
+ *   9. Focus & Interaction Tokens
+ *  10. Reduced Motion
+ */
+
+/* ============================================================
+   @property registrations — enables smooth HSL interpolation
+   for the vanilla ↔ spicy accent transition
+   ============================================================ */
 @property --accent-h {
   syntax: '<number>';
-  inherits: true;
   initial-value: 130;
+  inherits: true;
 }
 
 @property --accent-s {
   syntax: '<percentage>';
+  initial-value: 16%;
   inherits: true;
-  initial-value: 23%;
 }
 
 @property --accent-l {
   syntax: '<percentage>';
+  initial-value: 55%;
   inherits: true;
-  initial-value: 46%;
 }
 
+/* ============================================================
+   1. COLOR PRIMITIVES
+   All colors defined as individual H/S/L components so any
+   token can be reused with arbitrary alpha or lightness.
+   ============================================================ */
 :root {
-  --color-copper: #B87333;
-  --color-gold: #D4A843;
-  --color-warm-white: #FDF8F3;
-  --color-charcoal: #2C2421;
-  --color-ember: #C85A3A;
-  --color-sage: #7A9E7E;
-  --color-gold-bright: #E8B84B;
-  --color-gold-deep: #C9973E;
-  --color-copper-light: #D4A574;
+  /* — Copper #B87333 — primary brand, warm + intimate */
+  --color-copper-h: 28;
+  --color-copper-s: 52%;
+  --color-copper-l: 46%;
+  --color-copper: hsl(var(--color-copper-h), var(--color-copper-s), var(--color-copper-l));
 
-  --bg-primary: #FDF8F3;
-  --bg-secondary: #FFFBF7;
-  --bg-elevated: #FFFFFF;
-  --text-primary: #2C2421;
-  --text-secondary: #4A3F39;
-  --text-muted: #8B7E74;
-  --border-subtle: rgba(184, 115, 51, 0.08);
-  --border-medium: rgba(184, 115, 51, 0.15);
+  /* — Copper Light #D4956A — hover states, borders */
+  --color-copper-light-h: 26;
+  --color-copper-light-s: 55%;
+  --color-copper-light-l: 63%;
+  --color-copper-light: hsl(var(--color-copper-light-h), var(--color-copper-light-s), var(--color-copper-light-l));
 
-  /* Vanilla (default): sage green — hsl(130, 23%, 46%) */
-  --accent-h: 130;
-  --accent-s: 23%;
-  --accent-l: 46%;
-  --accent: hsl(var(--accent-h), var(--accent-s), var(--accent-l));
-  --accent-glow: hsla(var(--accent-h), var(--accent-s), var(--accent-l), 0.15);
+  /* — Copper Dark #8B5629 — pressed states */
+  --color-copper-dark-h: 27;
+  --color-copper-dark-s: 55%;
+  --color-copper-dark-l: 35%;
+  --color-copper-dark: hsl(var(--color-copper-dark-h), var(--color-copper-dark-s), var(--color-copper-dark-l));
 
-  --shadow-xs: 0 1px 2px rgba(184, 115, 51, 0.04);
-  --shadow-sm: 0 1px 2px rgba(184, 115, 51, 0.06), 0 4px 8px rgba(184, 115, 51, 0.04);
-  --shadow-md: 0 1px 2px rgba(184, 115, 51, 0.06), 0 4px 8px rgba(184, 115, 51, 0.04), 0 12px 24px rgba(44, 36, 33, 0.03);
-  --shadow-lg: 0 2px 4px rgba(184, 115, 51, 0.08), 0 8px 16px rgba(184, 115, 51, 0.06), 0 24px 48px rgba(44, 36, 33, 0.05);
-  --shadow-xl: 0 4px 8px rgba(184, 115, 51, 0.1), 0 16px 32px rgba(184, 115, 51, 0.08), 0 48px 96px rgba(44, 36, 33, 0.06);
+  /* — Gold #D4A843 — secondary, luxury + highlights */
+  --color-gold-h: 42;
+  --color-gold-s: 57%;
+  --color-gold-l: 56%;
+  --color-gold: hsl(var(--color-gold-h), var(--color-gold-s), var(--color-gold-l));
 
-  --spring: linear(0, 0.009, 0.037, 0.082, 0.145, 0.223, 0.315, 0.418, 0.529, 0.644, 0.758, 0.866, 0.963, 1.044, 1.108, 1.152, 1.176, 1.182, 1.172, 1.149, 1.117, 1.079, 1.039, 1.0, 0.965, 0.937, 0.916, 0.903, 0.897, 0.898, 0.905, 0.916, 0.93, 0.945, 0.96, 0.974, 0.986, 0.995, 1.001, 1.004, 1.004, 1.002, 1.0);
-  --spring-soft: linear(0, 0.011, 0.044, 0.098, 0.172, 0.263, 0.368, 0.483, 0.604, 0.726, 0.844, 0.953, 1.048, 1.125, 1.182, 1.217, 1.231, 1.226, 1.205, 1.172, 1.131, 1.085, 1.040, 1.0, 0.966, 0.940, 0.922, 0.912, 0.910, 0.914, 0.923, 0.936, 0.951, 0.966, 0.980, 0.990, 0.997, 1.001, 1.003, 1.002, 1.001, 1.0);
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  /* — Gold Light #E5C675 — subtle highlights */
+  --color-gold-light-h: 42;
+  --color-gold-light-s: 66%;
+  --color-gold-light-l: 68%;
+  --color-gold-light: hsl(var(--color-gold-light-h), var(--color-gold-light-s), var(--color-gold-light-l));
 
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 20px;
-  --space-6: 24px;
-  --space-8: 32px;
-  --space-10: 40px;
-  --space-12: 48px;
-  --space-16: 64px;
+  /* — Warm White #FDF8F3 — light mode base */
+  --color-warm-white-h: 30;
+  --color-warm-white-s: 71%;
+  --color-warm-white-l: 97%;
+  --color-warm-white: hsl(var(--color-warm-white-h), var(--color-warm-white-s), var(--color-warm-white-l));
 
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
+  /* — Charcoal #2C2421 — dark mode base */
+  --color-charcoal-h: 13;
+  --color-charcoal-s: 15%;
+  --color-charcoal-l: 15%;
+  --color-charcoal: hsl(var(--color-charcoal-h), var(--color-charcoal-s), var(--color-charcoal-l));
+
+  /* — Surface Dark #1A1614 — elevated dark surfaces */
+  --color-surface-dark-h: 15;
+  --color-surface-dark-s: 12%;
+  --color-surface-dark-l: 9%;
+  --color-surface-dark: hsl(var(--color-surface-dark-h), var(--color-surface-dark-s), var(--color-surface-dark-l));
+
+  /* — Surface Light #FFFFFF — elevated light surfaces */
+  --color-surface-light: #ffffff;
+
+  /* — Sage #7A9E7E — vanilla mode accent */
+  --color-sage-h: 130;
+  --color-sage-s: 16%;
+  --color-sage-l: 55%;
+  --color-sage: hsl(var(--color-sage-h), var(--color-sage-s), var(--color-sage-l));
+
+  /* — Ember #C85A3A — spicy mode accent */
+  --color-ember-h: 14;
+  --color-ember-s: 58%;
+  --color-ember-l: 50%;
+  --color-ember: hsl(var(--color-ember-h), var(--color-ember-s), var(--color-ember-l));
+
+  /* — Text on Dark */
+  --color-text-primary-dark-h: 24;
+  --color-text-primary-dark-s: 43%;
+  --color-text-primary-dark-l: 94%;
+  --color-text-primary-dark: hsl(var(--color-text-primary-dark-h), var(--color-text-primary-dark-s), var(--color-text-primary-dark-l));
+
+  --color-text-muted-dark-h: 23;
+  --color-text-muted-dark-s: 9%;
+  --color-text-muted-dark-l: 56%;
+  --color-text-muted-dark: hsl(var(--color-text-muted-dark-h), var(--color-text-muted-dark-s), var(--color-text-muted-dark-l));
+
+  /* — Text on Light */
+  --color-text-primary-light-h: 13;
+  --color-text-primary-light-s: 15%;
+  --color-text-primary-light-l: 15%;
+  --color-text-primary-light: hsl(var(--color-text-primary-light-h), var(--color-text-primary-light-s), var(--color-text-primary-light-l));
+
+  --color-text-muted-light-h: 21;
+  --color-text-muted-light-s: 7%;
+  --color-text-muted-light-l: 44%;
+  --color-text-muted-light: hsl(var(--color-text-muted-light-h), var(--color-text-muted-light-s), var(--color-text-muted-light-l));
+}
+
+/* ============================================================
+   2. SEMANTIC COLORS
+   Theme-aware aliases — components use THESE tokens, never
+   the raw primitives above. Dark mode is the default theme.
+   ============================================================ */
+
+/* Default: dark theme */
+:root,
+[data-theme="dark"] {
+  --color-bg-primary: var(--color-charcoal);
+  --color-bg-elevated: var(--color-surface-dark);
+  --color-text-primary: var(--color-text-primary-dark);
+  --color-text-muted: var(--color-text-muted-dark);
+  --color-border: rgba(255, 255, 255, 0.06);
+  --color-border-subtle: rgba(255, 255, 255, 0.04);
+  --color-overlay: rgba(0, 0, 0, 0.6);
+
+  /* Glass surface */
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.10);
+}
+
+/* Light theme */
+[data-theme="light"] {
+  --color-bg-primary: var(--color-warm-white);
+  --color-bg-elevated: var(--color-surface-light);
+  --color-text-primary: var(--color-text-primary-light);
+  --color-text-muted: var(--color-text-muted-light);
+  --color-border: rgba(0, 0, 0, 0.08);
+  --color-border-subtle: rgba(0, 0, 0, 0.04);
+  --color-overlay: rgba(0, 0, 0, 0.4);
+
+  /* Glass surface */
+  --glass-bg: rgba(255, 255, 255, 0.70);
+  --glass-border: rgba(0, 0, 0, 0.05);
+}
+
+/* ============================================================
+   3. ACCENT SYSTEM — Vanilla / Spicy mode
+   CSS @property allows smooth 600ms interpolation between
+   sage (vanilla) and ember (spicy) across all accent uses.
+   ============================================================ */
+
+/* Default mode: vanilla (sage) */
+:root,
+[data-mode="vanilla"] {
+  --accent-h: var(--color-sage-h);
+  --accent-s: var(--color-sage-s);
+  --accent-l: var(--color-sage-l);
+  --color-accent: hsl(var(--accent-h), var(--accent-s), var(--accent-l));
+}
+
+/* Spicy mode: ember */
+[data-mode="spicy"] {
+  --accent-h: var(--color-ember-h);
+  --accent-s: var(--color-ember-s);
+  --accent-l: var(--color-ember-l);
+  --color-accent: hsl(var(--accent-h), var(--accent-s), var(--accent-l));
+}
+
+/* ============================================================
+   4. SPACING SCALE
+   Base unit: 4px. Named for semantic meaning, not size.
+   ============================================================ */
+:root {
+  --space-xs:  4px;
+  --space-sm:  8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+  --space-2xl: 32px;
+  --space-3xl: 48px;
+  --space-4xl: 64px;
+  --space-5xl: 96px;
+}
+
+/* ============================================================
+   5. BORDER RADIUS
+   ============================================================ */
+:root {
+  --radius-sm:   8px;
+  --radius-md:  12px;
+  --radius-lg:  16px;
+  --radius-xl:  24px;
   --radius-full: 9999px;
-
-  /* Smooth transitions for @property-registered values (mode switch) */
-  /* Also transition background/text tokens via class-based approach for theme switch */
-  transition:
-    --accent-h 600ms ease,
-    --accent-s 600ms ease,
-    --accent-l 600ms ease;
 }
 
-:root[data-theme="dark"] {
-  --bg-primary: #1A1614;
-  --bg-secondary: #231F1C;
-  --bg-elevated: #2C2724;
-  --text-primary: #FDF8F3;
-  --text-secondary: #C4B8AD;
-  --text-muted: #8B7E74;
-  --border-subtle: rgba(212, 168, 67, 0.12);
-  --border-medium: rgba(212, 168, 67, 0.2);
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 8px rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 8px rgba(0, 0, 0, 0.2), 0 12px 24px rgba(0, 0, 0, 0.15);
-  --shadow-lg: 0 2px 4px rgba(0, 0, 0, 0.35), 0 8px 16px rgba(0, 0, 0, 0.25), 0 24px 48px rgba(0, 0, 0, 0.2);
-  --shadow-xl: 0 4px 8px rgba(0, 0, 0, 0.4), 0 16px 32px rgba(0, 0, 0, 0.3), 0 48px 96px rgba(0, 0, 0, 0.25);
+/* ============================================================
+   6. SHADOW SCALE
+   Copper-tinted shadows give depth a warmth that pure grey
+   shadows cannot — this is a core part of the brand feel.
+   ============================================================ */
+:root {
+  /* Neutral shadows — for light mode surfaces */
+  --shadow-sm:  0 1px  3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08);
+  --shadow-md:  0 4px 12px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.10);
+  --shadow-lg:  0 8px 24px rgba(0, 0, 0, 0.18), 0 4px 8px rgba(0, 0, 0, 0.12);
+  --shadow-xl:  0 16px 48px rgba(0, 0, 0, 0.22), 0 8px 16px rgba(0, 0, 0, 0.14);
+
+  /* Copper-tinted shadows — for elevated cards, modals, interactive elements */
+  --shadow-copper-sm:  0 1px  3px rgba(184, 115, 51, 0.10), 0 1px 2px rgba(0, 0, 0, 0.08);
+  --shadow-copper-md:  0 4px 12px rgba(184, 115, 51, 0.12), 0 2px 4px rgba(0, 0, 0, 0.10);
+  --shadow-copper-lg:  0 8px 32px rgba(184, 115, 51, 0.15), 0 4px 8px rgba(0, 0, 0, 0.12);
+  --shadow-copper-xl:  0 16px 48px rgba(184, 115, 51, 0.20), 0 8px 16px rgba(0, 0, 0, 0.14);
 }
 
-/* Spicy mode: ember red — hsl(13, 55%, 50%) */
-:root[data-mode="spicy"] {
-  --accent-h: 13;
-  --accent-s: 55%;
-  --accent-l: 50%;
+/* ============================================================
+   7. Z-INDEX SCALE
+   Explicit stacking context prevents z-index wars.
+   ============================================================ */
+:root {
+  --z-base:      0;
+  --z-dropdown: 100;
+  --z-sticky:   200;
+  --z-modal:    300;
+  --z-toast:    400;
+  --z-tooltip:  500;
 }
 
-/* Fallback for browsers without @property support — instant switch, no animation */
-@supports not (syntax: '<number>') {
+/* ============================================================
+   8. SPRING ANIMATIONS
+   CSS linear() springs — compositor-thread only, zero JS.
+   These are the primary animation primitives for 95% of all
+   interactive feedback in the app.
+   ============================================================ */
+:root {
+  /* Standard spring — snappy, responsive (buttons, toggles, hover) */
+  --spring: linear(
+    0, 0.013 0.6%, 0.05 1.2%, 0.2 2.5%, 0.398 4.7%,
+    0.646 7.3%, 0.875 10.5%, 0.971 13%, 1.015 15.2%,
+    1.033 17.4%, 1.03 19.8%, 1.012 22.8%, 0.997 26.8%,
+    0.994 32%, 1.001 42%, 1
+  );
+
+  /* Soft spring — gentler, for entrance animations and page content */
+  --spring-soft: linear(
+    0, 0.009 1.1%, 0.035 2.2%, 0.141 4.5%, 0.281 6.7%,
+    0.453 9.2%, 0.625 12%, 0.762 15%, 0.861 18.3%,
+    0.928 22%, 0.968 26.5%, 0.99 33%, 1
+  );
+
+  /* Durations */
+  --spring-duration:      500ms;
+  --spring-soft-duration: 600ms;
+
+  /* Shorthand transition values — use in transition property */
+  --transition-spring:      var(--spring-duration) var(--spring);
+  --transition-spring-soft: var(--spring-soft-duration) var(--spring-soft);
+
+  /* Fast exit — exits are always faster than entrances */
+  --duration-exit:   200ms;
+  --easing-exit:     ease-in;
+}
+
+/* ============================================================
+   9. FOCUS & INTERACTION TOKENS
+   ============================================================ */
+:root {
+  /* Focus ring — copper outline for keyboard navigation */
+  --focus-ring:        2px solid var(--color-copper);
+  --focus-ring-offset: 2px;
+
+  /* Hover scale — card lifts */
+  --scale-hover:  scale(1.02);
+  --scale-active: scale(0.97);
+  --lift-hover:   translateY(-4px);
+  --lift-subtle:  translateY(-2px);
+
+  /* Glassmorphism */
+  --glass-blur:   blur(12px);
+}
+
+/* ============================================================
+   10. REDUCED MOTION
+   Respect the user's OS-level motion preference by collapsing
+   all spring durations to instant transitions.
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
   :root {
-    --accent: #7A9E7E;
-    --accent-glow: rgba(122, 158, 126, 0.15);
-    transition: none;
-  }
-  :root[data-mode="spicy"] {
-    --accent: #C85A3A;
-    --accent-glow: rgba(200, 90, 58, 0.15);
+    --spring-duration:       0ms;
+    --spring-soft-duration:  0ms;
+    --duration-exit:         0ms;
+    --transition-spring:     0ms linear;
+    --transition-spring-soft: 0ms linear;
   }
 }

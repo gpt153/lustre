@@ -1,83 +1,288 @@
+/* ─── Rail container ────────────────────────────────────────────────────────── */
+
 .rail {
-  grid-area: rail;
+  grid-area: nav;
+  width: 72px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: var(--space-4) 0;
-  gap: var(--space-2);
-  border-right: 1px solid var(--border-subtle);
-  background: var(--bg-secondary);
-  height: calc(100vh - 64px);
+  padding: var(--space-md) 0;
+  background: var(--color-bg-secondary);
+  border-right: 1px solid var(--color-border);
+  z-index: var(--z-sticky);
   position: sticky;
-  top: 64px;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  scrollbar-width: none;
+  flex-shrink: 0;
 }
 
-.railItem {
-  width: 48px;
-  height: 48px;
+.rail::-webkit-scrollbar {
+  display: none;
+}
+
+/* ─── Logo ──────────────────────────────────────────────────────────────────── */
+
+.logo {
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--radius-md);
-  color: var(--text-muted);
-  cursor: pointer;
-  position: relative;
-  transition: color 200ms var(--spring), background 200ms var(--spring), transform 200ms var(--spring);
-  text-decoration: none;
-  border-left: 3px solid transparent;
-}
-
-.railItem:hover {
-  color: var(--text-primary);
-  background: rgba(184, 115, 51, 0.08);
-  transform: scale(1.05);
-}
-
-.railItem::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: var(--color-copper);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 200ms var(--spring);
-}
-
-.railItem:hover::after {
-  transform: scaleX(1);
-}
-
-.railItemActive {
+  padding: var(--space-sm) 0 var(--space-xl);
   color: var(--color-copper);
-  border-left-color: var(--color-copper);
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  overflow: hidden;
 }
 
-.railItem .tooltip {
+.logoText {
+  font-size: 22px;
+  display: none;
+}
+
+.logoFull {
+  font-size: 16px;
+  display: block;
+}
+
+/* ─── Items container ───────────────────────────────────────────────────────── */
+
+.items {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  gap: var(--space-xs);
+  flex: 1;
+}
+
+/* ─── Nav item ──────────────────────────────────────────────────────────────── */
+
+.navItem {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: var(--space-sm) var(--space-xs);
+  width: 100%;
+  text-decoration: none;
+  color: var(--color-text-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  border-radius: 0;
+  transition:
+    transform var(--spring-duration) var(--spring),
+    color var(--spring-duration) var(--spring),
+    background-color var(--spring-duration) var(--spring);
+}
+
+.navItem:hover {
+  transform: scale(1.02);
+  color: var(--color-text-primary);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.navItem:active {
+  transform: scale(0.97);
+}
+
+.navItemActive {
+  color: var(--color-copper);
+}
+
+/* Active indicator — copper bar on left edge */
+.activeIndicator {
   position: absolute;
-  left: 100%;
-  margin-left: 8px;
-  padding: 4px 8px;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-md);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
-    Arial, sans-serif;
-  font-size: 13px;
-  color: var(--text-primary);
-  white-space: nowrap;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 24px;
+  background: var(--color-copper);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   opacity: 0;
-  pointer-events: none;
-  transition: opacity 200ms ease;
-  transition-delay: 300ms;
+  animation: slideIn var(--spring-duration) var(--spring) forwards;
 }
 
-.railItem:hover .tooltip {
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) scaleY(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%) scaleY(1);
+  }
+}
+
+/* ─── Icon ──────────────────────────────────────────────────────────────────── */
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+/* ─── Label ─────────────────────────────────────────────────────────────────── */
+
+.label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  text-align: center;
+}
+
+/* ─── Keyboard shortcut hint ────────────────────────────────────────────────── */
+
+.shortcutHint {
+  position: absolute;
+  left: calc(100% + var(--space-sm));
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--color-bg-elevated, #352D29);
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 3px 6px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 150ms ease;
+  z-index: var(--z-tooltip);
+  box-shadow: var(--shadow-md);
+}
+
+.navItem:hover .shortcutHint {
   opacity: 1;
 }
+
+/* ─── More button chevron ───────────────────────────────────────────────────── */
+
+.moreButton {
+  position: relative;
+}
+
+.chevron {
+  position: absolute;
+  right: var(--space-xs);
+  top: 50%;
+  transform: translateY(-50%) rotate(0deg);
+  transition: transform var(--spring-duration) var(--spring);
+  display: flex;
+  align-items: center;
+  color: var(--color-text-muted);
+  opacity: 0.6;
+}
+
+.chevronOpen {
+  transform: translateY(-50%) rotate(-180deg);
+}
+
+/* ─── More submenu ──────────────────────────────────────────────────────────── */
+
+.moreMenu {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition:
+    max-height var(--spring-duration) var(--spring),
+    opacity var(--spring-duration) var(--spring);
+  pointer-events: none;
+}
+
+.moreMenuOpen {
+  max-height: 400px;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ─── Sub item ──────────────────────────────────────────────────────────────── */
+
+.subItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: var(--space-sm) var(--space-xs);
+  width: 100%;
+  text-decoration: none;
+  color: var(--color-text-muted);
+  border-radius: 0;
+  transition:
+    transform var(--spring-duration) var(--spring),
+    color var(--spring-duration) var(--spring),
+    background-color var(--spring-duration) var(--spring);
+}
+
+.subItem:hover {
+  transform: scale(1.02);
+  color: var(--color-text-primary);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.subItem:active {
+  transform: scale(0.97);
+}
+
+.subItemActive {
+  color: var(--color-copper);
+}
+
+/* Sub item indentation indicator */
+.subItem::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--color-border);
+}
+
+/* ─── Responsive: 900–1200px — icons only ───────────────────────────────────── */
+
+@media (max-width: 1200px) {
+  .rail {
+    width: 56px;
+  }
+
+  .logoFull {
+    display: none;
+  }
+
+  .logoText {
+    display: block;
+  }
+
+  .label {
+    display: none;
+  }
+
+  .shortcutHint {
+    display: none;
+  }
+
+  .chevron {
+    display: none;
+  }
+}
+
+/* ─── Responsive: below 900px — hide entirely ───────────────────────────────── */
 
 @media (max-width: 900px) {
   .rail {

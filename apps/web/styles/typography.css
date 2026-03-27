@@ -1,41 +1,117 @@
+/*
+ * Lustre Typography System
+ * Six semantic type classes built on CSS custom properties.
+ *
+ * Font strategy:
+ *   Display / Hero  → General Sans  (loaded via next/font/local — already in project)
+ *   Body / UI       → Inter          (Google Fonts via next/font/google)
+ *   Tags / Mono     → JetBrains Mono (Google Fonts via next/font/google)
+ *
+ * Font variables set by layout.tsx:
+ *   --font-general-sans  (CSS variable injected by Next.js font loader)
+ *   --font-inter
+ *   --font-jetbrains
+ *
+ * Principles:
+ *   - Display text tracked slightly tighter (-0.02em) for optical weight
+ *   - Body text tracked slightly looser (0.01em) for reading comfort
+ *   - Max line length: 65ch for prose (see .max-prose in globals.css)
+ *   - No hyphenation — manual word breaks only
+ *   - Generous line-height (1.6 body) for readability on screens
+ */
+
+/* ============================================================
+   FONT FAMILY TOKENS
+   These are the canonical font-family values for the app.
+   Always reference these tokens, not the raw CSS variables.
+   ============================================================ */
+:root {
+  --font-display: var(--font-general-sans, 'General Sans', system-ui, -apple-system, sans-serif);
+  --font-body:    var(--font-inter, 'Inter', system-ui, -apple-system, sans-serif);
+  --font-mono:    var(--font-jetbrains, 'JetBrains Mono', ui-monospace, 'Cascadia Code', 'Fira Code', monospace);
+}
+
+/* ============================================================
+   TYPE CLASSES
+   ============================================================ */
+
+/*
+ * .text-hero
+ * Use for: page heroes, landing sections, primary page title
+ */
 .text-hero {
-  font-family: var(--font-heading);
+  font-family: var(--font-display);
   font-size: 48px;
-  line-height: 56px;
-  font-weight: 600;
+  font-weight: 700;
+  line-height: 1.1;
   letter-spacing: -0.02em;
-  color: var(--text-primary);
+  hyphens: none;
+  overflow-wrap: break-word;
 }
 
+/*
+ * .text-section
+ * Use for: section headings, modal titles, card group headers
+ */
 .text-section {
-  font-family: var(--font-heading);
+  font-family: var(--font-display);
   font-size: 28px;
-  line-height: 36px;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  color: var(--text-primary);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  hyphens: none;
 }
 
+/*
+ * .text-card-title
+ * Use for: card headings, profile names, list item primaries
+ */
 .text-card-title {
-  font-family: var(--font-heading);
+  font-family: var(--font-display);
   font-size: 18px;
-  line-height: 24px;
-  font-weight: 500;
-  color: var(--text-primary);
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  hyphens: none;
 }
 
+/*
+ * .text-body
+ * Use for: body copy, descriptions, form labels, paragraph text
+ */
 .text-body {
   font-family: var(--font-body);
   font-size: 15px;
-  line-height: 24px;
   font-weight: 400;
-  color: var(--text-secondary);
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+  hyphens: none;
 }
 
+/*
+ * .text-muted
+ * Use for: captions, metadata, timestamps, secondary info
+ */
 .text-muted {
   font-family: var(--font-body);
   font-size: 13px;
-  line-height: 20px;
   font-weight: 400;
-  color: var(--text-muted);
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  color: var(--color-text-muted);
+  hyphens: none;
+}
+
+/*
+ * .text-mono
+ * Use for: tags, kink tags, labels, timestamps, code, metadata badges
+ */
+.text-mono {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0em;
+  hyphens: none;
+  font-feature-settings: 'zero' 1, 'ss01' 1;
 }

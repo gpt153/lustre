@@ -1,48 +1,121 @@
+/*
+ * AppShell — Three-zone CSS Grid Layout
+ *
+ * Desktop (>= 1200px): NavRail | Main (max 720px) | Context Panel
+ * Tablet (900–1199px): NavRail | Main (context panel hidden)
+ * Mobile (< 900px):    Single column with BottomNav padding
+ */
+
+/* ============================================================
+   SHELL — Full-viewport CSS Grid
+   ============================================================ */
 .shell {
   display: grid;
-  grid-template-rows: 64px 1fr;
   grid-template-columns: 72px 1fr 320px;
+  grid-template-rows: 56px 1fr;
   grid-template-areas:
-    "header header header"
-    "rail   main   context";
-  min-height: 100vh;
-  background-color: var(--bg-primary);
-  background-image: url('/textures/paper-grain.png');
-  background-size: 200px;
-  background-blend-mode: multiply;
+    "nav header header"
+    "nav main context";
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--color-bg-primary);
+  position: relative;
 }
 
+/* Paper grain texture — very subtle, adds warmth and depth */
+.shell::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: var(--z-base);
+  background-image: url('/textures/paper-grain.png');
+  background-repeat: repeat;
+  opacity: 0.03;
+  mix-blend-mode: multiply;
+}
+
+/* ============================================================
+   MAIN CONTENT AREA
+   Scrollable independently, centered, max-width constrained.
+   ============================================================ */
 .main {
   grid-area: main;
-  max-width: 720px;
-  width: 100%;
-  margin: 0 auto;
-  padding: var(--space-6);
   overflow-y: auto;
-  height: calc(100vh - 64px);
+  overflow-x: hidden;
+  padding: var(--space-xl) var(--space-xl);
+  /* Center content within flexible column */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* Breathing ambient gradient handled by warm-ui.css — see styles/warm-ui.css */
+.mainInner {
+  width: 100%;
+  max-width: 720px;
+  flex: 1;
+}
 
-/* 1200-1440px: narrower context */
-@media (max-width: 1440px) {
+/* ============================================================
+   CONTEXT PANEL
+   Right-side panel: filter sidebars, chat detail, etc.
+   ============================================================ */
+.contextPanel {
+  grid-area: context;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-left: 1px solid var(--color-border);
+  padding: var(--space-xl) var(--space-lg);
+  background: var(--color-bg-primary);
+}
+
+/* Hide context panel when no content or explicitly hidden */
+.contextPanelHidden {
+  display: none;
+}
+
+/* ============================================================
+   RESPONSIVE — XL (>= 1440px)
+   Context panel expands slightly for wide viewports.
+   ============================================================ */
+@media (min-width: 1440px) {
+  .shell {
+    grid-template-columns: 72px 1fr 320px;
+  }
+}
+
+/* ============================================================
+   RESPONSIVE — Below XL (< 1440px)
+   Narrow context panel to 280px.
+   ============================================================ */
+@media (max-width: 1439px) {
   .shell {
     grid-template-columns: 72px 1fr 280px;
   }
 }
 
-/* 900-1200px: no context panel in grid */
-@media (max-width: 1200px) {
+/* ============================================================
+   RESPONSIVE — LG to MD (900px–1199px)
+   Context panel hidden. NavRail visible. Two-column layout.
+   ============================================================ */
+@media (max-width: 1199px) {
   .shell {
     grid-template-columns: 72px 1fr;
     grid-template-areas:
-      "header header"
-      "rail   main";
+      "nav header"
+      "nav main";
+  }
+
+  .contextPanel {
+    display: none;
   }
 }
 
-/* 600-900px: bottom nav, no rail */
-@media (max-width: 900px) {
+/* ============================================================
+   RESPONSIVE — Below MD (< 900px)
+   NavRail hidden. Single-column. BottomNav padding.
+   ============================================================ */
+@media (max-width: 899px) {
   .shell {
     grid-template-columns: 1fr;
     grid-template-rows: 56px 1fr;
@@ -50,20 +123,32 @@
       "header"
       "main";
   }
+
+  .navRail {
+    display: none;
+  }
+
+  .contextPanel {
+    display: none;
+  }
+
   .main {
-    padding: 0 var(--space-4);
-    height: calc(100vh - 56px - 56px);
-    padding-bottom: 56px;
+    /* Reserve space for BottomNav (56px) at the bottom */
+    padding-bottom: calc(var(--space-xl) + 56px);
   }
 }
 
-/* <600px: mobile browser */
-@media (max-width: 600px) {
+/* ============================================================
+   RESPONSIVE — Below SM (< 600px)
+   Tighter spacing, smaller header.
+   ============================================================ */
+@media (max-width: 599px) {
   .shell {
     grid-template-rows: 48px 1fr;
   }
+
   .main {
-    padding: 0 var(--space-3);
-    padding-bottom: 56px;
+    padding: var(--space-lg) var(--space-md);
+    padding-bottom: calc(var(--space-lg) + 56px);
   }
 }

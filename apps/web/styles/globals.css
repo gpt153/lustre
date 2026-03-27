@@ -1,83 +1,243 @@
+/*
+ * Lustre Global Styles
+ * Imports all design token files and sets document-level defaults.
+ * Import order matters — tokens first, then typography, then base styles.
+ */
+
 @import './tokens.css';
+@import './themes.css';
 @import './typography.css';
-@import './warm-ui.css';
 
-:root {
-  --font-heading: var(--font-general-sans, 'Inter', system-ui, sans-serif);
-  --font-body: var(--font-inter, 'Inter', system-ui, sans-serif);
-}
-
-* {
+/* ============================================================
+   BOX MODEL RESET
+   ============================================================ */
+*,
+*::before,
+*::after {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
+/* ============================================================
+   HTML & BODY
+   ============================================================ */
 html {
   scroll-behavior: smooth;
-}
-
-html.no-motion,
-html.no-motion * {
-  animation-duration: 0.01ms !important;
-  animation-iteration-count: 1 !important;
-  transition-duration: 0.01ms !important;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
-  html *,
-  html *::before,
-  html *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-@supports (color-scheme: light) {
-  html {
-    color-scheme: light;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
   font-family: var(--font-body);
   font-size: 15px;
-  line-height: 24px;
-  font-weight: 400;
+  line-height: 1.6;
+  color: var(--color-text-primary);
+  background: var(--color-bg-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  /* Prevent layout shift from scrollbar appearing */
+  overflow-y: scroll;
 }
 
+/* ============================================================
+   TYPOGRAPHY BASELINE
+   ============================================================ */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--color-text-primary);
+}
+
+p {
+  max-width: 65ch;
+}
+
+a {
+  color: var(--color-copper);
+  text-decoration: none;
+  transition: color var(--transition-spring);
+}
+
+a:hover {
+  color: var(--color-copper-light);
+}
+
+/* ============================================================
+   FOCUS RING
+   Global focus-visible rule — copper ring for all keyboard users.
+   outline: revert ensures native browser outlines don't disappear
+   for elements that don't inherit border-radius.
+   ============================================================ */
+:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: inherit;
+}
+
+/* Remove focus ring for mouse users */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ============================================================
+   SELECTION
+   Copper background, warm-white text — on-brand selection.
+   ============================================================ */
 ::selection {
-  background-color: var(--color-copper);
+  background-color: hsl(
+    var(--color-copper-h),
+    var(--color-copper-s),
+    var(--color-copper-l),
+    0.85
+  );
   color: var(--color-warm-white);
 }
 
+::-moz-selection {
+  background-color: hsl(
+    var(--color-copper-h),
+    var(--color-copper-s),
+    var(--color-copper-l),
+    0.85
+  );
+  color: var(--color-warm-white);
+}
+
+/* ============================================================
+   CUSTOM SCROLLBAR
+   Subtle copper-tinted scrollbar. Only rendered on WebKit/Blink.
+   Firefox uses scrollbar-color (below).
+   ============================================================ */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-primary);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-copper);
+  background: hsl(
+    var(--color-copper-h),
+    var(--color-copper-s),
+    var(--color-copper-l),
+    0.35
+  );
   border-radius: var(--radius-full);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-gold-deep);
+  background: hsl(
+    var(--color-copper-h),
+    var(--color-copper-s),
+    var(--color-copper-l),
+    0.55
+  );
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(
+    var(--color-copper-h),
+    var(--color-copper-s),
+    var(--color-copper-l),
+    0.35
+  ) transparent;
+}
+
+/* ============================================================
+   MEDIA
+   ============================================================ */
+img,
+video,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+img {
+  /* Prevent alt text from shifting layout on load */
+  height: auto;
+}
+
+/* ============================================================
+   FORM ELEMENTS
+   ============================================================ */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+/* ============================================================
+   LAYOUT UTILITIES
+   ============================================================ */
+
+/* Constrain prose to comfortable reading width */
+.max-prose {
+  max-width: 65ch;
+}
+
+/* Screen-reader only — visually hidden but accessible */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Skip to main content link — accessible keyboard nav */
+.skip-to-content {
+  position: absolute;
+  top: -40px;
+  left: var(--space-lg);
+  z-index: var(--z-tooltip);
+  padding: var(--space-sm) var(--space-lg);
+  background: var(--color-copper);
+  color: var(--color-warm-white);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  transition: top var(--transition-spring);
+}
+
+.skip-to-content:focus {
+  top: var(--space-lg);
+}
+
+/* ============================================================
+   REDUCED MOTION
+   When the user has requested reduced motion, disable all
+   transitions and animations at the document level.
+   Individual spring durations are already zeroed in tokens.css.
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

@@ -1,3 +1,5 @@
+/* ─── Bottom nav bar ────────────────────────────────────────────────────────── */
+
 .bottomNav {
   position: fixed;
   bottom: 0;
@@ -7,39 +9,236 @@
   display: none;
   align-items: center;
   justify-content: space-around;
-  background: var(--bg-elevated);
-  border-top: 1px solid var(--border-subtle);
-  box-shadow: 0 -1px 3px rgba(184, 115, 51, 0.04);
-  padding-bottom: env(safe-area-inset-bottom, 0);
-  z-index: 100;
+  z-index: var(--z-sticky);
+  border-radius: 0;
+  /* Override .glass border-radius — bar is full width */
+  border-top: 1px solid var(--color-border);
+  border-bottom: none;
+  border-left: none;
+  border-right: none;
+  /* Glassmorphism */
+  background: rgba(28, 22, 20, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  /* Safe area padding for devices with home indicator */
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
+
+[data-theme="light"] .bottomNav {
+  background: rgba(253, 248, 243, 0.85);
+}
+
 @media (max-width: 900px) {
   .bottomNav {
     display: flex;
   }
 }
+
+/* ─── Nav item ──────────────────────────────────────────────────────────────── */
+
 .navItem {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
-  color: var(--text-muted);
-  font-size: 10px;
-  font-family: var(--font-body);
-  cursor: pointer;
-  padding: var(--space-2);
+  justify-content: center;
+  gap: 3px;
+  flex: 1;
+  height: 100%;
   text-decoration: none;
-  transition: color 200ms ease;
+  color: var(--color-text-muted);
+  background: transparent;
   border: none;
-  background: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  padding: 0;
+  transition:
+    transform var(--spring-duration) var(--spring),
+    color var(--spring-duration) var(--spring);
 }
-.navItem:hover {
-  color: var(--text-secondary);
+
+.navItem:active {
+  transform: scale(0.92);
 }
+
 .navItemActive {
   color: var(--color-copper);
 }
-.navLabel {
+
+/* ─── Icon wrapper — adds a subtle copper tint ring on active ───────────────── */
+
+.iconWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 24px;
+  position: relative;
+}
+
+/* Active dot indicator below icon */
+.navItemActive .iconWrap::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: var(--radius-full);
+  background: var(--color-copper);
+  animation: dotPop var(--spring-duration) var(--spring) forwards;
+}
+
+@keyframes dotPop {
+  from {
+    transform: translateX(-50%) scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
+  }
+}
+
+/* ─── Label ─────────────────────────────────────────────────────────────────── */
+
+.label {
   font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
   line-height: 1;
+}
+
+/* ─── More sheet backdrop ───────────────────────────────────────────────────── */
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--color-overlay);
+  z-index: calc(var(--z-sticky) + 1);
+  animation: fadeIn 200ms ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ─── More bottom sheet ─────────────────────────────────────────────────────── */
+
+.moreSheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--color-bg-elevated, #352D29);
+  border-top: 1px solid var(--color-border);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  z-index: calc(var(--z-sticky) + 2);
+  transform: translateY(100%);
+  transition: transform var(--spring-duration) var(--spring);
+  /* Safe area inset for home indicator */
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.moreSheetOpen {
+  transform: translateY(0);
+}
+
+/* Only show on mobile */
+@media (min-width: 901px) {
+  .moreSheet,
+  .backdrop {
+    display: none;
+  }
+}
+
+/* ─── More sheet header ─────────────────────────────────────────────────────── */
+
+.moreSheetHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-lg) var(--space-xl) var(--space-md);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.moreSheetTitle {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  letter-spacing: -0.01em;
+}
+
+.moreSheetClose {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  border: none;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: transform var(--spring-duration) var(--spring), background-color var(--spring-duration) var(--spring);
+}
+
+.moreSheetClose:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.moreSheetClose:active {
+  transform: scale(0.9);
+}
+
+/* ─── More sheet items grid ─────────────────────────────────────────────────── */
+
+.moreSheetItems {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-xs);
+  padding: var(--space-lg);
+}
+
+.moreSheetItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-lg) var(--space-sm);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: var(--color-text-muted);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid transparent;
+  transition:
+    transform var(--spring-duration) var(--spring),
+    color var(--spring-duration) var(--spring),
+    background-color var(--spring-duration) var(--spring),
+    border-color var(--spring-duration) var(--spring);
+}
+
+.moreSheetItem:active {
+  transform: scale(0.95);
+}
+
+.moreSheetItemActive {
+  color: var(--color-copper);
+  background: rgba(184, 115, 51, 0.1);
+  border-color: rgba(184, 115, 51, 0.2);
+}
+
+.moreSheetIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.moreSheetLabel {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  font-family: var(--font-body);
 }

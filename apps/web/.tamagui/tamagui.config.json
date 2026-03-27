@@ -39504,6 +39504,48 @@
           "name": "t-space--20",
           "val": -186,
           "variable": "var(--t-space--20)"
+        },
+        "xs": {
+          "isVar": true,
+          "key": "$xs",
+          "name": "c-space-xs",
+          "val": 4,
+          "variable": "var(--c-space-xs)"
+        },
+        "sm": {
+          "isVar": true,
+          "key": "$sm",
+          "name": "c-space-sm",
+          "val": 8,
+          "variable": "var(--c-space-sm)"
+        },
+        "md": {
+          "isVar": true,
+          "key": "$md",
+          "name": "c-space-md",
+          "val": 16,
+          "variable": "var(--c-space-md)"
+        },
+        "lg": {
+          "isVar": true,
+          "key": "$lg",
+          "name": "c-space-lg",
+          "val": 24,
+          "variable": "var(--c-space-lg)"
+        },
+        "xl": {
+          "isVar": true,
+          "key": "$xl",
+          "name": "c-space-xl",
+          "val": 32,
+          "variable": "var(--c-space-xl)"
+        },
+        "2xl": {
+          "isVar": true,
+          "key": "$2xl",
+          "name": "c-space-2xl",
+          "val": 48,
+          "variable": "var(--c-space-2xl)"
         }
       },
       "size": {
@@ -39712,19 +39754,33 @@
         }
       },
       "shadows": {
-        "cardShadow": {
+        "sm": {
           "isVar": true,
-          "key": "$cardShadow",
-          "name": "c-shadows-cardShadow",
-          "val": "0 2px 8px rgba(184, 115, 51, 0.15)",
-          "variable": "var(--c-shadows-cardShadow)"
+          "key": "$sm",
+          "name": "c-shadows-sm",
+          "val": "0 1px 2px rgba(44, 36, 33, 0.05)",
+          "variable": "var(--c-shadows-sm)"
         },
-        "cardShadowDark": {
+        "md": {
           "isVar": true,
-          "key": "$cardShadowDark",
-          "name": "c-shadows-cardShadowDark",
-          "val": "0 2px 8px rgba(184, 115, 51, 0.25)",
-          "variable": "var(--c-shadows-cardShadowDark)"
+          "key": "$md",
+          "name": "c-shadows-md",
+          "val": "0 2px 8px rgba(44, 36, 33, 0.1)",
+          "variable": "var(--c-shadows-md)"
+        },
+        "lg": {
+          "isVar": true,
+          "key": "$lg",
+          "name": "c-shadows-lg",
+          "val": "0 4px 16px rgba(44, 36, 33, 0.15)",
+          "variable": "var(--c-shadows-lg)"
+        },
+        "xl": {
+          "isVar": true,
+          "key": "$xl",
+          "name": "c-shadows-xl",
+          "val": "0 8px 24px rgba(44, 36, 33, 0.2)",
+          "variable": "var(--c-shadows-xl)"
         }
       }
     },
@@ -41398,19 +41454,33 @@
         "val": 9,
         "variable": "var(--t-radius-true)"
       },
-      "$shadows.cardShadow": {
+      "$shadows.lg": {
         "isVar": true,
-        "key": "$cardShadow",
-        "name": "c-shadows-cardShadow",
-        "val": "0 2px 8px rgba(184, 115, 51, 0.15)",
-        "variable": "var(--c-shadows-cardShadow)"
+        "key": "$lg",
+        "name": "c-shadows-lg",
+        "val": "0 4px 16px rgba(44, 36, 33, 0.15)",
+        "variable": "var(--c-shadows-lg)"
       },
-      "$shadows.cardShadowDark": {
+      "$shadows.md": {
         "isVar": true,
-        "key": "$cardShadowDark",
-        "name": "c-shadows-cardShadowDark",
-        "val": "0 2px 8px rgba(184, 115, 51, 0.25)",
-        "variable": "var(--c-shadows-cardShadowDark)"
+        "key": "$md",
+        "name": "c-shadows-md",
+        "val": "0 2px 8px rgba(44, 36, 33, 0.1)",
+        "variable": "var(--c-shadows-md)"
+      },
+      "$shadows.sm": {
+        "isVar": true,
+        "key": "$sm",
+        "name": "c-shadows-sm",
+        "val": "0 1px 2px rgba(44, 36, 33, 0.05)",
+        "variable": "var(--c-shadows-sm)"
+      },
+      "$shadows.xl": {
+        "isVar": true,
+        "key": "$xl",
+        "name": "c-shadows-xl",
+        "val": "0 8px 24px rgba(44, 36, 33, 0.2)",
+        "variable": "var(--c-shadows-xl)"
       },
       "$size.0": {
         "isVar": true,
@@ -41944,6 +42014,13 @@
         "val": 186,
         "variable": "var(--t-space-20)"
       },
+      "$space.2xl": {
+        "isVar": true,
+        "key": "$2xl",
+        "name": "c-space-2xl",
+        "val": 48,
+        "variable": "var(--c-space-2xl)"
+      },
       "$space.3": {
         "isVar": true,
         "key": "$3",
@@ -42007,12 +42084,47 @@
         "val": 53,
         "variable": "var(--t-space-9)"
       },
+      "$space.lg": {
+        "isVar": true,
+        "key": "$lg",
+        "name": "c-space-lg",
+        "val": 24,
+        "variable": "var(--c-space-lg)"
+      },
+      "$space.md": {
+        "isVar": true,
+        "key": "$md",
+        "name": "c-space-md",
+        "val": 16,
+        "variable": "var(--c-space-md)"
+      },
+      "$space.sm": {
+        "isVar": true,
+        "key": "$sm",
+        "name": "c-space-sm",
+        "val": 8,
+        "variable": "var(--c-space-sm)"
+      },
       "$space.true": {
         "isVar": true,
         "key": "$true",
         "name": "t-space-true",
         "val": 18,
         "variable": "var(--t-space-true)"
+      },
+      "$space.xl": {
+        "isVar": true,
+        "key": "$xl",
+        "name": "c-space-xl",
+        "val": 32,
+        "variable": "var(--c-space-xl)"
+      },
+      "$space.xs": {
+        "isVar": true,
+        "key": "$xs",
+        "name": "c-space-xs",
+        "val": 4,
+        "variable": "var(--c-space-xs)"
       },
       "$zIndex.0": {
         "isVar": true,

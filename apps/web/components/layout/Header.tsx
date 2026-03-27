@@ -1,78 +1,80 @@
 'use client'
 
-import { useAuthStore } from '@lustre/app'
-import { LustreLogo } from '@lustre/ui'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { useTheme } from '@/hooks/useTheme'
 import styles from './Header.module.css'
 
-const NAV_LINKS = [
-  { href: '/discover', label: 'Discover' },
-  { href: '/chat', label: 'Connect' },
-  { href: '/events', label: 'Explore' },
-  { href: '/learn', label: 'Learn' },
-]
+// ─── Icons ────────────────────────────────────────────────────────────────────
+
+const SunIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <circle cx="12" cy="12" r="5"/>
+    <line x1="12" y1="1"  x2="12" y2="3"/>
+    <line x1="12" y1="21" x2="12" y2="23"/>
+    <line x1="4.22" y1="4.22"  x2="5.64" y2="5.64"/>
+    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+    <line x1="1" y1="12" x2="3" y2="12"/>
+    <line x1="21" y1="12" x2="23" y2="12"/>
+    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+  </svg>
+)
+
+const MoonIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+  </svg>
+)
+
+// ─── Header ───────────────────────────────────────────────────────────────────
 
 export function Header() {
-  const { logout, user } = useAuthStore()
-  const pathname = usePathname()
-
-  const handleLogout = async () => {
-    logout()
-  }
+  const { toggleTheme, toggleMode, isSpicy, isDark } = useTheme()
 
   return (
-    <header className={styles.header}>
-      <div className={styles.logoSection}>
-        <Link href="/discover">
-          <LustreLogo width={32} height={32} />
-        </Link>
+    <header className={styles.header} role="banner">
+      {/* Left — Logo */}
+      <div className={styles.left}>
+        <span className={`${styles.logoText} text-card-title`}>Lustre</span>
       </div>
 
-      <nav className={styles.navLinks}>
-        {NAV_LINKS.map((link) => {
-          const isActive = pathname.startsWith(link.href)
-          return (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`${styles.navLink} ${isActive ? styles.navLinkActive : ''}`}
-            >
-              {link.label}
-            </Link>
-          )
-        })}
-      </nav>
+      {/* Center — reserved for search */}
+      <div className={styles.center} aria-hidden="true" />
 
-      <div className={styles.rightSection}>
-        <button className={styles.bellButton} title="Notifications">
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M10 2C6.69 2 4 4.69 4 8v5l-2 2v1h16v-1l-2-2v-5c0-3.31-2.69-6-6-6zm0 17c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2z"
-              fill="currentColor"
-            />
-          </svg>
+      {/* Right — controls */}
+      <div className={styles.right}>
+        {/* Mode toggle: vanilla / spicy */}
+        <button
+          className={`${styles.toggleButton} ${isSpicy ? styles.toggleButtonSpicy : styles.toggleButtonVanilla}`}
+          onClick={toggleMode}
+          aria-label={isSpicy ? 'Byt till Vanilla-läge' : 'Byt till Spicy-läge'}
+          title={isSpicy ? 'Byt till Vanilla (säkert läge)' : 'Byt till Spicy-läge'}
+        >
+          <span className={styles.toggleEmoji} aria-hidden="true">
+            {isSpicy ? '🌶️' : '🌿'}
+          </span>
+          <span className={styles.toggleLabel}>
+            {isSpicy ? 'Spicy' : 'Vanilla'}
+          </span>
         </button>
 
-        {user && (
-          <div className={styles.avatarContainer}>
-            <button
-              className={styles.avatarButton}
-              onClick={handleLogout}
-              title={user.email || 'User menu'}
-            >
-              <div className={styles.avatar}>
-                {user.email?.[0]?.toUpperCase() || 'U'}
-              </div>
-            </button>
-          </div>
-        )}
+        {/* Theme toggle: dark / light */}
+        <button
+          className={styles.iconButton}
+          onClick={toggleTheme}
+          aria-label={isDark ? 'Byt till ljust tema' : 'Byt till mörkt tema'}
+          title={isDark ? 'Ljust tema' : 'Mörkt tema'}
+        >
+          {isDark ? <SunIcon /> : <MoonIcon />}
+        </button>
+
+        {/* User avatar placeholder */}
+        <button
+          className={styles.avatarButton}
+          aria-label="Användarmeny"
+          title="Användarmeny"
+        >
+          <div className={styles.avatar} aria-hidden="true" />
+        </button>
       </div>
     </header>
   )

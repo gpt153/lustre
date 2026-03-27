@@ -1,0 +1,140 @@
+/* ============================================================
+   Lustre Theme System — 4 variants (light/dark × vanilla/spicy)
+   Applied via data-theme="dark|light" and data-mode="vanilla|spicy"
+   on the <html> element.
+
+   Requires tokens.css to be loaded first.
+   --accent-h / --accent-s / --accent-l @property registrations
+   live in tokens.css to avoid duplicate @property declarations.
+   ============================================================ */
+
+/* ============================================================
+   Smooth accent transition (600ms spring easing)
+   ============================================================ */
+html {
+  transition:
+    --accent-h 600ms var(--spring, ease),
+    --accent-s 600ms var(--spring, ease),
+    --accent-l 600ms var(--spring, ease);
+}
+
+/* ============================================================
+   DARK VANILLA (default)
+   Charcoal base + sage accent (h=130, s=16%, l=55%)
+   ============================================================ */
+[data-theme="dark"][data-mode="vanilla"] {
+  --color-bg-primary:   #1A1614;
+  --color-bg-secondary: #2C2421;
+  --color-bg-elevated:  #352D29;
+
+  --color-text-primary: #F5EDE6;
+  --color-text-muted:   #9B8E85;
+
+  --accent-h: 130;
+  --accent-s: 16%;
+  --accent-l: 55%;
+
+  --color-accent:       hsl(var(--accent-h), var(--accent-s), var(--accent-l));
+  --color-accent-hover: hsl(var(--accent-h), var(--accent-s), calc(var(--accent-l) + 8%));
+
+  --color-border:       rgba(255, 255, 255, 0.08);
+  --color-border-hover: rgba(255, 255, 255, 0.15);
+}
+
+/* ============================================================
+   DARK SPICY
+   Charcoal base + ember accent (h=14, s=58%, l=50%)
+   ============================================================ */
+[data-theme="dark"][data-mode="spicy"] {
+  --color-bg-primary:   #1A1614;
+  --color-bg-secondary: #2C2421;
+  --color-bg-elevated:  #352D29;
+
+  --color-text-primary: #F5EDE6;
+  --color-text-muted:   #9B8E85;
+
+  --accent-h: 14;
+  --accent-s: 58%;
+  --accent-l: 50%;
+
+  --color-accent:       hsl(var(--accent-h), var(--accent-s), var(--accent-l));
+  --color-accent-hover: hsl(var(--accent-h), var(--accent-s), calc(var(--accent-l) + 8%));
+
+  --color-border:       rgba(255, 255, 255, 0.08);
+  --color-border-hover: rgba(255, 255, 255, 0.15);
+}
+
+/* ============================================================
+   LIGHT VANILLA
+   Warm white base + sage accent (h=130, s=16%, l=55%)
+   ============================================================ */
+[data-theme="light"][data-mode="vanilla"] {
+  --color-bg-primary:   #FDF8F3;
+  --color-bg-secondary: #F5EDE6;
+  --color-bg-elevated:  #FFFFFF;
+
+  --color-text-primary: #2C2421;
+  --color-text-muted:   #7A6E66;
+
+  --accent-h: 130;
+  --accent-s: 16%;
+  --accent-l: 55%;
+
+  --color-accent:       hsl(var(--accent-h), var(--accent-s), var(--accent-l));
+  --color-accent-hover: hsl(var(--accent-h), var(--accent-s), calc(var(--accent-l) + 8%));
+
+  --color-border:       rgba(0, 0, 0, 0.08);
+  --color-border-hover: rgba(0, 0, 0, 0.15);
+}
+
+/* ============================================================
+   LIGHT SPICY
+   Warm white base + ember accent (h=14, s=58%, l=50%)
+   ============================================================ */
+[data-theme="light"][data-mode="spicy"] {
+  --color-bg-primary:   #FDF8F3;
+  --color-bg-secondary: #F5EDE6;
+  --color-bg-elevated:  #FFFFFF;
+
+  --color-text-primary: #2C2421;
+  --color-text-muted:   #7A6E66;
+
+  --accent-h: 14;
+  --accent-s: 58%;
+  --accent-l: 50%;
+
+  --color-accent:       hsl(var(--accent-h), var(--accent-s), var(--accent-l));
+  --color-accent-hover: hsl(var(--accent-h), var(--accent-s), calc(var(--accent-l) + 8%));
+
+  --color-border:       rgba(0, 0, 0, 0.08);
+  --color-border-hover: rgba(0, 0, 0, 0.15);
+}
+
+/* ============================================================
+   Glassmorphism Utilities
+   ============================================================ */
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+}
+
+[data-theme="light"] .glass {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+@supports not (backdrop-filter: blur(12px)) {
+  .glass {
+    background: var(--color-bg-elevated);
+  }
+}
+
+/* Focus ring — copper color uses brand token */
+:focus-visible {
+  outline: 2px solid var(--color-copper, #B87333);
+  outline-offset: 2px;
+  border-radius: inherit;
+}

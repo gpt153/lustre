@@ -1,18 +1,68 @@
-/* Page transition — cross-fade between routes */
+/* ─── Page transition container ─────────────────────────────────────────────── */
 
-@keyframes pageIn {
+.pageTransition {
+  width: 100%;
+  min-height: 100%;
+  /* Initial state — invisible before first enter */
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+/* Entered state — triggered via JS class toggle on route change */
+.entered {
+  animation: pageEnter var(--spring-soft-duration, 600ms) var(--spring-soft, ease-out) forwards;
+}
+
+@keyframes pageEnter {
   from {
     opacity: 0;
+    transform: translateY(6px);
   }
   to {
     opacity: 1;
+    transform: translateY(0);
   }
 }
 
-.pageEnter {
-  animation: pageIn 200ms ease forwards;
+/* ─── View Transitions API — browser-native page transitions ─────────────────
+   Applied when next.config.ts has experimental.viewTransition: true
+   and the browser supports the API.
+   ──────────────────────────────────────────────────────────────────────────── */
+
+@keyframes slideOutLeft {
+  to {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
 }
 
-.pageHidden {
-  opacity: 0;
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+}
+
+/* Old page slides out left, new page slides in from right */
+::view-transition-old(page) {
+  animation: 200ms ease-in both slideOutLeft;
+}
+
+::view-transition-new(page) {
+  animation: var(--spring-soft-duration, 600ms) var(--spring-soft, ease-out) both slideInRight;
+}
+
+/* Reduced motion — collapse to instant crossfade */
+@media (prefers-reduced-motion: reduce) {
+  .pageTransition,
+  .entered {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  ::view-transition-old(page),
+  ::view-transition-new(page) {
+    animation: none;
+  }
 }
