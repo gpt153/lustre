@@ -22,31 +22,7 @@
   height: calc(100vh - 64px);
 }
 
-.shell::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background: radial-gradient(ellipse at 50% 50%, var(--color-copper), transparent 70%);
-  animation: breathe 8s ease-in-out infinite;
-  z-index: 0;
-}
-
-@keyframes breathe {
-  0%, 100% {
-    opacity: 0.04;
-  }
-  50% {
-    opacity: 0.08;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .shell::after {
-    animation: none;
-    opacity: 0.04;
-  }
-}
+/* Breathing ambient gradient handled by warm-ui.css — see styles/warm-ui.css */
 
 /* 1200-1440px: narrower context */
 @media (max-width: 1440px) {

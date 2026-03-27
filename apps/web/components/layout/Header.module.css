@@ -134,11 +134,12 @@
   color: var(--bg-primary);
   font-weight: 600;
   font-size: 14px;
-  transition: transform 200ms ease;
+  transition: transform 200ms var(--spring), box-shadow 200ms var(--spring);
 }
 
 .avatarButton:hover .avatar {
   transform: scale(1.05);
+  box-shadow: 0 0 0 3px var(--color-copper), 0 0 0 5px rgba(184, 115, 51, 0.2);
 }
 
 @media (max-width: 900px) {

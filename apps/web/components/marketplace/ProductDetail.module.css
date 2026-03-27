@@ -1,0 +1,135 @@
+.gallery {
+  max-width: 600px;
+}
+
+.mainImage {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--radius-lg);
+  object-fit: cover;
+  box-shadow: var(--shadow-md);
+}
+
+.thumbnailRow {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  overflow-x: auto;
+  padding-bottom: var(--space-1);
+}
+
+.thumbnail {
+  flex-shrink: 0;
+  width: 72px;
+  height: 72px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border-color 200ms ease, transform 200ms ease;
+}
+
+.thumbnail:hover {
+  border-color: var(--border-medium);
+  transform: scale(1.05);
+}
+
+.thumbnailActive {
+  border-color: var(--color-copper);
+}
+
+.detailContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-8);
+  margin-top: var(--space-8);
+}
+
+.detailContent {
+  max-width: 720px;
+}
+
+.detailTitle {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-4) 0;
+  line-height: 1.2;
+}
+
+.detailPrice {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--color-copper);
+  margin: 0 0 var(--space-6) 0;
+}
+
+.description {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0 0 var(--space-6) 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.sellerCard {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.sellerLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 var(--space-2) 0;
+}
+
+.sellerName {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.buyButton {
+  width: 100%;
+  padding: var(--space-4);
+  background: var(--color-copper);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 200ms ease, transform 200ms ease;
+  font-family: inherit;
+}
+
+.buyButton:hover {
+  background: #A46A2A;
+  transform: translateY(-2px);
+}
+
+.buyButton:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 1200px) {
+  .detailContainer {
+    grid-template-columns: 1fr;
+  }
+
+  .detailContent {
+    order: 2;
+  }
+
+  .gallery {
+    order: 1;
+  }
+}

@@ -1,0 +1,64 @@
+.linkedAccounts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.linkedAccount {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+}
+
+.smallButton {
+  padding: 6px 14px !important;
+  font-size: 13px !important;
+}
+
+.deleteButton {
+  background: var(--color-ember) !important;
+  color: white !important;
+}
+
+.deleteButton:hover {
+  opacity: 0.9;
+}
+
+.deleteModal {
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.deleteModal p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+.deleteWarning {
+  color: var(--text-muted) !important;
+  font-size: 13px !important;
+}
+
+.deleteActions {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+.deleteActions > * {
+  flex: 1;
+}
+
+.deleteConfirmButton {
+  background: var(--color-ember) !important;
+  color: white !important;
+}

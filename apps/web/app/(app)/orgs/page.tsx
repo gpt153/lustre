@@ -1,17 +1,20 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
-import { YStack, XStack, Text, Spinner, Button } from 'tamagui'
-import { trpc } from '@lustre/api'
+import { useEffect, useRef } from 'react'
 import Link from 'next/link'
+import { trpc } from '@lustre/api'
+import { EmptyState } from '@/components/common/EmptyState'
+import { SkeletonCard } from '@/components/common/Skeleton'
+import { Button } from '@/components/common/Button'
+import styles from './page.module.css'
 
 export default function OrgsPage() {
   const listQuery = trpc.org.list.useInfiniteQuery(
-    { limit: 20 },
-    { getNextPageParam: (lastPage) => lastPage.nextCursor }
+    { limit: 12 },
+    { getNextPageParam: (lastPage: any) => lastPage.nextCursor }
   )
 
-  const orgs = listQuery.data?.pages.flatMap((page) => page.orgs) ?? []
+  const orgs = listQuery.data?.pages.flatMap((page: any) => page.orgs) ?? []
 
   const loadMoreRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
@@ -30,117 +33,101 @@ export default function OrgsPage() {
 
   if (listQuery.isLoading) {
     return (
-      <YStack flex={1} alignItems="center" justifyContent="center" minHeight="80vh">
-        <Spinner color="$primary" />
-      </YStack>
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <h1 className={styles.pageTitle}>Organisationer</h1>
+          <Link href="/orgs/create" style={{ textDecoration: 'none' }}>
+            <Button variant="primary">Skapa organisation</Button>
+          </Link>
+        </div>
+
+        <div className={styles.gridContainer}>
+          {[...Array(6)].map((_, i) => (
+            <SkeletonCard key={i} />
+          ))}
+        </div>
+      </div>
     )
   }
 
   return (
-    <YStack flex={1} alignItems="center" padding="$4">
-      <YStack width="100%" maxWidth={800} gap="$4">
-        <XStack justifyContent="space-between" alignItems="center">
-          <Text fontSize="$6" fontWeight="700" color="$text">Organizations</Text>
-          <Link href="/orgs/create" style={{ textDecoration: 'none' }}>
-            <Button backgroundColor="$primary" borderRadius="$3" paddingHorizontal="$4">
-              <Text color="white" fontWeight="600">Create Org</Text>
-            </Button>
-          </Link>
-        </XStack>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h1 className={styles.pageTitle}>Organisationer</h1>
+        <Link href="/orgs/create" style={{ textDecoration: 'none' }}>
+          <Button variant="primary">Skapa organisation</Button>
+        </Link>
+      </div>
 
-        {orgs.length === 0 ? (
-          <YStack alignItems="center" padding="$6">
-            <Text color="$textSecondary">No organizations yet. Create one!</Text>
-          </YStack>
-        ) : (
-          <YStack gap="$3">
-            {orgs.map((org) => (
+      {orgs.length === 0 ? (
+        <EmptyState
+          title="Inga organisationer hittades"
+          description="Börja skapa en organisation för att komma igång."
+          action={
+            <Link href="/orgs/create" style={{ textDecoration: 'none' }}>
+              <Button variant="primary">Skapa organisation</Button>
+            </Link>
+          }
+        />
+      ) : (
+        <>
+          <div className={styles.gridContainer}>
+            {orgs.map((org: any) => (
               <Link key={org.id} href={`/orgs/${org.id}`} style={{ textDecoration: 'none' }}>
                 <OrgCard org={org} />
               </Link>
             ))}
-          </YStack>
-        )}
+          </div>
 
-        <div ref={loadMoreRef} style={{ height: 1 }} />
+          <div ref={loadMoreRef} style={{ height: 1, margin: 'var(--space-4) 0' }} />
 
-        {listQuery.isFetchingNextPage && (
-          <YStack padding="$4" alignItems="center">
-            <Spinner color="$primary" />
-          </YStack>
-        )}
-      </YStack>
-    </YStack>
+          {listQuery.isFetchingNextPage && (
+            <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--space-4)' }}>
+              <div style={{ width: 24, height: 24, border: '2px solid var(--color-copper)', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.6s linear infinite' }} />
+            </div>
+          )}
+        </>
+      )}
+
+      <style>{`
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
+    </div>
   )
 }
 
-function OrgCard({ org }: {
-  org: {
-    id: string
-    name: string
-    description: string | null
-    type: string
-    locationName: string | null
-    _count: { members: number }
-    verified: boolean
-  }
-}) {
-  const descriptionSnippet = org.description
-    ? org.description.length > 100
-      ? org.description.substring(0, 100) + '...'
-      : org.description
-    : 'No description'
-
+function OrgCard({ org }: { org: any }) {
   return (
-    <YStack
-      backgroundColor="$background"
-      borderRadius="$3"
-      padding="$4"
-      gap="$2"
-      borderWidth={1}
-      borderColor="$borderColor"
-      hoverStyle={{ backgroundColor: '$borderColor' }}
-    >
-      <XStack justifyContent="space-between" alignItems="flex-start">
-        <YStack flex={1} gap="$1">
-          <XStack gap="$2" alignItems="center">
-            <Text fontWeight="700" color="$text" fontSize="$4">{org.name}</Text>
-            {org.verified && (
-              <YStack
-                backgroundColor="$primary"
-                borderRadius="$2"
-                paddingHorizontal="$2"
-                paddingVertical="$1"
-              >
-                <Text fontSize="$1" fontWeight="600" color="white">VERIFIED</Text>
-              </YStack>
-            )}
-          </XStack>
-          <Text color="$textSecondary" fontSize="$2">{descriptionSnippet}</Text>
-        </YStack>
-        <YStack
-          backgroundColor="$borderColor"
-          borderRadius="$2"
-          paddingHorizontal="$2"
-          paddingVertical="$1"
-        >
-          <Text
-            fontSize="$1"
-            fontWeight="600"
-            color="$text"
-          >
-            {org.type}
-          </Text>
-        </YStack>
-      </XStack>
-      <XStack gap="$4">
-        <Text fontSize="$2" color="$textSecondary">
-          {org._count.members} {org._count.members === 1 ? 'member' : 'members'}
-        </Text>
-        {org.locationName && (
-          <Text fontSize="$2" color="$textSecondary">{org.locationName}</Text>
-        )}
-      </XStack>
-    </YStack>
+    <div className={styles.orgCard}>
+      <div className={styles.orgHeader}>
+        <div className={styles.orgLogo}>🏢</div>
+        <div className={styles.orgInfo}>
+          <h3 className={styles.orgName}>{org.name}</h3>
+          {org.verified && (
+            <div className={styles.verifiedBadge}>
+              ✓ Verifierad
+            </div>
+          )}
+        </div>
+      </div>
+
+      {org.description && (
+        <p className={styles.description}>{org.description}</p>
+      )}
+
+      <div className={styles.meta}>
+        <span>{org._count.members} medlemmar</span>
+        {org.locationName && <span>{org.locationName}</span>}
+        <span>{org.type}</span>
+      </div>
+
+      <div className={styles.viewButton}>
+        <Button variant="secondary" size="md" type="button">
+          Visa detaljer
+        </Button>
+      </div>
+    </div>
   )
 }

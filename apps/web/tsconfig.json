@@ -24,6 +24,9 @@
       "@/styles/*": [
         "./styles/*"
       ],
+      "@/lib/*": [
+        "./lib/*"
+      ],
       "@lustre/ui": [
         "../../packages/ui/src"
       ],

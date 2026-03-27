@@ -1,0 +1,30 @@
+.gate {
+  padding: var(--space-8) var(--space-6);
+  text-align: center;
+  background: rgba(184, 115, 51, 0.04);
+  border: 1px dashed var(--border-medium);
+  border-radius: var(--radius-lg);
+}
+
+.icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto var(--space-3);
+  color: var(--color-copper);
+  opacity: 0.6;
+  font-size: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.text {
+  font-size: 15px;
+  color: var(--text-muted);
+  margin-bottom: var(--space-4);
+}
+
+.button {
+  margin-top: var(--space-3);
+}

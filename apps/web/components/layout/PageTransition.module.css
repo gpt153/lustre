@@ -1,0 +1,18 @@
+/* Page transition — cross-fade between routes */
+
+@keyframes pageIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.pageEnter {
+  animation: pageIn 200ms ease forwards;
+}
+
+.pageHidden {
+  opacity: 0;
+}

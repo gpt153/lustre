@@ -1,0 +1,29 @@
+.section {
+  margin-bottom: var(--space-8);
+}
+
+.sectionHeader {
+  margin-bottom: var(--space-6);
+}
+
+.sectionTitle {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-2) 0;
+  line-height: 1.2;
+}
+
+.sectionDescription {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin: var(--space-2) 0 0 0;
+  line-height: 1.5;
+}
+
+.sectionContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}

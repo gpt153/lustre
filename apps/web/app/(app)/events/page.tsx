@@ -1,19 +1,23 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { YStack, XStack, Text, Spinner, Button } from 'tamagui'
-import { trpc } from '@lustre/api'
 import Link from 'next/link'
+import { trpc } from '@lustre/api'
+import { EventCard } from '@/components/events/EventCard'
+import { EmptyState } from '@/components/common/EmptyState'
+import { SkeletonCard } from '@/components/common/Skeleton'
+import { Button } from '@/components/common/Button'
+import styles from './page.module.css'
 
 export default function EventsPage() {
   const [eventType, setEventType] = useState<'ALL' | 'ONLINE' | 'IRL' | 'HYBRID'>('ALL')
 
   const listQuery = trpc.event.listFiltered.useInfiniteQuery(
     {
-      limit: 20,
-      type: eventType === 'ALL' ? undefined : eventType
+      limit: 12,
+      type: eventType === 'ALL' ? undefined : eventType,
     },
-    { getNextPageParam: (lastPage) => lastPage.nextCursor }
+    { getNextPageParam: (lastPage: any) => lastPage.nextCursor }
   )
 
   const events = (listQuery.data?.pages.flatMap((page: any) => page.events) ?? []) as any[]
@@ -36,126 +40,77 @@ export default function EventsPage() {
 
   if (listQuery.isLoading) {
     return (
-      <YStack flex={1} alignItems="center" justifyContent="center" minHeight="80vh">
-        <Spinner color="$primary" />
-      </YStack>
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <h1 className={styles.pageTitle}>Event</h1>
+          <Link href="/events/create" style={{ textDecoration: 'none' }}>
+            <Button variant="primary">Skapa event</Button>
+          </Link>
+        </div>
+
+        <div className={styles.gridContainer}>
+          {[...Array(6)].map((_, i) => (
+            <SkeletonCard key={i} />
+          ))}
+        </div>
+      </div>
     )
   }
 
   return (
-    <YStack flex={1} alignItems="center" padding="$4">
-      <YStack width="100%" maxWidth={1000} gap="$4">
-        <XStack justifyContent="space-between" alignItems="center">
-          <Text fontSize="$6" fontWeight="700" color="$text">Events</Text>
-          <Link href="/events/create" style={{ textDecoration: 'none' }}>
-            <Button backgroundColor="$primary" borderRadius="$3" paddingHorizontal="$4">
-              <Text color="white" fontWeight="600">Create Event</Text>
-            </Button>
-          </Link>
-        </XStack>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h1 className={styles.pageTitle}>Event</h1>
+        <Link href="/events/create" style={{ textDecoration: 'none' }}>
+          <Button variant="primary">Skapa event</Button>
+        </Link>
+      </div>
 
-        <XStack gap="$2" flexWrap="wrap">
-          {(['ALL', 'ONLINE', 'IRL', 'HYBRID'] as const).map((type) => (
-            <Button
-              key={type}
-              backgroundColor={eventType === type ? '$primary' : '$borderColor'}
-              borderRadius="$3"
-              paddingHorizontal="$3"
-              paddingVertical="$2"
-              onPress={() => setEventType(type)}
-            >
-              <Text color={eventType === type ? 'white' : '$text'} fontWeight="600">
-                {type === 'ALL' ? 'All Events' : type}
-              </Text>
-            </Button>
-          ))}
-        </XStack>
-
-        {events.length === 0 ? (
-          <YStack alignItems="center" padding="$6">
-            <Text color="$textSecondary">
-              No events found. Create one!
-            </Text>
-          </YStack>
-        ) : (
-          <YStack gap="$3">
-            {(events as any[]).map((event: any) => (
-              <Link key={event.id} href={`/events/${event.id}`} style={{ textDecoration: 'none' }}>
-                <EventCard event={event} />
-              </Link>
-            ))}
-          </YStack>
-        )}
-
-        <div ref={loadMoreRef} style={{ height: 1 }} />
-
-        {listQuery.isFetchingNextPage && (
-          <YStack padding="$4" alignItems="center">
-            <Spinner color="$primary" />
-          </YStack>
-        )}
-      </YStack>
-    </YStack>
-  )
-}
-
-function EventCard({ event }: {
-  event: any
-}) {
-  const startDate = new Date(event.startsAt)
-  const formattedDate = startDate.toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  })
-
-  const priceNum = event.price ? parseFloat(event.price) : 0
-
-  return (
-    <YStack
-      backgroundColor="$background"
-      borderRadius="$3"
-      padding="$4"
-      gap="$2"
-      borderWidth={1}
-      borderColor="$borderColor"
-      hoverStyle={{ backgroundColor: '$borderColor' }}
-    >
-      <XStack justifyContent="space-between" alignItems="flex-start">
-        <YStack flex={1} gap="$1">
-          <Text fontWeight="700" color="$text" fontSize="$4">{event.title}</Text>
-          <Text color="$textSecondary" fontSize="$2">{formattedDate}</Text>
-        </YStack>
-        <YStack
-          backgroundColor={
-            event.type === 'ONLINE' ? '$primary' :
-            event.type === 'IRL' ? '$borderColor' :
-            '$primary'
-          }
-          borderRadius="$2"
-          paddingHorizontal="$2"
-          paddingVertical="$1"
-        >
-          <Text
-            fontSize="$1"
-            fontWeight="600"
-            color={event.type === 'IRL' ? '$text' : 'white'}
+      <div className={styles.filterBar}>
+        {(['ALL', 'ONLINE', 'IRL', 'HYBRID'] as const).map((type) => (
+          <button
+            key={type}
+            className={`${styles.filterButton} ${eventType === type ? styles.active : ''}`}
+            onClick={() => setEventType(type)}
           >
-            {event.type}
-          </Text>
-        </YStack>
-      </XStack>
-      <XStack gap="$4">
-        {event.locationName && (
-          <Text fontSize="$2" color="$textSecondary">
-            📍 {event.locationName}
-          </Text>
-        )}
-        <Text fontSize="$2" color="$textSecondary">
-          {priceNum > 0 ? `${priceNum} SEK` : 'Free'}
-        </Text>
-      </XStack>
-    </YStack>
+            {type === 'ALL' ? 'Alla event' : type}
+          </button>
+        ))}
+      </div>
+
+      {events.length === 0 ? (
+        <EmptyState
+          title="Inga event hittades"
+          description={eventType === 'ALL' ? 'Börja skapa ett event för att komma igång.' : `Inga ${eventType.toLowerCase()}-event hittades.`}
+          action={
+            <Link href="/events/create" style={{ textDecoration: 'none' }}>
+              <Button variant="primary">Skapa event</Button>
+            </Link>
+          }
+        />
+      ) : (
+        <>
+          <div className={styles.gridContainer}>
+            {events.map((event) => (
+              <EventCard key={event.id} event={event} />
+            ))}
+          </div>
+
+          <div ref={loadMoreRef} className={styles.loadMoreTrigger} />
+
+          {listQuery.isFetchingNextPage && (
+            <div className={styles.loadMoreSpinner}>
+              <div style={{ width: 24, height: 24, border: '2px solid var(--color-copper)', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.6s linear infinite' }} />
+            </div>
+          )}
+        </>
+      )}
+
+      <style>{`
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
+    </div>
   )
 }
