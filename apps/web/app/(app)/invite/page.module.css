@@ -1,0 +1,247 @@
+.page {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-lg) 100px;
+  min-height: 100vh;
+}
+
+/* ---- Header ---- */
+.header {
+  margin-bottom: var(--space-xl);
+}
+
+.heading {
+  font-size: 28px;
+  font-weight: 800;
+  margin: 0 0 var(--space-xs);
+  letter-spacing: -0.03em;
+  background: linear-gradient(
+    120deg,
+    var(--color-text-primary) 55%,
+    var(--color-copper)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subheading {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* ---- Rewards card ---- */
+.rewardsCard {
+  margin-bottom: var(--space-xl) !important;
+  border: 1px solid rgba(212, 168, 67, 0.2) !important;
+  background: linear-gradient(
+    135deg,
+    var(--color-bg-elevated) 0%,
+    rgba(212, 168, 67, 0.05) 100%
+  ) !important;
+}
+
+.rewardsGrid {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+.rewardItem {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.rewardIcon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.rewardValue {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-copper);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.rewardLabel {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.rewardDivider {
+  width: 1px;
+  height: 40px;
+  background: rgba(184, 115, 51, 0.15);
+  flex-shrink: 0;
+}
+
+/* ---- Share section ---- */
+.shareSection {
+  margin-bottom: var(--space-2xl);
+}
+
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-md);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.claimedBadge {
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(184, 115, 51, 0.12);
+  color: var(--color-copper);
+  padding: 2px 8px;
+  border-radius: 20px;
+  letter-spacing: 0.02em;
+}
+
+.linkRow {
+  display: flex;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+  align-items: flex-end;
+}
+
+.linkInputWrapper {
+  flex: 1;
+  min-width: 0;
+}
+
+.linkInput {
+  font-size: 13px !important;
+  font-family: 'SF Mono', 'Fira Code', monospace !important;
+  color: var(--color-text-muted) !important;
+}
+
+.copyButton {
+  flex-shrink: 0;
+}
+
+.generateButton {
+  width: 100%;
+}
+
+/* ---- History ---- */
+.historySection {
+  margin-top: var(--space-xl);
+}
+
+.historyEmpty {
+  padding: var(--space-xl);
+  text-align: center;
+  border: 1px dashed rgba(184, 115, 51, 0.2);
+  border-radius: var(--radius-lg);
+}
+
+.historyEmptyText {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.historyList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.historyItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md) var(--space-lg);
+  background: var(--color-bg-elevated);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(184, 115, 51, 0.08);
+  gap: var(--space-md);
+}
+
+.historyItemLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.historyCode {
+  font-size: 13px;
+  font-weight: 600;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  color: var(--color-text-primary);
+}
+
+.historyDate {
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+.historyItemRight {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  flex-shrink: 0;
+}
+
+.statusAccepted {
+  font-size: 12px;
+  font-weight: 600;
+  color: #4caf50;
+}
+
+.statusPending {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.copySmall {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-copper);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: var(--radius-md);
+  transition: background 150ms ease;
+}
+
+.copySmall:hover {
+  background: rgba(184, 115, 51, 0.1);
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 600px) {
+  .page {
+    padding: var(--space-lg) var(--space-md) 100px;
+  }
+
+  .rewardsGrid {
+    gap: var(--space-md);
+  }
+
+  .rewardValue {
+    font-size: 16px;
+  }
+
+  .rewardLabel {
+    font-size: 10px;
+  }
+
+  .linkRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

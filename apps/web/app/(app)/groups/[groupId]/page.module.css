@@ -1,0 +1,360 @@
+.page {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-lg) 100px;
+  min-height: 100vh;
+}
+
+/* ---- Back button ---- */
+.backBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--space-xs) 0;
+  margin-bottom: var(--space-lg);
+  transition: color 150ms ease;
+}
+
+.backBtn:hover {
+  color: var(--color-copper);
+}
+
+/* ---- Skeleton ---- */
+.skeletonContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.skeletonHeader {
+  display: flex;
+  gap: var(--space-md);
+  align-items: center;
+}
+
+.skeletonHeaderText {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+/* ---- Content ---- */
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+/* ---- Group header ---- */
+.groupHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+.groupAvatar {
+  width: 72px;
+  height: 72px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(
+    135deg,
+    var(--color-copper) 0%,
+    var(--color-gold) 100%
+  );
+  color: #fff;
+  font-size: 28px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  letter-spacing: -0.01em;
+}
+
+.groupHeaderInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.groupName {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--color-text);
+  margin: 0 0 var(--space-xs);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.groupMeta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+.memberCountBadge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+.visibilityBadge {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: var(--radius-md);
+}
+
+.open {
+  background: hsla(140, 50%, 50%, 0.1);
+  color: hsl(140, 50%, 35%);
+}
+
+.private {
+  background: hsla(var(--color-copper-h), var(--color-copper-s), var(--color-copper-l), 0.1);
+  color: var(--color-copper);
+}
+
+/* ---- Sections ---- */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.sectionHeading {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.description {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--color-text);
+  margin: 0;
+}
+
+/* ---- Tags ---- */
+.tags {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+.tag {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  background: hsla(0, 0%, 50%, 0.08);
+  padding: 4px 10px;
+  border-radius: var(--radius-md);
+  letter-spacing: 0.02em;
+}
+
+/* ---- Join section ---- */
+.joinSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+  background: var(--color-bg-elevated);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.joinedConfirmed {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-copper);
+}
+
+.joinedCheck {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--color-copper);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.copperBtn {
+  background: var(--color-copper) !important;
+}
+
+/* ---- Posts list ---- */
+.postsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.postCard {
+  background: var(--color-bg-elevated);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.postHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.postAvatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(
+    135deg,
+    hsla(var(--color-copper-h), var(--color-copper-s), var(--color-copper-l), 0.2),
+    hsla(var(--color-gold-h), var(--color-gold-s), var(--color-gold-l), 0.15)
+  );
+  color: var(--color-copper);
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.postMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.postAuthor {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.postTime {
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+.postContent {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.noPostsText {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  margin: 0;
+  font-style: italic;
+}
+
+/* ---- Member grid ---- */
+.memberGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: var(--space-md);
+}
+
+.memberItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+}
+
+.memberAvatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(
+    135deg,
+    hsla(var(--color-copper-h), var(--color-copper-s), var(--color-copper-l), 0.15),
+    hsla(var(--color-gold-h), var(--color-gold-s), var(--color-gold-l), 0.1)
+  );
+  color: var(--color-copper);
+  font-size: 17px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid transparent;
+}
+
+.ownerAvatar {
+  border-color: var(--color-copper);
+}
+
+.memberAvatarMore {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: hsla(0, 0%, 50%, 0.1);
+  color: var(--color-text-muted);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.memberName {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.ownerBadge {
+  position: absolute;
+  top: -4px;
+  right: calc(50% - 32px);
+  font-size: 10px;
+  color: var(--color-gold);
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 600px) {
+  .page {
+    padding: var(--space-lg) var(--space-md) 100px;
+  }
+
+  .groupName {
+    font-size: 20px;
+  }
+
+  .groupAvatar {
+    width: 56px;
+    height: 56px;
+    font-size: 22px;
+  }
+}

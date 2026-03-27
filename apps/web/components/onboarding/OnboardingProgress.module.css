@@ -1,0 +1,86 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  width: 100%;
+}
+
+/* ── Progress track ── */
+.track {
+  position: relative;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+[data-theme="light"] .track {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.fill {
+  position: absolute;
+  inset: 0;
+  left: 0;
+  background: linear-gradient(90deg, var(--color-copper), var(--color-gold));
+  border-radius: var(--radius-full);
+  transition: width var(--transition-spring-soft);
+  box-shadow: 0 0 8px rgba(184, 115, 51, 0.4);
+}
+
+/* ── Step dots ── */
+.dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+}
+
+.dot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  background: transparent;
+  transition:
+    transform var(--transition-spring),
+    border-color var(--transition-spring),
+    background-color var(--transition-spring);
+  color: var(--color-bg-primary);
+}
+
+[data-theme="light"] .dot {
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+.dotCompleted {
+  background: var(--color-copper);
+  border-color: var(--color-copper);
+  color: white;
+  transform: scale(1.0);
+}
+
+.dotCurrent {
+  border-color: var(--color-copper);
+  background: rgba(184, 115, 51, 0.15);
+  transform: scale(1.2);
+  box-shadow: 0 0 0 3px rgba(184, 115, 51, 0.2);
+}
+
+.dot svg {
+  width: 10px;
+  height: 10px;
+}
+
+/* ── Step label ── */
+.label {
+  text-align: center;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  margin: 0;
+}

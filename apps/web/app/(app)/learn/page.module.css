@@ -1,0 +1,283 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xl);
+  padding: var(--space-3xl) 0;
+  max-width: 860px;
+}
+
+/* ── Header ── */
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-lg);
+}
+
+.headerLeft {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.headerRight {
+  flex-shrink: 0;
+  padding-top: var(--space-xs);
+}
+
+.headingGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-copper);
+}
+
+.heading {
+  font-size: 32px;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--color-copper) 0%, var(--color-gold) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subheading {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  margin: 0;
+  max-width: 400px;
+}
+
+/* ── Sexual health card ── */
+.healthCard {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  padding: var(--space-xl);
+  background: linear-gradient(135deg, hsl(28, 52%, 97%) 0%, hsl(42, 57%, 97%) 100%);
+  border: 1px solid var(--color-copper);
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  color: inherit;
+  box-shadow: var(--shadow-copper-sm);
+  transition: border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
+}
+
+.healthCard:hover {
+  box-shadow: var(--shadow-copper-md);
+  transform: translateY(-1px);
+}
+
+.healthIcon {
+  font-size: 32px;
+  line-height: 1;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  background: white;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border);
+}
+
+.healthBody {
+  flex: 1;
+}
+
+.healthTitle {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 4px;
+  color: var(--color-text-primary);
+}
+
+.healthDesc {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.healthArrow {
+  font-size: 20px;
+  color: var(--color-copper);
+  font-weight: 300;
+  flex-shrink: 0;
+}
+
+/* ── Sections ── */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.sectionLabel {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-muted);
+}
+
+.sectionBadge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px var(--space-sm);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  color: var(--color-text-muted);
+}
+
+/* ── Grid ── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-lg);
+}
+
+/* ── Spicy gate ── */
+.spicyGate {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-lg);
+  padding: var(--space-xl);
+  background: var(--color-bg-elevated);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.gateIcon {
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.gateBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.gateTitle {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0;
+  color: var(--color-text-primary);
+}
+
+.gateDesc {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.gateAction {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-sm) var(--space-lg);
+  background: var(--color-copper);
+  color: white;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  align-self: flex-start;
+  transition: background 150ms ease;
+}
+
+.gateAction:hover {
+  background: var(--color-copper-light);
+}
+
+/* ── Achievements link ── */
+.achievementsLink {
+  display: block;
+}
+
+.achievementsCard {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  padding: var(--space-xl);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  color: inherit;
+  box-shadow: var(--shadow-md);
+  transition: border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
+}
+
+.achievementsCard:hover {
+  border-color: var(--color-gold);
+  box-shadow: 0 4px 16px hsla(42, 57%, 56%, 0.2);
+  transform: translateY(-1px);
+}
+
+.achievementsIcon {
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.achievementsTitle {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0 0 2px;
+  color: var(--color-text-primary);
+}
+
+.achievementsDesc {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.achievementsArrow {
+  font-size: 20px;
+  color: var(--color-gold);
+  margin-left: auto;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .page {
+    padding: var(--space-xl) 0;
+    gap: var(--space-xl);
+  }
+
+  .header {
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .heading {
+    font-size: 26px;
+  }
+
+  .healthCard {
+    padding: var(--space-lg);
+    gap: var(--space-md);
+  }
+}

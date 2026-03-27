@@ -1,0 +1,220 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xl) var(--space-md);
+  background: var(--color-bg);
+  background-image:
+    radial-gradient(ellipse 60% 50% at 50% -10%, rgba(212, 168, 67, 0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 30% at 80% 90%, rgba(184, 115, 51, 0.08) 0%, transparent 60%);
+}
+
+/* ---- Card ---- */
+.card {
+  width: 100%;
+  max-width: 460px;
+  background: var(--color-bg-elevated);
+  border-radius: 24px;
+  padding: var(--space-3xl) var(--space-2xl);
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.12),
+    0 4px 16px rgba(0, 0, 0, 0.06),
+    0 0 0 1px rgba(212, 168, 67, 0.12);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+/* ---- Logo ---- */
+.logoArea {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: var(--space-2xl);
+}
+
+.logoMark {
+  font-size: 28px;
+  background: linear-gradient(135deg, var(--color-copper) 0%, var(--color-gold) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+}
+
+.logoText {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  background: linear-gradient(120deg, var(--color-text-primary) 60%, var(--color-copper));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ---- Hero ---- */
+.heroSection {
+  text-align: center;
+  margin-bottom: var(--space-2xl);
+}
+
+.heading {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-md);
+  line-height: 1.15;
+}
+
+.subheading {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* ---- CTA ---- */
+.ctaButton {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 16px var(--space-xl);
+  background: linear-gradient(135deg, var(--color-copper) 0%, color-mix(in srgb, var(--color-copper) 80%, var(--color-gold)) 100%);
+  color: #fff;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  border-radius: 14px;
+  text-decoration: none;
+  transition: opacity 200ms ease, transform 200ms ease, box-shadow 200ms ease;
+  box-shadow: 0 6px 24px rgba(184, 115, 51, 0.4), 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: var(--space-md);
+}
+
+.ctaButton:hover {
+  opacity: 0.92;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 32px rgba(184, 115, 51, 0.5), 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.ctaButton:active {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.ctaNote {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  text-align: center;
+  margin: 0 0 var(--space-2xl);
+  opacity: 0.65;
+}
+
+/* ---- Divider ---- */
+.divider {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(184, 115, 51, 0.15);
+}
+
+.dividerText {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  opacity: 0.7;
+  white-space: nowrap;
+}
+
+/* ---- Benefits ---- */
+.benefits {
+  width: 100%;
+  list-style: none;
+  margin: 0 0 var(--space-2xl);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.benefitItem {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+}
+
+.benefitIcon {
+  font-size: 20px;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(184, 115, 51, 0.08);
+  border-radius: 10px;
+}
+
+.benefitContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.benefitTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 2px;
+}
+
+.benefitDescription {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ---- Footer ---- */
+.footer {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  text-align: center;
+  margin: 0;
+}
+
+.footerLink {
+  color: var(--color-copper);
+  text-decoration: none;
+  font-weight: 600;
+  transition: opacity 150ms ease;
+}
+
+.footerLink:hover {
+  opacity: 0.75;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 500px) {
+  .card {
+    padding: var(--space-2xl) var(--space-lg);
+    border-radius: 20px;
+  }
+
+  .heading {
+    font-size: 22px;
+  }
+}

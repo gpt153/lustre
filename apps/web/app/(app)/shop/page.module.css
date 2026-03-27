@@ -1,0 +1,101 @@
+.page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-lg) 100px;
+  min-height: 100vh;
+}
+
+/* ---- Header ---- */
+.header {
+  margin-bottom: var(--space-lg);
+}
+
+.heading {
+  font-size: 28px;
+  font-weight: 800;
+  margin: 0 0 var(--space-xs);
+  letter-spacing: -0.03em;
+  background: linear-gradient(
+    120deg,
+    var(--color-text-primary) 55%,
+    var(--color-copper)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subheading {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* ---- Search bar ---- */
+.searchBar {
+  position: relative;
+  margin-bottom: var(--space-xl);
+}
+
+.searchIcon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-muted);
+  pointer-events: none;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+}
+
+.searchInput {
+  padding-left: 40px !important;
+}
+
+/* ---- Grid ---- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+}
+
+/* ---- Skeleton ---- */
+.skeletonCard {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---- Empty state ---- */
+.empty {
+  text-align: center;
+  padding: var(--space-3xl) 0;
+}
+
+.emptyText {
+  font-size: 15px;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .page {
+    padding: var(--space-lg) var(--space-md) 100px;
+  }
+
+  .heading {
+    font-size: 24px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+}

@@ -1,0 +1,187 @@
+.link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.lockedWrapper {
+  display: block;
+}
+
+.card {
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.card:hover:not(.locked) {
+  border-color: var(--color-copper);
+  box-shadow: var(--shadow-copper-sm);
+}
+
+.locked {
+  opacity: 0.55;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.spicy {
+  border-color: hsl(0, 60%, 70%);
+}
+
+.spicy:hover {
+  border-color: hsl(0, 60%, 55%);
+  box-shadow: 0 4px 16px hsla(0, 60%, 55%, 0.2);
+}
+
+.complete {
+  border-color: var(--color-copper);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.numberBadge {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  background: var(--color-copper);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.locked .numberBadge {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+}
+
+.number {
+  font-size: 14px;
+  font-weight: 700;
+  color: white;
+  line-height: 1;
+}
+
+.lockIcon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.spicyPill {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 2px var(--space-xs);
+  background: hsl(0, 60%, 95%);
+  color: hsl(0, 60%, 45%);
+  border-radius: var(--radius-sm);
+  border: 1px solid hsl(0, 60%, 80%);
+}
+
+.badgePill {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px var(--space-xs);
+  background: hsl(42, 57%, 95%);
+  color: hsl(42, 57%, 35%);
+  border-radius: var(--radius-sm);
+  border: 1px solid hsl(42, 57%, 75%);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+}
+
+.body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+.description {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin-top: auto;
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--color-border);
+}
+
+.lessonCount {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lessonLabel {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+}
+
+.lessonValue {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.progressTrack {
+  height: 4px;
+  background: var(--color-border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--color-copper);
+  border-radius: 2px;
+  transition: width 600ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.complete .progressFill {
+  background: linear-gradient(90deg, var(--color-copper), var(--color-gold));
+}

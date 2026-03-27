@@ -1,0 +1,393 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xl);
+  padding: var(--space-3xl) 0;
+  max-width: 720px;
+}
+
+/* ── Breadcrumb ── */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+.breadcrumbLink {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color 150ms ease;
+}
+
+.breadcrumbLink:hover {
+  color: var(--color-copper);
+}
+
+.breadcrumbSep {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  opacity: 0.5;
+}
+
+.breadcrumbCurrent {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+/* ── Lesson header ── */
+.lessonHeader {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.spicyBadge {
+  display: inline-flex;
+  align-self: flex-start;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px var(--space-sm);
+  background: hsl(0, 60%, 95%);
+  color: hsl(0, 60%, 45%);
+  border-radius: var(--radius-sm);
+  border: 1px solid hsl(0, 60%, 80%);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.lessonMeta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.lessonOrderLabel {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-copper);
+}
+
+.lessonTitle {
+  font-size: 28px;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: -0.02em;
+  color: var(--color-text-primary);
+  line-height: 1.2;
+}
+
+.lessonDesc {
+  font-size: 15px;
+  color: var(--color-text-muted);
+  margin: 0;
+  line-height: 1.6;
+  max-width: 560px;
+}
+
+/* ── Section headers ── */
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--space-md);
+}
+
+.sectionLabel {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-muted);
+}
+
+/* ── Assessment criteria ── */
+.criteriaSection {
+  display: flex;
+  flex-direction: column;
+}
+
+.criteriaCard {
+  padding: var(--space-xl);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.criteriaIntro {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.criteriaList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.criteriaItem {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  font-size: 14px;
+  color: var(--color-text-primary);
+  line-height: 1.5;
+}
+
+.criteriaCheck {
+  color: var(--color-copper);
+  font-size: 12px;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+/* ── Mode picker ── */
+.modeSection {
+  display: flex;
+  flex-direction: column;
+}
+
+.modePicker {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+}
+
+.modeOption {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+  background: var(--color-bg-elevated);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 150ms ease, background 150ms ease, box-shadow 150ms ease;
+}
+
+.modeOption:hover {
+  border-color: var(--color-copper);
+  background: hsl(28, 52%, 98%);
+}
+
+.modeActive {
+  border-color: var(--color-copper);
+  background: hsl(28, 52%, 97%);
+  box-shadow: var(--shadow-copper-sm);
+}
+
+.modeIcon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.modeInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.modeName {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.modeDesc {
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+/* ── Persona grid ── */
+.personaSection {
+  display: flex;
+  flex-direction: column;
+}
+
+.personaGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+}
+
+.personaCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+  padding: var(--space-3xl) var(--space-xl);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  text-align: center;
+  transition: border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
+}
+
+.personaCard:hover {
+  border-color: var(--color-copper);
+  box-shadow: var(--shadow-copper-md);
+  transform: translateY(-2px);
+}
+
+.personaCardPartner:hover {
+  border-color: var(--color-gold);
+  box-shadow: 0 8px 24px hsla(42, 57%, 56%, 0.2);
+}
+
+.personaSelected {
+  border-color: var(--color-copper);
+  box-shadow: var(--shadow-copper-sm);
+}
+
+.personaCardPartner.personaSelected {
+  border-color: var(--color-gold);
+}
+
+.personaAvatar {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  border-radius: var(--radius-full);
+  background: hsl(28, 52%, 94%);
+  border: 3px solid var(--color-copper);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.personaCardPartner .personaAvatar {
+  background: hsl(42, 57%, 94%);
+  border-color: var(--color-gold);
+}
+
+.personaEmoji {
+  font-size: 36px;
+  line-height: 1;
+}
+
+.personaAvatarGlow {
+  position: absolute;
+  inset: -8px;
+  border-radius: var(--radius-full);
+  background: radial-gradient(circle, hsla(28, 52%, 46%, 0.12), transparent 70%);
+  pointer-events: none;
+}
+
+.personaAvatarGlowPartner {
+  background: radial-gradient(circle, hsla(42, 57%, 56%, 0.12), transparent 70%);
+}
+
+.personaInfo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  align-items: center;
+}
+
+.personaName {
+  font-size: 20px;
+  font-weight: 800;
+  margin: 0;
+  color: var(--color-text-primary);
+  letter-spacing: -0.01em;
+}
+
+.personaRoleBadge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 2px var(--space-sm);
+  background: hsl(28, 52%, 92%);
+  color: var(--color-copper-dark);
+  border-radius: var(--radius-full);
+  border: 1px solid hsl(28, 52%, 80%);
+}
+
+.partnerBadge {
+  background: hsl(42, 57%, 92%);
+  color: hsl(42, 57%, 35%);
+  border-color: hsl(42, 57%, 78%);
+}
+
+.personaBio {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ── Start buttons ── */
+.personaStartBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-xl);
+  background: var(--color-copper);
+  color: white;
+  border-radius: var(--radius-full);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition: background 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+  box-shadow: var(--shadow-copper-sm);
+  margin-top: auto;
+  width: 100%;
+  justify-content: center;
+}
+
+.personaStartBtn:hover {
+  background: var(--color-copper-light);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-copper-md);
+}
+
+.personaStartBtnPartner {
+  background: var(--color-gold);
+  box-shadow: 0 2px 8px hsla(42, 57%, 56%, 0.3);
+}
+
+.personaStartBtnPartner:hover {
+  background: var(--color-gold-light);
+  box-shadow: 0 4px 16px hsla(42, 57%, 56%, 0.35);
+}
+
+.btnArrow {
+  font-size: 16px;
+}
+
+@media (max-width: 600px) {
+  .page {
+    padding: var(--space-xl) 0;
+    gap: var(--space-xl);
+  }
+
+  .lessonTitle {
+    font-size: 22px;
+  }
+
+  .personaGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .modePicker {
+    grid-template-columns: 1fr;
+  }
+}

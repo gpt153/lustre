@@ -1,0 +1,120 @@
+.page {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-lg) 100px;
+  min-height: 100vh;
+}
+
+/* ---- Header ---- */
+.header {
+  margin-bottom: var(--space-lg);
+}
+
+.headerContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.heading {
+  font-size: 26px;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: -0.03em;
+  background: linear-gradient(
+    120deg,
+    var(--color-text-primary, var(--color-text)) 55%,
+    var(--color-copper-light)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subheading {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* ---- Filter row ---- */
+.filterRow {
+  display: flex;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-xl);
+  flex-wrap: wrap;
+}
+
+.filterTab {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 7px 16px;
+  border-radius: 100px;
+  border: 1.5px solid hsla(0, 0%, 50%, 0.15);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all 150ms ease;
+  letter-spacing: 0.02em;
+}
+
+.filterTab:hover {
+  border-color: hsla(var(--color-copper-h), var(--color-copper-s), var(--color-copper-l), 0.35);
+  color: var(--color-copper);
+}
+
+.filterTabActive {
+  background: var(--color-copper);
+  border-color: var(--color-copper);
+  color: #fff;
+}
+
+.filterTabActive:hover {
+  background: var(--color-copper-light);
+  border-color: var(--color-copper-light);
+  color: #fff;
+}
+
+/* ---- Main ---- */
+.main {
+  flex: 1;
+}
+
+/* ---- Grid ---- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-lg);
+}
+
+/* ---- Skeleton card ---- */
+.skeletonCard {
+  background: var(--color-bg-elevated);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.skeletonContent {
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 700px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .page {
+    padding: var(--space-lg) var(--space-md) 100px;
+  }
+
+  .heading {
+    font-size: 22px;
+  }
+}
