@@ -1,0 +1,93 @@
+.shell {
+  display: grid;
+  grid-template-rows: 64px 1fr;
+  grid-template-columns: 72px 1fr 320px;
+  grid-template-areas:
+    "header header header"
+    "rail   main   context";
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+  background-image: url('/textures/paper-grain.png');
+  background-size: 200px;
+  background-blend-mode: multiply;
+}
+
+.main {
+  grid-area: main;
+  max-width: 720px;
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--space-6);
+  overflow-y: auto;
+  height: calc(100vh - 64px);
+}
+
+.shell::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 50%, var(--color-copper), transparent 70%);
+  animation: breathe 8s ease-in-out infinite;
+  z-index: 0;
+}
+
+@keyframes breathe {
+  0%, 100% {
+    opacity: 0.04;
+  }
+  50% {
+    opacity: 0.08;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shell::after {
+    animation: none;
+    opacity: 0.04;
+  }
+}
+
+/* 1200-1440px: narrower context */
+@media (max-width: 1440px) {
+  .shell {
+    grid-template-columns: 72px 1fr 280px;
+  }
+}
+
+/* 900-1200px: no context panel in grid */
+@media (max-width: 1200px) {
+  .shell {
+    grid-template-columns: 72px 1fr;
+    grid-template-areas:
+      "header header"
+      "rail   main";
+  }
+}
+
+/* 600-900px: bottom nav, no rail */
+@media (max-width: 900px) {
+  .shell {
+    grid-template-columns: 1fr;
+    grid-template-rows: 56px 1fr;
+    grid-template-areas:
+      "header"
+      "main";
+  }
+  .main {
+    padding: 0 var(--space-4);
+    height: calc(100vh - 56px - 56px);
+    padding-bottom: 56px;
+  }
+}
+
+/* <600px: mobile browser */
+@media (max-width: 600px) {
+  .shell {
+    grid-template-rows: 48px 1fr;
+  }
+  .main {
+    padding: 0 var(--space-3);
+    padding-bottom: 56px;
+  }
+}

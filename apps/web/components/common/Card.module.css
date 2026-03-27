@@ -1,0 +1,23 @@
+.card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  box-shadow: var(--shadow-md);
+  padding: var(--space-6);
+  transition: box-shadow 300ms var(--spring), transform 300ms var(--spring);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.cardFlat {
+  box-shadow: none;
+  border: 1px solid var(--border-medium);
+}
+
+.cardFlat:hover {
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}

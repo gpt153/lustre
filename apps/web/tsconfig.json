@@ -15,6 +15,15 @@
         "./app/*",
         "./src/*"
       ],
+      "@/components/*": [
+        "./components/*"
+      ],
+      "@/hooks/*": [
+        "./hooks/*"
+      ],
+      "@/styles/*": [
+        "./styles/*"
+      ],
       "@lustre/ui": [
         "../../packages/ui/src"
       ],
