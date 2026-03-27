@@ -330,6 +330,22 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
 - **Shared components:** `packages/app/src/` — `MigrationScreen`, `useMigration`, `InviteScreen`, `useInvite`
 - **Deps added:** `cheerio ^1.0.0`, `nanoid ^5.0.0` in `services/api/package.json`
 
+## Kudos / Reputation (F28-CONNECT-kudos)
+- **Schema:** `KudosBadgeCategory`, `KudosBadge`, `Kudos`, `KudosBadgeSelection`, `KudosPrompt` — Prisma models in `services/api/prisma/schema.prisma`
+- **Enums:** `KudosPromptStatus` (PENDING, COMPLETED, DISMISSED)
+- **Badge data:** 24 badges across 5 categories (Kommunikation, Respekt & trygghet, IRL-möten, Generellt, Spicy) seeded via `services/api/prisma/seed-badges.ts`. Spicy badges have `spicyOnly: true`
+- **tRPC Router:** `kudos` — `listBadges` (cached in Redis, spicy-filtered), `give` (rate-limited 10/24h, deduplicated per interaction), `getProfileKudos` (aggregated badge counts), `suggestBadges` (AI-powered), `getPendingPrompts`, `dismissPrompt`
+- **AI badge suggestion:** `services/api/src/lib/kudos-ai.ts` — OpenAI GPT-4o-mini, Swedish prompt, returns 2-4 badge IDs from free text. Free text NEVER persisted
+- **NATS trigger:** `services/api/src/lib/kudos-consumer.ts` — subscribes `match.conversation.archived`, creates bidirectional KudosPrompt records (7-day expiry)
+- **Redis:** Badge catalog cache (`kudos:badges:catalog`, 1h TTL), rate limiting (`kudos:ratelimit:{userId}`, 24h window)
+- **Gatekeeper integration:** `gatekeeper-ai.ts` `buildSystemPrompt()` accepts `kudosScore` — users with score >50 noted as "trusted community member"
+- **Milestone events:** NATS events `lustre.kudos.milestone.first`, `.10`, `.50` emitted on kudos receipt (idempotent)
+- **Shared components:** `packages/app/src/` — `KudosPromptSheet`, `BadgeSelectionScreen`, `ProfileKudosSection`, `useKudos` hook
+- **Shared UI:** `packages/ui/src/KudosBadgeTag.tsx`
+- **Mobile:** KudosPromptSheet appears on chat tab; BadgeSelectionScreen for badge picking; ProfileKudosSection integrated into profile view
+- **Web:** `/kudos/give/[recipientId]` (badge selection page), kudos modal in `/chat`, kudos section in `/profile/[userId]`
+- **Migrations:** `20260326230000_add_kudos_schema`, `20260327110000_add_kudos_prompts`
+
 ## Rules
 - All users verified via Swish 10 SEK + SPAR (Sweden); international expansion TBD
 - Real names NEVER shown in app — stored encrypted, released only via court order
