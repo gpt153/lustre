@@ -70,6 +70,7 @@ model User {
   kudosReceived              Kudos[]                   @relation("kudosReceived")
   kudosPromptsAsUser         KudosPrompt[]             @relation("kudosPromptUser")
   kudosPromptsAsRecipient    KudosPrompt[]             @relation("kudosPromptRecipient")
+  intentions                 Intention[]
 
   @@map("users")
 }
@@ -180,6 +181,7 @@ model KinkTag {
   category  String
   createdAt DateTime         @default(now()) @map("created_at")
   profiles  ProfileKinkTag[]
+  intentions IntentionKinkTag[]
 
   @@map("kink_tags")
 }
@@ -1395,4 +1397,61 @@ model KudosPrompt {
   @@unique([userId, recipientId, matchId])
   @@index([userId, status])
   @@map("kudos_prompts")
+}
+
+enum IntentionStatus {
+  ACTIVE
+  PAUSED
+  EXPIRED
+  DELETED
+}
+
+enum IntentionSeeking {
+  CASUAL
+  RELATIONSHIP
+  FRIENDSHIP
+  EXPLORATION
+  EVENT
+  OTHER
+}
+
+enum IntentionAvailability {
+  WEEKDAYS
+  WEEKENDS
+  FLEXIBLE
+}
+
+model Intention {
+  id                    String                @id @default(uuid()) @db.Uuid
+  userId                String                @map("user_id") @db.Uuid
+  seeking               IntentionSeeking
+  genderPreferences     Gender[]              @map("gender_preferences")
+  ageMin                Int                   @map("age_min")
+  ageMax                Int                   @map("age_max")
+  distanceRadiusKm      Int                   @map("distance_radius_km")
+  orientationMatch      Orientation[]         @map("orientation_match")
+  availability          IntentionAvailability
+  relationshipStructure RelationshipType?     @map("relationship_structure")
+  status                IntentionStatus       @default(ACTIVE)
+  createdAt             DateTime              @default(now()) @map("created_at")
+  updatedAt             DateTime              @updatedAt @map("updated_at")
+  expiresAt             DateTime              @map("expires_at")
+  user                  User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kinkTags              IntentionKinkTag[]
+
+  @@index([status, seeking, expiresAt])
+  @@index([userId])
+  @@map("intentions")
+}
+
+model IntentionKinkTag {
+  id          String    @id @default(uuid()) @db.Uuid
+  intentionId String    @map("intention_id") @db.Uuid
+  kinkTagId   String    @map("kink_tag_id") @db.Uuid
+  createdAt   DateTime  @default(now()) @map("created_at")
+  intention   Intention @relation(fields: [intentionId], references: [id], onDelete: Cascade)
+  kinkTag     KinkTag   @relation(fields: [kinkTagId], references: [id], onDelete: Cascade)
+
+  @@unique([intentionId, kinkTagId])
+  @@map("intention_kink_tags")
 }
