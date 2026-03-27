@@ -11,8 +11,8 @@
 | Wave | Name | Epics | Duration | Status |
 |------|------|-------|----------|--------|
 | 1 | Design Foundation | 7 epics (1a-1g) | 3 weeks | DONE (2026-03-27) |
-| 2 | Signature Interactions | 5 epics (2a-2e) | 3 weeks | IN_PROGRESS (2026-03-27) |
-| 3 | Polish & Delight | 5 epics (3a-3e) | 2 weeks | NOT STARTED |
+| 2 | Signature Interactions | 5 epics (2a-2e) | 3 weeks | DONE (2026-03-27) |
+| 3 | Polish & Delight | 5 epics (3a-3e) | 2 weeks | DONE (2026-03-27) |
 
 **Total: 17 epics, 8 weeks**
 
@@ -142,11 +142,11 @@ Wave 1 (all) ──┬── 2a (profile card) ── 2d (copper pick)
 
 | Order | Epic | Est. | Model | Status |
 |-------|------|------|-------|--------|
-| 3a | Micro-interactions | 3d | haiku | NOT STARTED |
-| 3b | Parallax & Depth | 2d | haiku | NOT STARTED |
-| 3c | Haptics Patterns | 2d | haiku | NOT STARTED |
-| 3d | Ambient Animations | 2d | sonnet | NOT STARTED |
-| 3e | Sound Design | 2d | haiku | NOT STARTED |
+| 3a | Micro-interactions | 3d | haiku | VERIFIED (2026-03-27) |
+| 3b | Parallax & Depth | 2d | haiku | VERIFIED (2026-03-27) |
+| 3c | Haptics Patterns | 2d | haiku | VERIFIED (2026-03-27) |
+| 3d | Ambient Animations | 2d | sonnet | VERIFIED (2026-03-27) |
+| 3e | Sound Design | 2d | haiku | VERIFIED (2026-03-27) |
 
 **Parallelization:** All Wave 3 epics can run in parallel (independent polish layers). 3d is sonnet due to Skia shader complexity.
 
@@ -209,3 +209,5 @@ Wave 2 (all) ──┬── 3a (micro-interactions)
 | 2026-03-27 | Initial roadmap created with 3 waves, 17 epics |
 | 2026-03-27 | Rewritten for native-only (removed web, Tamagui, CSS, Framer Motion) |
 | 2026-03-27 | Wave 1 DONE — all 7 epics built and verified. TS clean. Committed efc563c. |
+| 2026-03-27 | Wave 2 DONE — all 5 epics built and verified. TS clean. Committed 0688620. |
+| 2026-03-27 | Wave 3 DONE — all 5 epics built and verified. TS clean. |

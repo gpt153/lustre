@@ -28,7 +28,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated'
 import { useReducedMotion } from 'react-native-reanimated'
-import { SPRING, REDUCED_MOTION } from '@/constants/animations'
+import { SPRING, REDUCED_MOTION, INTERACTION } from '@/constants/animations'
 import { MIN_TOUCH_TARGET, HIT_SLOP_DEFAULT } from '@/constants/accessibility'
 
 const AnimatedPressableBase = Animated.createAnimatedComponent(Pressable)
@@ -45,6 +45,8 @@ export interface AnimatedPressableProps
   accessibilityActions?: ReadonlyArray<{ name: string; label?: string }>
   /** Handler for custom accessibility actions. */
   onAccessibilityAction?: (event: AccessibilityActionEvent) => void
+  /** Apply vertical lift effect (translateY) on press alongside scale. Default: false */
+  liftOnPress?: boolean
   style?: StyleProp<ViewStyle>
   children?: React.ReactNode
 }
@@ -55,6 +57,7 @@ export function AnimatedPressable({
   accessibilityHint,
   accessibilityActions,
   onAccessibilityAction,
+  liftOnPress,
   style,
   children,
   onPressIn,
@@ -64,28 +67,36 @@ export function AnimatedPressable({
 }: AnimatedPressableProps) {
   const reducedMotion = useReducedMotion()
   const scale = useSharedValue(1)
+  const translateY = useSharedValue(0)
 
   const springConfig = reducedMotion ? REDUCED_MOTION.spring : SPRING.snappy
   const targetScale = reducedMotion ? REDUCED_MOTION.pressScale : 0.97
+  const targetLiftY = liftOnPress && !reducedMotion ? INTERACTION.hoverLift : 0
 
   const handlePressIn = useCallback(
     (event: Parameters<NonNullable<PressableProps['onPressIn']>>[0]) => {
       scale.value = withSpring(targetScale, springConfig)
+      if (targetLiftY !== 0) {
+        translateY.value = withSpring(targetLiftY, springConfig)
+      }
       onPressIn?.(event)
     },
-    [scale, targetScale, springConfig, onPressIn],
+    [scale, translateY, targetScale, targetLiftY, springConfig, onPressIn],
   )
 
   const handlePressOut = useCallback(
     (event: Parameters<NonNullable<PressableProps['onPressOut']>>[0]) => {
       scale.value = withSpring(1, springConfig)
+      if (targetLiftY !== 0) {
+        translateY.value = withSpring(0, springConfig)
+      }
       onPressOut?.(event)
     },
-    [scale, springConfig, onPressOut],
+    [scale, translateY, targetLiftY, springConfig, onPressOut],
   )
 
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
+    transform: [{ scale: scale.value }, { translateY: translateY.value }],
   }))
 
   return (
