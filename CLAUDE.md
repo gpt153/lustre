@@ -411,6 +411,28 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
 - **Haptics:** `packages/app/src/hooks/useHaptics.ts` — expo-haptics with Platform detection and web fallback
 - **Match animation:** `packages/app/src/components/MatchAnimation.tsx` — Lottie animation with scale+opacity fallback
 
+## UX Design Excellence — Native Mobile (F32-UX-design-excellence)
+- **Platform:** Expo/React Native only (web is F33)
+- **Design tokens (native):** `packages/tokens/` — `spacing.ts` (xs=4, sm=8, md=16, lg=24, xl=32, xxl=48), `colors.ts` (copper, gold, warmWhite, charcoal + 4 mode-specific palettes), `shadows.ts` (sm/md/lg/xl with iOS shadow + Android elevation). Re-exported at `apps/mobile/constants/tokens.ts`
+- **Animation constants:** `apps/mobile/constants/animations.ts` — SPRING configs (default, snappy, gentle, bouncy, stiff, rubber), TIMING, INTERACTION, REDUCED_MOTION fallbacks
+- **Skeleton loaders:** `apps/mobile/components/Skeleton.tsx` (Box, Text, Circle with Reanimated shimmer via MaskedView + expo-linear-gradient). Screen-specific: `skeletons/DiscoverSkeleton.tsx`, `ChatListSkeleton.tsx`, `ProfileSkeleton.tsx`, `FeedSkeleton.tsx`
+- **Toast system:** `apps/mobile/components/Toast.tsx` + `ToastContainer.tsx` — Reanimated spring enter, Gesture.Pan swipe-to-dismiss, 4 variants. Store: `packages/app/src/stores/toastStore.ts` (Zustand, callable outside React)
+- **Empty states:** `apps/mobile/components/EmptyState.tsx` — centered layout with illustration + CTA. 8 SVG illustrations in `components/illustrations/`
+- **Form validation:** `apps/mobile/components/LustreInput.tsx` (interpolateColor border), `ValidatedForm.tsx` (react-hook-form + zod), `hooks/useFormShake.ts`
+- **Icons:** `apps/mobile/components/LustreIcon.tsx` — phosphor-react-native wrapper (sm:16, md:20, lg:24, xl:32)
+- **Accessibility:** `apps/mobile/components/AnimatedPressable.tsx` (required a11y props, 44pt touch targets, spring scale + optional liftOnPress), `AccessibleModal.tsx` (focus management), `hooks/useAccessibility.ts` (reducedMotion, screenReaderEnabled, getSpring)
+- **Profile Card Story:** `apps/mobile/components/ProfileCardStory.tsx` — story-format with Gesture.Race(Tap, Pan, LongPress), Ken Burns zoom, progress bar. Hooks: `useStoryNavigation.ts`, `useKenBurns.ts`
+- **Mode Transformation:** `apps/mobile/components/ModeTransition.tsx` + `ModeToggle.tsx` — Reanimated interpolateColor vanilla↔spicy full-UI morph. Hook: `hooks/useModeTransform.ts`
+- **Match Ceremony:** `apps/mobile/components/MatchCeremony.tsx` — Skia particles (`SkiaParticles.tsx`), glassmorphism frames (`GlassmorphismFrame.tsx`), haptic sequence. Hooks: `useMatchCeremony.ts`, `useParticles.ts`
+- **Copper Pick:** `apps/mobile/components/CopperPick.tsx` + `CopperPickBadge.tsx` — cinematic daily recommendation, Ken Burns, no swipe. Hook: `useCopperPick.ts`
+- **Consent Ceremony:** `apps/mobile/components/ConsentCeremony.tsx` + `ConsentItem.tsx` + `ConsentRing.tsx` + `SafeDateShield.tsx` — Skia ring, staggered items, partner sync. Hook: `useConsentCeremony.ts`
+- **Micro-interactions:** `hooks/usePressAnimation.ts`, `hooks/useLongPress.ts` (Gesture.LongPress + haptic), `hooks/useDoubleTap.ts` (Gesture.Tap×2 + haptic)
+- **Parallax:** `hooks/useParallax.ts` (scroll-driven via useAnimatedScrollHandler), `components/ParallaxHeader.tsx` (Ken Burns + gradient overlay)
+- **Haptics:** `constants/haptics.ts` — 9 patterns (tap, impact, heavy, success, warning, error, selection, doublePulse, risingSequence). `hooks/useLustreHaptics.ts` — auto-disabled on reducedMotion
+- **Ambient animations:** `hooks/useAmbientAnimation.ts` (looping progress SharedValue), `components/AmbientGradient.tsx` (Skia breathing gradient), `ParticleField.tsx` (drifting particles), `PaperGrain.tsx` (Skia fractal noise texture)
+- **Sound design:** `constants/sounds.ts` (5 keys: match, like, message, modeSwitch, ceremony), `hooks/useSound.ts` (lazy-load, iOS mute respect, volume control). Assets: `assets/sounds/`
+- **Key deps:** react-native-reanimated 3, react-native-gesture-handler 2, @shopify/react-native-skia, phosphor-react-native, expo-blur, expo-haptics, expo-linear-gradient, react-native-svg, expo-av
+
 ## Rules
 - All users verified via Swish 10 SEK + SPAR (Sweden); international expansion TBD
 - Real names NEVER shown in app — stored encrypted, released only via court order
