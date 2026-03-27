@@ -1,0 +1,186 @@
+/*
+ * Lustre Animation Utilities
+ * Global utility classes and keyframes for motion design.
+ *
+ * Design principle: animation should feel physical and alive, never decorative.
+ * Every transition communicates something — spring easing for interactive feedback,
+ * ease-out for entrance, ease-in for exit.
+ *
+ * Import order: after typography.css, before glassmorphism.css
+ */
+
+/* ============================================================
+   BOUNCY SPRING
+   Higher stiffness + lower damping = more overshoot.
+   Use for playful interactions — likes, matches, badges.
+   ============================================================ */
+:root {
+  --spring-bouncy: linear(
+    0, 0.016 0.5%, 0.063 1.1%, 0.248 2.4%, 0.489 4.4%,
+    0.754 6.9%, 0.948 9.2%, 1.051 11.4%, 1.107 13.5%,
+    1.124 15.6%, 1.115 17.7%, 1.08 20.8%, 1.03 24.5%,
+    1.005 29%, 0.994 34%, 1.001 45%, 1
+  );
+  --spring-bouncy-duration: 550ms;
+  --transition-spring-bouncy: var(--spring-bouncy-duration) var(--spring-bouncy);
+}
+
+/* ============================================================
+   KEYFRAMES
+   ============================================================ */
+
+/* Fade — pure opacity, no transform */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Slide up — content enters from slight below */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Slide in from left — for panels, drawers, staggered lists */
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Slide in from right — for back navigation, secondary panels */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ============================================================
+   INTERACTION UTILITIES
+   Apply directly to elements for immediate interactive feel.
+   Transitions use CSS spring for physical, weighty response.
+   ============================================================ */
+
+/* Lift on hover — cards, thumbnails, anything tappable */
+.hover-lift {
+  transition:
+    transform var(--transition-spring),
+    box-shadow var(--transition-spring);
+  will-change: transform;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: var(--shadow-copper-lg);
+}
+
+.hover-lift:active {
+  transform: translateY(-1px) scale(0.99);
+  box-shadow: var(--shadow-copper-sm);
+  transition-duration: calc(var(--spring-duration) * 0.4);
+}
+
+/* Press scale — buttons, interactive chips */
+.press-scale {
+  transition: transform var(--transition-spring);
+  will-change: transform;
+}
+
+.press-scale:active {
+  transform: scale(0.97);
+  transition-duration: calc(var(--spring-duration) * 0.3);
+}
+
+/* ============================================================
+   ENTRANCE ANIMATION UTILITIES
+   One-shot animations for elements entering the DOM.
+   Use on mounting elements; remove (or let expire) after.
+   ============================================================ */
+
+/* Fade in — most content, overlays */
+.fade-in {
+  animation: fadeIn 400ms ease-out both;
+}
+
+/* Slide up — cards, modals, page sections */
+.slide-up {
+  animation: slideUp var(--spring-soft-duration, 600ms) var(--spring-soft, ease-out) both;
+}
+
+/* Slide in left — list items, panels entering from left */
+.slide-in-left {
+  animation: slideInLeft var(--spring-soft-duration, 600ms) var(--spring-soft, ease-out) both;
+}
+
+/* Slide in right — panels entering from right */
+.slide-in-right {
+  animation: slideInRight var(--spring-soft-duration, 600ms) var(--spring-soft, ease-out) both;
+}
+
+/* ============================================================
+   STAGGER HELPERS
+   Apply animation-delay via CSS custom property for staggered
+   list entrances without JavaScript.
+
+   Usage:
+     <li class="slide-up" style="--stagger: 1">...</li>
+     <li class="slide-up" style="--stagger: 2">...</li>
+   ============================================================ */
+.fade-in,
+.slide-up,
+.slide-in-left,
+.slide-in-right {
+  animation-delay: calc(var(--stagger, 0) * 60ms);
+}
+
+/* ============================================================
+   REDUCED MOTION
+   Collapse all animation durations to instant.
+   Overrides everything above — user preference is non-negotiable.
+   Note: globals.css already has a broad reduced-motion rule;
+   this ensures our custom keyframes and bouncy spring are also
+   zeroed even if globals.css is refactored.
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --spring-bouncy-duration:    0ms;
+    --transition-spring-bouncy:  0ms linear;
+  }
+
+  .hover-lift,
+  .press-scale {
+    transition: none;
+  }
+
+  .hover-lift:hover {
+    transform: none;
+  }
+
+  .press-scale:active {
+    transform: none;
+  }
+
+  .fade-in,
+  .slide-up,
+  .slide-in-left,
+  .slide-in-right {
+    animation-duration: 0.01ms !important;
+    animation-delay:    0ms    !important;
+  }
+}

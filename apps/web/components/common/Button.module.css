@@ -1,0 +1,198 @@
+/* ============================================================
+   Button — Lustre Core Component
+   Premium interactive button with spring press animations
+   ============================================================ */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color 180ms ease,
+    box-shadow 180ms ease,
+    opacity 180ms ease;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+/* ---- Sizes ---- */
+
+.sm {
+  height: 32px;
+  padding: 0 var(--space-md);
+  font-size: 13px;
+  min-width: 44px;
+}
+
+.md {
+  height: 40px;
+  padding: 0 var(--space-lg);
+  font-size: 14px;
+  min-width: 44px;
+}
+
+.lg {
+  height: 48px;
+  padding: 0 var(--space-xl);
+  font-size: 15px;
+  min-width: 44px;
+}
+
+/* ---- Variants ---- */
+
+.primary {
+  background: var(--color-copper);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(184, 115, 51, 0.30);
+}
+
+.primary:hover:not(:disabled):not(.loading) {
+  background: var(--color-copper-light);
+  box-shadow: 0 4px 16px rgba(184, 115, 51, 0.40);
+}
+
+.secondary {
+  background: var(--color-gold);
+  color: #1a1007;
+  box-shadow: 0 2px 8px rgba(212, 168, 67, 0.28);
+}
+
+.secondary:hover:not(:disabled):not(.loading) {
+  background: var(--color-gold-light);
+  box-shadow: 0 4px 16px rgba(212, 168, 67, 0.38);
+}
+
+.ghost {
+  background: transparent;
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+  box-shadow: none;
+}
+
+.ghost:hover:not(:disabled):not(.loading) {
+  background: var(--glass-bg);
+  border-color: var(--color-border-hover, rgba(255, 255, 255, 0.20));
+}
+
+.danger {
+  background: hsl(0, 72%, 51%);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.28);
+}
+
+.danger:hover:not(:disabled):not(.loading) {
+  background: hsl(0, 72%, 44%);
+  box-shadow: 0 4px 16px rgba(220, 38, 38, 0.36);
+}
+
+/* ---- Press animation — physical feel ---- */
+
+.button:active:not(:disabled):not(.loading) {
+  transform: scale(0.97);
+  transition:
+    transform var(--spring-duration, 500ms) var(--spring, ease),
+    background-color 80ms ease,
+    box-shadow 80ms ease;
+}
+
+/* ---- Focus ring ---- */
+
+.button:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset, 2px);
+}
+
+/* ---- States ---- */
+
+.disabled,
+.button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.loading {
+  cursor: wait;
+  pointer-events: none;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+/* ---- Spinner ---- */
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 600ms linear infinite;
+  flex-shrink: 0;
+}
+
+.primary .spinner,
+.danger .spinner {
+  border-color: rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+}
+
+.secondary .spinner {
+  border-color: rgba(26, 16, 7, 0.25);
+  border-top-color: #1a1007;
+}
+
+.ghost .spinner {
+  border-color: var(--color-border);
+  border-top-color: var(--color-text-primary);
+}
+
+.sm .spinner {
+  width: 14px;
+  height: 14px;
+}
+
+.lg .spinner {
+  width: 18px;
+  height: 18px;
+}
+
+.contentHidden {
+  opacity: 0;
+}
+
+.loadingContent {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ---- Reduced motion ---- */
+
+@media (prefers-reduced-motion: reduce) {
+  .button:active:not(:disabled):not(.loading) {
+    transform: none;
+  }
+
+  .spinner {
+    animation-duration: 1200ms;
+  }
+}

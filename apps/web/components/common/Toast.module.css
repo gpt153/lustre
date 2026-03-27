@@ -1,0 +1,208 @@
+/* ============================================================
+   Toast — Lustre Core Component
+   Slide-in notifications from top-right with spring animation
+   ============================================================ */
+
+/* ---- Container ---- */
+
+.container {
+  position: fixed;
+  top: var(--space-xl);
+  right: var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  z-index: var(--z-toast, 400);
+  pointer-events: none;
+  max-width: 380px;
+  width: calc(100vw - var(--space-xl) * 2);
+}
+
+/* ---- Toast item ---- */
+
+.toast {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-lg);
+  border: 1px solid transparent;
+  box-shadow: var(--shadow-copper-lg);
+  pointer-events: all;
+  cursor: default;
+  position: relative;
+  overflow: hidden;
+
+  /* Enter: slide in from right with spring */
+  animation: slideIn var(--spring-soft-duration, 600ms) var(--spring-soft, ease) forwards;
+  transform-origin: right center;
+}
+
+/* Exit class applied by JS before removal */
+.toast.exiting {
+  animation: slideOut var(--duration-exit, 200ms) var(--easing-exit, ease-in) forwards;
+}
+
+/* ---- Variants ---- */
+
+.success {
+  background: hsl(142, 71%, 12%);
+  border-color: hsl(142, 71%, 25%);
+  color: hsl(142, 60%, 85%);
+}
+
+.error {
+  background: hsl(0, 72%, 14%);
+  border-color: hsl(0, 72%, 30%);
+  color: hsl(0, 60%, 88%);
+}
+
+.warning {
+  background: hsl(38, 92%, 12%);
+  border-color: hsl(38, 92%, 30%);
+  color: hsl(38, 80%, 85%);
+}
+
+.info {
+  background: hsl(var(--color-copper-h), var(--color-copper-s), 12%);
+  border-color: hsl(var(--color-copper-h), var(--color-copper-s), 30%);
+  color: hsl(var(--color-copper-h), 50%, 85%);
+}
+
+/* Light theme overrides */
+
+[data-theme="light"] .success {
+  background: hsl(142, 71%, 94%);
+  border-color: hsl(142, 71%, 75%);
+  color: hsl(142, 71%, 20%);
+}
+
+[data-theme="light"] .error {
+  background: hsl(0, 86%, 95%);
+  border-color: hsl(0, 86%, 75%);
+  color: hsl(0, 72%, 25%);
+}
+
+[data-theme="light"] .warning {
+  background: hsl(38, 92%, 94%);
+  border-color: hsl(38, 92%, 70%);
+  color: hsl(38, 80%, 22%);
+}
+
+[data-theme="light"] .info {
+  background: hsl(var(--color-copper-h), 60%, 94%);
+  border-color: hsl(var(--color-copper-h), 52%, 70%);
+  color: hsl(var(--color-copper-h), 52%, 22%);
+}
+
+/* ---- Icon ---- */
+
+.icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* ---- Message ---- */
+
+.message {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 450;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+/* ---- Dismiss button ---- */
+
+.dismiss {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: currentColor;
+  opacity: 0.6;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity 120ms ease;
+  margin-top: 1px;
+}
+
+.dismiss:hover {
+  opacity: 1;
+}
+
+.dismiss:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset, 2px);
+  opacity: 1;
+}
+
+/* ---- Progress bar ---- */
+
+.progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: currentColor;
+  opacity: 0.35;
+  transform-origin: left;
+  animation: progress 5000ms linear forwards;
+}
+
+/* ---- Keyframes ---- */
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(110%) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(110%) scale(0.92);
+  }
+}
+
+@keyframes progress {
+  from { transform: scaleX(1); }
+  to   { transform: scaleX(0); }
+}
+
+/* ---- Reduced motion ---- */
+
+@media (prefers-reduced-motion: reduce) {
+  .toast {
+    animation: none;
+  }
+
+  .toast.exiting {
+    animation: fadeOut var(--duration-exit, 200ms) ease forwards;
+  }
+
+  .progress {
+    display: none;
+  }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}

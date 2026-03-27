@@ -1,0 +1,45 @@
+/*
+ * PaperGrain
+ *
+ * Fixed full-screen overlay with SVG feTurbulence noise filter.
+ * The data URI encodes:
+ *   <svg xmlns="http://www.w3.org/2000/svg">
+ *     <filter id="noise">
+ *       <feTurbulence type="fractalNoise" baseFrequency="0.8"
+ *                     numOctaves="4" stitchTiles="stitch"/>
+ *     </filter>
+ *     <rect width="100%" height="100%" filter="url(#noise)"/>
+ *   </svg>
+ *
+ * stitchTiles="stitch" ensures the pattern tiles seamlessly across the viewport.
+ * baseFrequency 0.8 + 4 octaves = fine grain, not coarse noise.
+ */
+
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-toast); /* above content, below tooltips */
+  pointer-events: none;
+  user-select: none;
+
+  /* The noise filter renders as greyscale by default;
+     mix-blend-mode: multiply darkens underlying content
+     proportionally — light areas stay light, darks go richer. */
+  mix-blend-mode: multiply;
+  opacity: 0.03;
+
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px 200px;
+}
+
+/* In dark mode the grain blends too heavily with the dark background.
+   Switch to screen blend mode so the grain lightens dark areas slightly
+   for a more authentic film-grain feel. */
+[data-theme="dark"] .grain {
+  mix-blend-mode: screen;
+  opacity: 0.025;
+}
+
+/* Reduced motion: the grain is static, so it's fine to keep it.
+   No animation to disable here. */

@@ -1,0 +1,162 @@
+/* ============================================================
+   Modal — Lustre Core Component
+   Native <dialog> with spring entrance, focus trap, backdrop blur
+   ============================================================ */
+
+/* ---- Backdrop / dialog native reset ---- */
+
+.dialog {
+  border: none;
+  background: transparent;
+  padding: 0;
+  max-height: 100dvh;
+  max-width: 100dvw;
+  overflow: visible;
+}
+
+/* Native backdrop from ::backdrop pseudo-element */
+
+.dialog::backdrop {
+  background: rgba(0, 0, 0, 0.60);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: backdropIn 200ms ease forwards;
+}
+
+/* ---- Panel ---- */
+
+.panel {
+  background: var(--color-bg-elevated);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border);
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.40),
+    0 8px 32px rgba(184, 115, 51, 0.12);
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100dvh - 64px);
+  position: relative;
+  animation: panelIn var(--spring-soft-duration, 600ms) var(--spring-soft, ease) forwards;
+  transform-origin: center center;
+}
+
+/* ---- Exit animation class toggled by JS ---- */
+
+.dialog.closing .panel {
+  animation: panelOut var(--duration-exit, 200ms) var(--easing-exit, ease-in) forwards;
+}
+
+.dialog.closing::backdrop {
+  animation: backdropOut var(--duration-exit, 200ms) ease forwards;
+}
+
+/* ---- Sizes ---- */
+
+.sm { width: min(400px, 90vw); }
+.md { width: min(560px, 90vw); }
+.lg { width: min(720px, 90vw); }
+
+/* ---- Header ---- */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-xl) var(--space-xl) var(--space-lg);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+  gap: var(--space-md);
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.closeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: color 120ms ease, background-color 120ms ease;
+  padding: 0;
+}
+
+.closeButton:hover {
+  color: var(--color-text-primary);
+  background: var(--glass-bg);
+}
+
+.closeButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset, 2px);
+}
+
+/* ---- Body ---- */
+
+.body {
+  padding: var(--space-xl);
+  overflow-y: auto;
+  flex: 1;
+  overscroll-behavior: contain;
+}
+
+/* ---- Keyframes ---- */
+
+@keyframes panelIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes panelOut {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.96) translateY(4px);
+  }
+}
+
+@keyframes backdropIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes backdropOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+/* ---- Reduced motion ---- */
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    animation: none;
+  }
+  .dialog.closing .panel {
+    animation: none;
+  }
+  .dialog::backdrop,
+  .dialog.closing::backdrop {
+    animation: none;
+  }
+}

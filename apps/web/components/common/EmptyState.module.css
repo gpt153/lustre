@@ -1,0 +1,58 @@
+/* ============================================================
+   EmptyState — Lustre Core Component
+   Centered layout with illustration, title, description, CTA
+   ============================================================ */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-4xl) var(--space-2xl);
+  gap: var(--space-lg);
+  width: 100%;
+  min-height: 280px;
+}
+
+/* ---- Illustration slot ---- */
+
+.illustration {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-sm);
+  opacity: 0.85;
+}
+
+/* ---- Text content ---- */
+
+.textGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  max-width: 360px;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.description {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ---- CTA ---- */
+
+.action {
+  margin-top: var(--space-sm);
+}

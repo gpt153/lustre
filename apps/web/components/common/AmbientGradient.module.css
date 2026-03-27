@@ -1,0 +1,102 @@
+/*
+ * AmbientGradient
+ *
+ * Fixed behind all content (z-index: -1).
+ * The CSS @keyframes animate the gradient's position via background-position,
+ * creating a slow, organic drift that reads as "breathing".
+ *
+ * Color: copper HSL components from tokens — adapts automatically if
+ * the copper palette changes. Opacity kept very low (4–6%) so it never
+ * competes with actual content.
+ */
+
+@keyframes ambientBreath {
+  0% {
+    background-position: 30% 40%;
+  }
+  25% {
+    background-position: 65% 35%;
+  }
+  50% {
+    background-position: 70% 65%;
+  }
+  75% {
+    background-position: 35% 70%;
+  }
+  100% {
+    background-position: 30% 40%;
+  }
+}
+
+.ambient {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  user-select: none;
+
+  /* Radial gradient: copper at very low opacity, fading to transparent.
+     The gradient is oversized (150% × 150%) so it visually fills the
+     viewport even when the center is at an edge position. */
+  background-image: radial-gradient(
+    ellipse 80% 60% at center,
+    hsl(
+      var(--color-copper-h, 28),
+      var(--color-copper-s, 52%),
+      calc(var(--color-copper-l, 46%) + 10%)
+    ) 0%,
+    transparent 70%
+  );
+  background-size: 150% 150%;
+  background-repeat: no-repeat;
+  background-position: 30% 40%;
+  opacity: 0.05;
+
+  animation: ambientBreath 18s ease-in-out infinite;
+}
+
+/* Light theme: slightly reduced opacity — the warm white background
+   already has warmth and the gradient would over-saturate it. */
+[data-theme="light"] .ambient {
+  opacity: 0.04;
+}
+
+/* Second radial: a secondary, cooler gold highlight drifts
+   in the opposite direction, adding organic depth.
+   Implemented as a pseudo-element on the same container. */
+.ambient::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    ellipse 60% 50% at center,
+    hsl(
+      var(--color-gold-h, 42),
+      var(--color-gold-s, 57%),
+      calc(var(--color-gold-l, 56%) + 5%)
+    ) 0%,
+    transparent 65%
+  );
+  background-size: 130% 130%;
+  background-repeat: no-repeat;
+  background-position: 70% 60%;
+  opacity: 0.5; /* 50% of parent's 5% = 2.5% total */
+
+  /* Counter-rotate the drift for natural variation */
+  animation: ambientBreath 24s ease-in-out infinite reverse;
+  animation-delay: -8s;
+}
+
+/* Reduced motion: freeze the animation at its initial frame.
+   The gradient is still visible — just static instead of breathing. */
+@media (prefers-reduced-motion: reduce) {
+  .ambient {
+    animation: none;
+    background-position: 30% 40%;
+  }
+
+  .ambient::after {
+    animation: none;
+    background-position: 70% 60%;
+  }
+}

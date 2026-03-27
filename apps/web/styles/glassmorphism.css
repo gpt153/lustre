@@ -1,0 +1,67 @@
+/*
+ * Lustre Glassmorphism Utilities
+ *
+ * The base `.glass` class lives in themes.css where it has access to the
+ * theme-aware --glass-bg and --glass-border custom properties defined per
+ * data-theme variant.  This file extends the system with two additional
+ * variants and an @supports fallback that applies to all three classes.
+ *
+ * All three classes use CSS custom properties so they respond automatically
+ * to [data-theme="light"] and [data-theme="dark"] without duplication.
+ */
+
+/* ============================================================
+   .glass-light
+   A more transparent, delicate surface.
+   Use for: hover tooltips, secondary panels, badge backgrounds.
+   ============================================================ */
+.glass-light {
+  background: var(--glass-bg-light, rgba(255, 255, 255, 0.03));
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--glass-border-light, rgba(255, 255, 255, 0.06));
+  border-radius: var(--radius-lg);
+}
+
+/* ============================================================
+   .glass-strong
+   Heavier blur and more opaque — for modals, sheets, menus
+   that need to clearly separate from the content behind them.
+   ============================================================ */
+.glass-strong {
+  background: var(--glass-bg-strong, rgba(255, 255, 255, 0.10));
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border: 1px solid var(--glass-border-strong, rgba(255, 255, 255, 0.15));
+  border-radius: var(--radius-lg);
+}
+
+/* ============================================================
+   Light-theme overrides
+   Light mode uses semi-opaque white with dark borders.
+   ============================================================ */
+[data-theme="light"] .glass-light {
+  background: rgba(255, 255, 255, 0.50);
+  border-color: rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .glass-strong {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+/* ============================================================
+   @supports fallback
+   Browsers that don't support backdrop-filter get a solid
+   elevated surface instead of a broken semi-transparent one.
+   Applies to all three glass classes.
+   ============================================================ */
+@supports not (backdrop-filter: blur(1px)) {
+  .glass-light {
+    background: color-mix(in oklch, var(--color-bg-elevated) 95%, transparent);
+  }
+
+  .glass-strong {
+    background: var(--color-bg-elevated);
+  }
+}

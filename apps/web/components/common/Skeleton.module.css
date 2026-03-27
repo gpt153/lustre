@@ -1,0 +1,83 @@
+/* ============================================================
+   Skeleton — Lustre Core Component
+   Shimmer loading placeholders — pure CSS, no JS needed
+   ============================================================ */
+
+/* ---- Base skeleton ---- */
+
+.skeleton {
+  background: var(--skeleton-base, rgba(255, 255, 255, 0.06));
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+
+[data-theme="light"] .skeleton {
+  --skeleton-base: rgba(0, 0, 0, 0.06);
+  --skeleton-highlight: rgba(255, 255, 255, 0.70);
+}
+
+/* ---- Shimmer overlay ---- */
+
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--skeleton-highlight, rgba(255, 255, 255, 0.08)) 50%,
+    transparent 100%
+  );
+  animation: shimmer 1.8s ease-in-out infinite;
+  transform: translateX(-100%);
+}
+
+/* ---- Shape variants ---- */
+
+.text {
+  height: 14px;
+  border-radius: var(--radius-sm);
+  width: 100%;
+}
+
+.text + .text {
+  margin-top: var(--space-sm);
+}
+
+/* Narrow last line of text block — classic placeholder look */
+.text:last-child {
+  width: 65%;
+}
+
+.circle {
+  border-radius: 50%;
+}
+
+.image {
+  border-radius: var(--radius-md);
+  aspect-ratio: 3 / 4;
+}
+
+/* box has no extra styling — uses wrapper's width/height */
+.box {
+  border-radius: var(--radius-md);
+}
+
+/* ---- Keyframes ---- */
+
+@keyframes shimmer {
+  0%   { transform: translateX(-100%); }
+  60%  { transform: translateX(100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* ---- Reduced motion: no shimmer, just static ---- */
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton::after {
+    animation: none;
+    display: none;
+  }
+}
