@@ -163,6 +163,19 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
   - `SECRET_KEY_BASE` — Phoenix secret key base (64-byte hex)
   - `NATS_URL` — used by both Fastify and Phoenix
 
+## Events (F11-MEET-events)
+- **Schema:** `Event`, `EventAttendee`, `EventTicket` — Prisma models in `services/api/prisma/schema.prisma`
+- **Enums:** `EventType` (ONLINE, IRL, HYBRID), `EventStatus` (DRAFT, PUBLISHED, CANCELLED, COMPLETED), `AttendeeStatus` (GOING, WAITLIST, DECLINED), `TicketStatus` (VALID, USED, REFUNDED, CANCELLED)
+- **PostGIS:** Event.location field (`geography(Point,4326)`) for proximity search via ST_DWithin
+- **tRPC Router:** `event` — create, update, get, list, cancel, search (PostGIS), nearby (distance_km), calendar (grouped by date), listFiltered (type/date/location), recommended (AI scoring), rsvp, getAttendees, complete, purchaseTicket, checkTicketStatus, validateTicket, refundTicket
+- **Targeting:** `matchesEventTargeting(profile, event)` — filters events by targetGenders, targetOrientations, targetAgeMin/Max; applied to all visibility queries
+- **Ticketing:** `services/api/src/lib/event-tickets.ts` — Swish mTLS payment flow, creates EventTicket on purchase, auto-adds attendee on PAID callback
+- **Discovery:** map-based proximity search, calendar view, AI scoring (IRL +3, 7-day recency +2, targeting match +1 per dimension)
+- **Post-event suggestions:** `services/api/src/lib/post-event-suggestions.ts` — NATS `event.completed` consumer, suggests attendees to each other (opt-in via `Profile.allowPostEventSuggestions`)
+- **Shared components:** `packages/app/src/` — EventCard, EventListScreen, EventDetailScreen, CreateEventScreen, useEvents hook
+- **Mobile:** Events at `apps/mobile/app/(tabs)/events.tsx` and `apps/mobile/app/(tabs)/explore/events.tsx`
+- **Web:** `/events` (list with type filters), `/events/[eventId]` (detail with RSVP/ticket), `/events/create` (creation form)
+
 ## Organizations (F12-MEET-organizations)
 - **Schema:** Organization, OrgMember, OrgVerification — Prisma models in `services/api/prisma/schema.prisma`
 - **Enums:** OrgType (CLUB, ASSOCIATION, BUSINESS, EVENT_COMPANY), OrgMemberRole (OWNER, ADMIN, MODERATOR, MEMBER), OrgVerificationStatus (PENDING, VERIFIED, REJECTED)
