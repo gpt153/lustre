@@ -359,6 +359,32 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
 - **Web:** `/kudos/give/[recipientId]` (badge selection page), kudos modal in `/chat`, kudos section in `/profile/[userId]`
 - **Migrations:** `20260326230000_add_kudos_schema`, `20260327110000_add_kudos_prompts`
 
+## Intentions-based Discovery (F29-CONNECT-intentions)
+- **Schema:** `Intention`, `IntentionKinkTag` — Prisma models in `services/api/prisma/schema.prisma`
+- **Enums:** `IntentionStatus` (ACTIVE, PAUSED, EXPIRED, DELETED), `IntentionSeeking` (CASUAL, RELATIONSHIP, FRIENDSHIP, EXPLORATION, EVENT, OTHER), `IntentionAvailability` (WEEKDAYS, WEEKENDS, FLEXIBLE)
+- **tRPC Router:** `intention` — create, update, pause, resume, delete, list, get, getFeed. Max 3 active per user. 30-day expiry with lazy expiry check. Kink tags gated on spicyModeEnabled.
+- **Scoring engine:** `services/api/src/lib/intention-scoring.ts` — 6-factor weighted score (seeking 25%, gender/orientation 20%, age 15%, distance 15%, availability 10%, kink 15%). Mutual boost 1.2x. Final ranking: 70% intention + 15% gatekeeper + 15% kudos.
+- **Redis indexing:** `services/api/src/lib/intention-index.ts` — sorted sets keyed by `intentions:seeking:{type}:gender:{gender}`, score = expiresAt timestamp. Updated on create/update/pause/resume/delete.
+- **Feed generation:** `services/api/src/lib/intention-feed.ts` — per-Intention feed with Redis index lookup, Kvinnor-forst enforcement (males must have reciprocal active Intention), seen-list exclusion, cursor pagination, cold-start fallback (isFallback=true from swipe pool when <5 results).
+- **Shared components:** `packages/app/src/` — CreateIntentionScreen, IntentionListScreen, IntentionFeedScreen, IntentionProfileCard, useIntentions hook
+- **Mobile:** Discover tab at `apps/mobile/app/(tabs)/discover.tsx` — Intentions is default tab, with sub-views (list, create, feed). Also Swipe, Matchningar, Sök tabs.
+- **Web:** `/discover/intentions` (dashboard), `/discover/intentions/new` (create), `/discover/intentions/[intentionId]` (feed), `/discover/intentions/[intentionId]/edit` (edit)
+- **Shared UI:** `packages/ui/src/IntentionProfileCard.tsx` — intent-first card (score badge → tags → bio → photo)
+
+## Design System (F31-UX-design-system)
+- **Design tokens:** `packages/ui/src/tokens.ts` — 12 brand colors (copper #B87333, gold #D4A843, warmWhite #FDF8F3, charcoal #2C2421, etc.), shadow tokens
+- **Themes:** `packages/ui/src/themes.ts` — 4 variants: light_vanilla, light_spicy, dark_vanilla, dark_spicy. Copper/gold accents throughout.
+- **Typography:** `packages/ui/src/fonts/` — General Sans (headings), Inter (body). Expo loader (`expo-loader.ts`), Next.js loader (`next-loader.ts`)
+- **Logo:** `packages/ui/src/LustreLogo.tsx`, `LogoBrand.tsx` — PNG assets with brand text
+- **Core components:** `packages/ui/src/` — CardBase (copper shadow), LustreButton (gold/copper/ember variants), LustreInput (copper focus glow), ModalBase (spring animation), BottomSheetBase (slide-up spring)
+- **Tamagui config:** `packages/ui/src/tamagui.config.ts` — all tokens and themes wired
+- **Mobile nav:** `apps/mobile/app/(tabs)/_layout.tsx` — 5 bottom tabs (Discover, Connect, Explore, Learn, Profile) with copper active tint
+- **Web header:** `apps/web/app/(app)/components/Header.tsx` — glassmorphism styling with backdrop-filter blur
+- **Swipe mechanics:** `packages/app/src/hooks/useSwipeGesture.ts` — Reanimated 3 gesture handling with spring physics
+- **Profile redesign:** `ProfilePrompt` Prisma model, scrollable photo+prompt layout, prompt CRUD in profile router
+- **Haptics:** `packages/app/src/hooks/useHaptics.ts` — expo-haptics with Platform detection and web fallback
+- **Match animation:** `packages/app/src/components/MatchAnimation.tsx` — Lottie animation with scale+opacity fallback
+
 ## Rules
 - All users verified via Swish 10 SEK + SPAR (Sweden); international expansion TBD
 - Real names NEVER shown in app — stored encrypted, released only via court order
