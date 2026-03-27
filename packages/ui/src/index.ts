@@ -13,6 +13,8 @@ export { CardBase } from './CardBase'
 export { ModalBase } from './ModalBase'
 export { BottomSheetBase } from './BottomSheetBase'
 export { KudosBadgeTag } from './KudosBadgeTag'
+export { IntentionProfileCard } from './IntentionProfileCard'
+export type { IntentionProfileCardProps } from './IntentionProfileCard'
 
 // Font exports
 export { generalSansFont, interFont } from './fonts'

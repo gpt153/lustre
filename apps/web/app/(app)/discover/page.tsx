@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { YStack, XStack, Text, Button, Spinner, Image } from 'tamagui'
 import { trpc } from '@lustre/api'
 
-function DiscoverNav({ active }: { active: 'discover' | 'search' | 'matches' }) {
+function DiscoverNav({ active }: { active: 'intentions' | 'discover' | 'search' | 'matches' }) {
   const navTabStyle: React.CSSProperties = {
     paddingBottom: '12px',
     borderBottom: '2px solid transparent',
@@ -25,7 +25,16 @@ function DiscoverNav({ active }: { active: 'discover' | 'search' | 'matches' }) 
 
   return (
     <XStack marginBottom="$4" borderBottomWidth={1} borderBottomColor="#C4956A">
-      <Link href="/discover" style={{ textDecoration: 'none' }}>
+      <Link href="/discover/intentions" style={{ textDecoration: 'none' }}>
+        <Text
+          fontWeight="600"
+          fontSize="$4"
+          style={active === 'intentions' ? activeTabStyle : inactiveTabStyle}
+        >
+          Intentioner
+        </Text>
+      </Link>
+      <Link href="/discover" style={{ textDecoration: 'none', marginLeft: 24 }}>
         <Text
           fontWeight="600"
           fontSize="$4"
@@ -92,7 +101,7 @@ export default function DiscoverPage() {
   if (isLoading) {
     return (
       <YStack flex={1} padding="$4" maxWidth={1200} marginHorizontal="auto">
-        <DiscoverNav active="discover" />
+        <DiscoverNav active="intentions" />
         <YStack flex={1} alignItems="center" justifyContent="center" minHeight="60vh">
           <Spinner color="$primary" />
         </YStack>
@@ -104,7 +113,7 @@ export default function DiscoverPage() {
 
   return (
     <YStack flex={1} padding="$4" maxWidth={1200} marginHorizontal="auto">
-      <DiscoverNav active="discover" />
+      <DiscoverNav active="intentions" />
 
       {matchOverlay && (
         <YStack
