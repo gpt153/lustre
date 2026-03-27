@@ -7,6 +7,7 @@ import { EmptyFeed } from './EmptyFeed'
 import { NoResults } from './NoResults'
 import { Offline } from './Offline'
 import { ErrorState } from './ErrorState'
+import { CheckBackTomorrow } from './CheckBackTomorrow'
 
 export { NoMatches } from './NoMatches'
 export { NoMessages } from './NoMessages'
@@ -16,6 +17,7 @@ export { EmptyFeed } from './EmptyFeed'
 export { NoResults } from './NoResults'
 export { Offline } from './Offline'
 export { ErrorState } from './ErrorState'
+export { CheckBackTomorrow } from './CheckBackTomorrow'
 
 export type IllustrationKey =
   | 'no-matches'
@@ -26,6 +28,7 @@ export type IllustrationKey =
   | 'no-results'
   | 'offline'
   | 'error'
+  | 'check-back-tomorrow'
 
 export const ILLUSTRATIONS: Record<
   IllustrationKey,
@@ -39,4 +42,5 @@ export const ILLUSTRATIONS: Record<
   'no-results': NoResults,
   'offline': Offline,
   'error': ErrorState,
+  'check-back-tomorrow': CheckBackTomorrow,
 }

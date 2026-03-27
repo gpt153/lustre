@@ -9,6 +9,7 @@ import { StatusBar } from 'expo-status-bar'
 import Constants from 'expo-constants'
 import { useAuth } from '@lustre/app'
 import { ToastContainer } from '@/components/ToastContainer'
+import { ModeTransition } from '@/components/ModeTransition'
 
 const API_URL = Constants.expoConfig?.extra?.apiUrl ?? 'http://localhost:4000'
 
@@ -56,9 +57,11 @@ export default function RootLayout() {
   return (
     <TamaguiProvider config={tamaguiConfig}>
       <TRPCProvider apiUrl={API_URL}>
-        <StatusBar style="auto" />
-        {fontsLoaded ? <AuthGate /> : <Slot />}
-        <ToastContainer />
+        <ModeTransition>
+          <StatusBar style="auto" />
+          {fontsLoaded ? <AuthGate /> : <Slot />}
+          <ToastContainer />
+        </ModeTransition>
       </TRPCProvider>
     </TamaguiProvider>
   )

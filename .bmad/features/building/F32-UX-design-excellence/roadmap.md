@@ -10,8 +10,8 @@
 
 | Wave | Name | Epics | Duration | Status |
 |------|------|-------|----------|--------|
-| 1 | Design Foundation | 7 epics (1a-1g) | 3 weeks | IN_PROGRESS (2026-03-27) |
-| 2 | Signature Interactions | 5 epics (2a-2e) | 3 weeks | NOT STARTED |
+| 1 | Design Foundation | 7 epics (1a-1g) | 3 weeks | DONE (2026-03-27) |
+| 2 | Signature Interactions | 5 epics (2a-2e) | 3 weeks | IN_PROGRESS (2026-03-27) |
 | 3 | Polish & Delight | 5 epics (3a-3e) | 2 weeks | NOT STARTED |
 
 **Total: 17 epics, 8 weeks**
@@ -89,11 +89,11 @@
 
 | Order | Epic | Est. | Model | Status |
 |-------|------|------|-------|--------|
-| 2a | Profile Card Story | 4d | sonnet | NOT STARTED |
-| 2b | Mode Transformation | 3d | sonnet | NOT STARTED |
-| 2c | Match Ceremony 2.0 | 3d | sonnet | NOT STARTED |
-| 2d | Copper Pick | 3d | haiku | NOT STARTED |
-| 2e | Consent Ceremony | 3d | sonnet | NOT STARTED |
+| 2a | Profile Card Story | 4d | sonnet | VERIFIED (2026-03-27) |
+| 2b | Mode Transformation | 3d | sonnet | VERIFIED (2026-03-27) |
+| 2c | Match Ceremony 2.0 | 3d | sonnet | VERIFIED (2026-03-27) |
+| 2d | Copper Pick | 3d | haiku | VERIFIED (2026-03-27) |
+| 2e | Consent Ceremony | 3d | sonnet | VERIFIED (2026-03-27) |
 
 **Parallelization:** 2a, 2b, 2c can run in parallel (independent features). 2d depends on 2a (uses new profile card). 2e is independent.
 
@@ -208,3 +208,4 @@ Wave 2 (all) ──┬── 3a (micro-interactions)
 |------|--------|
 | 2026-03-27 | Initial roadmap created with 3 waves, 17 epics |
 | 2026-03-27 | Rewritten for native-only (removed web, Tamagui, CSS, Framer Motion) |
+| 2026-03-27 | Wave 1 DONE — all 7 epics built and verified. TS clean. Committed efc563c. |
