@@ -3,9 +3,11 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
+      "@/*": ["./*"],
       "@lustre/ui": ["../../packages/ui/src"],
       "@lustre/api": ["../../packages/api/src"],
-      "@lustre/app": ["../../packages/app/src"]
+      "@lustre/app": ["../../packages/app/src"],
+      "@lustre/tokens": ["../../packages/tokens"]
     }
   }
 }

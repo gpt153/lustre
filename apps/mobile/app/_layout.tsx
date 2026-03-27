@@ -1,35 +1,38 @@
 import * as React from 'react'
-import { Redirect, Slot } from 'expo-router'
+import { Slot, useRouter, useSegments } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { TamaguiProvider } from 'tamagui'
 import { tamaguiConfig } from '@lustre/ui'
-import { loadLustreFonts, useFonts } from '@lustre/ui/src/fonts/expo-loader'
+import { loadLustreFonts } from '@lustre/ui/src/fonts/expo-loader'
 import { TRPCProvider } from '@lustre/api'
 import { StatusBar } from 'expo-status-bar'
 import Constants from 'expo-constants'
 import { useAuth } from '@lustre/app'
+import { ToastContainer } from '@/components/ToastContainer'
 
 const API_URL = Constants.expoConfig?.extra?.apiUrl ?? 'http://localhost:4000'
 
 // Keep splash screen visible while loading fonts
 SplashScreen.preventAutoHideAsync()
 
-function RootLayoutContent() {
+function useProtectedRoute() {
   const auth = useAuth()
+  const router = useRouter()
+  const segments = useSegments()
 
-  if (!auth.isAuthenticated) {
-    return <Redirect href="/(auth)/welcome" />
-  }
+  React.useEffect(() => {
+    const inAuthGroup = segments[0] === '(auth)'
 
-  if (auth.needsPayment) {
-    return <Redirect href="/(auth)/payment" />
-  }
-
-  if (auth.needsDisplayName) {
-    return <Redirect href="/(auth)/display-name" />
-  }
-
-  return <Slot />
+    if (!auth.isAuthenticated && !inAuthGroup) {
+      router.replace('/(auth)/welcome')
+    } else if (auth.isAuthenticated && auth.needsPayment && !inAuthGroup) {
+      router.replace('/(auth)/payment')
+    } else if (auth.isAuthenticated && auth.needsDisplayName && !inAuthGroup) {
+      router.replace('/(auth)/display-name')
+    } else if (auth.isAuthenticated && !auth.needsPayment && !auth.needsDisplayName && inAuthGroup) {
+      router.replace('/(tabs)')
+    }
+  }, [auth.isAuthenticated, auth.needsPayment, auth.needsDisplayName, segments])
 }
 
 export default function RootLayout() {
@@ -39,12 +42,10 @@ export default function RootLayout() {
     async function loadFonts() {
       try {
         await loadLustreFonts()
-        setFontsLoaded(true)
       } catch (error) {
         console.error('Failed to load fonts:', error)
-        // Continue anyway - fonts will fall back to system defaults
-        setFontsLoaded(true)
       } finally {
+        setFontsLoaded(true)
         await SplashScreen.hideAsync()
       }
     }
@@ -52,16 +53,18 @@ export default function RootLayout() {
     loadFonts()
   }, [])
 
-  if (!fontsLoaded) {
-    return null
-  }
-
   return (
     <TamaguiProvider config={tamaguiConfig}>
       <TRPCProvider apiUrl={API_URL}>
         <StatusBar style="auto" />
-        <RootLayoutContent />
+        {fontsLoaded ? <AuthGate /> : <Slot />}
+        <ToastContainer />
       </TRPCProvider>
     </TamaguiProvider>
   )
+}
+
+function AuthGate() {
+  useProtectedRoute()
+  return <Slot />
 }
