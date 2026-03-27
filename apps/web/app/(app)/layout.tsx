@@ -1,4 +1,5 @@
 import { AppShell } from '@/components/layout/AppShell'
+import { AuthGuard } from '@/components/layout/AuthGuard'
 
 interface AppLayoutProps {
   children: React.ReactNode
@@ -7,10 +8,16 @@ interface AppLayoutProps {
 /**
  * AppLayout — Root layout for all authenticated routes.
  *
- * Wraps every route inside (app)/ with the AppShell three-zone grid.
- * This is a Server Component — AppShell is 'use client' and handles
- * all interactive breakpoint behaviour internally.
+ * AuthGuard hydrates the auth store and redirects to /login when the
+ * user is not authenticated. AppShell renders the three-zone grid.
+ *
+ * This is a Server Component — both AuthGuard and AppShell are
+ * 'use client' and handle interactivity internally.
  */
 export default function AppLayout({ children }: AppLayoutProps) {
-  return <AppShell>{children}</AppShell>
+  return (
+    <AuthGuard>
+      <AppShell>{children}</AppShell>
+    </AuthGuard>
+  )
 }

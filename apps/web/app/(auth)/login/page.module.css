@@ -1,0 +1,128 @@
+.container {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xl);
+}
+
+/* ── Logo ── */
+.logoWrap {
+  text-align: center;
+}
+
+.logo {
+  display: block;
+  font-family: var(--font-display, var(--font-inter, system-ui, sans-serif));
+  font-size: 2.25rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--color-copper);
+  line-height: 1;
+  /* Subtle copper text glow */
+  text-shadow: 0 0 32px hsla(var(--color-copper-h), var(--color-copper-s), var(--color-copper-l), 0.45);
+}
+
+.tagline {
+  margin-top: var(--space-xs);
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.01em;
+}
+
+/* ── Card ── */
+.card {
+  width: 100%;
+  border: 1px solid var(--glass-border) !important;
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(16px) !important;
+  box-shadow: var(--shadow-copper-lg) !important;
+}
+
+.heading {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-xl);
+  text-align: center;
+  letter-spacing: -0.01em;
+}
+
+/* ── Form ── */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.devButton {
+  border-style: dashed !important;
+  opacity: 0.7;
+  font-size: 0.8125rem;
+}
+
+/* ── Divider ── */
+.divider {
+  position: relative;
+  margin: var(--space-xl) 0 var(--space-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--color-border);
+}
+
+.dividerText {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* ── OAuth ── */
+.oauthGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.oauthButton {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+}
+
+/* ── Register link ── */
+.registerLink {
+  margin-top: var(--space-xl);
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.link {
+  color: var(--color-copper);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 180ms ease;
+}
+
+.link:hover {
+  color: var(--color-copper-light);
+  text-decoration: underline;
+}
+
+.link:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: 2px;
+}

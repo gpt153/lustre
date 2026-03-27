@@ -1,0 +1,157 @@
+.container {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xl);
+}
+
+/* ── Logo ── */
+.logoWrap {
+  text-align: center;
+}
+
+.logo {
+  display: block;
+  font-family: var(--font-display, var(--font-inter, system-ui, sans-serif));
+  font-size: 2.25rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--color-copper);
+  line-height: 1;
+  text-shadow: 0 0 32px hsla(var(--color-copper-h), var(--color-copper-s), var(--color-copper-l), 0.45);
+}
+
+.tagline {
+  margin-top: var(--space-xs);
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.01em;
+}
+
+/* ── Card ── */
+.card {
+  width: 100%;
+  border: 1px solid var(--glass-border) !important;
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(16px) !important;
+  box-shadow: var(--shadow-copper-lg) !important;
+}
+
+.heading {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-xl);
+  text-align: center;
+  letter-spacing: -0.01em;
+}
+
+/* ── Form ── */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+/* ── Terms checkbox ── */
+.termsWrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.termsLabel {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  cursor: pointer;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+  user-select: none;
+}
+
+.termsLabelError {
+  color: hsl(0, 70%, 60%);
+}
+
+.checkbox {
+  margin-top: 2px;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-copper);
+  cursor: pointer;
+}
+
+.termsLink {
+  color: var(--color-copper);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.termsLink:hover {
+  color: var(--color-copper-light);
+}
+
+.termsError {
+  font-size: 0.75rem;
+  color: hsl(0, 70%, 60%);
+  margin: 0;
+}
+
+/* ── Swish info banner ── */
+.swishInfo {
+  display: flex;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-lg);
+  background: hsla(var(--color-copper-h), var(--color-copper-s), var(--color-copper-l), 0.08);
+  border: 1px solid hsla(var(--color-copper-h), var(--color-copper-s), var(--color-copper-l), 0.20);
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+}
+
+.swishInfo svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--color-copper);
+}
+
+.swishInfo p {
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.swishInfo strong {
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+/* ── Login link ── */
+.loginLink {
+  margin-top: var(--space-xl);
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.link {
+  color: var(--color-copper);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 180ms ease;
+}
+
+.link:hover {
+  color: var(--color-copper-light);
+  text-decoration: underline;
+}
+
+.link:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: 2px;
+}

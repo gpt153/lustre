@@ -1,0 +1,235 @@
+/* ============================================================
+   MatchAnimation — Full-screen match celebration overlay
+   The most emotionally important moment in the dating experience.
+   Copper/gold luxury celebration aesthetic.
+   ============================================================ */
+
+/* ---- Backdrop ---- */
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-modal) + 10);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xl);
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* ---- Content container ---- */
+
+.container {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xl);
+  padding: var(--space-3xl) var(--space-2xl);
+
+  /* Glassmorphism card surface */
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  box-shadow:
+    var(--shadow-xl),
+    0 0 64px rgba(184, 115, 51, 0.18),
+    0 0 120px rgba(212, 168, 67, 0.10);
+
+  /* Subtle copper grain texture via pseudo-element */
+  overflow: hidden;
+}
+
+/* Warm copper glow behind the content */
+.container::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    rgba(184, 115, 51, 0.12) 0%,
+    transparent 50%,
+    rgba(212, 168, 67, 0.10) 100%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ---- Particle burst wrapper ---- */
+
+.particleWrapper {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---- Photos row ---- */
+
+.photosRow {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-lg);
+}
+
+/* ---- Single photo frame ---- */
+
+.photoFrame {
+  width: 120px;
+  height: 120px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+  position: relative;
+
+  /* Copper border ring */
+  padding: 3px;
+  background: linear-gradient(
+    135deg,
+    var(--color-copper) 0%,
+    var(--color-gold) 50%,
+    var(--color-copper-light) 100%
+  );
+
+  /* Warm glow */
+  box-shadow:
+    0 0 0 1px rgba(184, 115, 51, 0.30),
+    0 8px 32px rgba(184, 115, 51, 0.35),
+    0 0 60px rgba(212, 168, 67, 0.20);
+}
+
+.photo {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+  display: block;
+  background: var(--color-bg-elevated);
+}
+
+/* ---- Heart icon between photos ---- */
+
+.heartIcon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  background: var(--color-bg-elevated);
+  border: 1px solid rgba(184, 115, 51, 0.30);
+  box-shadow:
+    0 4px 16px rgba(184, 115, 51, 0.25),
+    0 0 24px rgba(212, 168, 67, 0.15);
+  z-index: 2;
+
+  /* Subtle pulse breathing after entrance */
+  animation: heartPulse 2.4s ease-in-out 0.8s infinite;
+}
+
+@keyframes heartPulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 4px 16px rgba(184, 115, 51, 0.25), 0 0 24px rgba(212, 168, 67, 0.15); }
+  50%       { transform: scale(1.08); box-shadow: 0 6px 24px rgba(184, 115, 51, 0.38), 0 0 36px rgba(212, 168, 67, 0.25); }
+}
+
+/* ---- Match heading ---- */
+
+.heading {
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  font-size: clamp(28px, 6vw, 38px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  text-align: center;
+
+  /* Copper → gold gradient text */
+  background: linear-gradient(
+    135deg,
+    var(--color-copper) 0%,
+    var(--color-gold) 45%,
+    var(--color-copper-light) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+
+  /* Fallback for browsers that don't support background-clip: text */
+  color: var(--color-copper);
+
+  /* Subtle text glow */
+  filter: drop-shadow(0 2px 12px rgba(212, 168, 67, 0.35));
+}
+
+/* ---- Subtext ---- */
+
+.subtext {
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--color-text-muted);
+  text-align: center;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+}
+
+/* ---- CTA button group ---- */
+
+.actions {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+/* ---- Reduced motion ---- */
+
+@media (prefers-reduced-motion: reduce) {
+  .backdrop {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .heartIcon {
+    animation: none;
+  }
+
+  /* The Motion component transitions collapse to instant via CSS tokens,
+     so photos, heading and buttons appear immediately without staggering.
+     Nothing else to override here — --spring-duration collapses to 0ms. */
+}
+
+/* ---- Mobile adjustments ---- */
+
+@media (max-width: 480px) {
+  .container {
+    padding: var(--space-2xl) var(--space-xl);
+    gap: var(--space-lg);
+  }
+
+  .photoFrame {
+    width: 100px;
+    height: 100px;
+  }
+
+  .heartIcon {
+    width: 40px;
+    height: 40px;
+  }
+}

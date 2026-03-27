@@ -1,0 +1,74 @@
+/* ============================================================
+   ParticleBurst — Copper/gold confetti explosion
+   Uses CSS custom properties --dx/--dy set via inline styles
+   for per-particle trajectory without JavaScript animation loops.
+   ============================================================ */
+
+.container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.particle {
+  position: absolute;
+  border-radius: var(--radius-full);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: burst var(--spring-duration, 800ms) var(--spring, ease) forwards;
+  will-change: transform, opacity;
+}
+
+/* Color variants using design tokens */
+
+.copper {
+  background: var(--color-copper);
+  box-shadow: 0 0 6px rgba(184, 115, 51, 0.60);
+}
+
+.gold {
+  background: var(--color-gold);
+  box-shadow: 0 0 6px rgba(212, 168, 67, 0.60);
+}
+
+.copperLight {
+  background: var(--color-copper-light);
+  box-shadow: 0 0 4px rgba(212, 149, 106, 0.50);
+}
+
+.goldLight {
+  background: var(--color-gold-light);
+  box-shadow: 0 0 4px rgba(229, 198, 117, 0.50);
+}
+
+/* Burst keyframe — translate along the random --dx/--dy vector,
+   fade to opacity 0, and scale down to nothing at peak distance */
+
+@keyframes burst {
+  0% {
+    transform: translate(-50%, -50%) translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  60% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(-50%, -50%) translate(var(--dx), var(--dy)) scale(0);
+    opacity: 0;
+  }
+}
+
+/* Reduced motion — disable all particle animation */
+
+@media (prefers-reduced-motion: reduce) {
+  .particle {
+    animation: none !important;
+    display: none;
+  }
+}
