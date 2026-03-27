@@ -210,4 +210,5 @@ Wave 2 (all) ──┬── 3a (micro-interactions)
 | 2026-03-27 | Rewritten for native-only (removed web, Tamagui, CSS, Framer Motion) |
 | 2026-03-27 | Wave 1 DONE — all 7 epics built and verified. TS clean. Committed efc563c. |
 | 2026-03-27 | Wave 2 DONE — all 5 epics built and verified. TS clean. Committed 0688620. |
-| 2026-03-27 | Wave 3 DONE — all 5 epics built and verified. TS clean. |
+| 2026-03-27 | Wave 3 DONE — all 5 epics built and verified. TS clean. Committed 821ee0f. |
+| 2026-03-27 | **F32 COMPLETE** — all 3 waves (17 epics) built, verified, committed, pushed. |
