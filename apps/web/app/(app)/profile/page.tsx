@@ -1,73 +1,94 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { YStack, Spinner } from 'tamagui'
 import { trpc } from '@lustre/api'
-import { useAuth, useAuthStore } from '@lustre/app'
-import { ProfileViewScreen } from '@lustre/app/src/screens/ProfileViewScreen'
-import { ProfileEditScreen } from '@lustre/app/src/screens/ProfileEditScreen'
-import { useProfile } from '@lustre/app/src/hooks/useProfile'
+import { useAuthStore } from '@lustre/app'
+import { ProfileView, type ProfileViewData } from '@/components/profile/ProfileView'
+import { ProfileEdit, type ProfileEditData, type ProfileEditPrompt } from '@/components/profile/ProfileEdit'
+import styles from '@/components/profile/ProfileView.module.css'
 
 export default function ProfilePage() {
   const router = useRouter()
-  const { logout } = useAuth()
   const authLogout = useAuthStore((state) => state.logout)
-  const { profile, isLoading, needsOnboarding } = useProfile()
-  const [editing, setEditing] = useState(false)
+  const { data: profile, isLoading } = trpc.profile.get.useQuery()
+  const { data: promptsData } = trpc.profile.getPrompts.useQuery()
   const logoutMutation = trpc.auth.logout.useMutation()
-  const updateMutation = trpc.profile.update.useMutation()
+  const [editing, setEditing] = useState(false)
 
   useEffect(() => {
-    if (!isLoading && (needsOnboarding || !profile)) {
+    if (!isLoading && !profile) {
       router.push('/onboarding')
     }
-  }, [isLoading, needsOnboarding, profile, router])
+  }, [isLoading, profile, router])
 
   if (isLoading) {
-    return (
-      <YStack flex={1} alignItems="center" justifyContent="center" minHeight="80vh">
-        <Spinner size="large" color="$primary" />
-      </YStack>
-    )
+    return <div className={styles.loadingState}>Laddar profil…</div>
   }
 
-  if (needsOnboarding || !profile) {
+  if (!profile) {
     return null
   }
 
-  const handleLogout = () => {
+  if (editing) {
+    const editData: ProfileEditData = {
+      id: profile.id,
+      displayName: profile.displayName,
+      bio: profile.bio,
+      photos: profile.photos.map((p) => ({
+        id: p.id,
+        url: p.url,
+        position: p.position,
+      })),
+    }
+
+    const editPrompts: ProfileEditPrompt[] = (promptsData ?? []).map((p) => ({
+      id: p.id,
+      promptKey: p.promptKey,
+      response: p.response,
+      order: p.order,
+    }))
+
+    return (
+      <ProfileEdit
+        profile={editData}
+        prompts={editPrompts}
+        onBack={() => setEditing(false)}
+      />
+    )
+  }
+
+  const viewData: ProfileViewData = {
+    id: profile.id,
+    displayName: profile.displayName,
+    age: profile.age,
+    bio: profile.bio,
+    photos: profile.photos.map((p) => ({
+      id: p.id,
+      url: p.url,
+      thumbnailSmall: p.thumbnailSmall,
+      position: p.position,
+    })),
+    prompts: (promptsData ?? []).map((p) => ({
+      id: p.id,
+      promptKey: p.promptKey,
+      response: p.response,
+      order: p.order,
+    })),
+  }
+
+  function handleLogout() {
     logoutMutation.mutate(undefined, {
       onSuccess: () => { authLogout(); router.push('/auth') },
       onError: () => { authLogout(); router.push('/auth') },
     })
   }
 
-  if (editing) {
-    return (
-      <div style={{ maxWidth: 600, margin: '0 auto', padding: '24px' }}>
-        <ProfileEditScreen
-          initialValues={profile}
-          onSave={(values) => {
-            updateMutation.mutate(values, {
-              onSuccess: () => setEditing(false),
-            })
-          }}
-          onCancel={() => setEditing(false)}
-          isSaving={updateMutation.isPending}
-        />
-      </div>
-    )
-  }
-
   return (
-    <div style={{ maxWidth: 600, margin: '0 auto', padding: '24px' }}>
-      <ProfileViewScreen
-        profile={profile}
-        isOwnProfile
-        onEdit={() => setEditing(true)}
-        onLogout={handleLogout}
-      />
-    </div>
+    <ProfileView
+      profile={viewData}
+      isOwnProfile
+      onEdit={() => setEditing(true)}
+    />
   )
 }

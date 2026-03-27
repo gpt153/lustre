@@ -4,7 +4,7 @@
 **Wave:** 2 — Core Pages
 **Size:** haiku
 **Depends On:** Wave 1 (all)
-**Status:** NOT STARTED
+**Status:** VERIFIED
 
 ---
 

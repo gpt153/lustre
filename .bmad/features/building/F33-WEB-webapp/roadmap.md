@@ -14,8 +14,8 @@ This file tracks wave completion and approval status.
 
 | Wave | Name | Weeks | Status | Approved |
 |------|------|-------|--------|----------|
-| 1 | Design Foundation | 1-2 | IN_PROGRESS (2026-03-27) | - |
-| 2 | Core Pages | 3-5 | NOT STARTED | - |
+| 1 | Design Foundation | 1-2 | DONE (2026-03-27) | PASS |
+| 2 | Core Pages | 3-5 | DONE (2026-03-27) | PASS |
 | 3 | Secondary Pages & Polish | 6-8 | NOT STARTED | - |
 
 ---

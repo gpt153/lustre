@@ -1,3 +1,23 @@
+/* @property registrations for animatable CSS custom properties */
+/* These enable smooth HSL color interpolation on vanilla→spicy transitions */
+@property --accent-h {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 130;
+}
+
+@property --accent-s {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: 23%;
+}
+
+@property --accent-l {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: 46%;
+}
+
 :root {
   --color-copper: #B87333;
   --color-gold: #D4A843;
@@ -18,8 +38,12 @@
   --border-subtle: rgba(184, 115, 51, 0.08);
   --border-medium: rgba(184, 115, 51, 0.15);
 
-  --accent: #7A9E7E;
-  --accent-glow: rgba(122, 158, 126, 0.15);
+  /* Vanilla (default): sage green — hsl(130, 23%, 46%) */
+  --accent-h: 130;
+  --accent-s: 23%;
+  --accent-l: 46%;
+  --accent: hsl(var(--accent-h), var(--accent-s), var(--accent-l));
+  --accent-glow: hsla(var(--accent-h), var(--accent-s), var(--accent-l), 0.15);
 
   --shadow-xs: 0 1px 2px rgba(184, 115, 51, 0.04);
   --shadow-sm: 0 1px 2px rgba(184, 115, 51, 0.06), 0 4px 8px rgba(184, 115, 51, 0.04);
@@ -47,6 +71,13 @@
   --radius-lg: 16px;
   --radius-xl: 20px;
   --radius-full: 9999px;
+
+  /* Smooth transitions for @property-registered values (mode switch) */
+  /* Also transition background/text tokens via class-based approach for theme switch */
+  transition:
+    --accent-h 600ms ease,
+    --accent-s 600ms ease,
+    --accent-l 600ms ease;
 }
 
 :root[data-theme="dark"] {
@@ -64,7 +95,22 @@
   --shadow-xl: 0 4px 8px rgba(0, 0, 0, 0.4), 0 16px 32px rgba(0, 0, 0, 0.3), 0 48px 96px rgba(0, 0, 0, 0.25);
 }
 
+/* Spicy mode: ember red — hsl(13, 55%, 50%) */
 :root[data-mode="spicy"] {
-  --accent: #C85A3A;
-  --accent-glow: rgba(200, 90, 58, 0.15);
+  --accent-h: 13;
+  --accent-s: 55%;
+  --accent-l: 50%;
+}
+
+/* Fallback for browsers without @property support — instant switch, no animation */
+@supports not (syntax: '<number>') {
+  :root {
+    --accent: #7A9E7E;
+    --accent-glow: rgba(122, 158, 126, 0.15);
+    transition: none;
+  }
+  :root[data-mode="spicy"] {
+    --accent: #C85A3A;
+    --accent-glow: rgba(200, 90, 58, 0.15);
+  }
 }

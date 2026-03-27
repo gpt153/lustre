@@ -1,0 +1,163 @@
+.row {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-2);
+  max-width: 100%;
+}
+
+.rowOwn {
+  flex-direction: row-reverse;
+  align-self: flex-end;
+}
+
+.rowOther {
+  flex-direction: row;
+  align-self: flex-start;
+}
+
+.avatarWrap {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+}
+
+.avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+}
+
+.avatarFallback {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--color-copper) 0%, var(--color-gold) 100%);
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+}
+
+.bubble {
+  max-width: 65%;
+  padding: var(--space-3) var(--space-4);
+  border-radius: 18px;
+  font-size: 15px;
+  line-height: 22px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.bubbleSent {
+  background: var(--color-copper);
+  color: #ffffff;
+  border-bottom-right-radius: 4px;
+  align-self: flex-end;
+}
+
+.bubbleReceived {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border-bottom-left-radius: 4px;
+  align-self: flex-start;
+  border: 1px solid var(--border-subtle);
+}
+
+.bubbleDeleted {
+  opacity: 0.6;
+  font-style: italic;
+}
+
+.text {
+  margin: 0;
+  white-space: pre-wrap;
+  font-family: var(--font-body);
+}
+
+.deletedText {
+  font-family: var(--font-body);
+  font-size: 13px;
+}
+
+.mediaWrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.mediaImage {
+  max-width: 200px;
+  max-height: 200px;
+  border-radius: var(--radius-md);
+  object-fit: cover;
+  display: block;
+}
+
+.filteredMedia {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  min-width: 120px;
+}
+
+.filteredIcon {
+  font-size: 24px;
+}
+
+.filteredLabel {
+  font-size: 13px;
+  font-family: var(--font-body);
+}
+
+.revealButton {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: var(--radius-sm);
+  color: inherit;
+  font-size: 12px;
+  padding: var(--space-1) var(--space-3);
+  cursor: pointer;
+  transition: background 150ms ease;
+  font-family: var(--font-body);
+}
+
+.revealButton:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.revealButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-1);
+  margin-top: 2px;
+}
+
+.time {
+  font-size: 11px;
+  font-family: var(--font-body);
+  opacity: 0.65;
+}
+
+.receipt {
+  font-size: 11px;
+  opacity: 0.65;
+}
+
+.receiptRead {
+  color: #a8f0d0;
+  opacity: 1;
+}

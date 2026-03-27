@@ -4,7 +4,7 @@
 **Wave:** 2 — Core Pages
 **Size:** haiku
 **Depends On:** W1a (CSS tokens)
-**Status:** NOT STARTED
+**Status:** VERIFIED
 
 ---
 

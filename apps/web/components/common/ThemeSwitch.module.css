@@ -1,0 +1,28 @@
+.themeSwitch {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 200ms ease, background 200ms ease;
+  flex-shrink: 0;
+}
+
+.themeSwitch:hover {
+  background: rgba(184, 115, 51, 0.08);
+  color: var(--text-primary);
+}
+
+.themeSwitch:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.themeSwitch:active {
+  transform: scale(0.92);
+}

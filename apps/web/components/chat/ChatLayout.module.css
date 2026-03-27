@@ -1,0 +1,35 @@
+.chatLayout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  height: calc(100vh - 64px);
+  overflow: hidden;
+  background: var(--bg-primary);
+}
+
+.conversationList {
+  border-right: 1px solid var(--border-subtle);
+  overflow-y: auto;
+  background: var(--bg-secondary);
+  display: flex;
+  flex-direction: column;
+}
+
+.chatRoom {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+@media (max-width: 900px) {
+  .chatLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .conversationList.hidden {
+    display: none;
+  }
+
+  .chatRoom.hidden {
+    display: none;
+  }
+}
