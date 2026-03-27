@@ -1,0 +1,209 @@
+/* ============================================================
+   PromptCard — Hinge-style Q&A card
+   ============================================================ */
+
+.wrapper {
+  /* article semantic wrapper */
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-xl);
+}
+
+/* ---- Question ---- */
+
+.question {
+  font-size: 13px;
+  font-style: italic;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+
+/* ---- Answer row (read mode) ---- */
+
+.answerRow {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+}
+
+.answer {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--color-text-primary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ---- Edit icon button ---- */
+
+.editBtn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  border: none;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  opacity: 0;
+  transition:
+    opacity 200ms ease,
+    background-color 150ms ease,
+    color 150ms ease;
+  margin-top: 1px;
+}
+
+.wrapper:hover .editBtn,
+.editBtn:focus-visible {
+  opacity: 1;
+}
+
+.editBtn:hover {
+  background: var(--color-border);
+  color: var(--color-copper);
+}
+
+.editBtn:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* ---- Edit area ---- */
+
+.editArea {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: var(--space-md);
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  font-size: 15px;
+  font-family: inherit;
+  line-height: 1.6;
+  resize: vertical;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.textarea:focus {
+  border-color: var(--color-copper);
+  box-shadow: 0 0 0 3px hsl(var(--color-copper-h), var(--color-copper-s), 46%, 0.15);
+}
+
+.textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ---- Edit action row ---- */
+
+.editActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.charCount {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.actionButtons {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.cancelBtn {
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 150ms ease, color 150ms ease;
+}
+
+.cancelBtn:hover:not(:disabled) {
+  border-color: var(--color-text-muted);
+  color: var(--color-text-primary);
+}
+
+.cancelBtn:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.cancelBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.saveBtn {
+  padding: 6px 16px;
+  border-radius: var(--radius-full);
+  border: none;
+  background: var(--color-copper);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition:
+    background-color var(--transition-spring),
+    transform var(--transition-spring),
+    opacity 150ms ease;
+}
+
+.saveBtn:hover:not(:disabled) {
+  background: var(--color-copper-light);
+}
+
+.saveBtn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.saveBtn:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.saveBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ---- Screen reader only ---- */
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

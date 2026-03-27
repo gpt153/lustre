@@ -1,0 +1,100 @@
+/* ============================================================
+   Settings — Account
+   ============================================================ */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.pageTitle {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-xs);
+}
+
+.pageSubtitle {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-lg);
+}
+
+/* ---- Section ---- */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.sectionTitle {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* ---- Field row ---- */
+
+.fieldRow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.readOnlyField {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.readOnlyLabel {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+.readOnlyValue {
+  font-size: 15px;
+  color: var(--color-text-primary);
+  padding: 10px var(--space-md);
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  letter-spacing: 0.02em;
+}
+
+/* ---- Divider ---- */
+
+.divider {
+  height: 1px;
+  background: var(--color-border);
+  margin: var(--space-sm) 0;
+}
+
+/* ---- Actions ---- */
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: var(--space-md);
+}
+
+.fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.legend {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-lg);
+  display: block;
+  width: 100%;
+}

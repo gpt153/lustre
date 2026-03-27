@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { m, AnimatePresence } from 'motion/react'
 import { springs, fadeIn, staggerContainer, slideUp } from '@/lib/motion'
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 import { api as _api } from '@/lib/trpc'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

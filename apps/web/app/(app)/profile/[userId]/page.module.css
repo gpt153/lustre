@@ -1,0 +1,289 @@
+/* ============================================================
+   Public Profile Page — /profile/[userId]
+   Same layout as own profile, no edit controls
+   CTA bar pinned at bottom
+   ============================================================ */
+
+.page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-2xl) var(--space-lg) 120px; /* room for CTA bar */
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xl);
+}
+
+/* ---- Header ---- */
+
+.header {
+  padding-bottom: var(--space-xl);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.headerContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.nameRow {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.name {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 0;
+}
+
+.age {
+  font-size: 24px;
+  font-weight: 300;
+  color: var(--color-text-muted);
+  letter-spacing: -0.01em;
+}
+
+.verifiedBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-full);
+  background: hsl(var(--color-gold-h), var(--color-gold-s), 10%);
+  flex-shrink: 0;
+  margin-bottom: 2px;
+}
+
+.location {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+/* ---- Generic section ---- */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.sectionTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0;
+}
+
+/* ---- Bio ---- */
+
+.bio {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--color-text-primary);
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+/* ---- Prompt list ---- */
+
+.promptList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+/* ---- Pair links ---- */
+
+.pairLinks {
+  display: flex;
+  gap: var(--space-lg);
+  flex-wrap: wrap;
+}
+
+.pairCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.pairAvatar {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  background: linear-gradient(
+    135deg,
+    hsl(var(--color-copper-h), var(--color-copper-s), 30%) 0%,
+    hsl(var(--color-gold-h), var(--color-gold-s), 30%) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.pairPhoto {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pairInitial {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-gold);
+}
+
+.pairName {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+/* ============================================================
+   CTA Bar — pinned at bottom of viewport
+   ============================================================ */
+
+.ctaBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-lg) var(--space-xl);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-top: 1px solid var(--glass-border);
+  z-index: var(--z-sticky);
+  /* Center content with max-width so it doesn't spread edge-to-edge on wide screens */
+  justify-content: center;
+}
+
+/* ---- Like button ---- */
+
+.likeButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 12px 22px;
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 15px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition:
+    background-color var(--transition-spring),
+    border-color var(--transition-spring),
+    color var(--transition-spring),
+    transform var(--transition-spring);
+  white-space: nowrap;
+}
+
+.likeButton:hover:not(:disabled) {
+  border-color: var(--color-copper);
+  color: var(--color-copper);
+  background: hsl(var(--color-copper-h), var(--color-copper-s), 46%, 0.06);
+}
+
+.likeButton.liked {
+  border-color: var(--color-copper);
+  background: hsl(var(--color-copper-h), var(--color-copper-s), 46%, 0.12);
+  color: var(--color-copper);
+}
+
+.likeButton:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.likeButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.likeButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---- Message button ---- */
+
+.messageButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 13px 28px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(
+    135deg,
+    var(--color-copper) 0%,
+    var(--color-gold) 100%
+  );
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition:
+    filter var(--transition-spring),
+    transform var(--transition-spring),
+    box-shadow var(--transition-spring);
+  box-shadow: 0 4px 20px hsl(var(--color-copper-h), var(--color-copper-s), 46%, 0.35);
+  white-space: nowrap;
+}
+
+.messageButton:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 28px hsl(var(--color-copper-h), var(--color-copper-s), 46%, 0.45);
+}
+
+.messageButton:active {
+  transform: scale(0.97);
+}
+
+.messageButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* ---- Responsive ---- */
+
+@media (max-width: 600px) {
+  .page {
+    padding: var(--space-lg) var(--space-md) 100px;
+    gap: var(--space-2xl);
+  }
+
+  .name {
+    font-size: 28px;
+  }
+
+  .ctaBar {
+    padding: var(--space-md) var(--space-lg);
+  }
+
+  .messageButton {
+    flex: 1;
+    justify-content: center;
+  }
+}

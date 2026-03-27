@@ -1,0 +1,33 @@
+/* ============================================================
+   Settings Layout — Two-column: sidebar + content
+   ============================================================ */
+
+.container {
+  display: flex;
+  gap: var(--space-2xl);
+  align-items: flex-start;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: var(--space-2xl) var(--space-xl);
+  min-height: calc(100vh - 72px);
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+  max-width: 640px;
+}
+
+/* Mobile: stack vertically, sidebar becomes top nav */
+@media (max-width: 900px) {
+  .container {
+    flex-direction: column;
+    gap: 0;
+    padding: 0;
+  }
+
+  .content {
+    max-width: 100%;
+    padding: var(--space-xl) var(--space-lg);
+  }
+}

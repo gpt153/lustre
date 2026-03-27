@@ -1,0 +1,222 @@
+/* ============================================================
+   Settings — Mode (Vanilla / Spicy)
+   ============================================================ */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.pageTitle {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-xs);
+}
+
+.pageSubtitle {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-lg);
+}
+
+.sectionTitle {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* ---- Mode toggle ---- */
+
+.modeToggleWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xl);
+  padding: var(--space-xl) 0;
+}
+
+.modeTrack {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 280px;
+  height: 56px;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  padding: 4px;
+  gap: 0;
+  cursor: pointer;
+  transition: border-color 300ms ease;
+}
+
+.modeTrack:hover {
+  border-color: var(--color-copper-light);
+}
+
+.modeOption {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-full);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  z-index: 1;
+  transition: color 300ms ease;
+  user-select: none;
+}
+
+.modeOptionActive {
+  color: white;
+}
+
+.modeThumb {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  width: calc(50% - 4px);
+  border-radius: var(--radius-full);
+  transition: transform var(--spring-duration, 500ms) var(--spring, ease),
+    background var(--spring-duration, 500ms) var(--spring, ease);
+  pointer-events: none;
+}
+
+.modeThumbVanilla {
+  left: 4px;
+  background: var(--color-sage);
+  transform: translateX(0);
+}
+
+.modeThumbSpicy {
+  left: 4px;
+  background: var(--color-ember);
+  transform: translateX(100%);
+}
+
+/* ---- Accent swatch ---- */
+
+.accentPreview {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.accentSwatch {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--color-border);
+  transition: background var(--spring-duration, 500ms) var(--spring, ease);
+}
+
+.accentSwatchVanilla {
+  background: var(--color-sage);
+}
+
+.accentSwatchSpicy {
+  background: var(--color-ember);
+}
+
+.accentLabel {
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+.accentName {
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+/* ---- Content filter cards ---- */
+
+.filterGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+}
+
+.filterCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-lg);
+  background: var(--color-bg-elevated);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition:
+    border-color var(--spring-duration, 500ms) var(--spring, ease),
+    background var(--spring-duration, 500ms) var(--spring, ease),
+    transform var(--spring-duration, 500ms) var(--spring, ease);
+  text-align: left;
+  outline: none;
+}
+
+.filterCard:hover {
+  border-color: var(--color-copper-light);
+  transform: translateY(-2px);
+}
+
+.filterCard:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset, 2px);
+}
+
+.filterCardActive {
+  border-color: var(--color-copper);
+  background: rgba(184, 115, 51, 0.06);
+}
+
+.filterCardActive:hover {
+  border-color: var(--color-copper);
+}
+
+.filterEmoji {
+  font-size: 24px;
+  line-height: 1;
+  margin-bottom: var(--space-xs);
+}
+
+.filterName {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  letter-spacing: 0.04em;
+}
+
+.filterDesc {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  line-height: 1.4;
+}
+
+/* ---- Saving indicator ---- */
+
+.savingBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: 12px;
+  color: var(--color-copper);
+  font-weight: 500;
+}
+
+@media (max-width: 600px) {
+  .filterGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .modeTrack {
+    width: 240px;
+  }
+}

@@ -1,0 +1,148 @@
+/* ============================================================
+   Settings — Sessions
+   ============================================================ */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.pageTitle {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-xs);
+}
+
+.pageSubtitle {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-lg);
+}
+
+.sectionTitle {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* ---- Session list ---- */
+
+.sessionList {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.sessionRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  padding: var(--space-lg) 0;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.sessionRow:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.sessionRow:first-child {
+  padding-top: 0;
+}
+
+/* ---- Device icon ---- */
+
+.deviceIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+}
+
+.deviceIconCurrent {
+  background: rgba(184, 115, 51, 0.08);
+  border-color: rgba(184, 115, 51, 0.3);
+  color: var(--color-copper);
+}
+
+/* ---- Session info ---- */
+
+.sessionInfo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sessionDevice {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.currentBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px var(--space-sm);
+  background: rgba(184, 115, 51, 0.12);
+  color: var(--color-copper);
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  border: 1px solid rgba(184, 115, 51, 0.25);
+}
+
+.sessionMeta {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  display: flex;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.sessionIp {
+  font-family: 'Courier New', Courier, monospace;
+}
+
+/* ---- Log out button ---- */
+
+.logoutBtn {
+  flex-shrink: 0;
+}
+
+/* ---- Log out all ---- */
+
+.footerActions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-border);
+  margin-top: var(--space-sm);
+}
+
+@media (max-width: 600px) {
+  .sessionRow {
+    flex-wrap: wrap;
+  }
+
+  .logoutBtn {
+    margin-left: calc(40px + var(--space-lg));
+  }
+}

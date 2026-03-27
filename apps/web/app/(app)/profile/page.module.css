@@ -1,0 +1,189 @@
+/* ============================================================
+   Own Profile Page — /profile
+   Max-width 720px centered, luxury magazine feel
+   ============================================================ */
+
+.page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-2xl) var(--space-lg) var(--space-5xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xl);
+}
+
+/* ---- Header ---- */
+
+.header {
+  padding-bottom: var(--space-xl);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.headerContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.nameRow {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.name {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 0;
+}
+
+.age {
+  font-size: 24px;
+  font-weight: 300;
+  color: var(--color-text-muted);
+  letter-spacing: -0.01em;
+}
+
+.verifiedBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-full);
+  background: hsl(var(--color-gold-h), var(--color-gold-s), 10%);
+  flex-shrink: 0;
+  margin-bottom: 2px;
+}
+
+.location {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+/* ---- Generic section ---- */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sectionTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0;
+}
+
+/* ---- Bio ---- */
+
+.bio {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--color-text-primary);
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+/* ---- Prompt list ---- */
+
+.promptList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+/* ---- Pair links ---- */
+
+.pairLinks {
+  display: flex;
+  gap: var(--space-lg);
+  flex-wrap: wrap;
+}
+
+.pairCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  cursor: default;
+}
+
+.pairAvatar {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  background: linear-gradient(
+    135deg,
+    hsl(var(--color-copper-h), var(--color-copper-s), 30%) 0%,
+    hsl(var(--color-gold-h), var(--color-gold-s), 30%) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.pairPhoto {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pairInitial {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-gold);
+}
+
+.pairName {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+/* ---- Floating action button ---- */
+
+.fab {
+  position: fixed;
+  bottom: calc(var(--space-3xl) + 72px); /* above bottom nav */
+  right: var(--space-xl);
+  z-index: var(--z-sticky);
+  filter: drop-shadow(var(--shadow-copper-lg));
+}
+
+/* ---- Responsive ---- */
+
+@media (max-width: 600px) {
+  .page {
+    padding: var(--space-lg) var(--space-md) var(--space-5xl);
+    gap: var(--space-2xl);
+  }
+
+  .name {
+    font-size: 28px;
+  }
+
+  .fab {
+    bottom: calc(var(--space-2xl) + 64px);
+    right: var(--space-md);
+  }
+}

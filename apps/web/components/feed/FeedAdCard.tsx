@@ -4,7 +4,6 @@ import { useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { m } from 'motion/react'
 import { springs, slideUp } from '@/lib/motion'
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 import { api as _api } from '@/lib/trpc'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

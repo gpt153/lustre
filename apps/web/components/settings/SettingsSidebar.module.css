@@ -1,0 +1,189 @@
+/* ============================================================
+   SettingsSidebar — Navigation rail for settings
+   ============================================================ */
+
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-lg) 0;
+  position: sticky;
+  top: var(--space-lg);
+  align-self: flex-start;
+}
+
+.sidebarTitle {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  padding: var(--space-xs) var(--space-lg) var(--space-md);
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* ---- Link items ---- */
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: 10px var(--space-lg);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: var(--color-text-muted);
+  font-size: 14px;
+  font-weight: 500;
+  border-left: 3px solid transparent;
+  transition:
+    color var(--spring-duration, 500ms) var(--spring, ease),
+    background var(--spring-duration, 500ms) var(--spring, ease),
+    border-color var(--spring-duration, 500ms) var(--spring, ease);
+  position: relative;
+}
+
+.link:hover {
+  color: var(--color-text-primary);
+  background: rgba(184, 115, 51, 0.06);
+}
+
+.link:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset, 2px);
+}
+
+.linkActive {
+  color: var(--color-copper);
+  background: rgba(184, 115, 51, 0.08);
+  border-left-color: var(--color-copper);
+  font-weight: 600;
+}
+
+.linkActive:hover {
+  background: rgba(184, 115, 51, 0.12);
+}
+
+/* Danger link */
+.linkDanger {
+  color: hsl(0, 70%, 55%);
+}
+
+.linkDanger:hover {
+  background: rgba(200, 50, 50, 0.08);
+}
+
+.linkDanger.linkActive {
+  color: hsl(0, 70%, 55%);
+  border-left-color: hsl(0, 70%, 55%);
+  background: rgba(200, 50, 50, 0.08);
+}
+
+/* ---- Icon ---- */
+
+.icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+.linkActive .icon {
+  opacity: 1;
+}
+
+/* ---- Divider ---- */
+
+.divider {
+  height: 1px;
+  background: var(--color-border);
+  margin: var(--space-sm) var(--space-lg);
+}
+
+/* ============================================================
+   Mobile — hamburger toggle + slide-down nav
+   ============================================================ */
+
+.mobileHeader {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-lg);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.mobileTitle {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.hamburger {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: var(--space-sm);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-primary);
+}
+
+.hamburger span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 2px;
+  transition: transform 200ms ease, opacity 200ms ease;
+}
+
+.mobileNav {
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg-elevated);
+}
+
+.mobileNavOpen {
+  display: flex;
+}
+
+@media (max-width: 900px) {
+  .sidebar {
+    width: 100%;
+    position: static;
+    padding: 0;
+    gap: 0;
+  }
+
+  .sidebarTitle {
+    display: none;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .mobileHeader {
+    display: flex;
+  }
+
+  .mobileNav {
+    /* shown/hidden via JS */
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link {
+    transition: none;
+  }
+}

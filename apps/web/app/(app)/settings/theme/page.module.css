@@ -1,0 +1,157 @@
+/* ============================================================
+   Settings — Theme
+   ============================================================ */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.pageTitle {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-xs);
+}
+
+.pageSubtitle {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-lg);
+}
+
+.sectionTitle {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* ---- Theme card grid ---- */
+
+.themeGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-md);
+}
+
+.themeCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-xl) var(--space-lg);
+  background: var(--color-bg-elevated);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  text-align: center;
+  transition:
+    border-color var(--spring-duration, 500ms) var(--spring, ease),
+    transform var(--spring-duration, 500ms) var(--spring, ease);
+  outline: none;
+}
+
+.themeCard:hover {
+  border-color: var(--color-copper-light);
+  transform: translateY(-2px);
+}
+
+.themeCard:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset, 2px);
+}
+
+.themeCardActive {
+  border-color: var(--color-copper);
+}
+
+.themeCardActive:hover {
+  border-color: var(--color-copper);
+}
+
+/* ---- Preview circle ---- */
+
+.preview {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+
+.previewLight {
+  background: linear-gradient(135deg, #FDF8F3 50%, #fff 100%);
+}
+
+.previewDark {
+  background: linear-gradient(135deg, #2C2421 50%, #1A1614 100%);
+}
+
+.previewAuto {
+  background: linear-gradient(135deg, #FDF8F3 0%, #FDF8F3 50%, #2C2421 50%, #2C2421 100%);
+}
+
+/* Copper accent dot */
+.preview::after {
+  content: '';
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-full);
+  background: var(--color-copper);
+}
+
+/* Active checkmark */
+.checkmark {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 18px;
+  height: 18px;
+  background: var(--color-copper);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+
+.themeCardActive .checkmark {
+  opacity: 1;
+}
+
+.checkmark svg {
+  width: 10px;
+  height: 10px;
+  color: white;
+}
+
+.themeName {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.themeDesc {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+@media (max-width: 600px) {
+  .themeGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .themeCard {
+    flex-direction: row;
+    text-align: left;
+  }
+}

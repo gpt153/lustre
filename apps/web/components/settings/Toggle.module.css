@@ -1,0 +1,101 @@
+/* ============================================================
+   Toggle — Pill-shaped switch with spring animation
+   ============================================================ */
+
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  width: 100%;
+}
+
+.labelGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.label {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  line-height: 1.4;
+}
+
+.description {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  line-height: 1.4;
+}
+
+/* ---- Track ---- */
+
+.track {
+  position: relative;
+  width: 48px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  background: var(--color-border);
+  transition:
+    background var(--spring-duration, 500ms) var(--spring, ease),
+    opacity 150ms ease;
+  outline: none;
+}
+
+.track[aria-checked="true"] {
+  background: var(--color-copper);
+}
+
+.track:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset, 2px);
+}
+
+.track:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ---- Knob ---- */
+
+.knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-full);
+  background: white;
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform var(--spring-duration, 500ms) var(--spring, ease);
+  pointer-events: none;
+}
+
+.track[aria-checked="true"] .knob {
+  transform: translateX(20px);
+}
+
+/* Subtle press feedback */
+.track:active:not(:disabled) .knob {
+  width: 24px;
+}
+
+.track[aria-checked="true"]:active:not(:disabled) .knob {
+  transform: translateX(18px);
+  width: 24px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track,
+  .knob {
+    transition: none;
+  }
+}

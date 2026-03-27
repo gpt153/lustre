@@ -1,0 +1,158 @@
+/* ============================================================
+   Settings — Danger zone
+   ============================================================ */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.pageTitle {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-xs);
+}
+
+.pageSubtitle {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-lg);
+}
+
+/* ---- Danger card ---- */
+
+.dangerCard {
+  background: var(--color-bg-elevated);
+  border: 1.5px solid hsl(0, 70%, 55%);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(220, 60, 60, 0.08);
+}
+
+.dangerHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-lg) var(--space-xl);
+  border-bottom: 1px solid rgba(220, 60, 60, 0.15);
+}
+
+.dangerHeaderIcon {
+  width: 20px;
+  height: 20px;
+  color: hsl(0, 70%, 55%);
+  flex-shrink: 0;
+}
+
+.dangerHeaderTitle {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: hsl(0, 70%, 55%);
+  margin: 0;
+}
+
+.dangerBody {
+  padding: var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+/* ---- Action rows ---- */
+
+.actionRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-xl);
+  flex-wrap: wrap;
+}
+
+.actionInfo {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.actionTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.actionDesc {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.divider {
+  height: 1px;
+  background: var(--color-border);
+}
+
+/* ---- Delete modal ---- */
+
+.modalBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.warningBox {
+  display: flex;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+  background: rgba(220, 60, 60, 0.06);
+  border: 1px solid rgba(220, 60, 60, 0.2);
+  border-radius: var(--radius-md);
+}
+
+.warningIcon {
+  width: 20px;
+  height: 20px;
+  color: hsl(0, 70%, 55%);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.warningText {
+  font-size: 14px;
+  color: var(--color-text-primary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.warningText strong {
+  color: hsl(0, 70%, 55%);
+}
+
+.confirmInstructions {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-sm);
+}
+
+.confirmInstructions code {
+  font-family: 'Courier New', Courier, monospace;
+  background: var(--color-bg-primary);
+  padding: 1px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  font-size: 12px;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-md);
+}

@@ -1,0 +1,100 @@
+/* ============================================================
+   Settings — Privacy
+   ============================================================ */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.pageTitle {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-xs);
+}
+
+.pageSubtitle {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-lg);
+}
+
+.sectionTitle {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* ---- Toggle list ---- */
+
+.toggleList {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.toggleRow {
+  padding: var(--space-lg) 0;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.toggleRow:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.toggleRow:first-child {
+  padding-top: 0;
+}
+
+/* ---- Block list ---- */
+
+.blockList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-2xl) var(--space-xl);
+  text-align: center;
+}
+
+.emptyIcon {
+  width: 40px;
+  height: 40px;
+  color: var(--color-text-muted);
+  opacity: 0.5;
+}
+
+.emptyText {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.blockedUser {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+}
+
+.blockedName {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}

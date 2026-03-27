@@ -4,7 +4,6 @@ import { useState, useCallback, MouseEvent } from 'react'
 import { m } from 'motion/react'
 import { springs, slideUp } from '@/lib/motion'
 import { addToast } from '@/lib/toast-store'
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 import { api as _api } from '@/lib/trpc'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

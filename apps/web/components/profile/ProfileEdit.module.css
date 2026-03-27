@@ -1,0 +1,171 @@
+/* ============================================================
+   ProfileEdit — inline edit form for own profile
+   ============================================================ */
+
+.editPanel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+  padding: var(--space-xl);
+  background: var(--color-bg-elevated);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-copper-md);
+}
+
+/* ---- Form fields ---- */
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.promptQuestion {
+  font-style: italic;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 500;
+}
+
+/* ---- Inputs ---- */
+
+.input,
+.textarea {
+  width: 100%;
+  padding: var(--space-md) var(--space-lg);
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  font-size: 15px;
+  font-family: inherit;
+  line-height: 1.5;
+  outline: none;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+  box-sizing: border-box;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.input:focus,
+.textarea:focus {
+  border-color: var(--color-copper);
+  box-shadow: 0 0 0 3px hsl(var(--color-copper-h), var(--color-copper-s), 46%, 0.15);
+}
+
+.input:disabled,
+.textarea:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.charCount {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Prompt section ---- */
+
+.promptsGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.groupHeading {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0 0 var(--space-xs);
+}
+
+/* ---- Photo drop zone ---- */
+
+.dropZone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: var(--space-3xl) var(--space-xl);
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition:
+    border-color 200ms ease,
+    background-color 200ms ease,
+    color 200ms ease;
+  text-align: center;
+  outline: none;
+}
+
+.dropZone:hover,
+.dropZone:focus-visible {
+  border-color: var(--color-copper);
+  background: hsl(var(--color-copper-h), var(--color-copper-s), 46%, 0.05);
+  color: var(--color-copper-light);
+}
+
+.dropZone:focus-visible {
+  box-shadow: 0 0 0 3px hsl(var(--color-copper-h), var(--color-copper-s), 46%, 0.2);
+}
+
+.dropZoneActive {
+  border-color: var(--color-copper);
+  background: hsl(var(--color-copper-h), var(--color-copper-s), 46%, 0.08);
+  color: var(--color-copper-light);
+}
+
+.dropZoneText {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.dropZoneHint {
+  font-size: 12px;
+  opacity: 0.65;
+}
+
+.fileInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---- Action buttons ---- */
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--color-border-subtle);
+}

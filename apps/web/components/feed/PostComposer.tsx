@@ -4,7 +4,6 @@ import { useState, useRef, useCallback, ChangeEvent } from 'react'
 import Modal from '@/components/common/Modal'
 import Button from '@/components/common/Button'
 import { addToast } from '@/lib/toast-store'
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 import { api as _api } from '@/lib/trpc'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

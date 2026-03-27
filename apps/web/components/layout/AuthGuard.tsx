@@ -28,8 +28,16 @@ export function AuthGuard({ children }: AuthGuardProps) {
 
   useEffect(() => {
     // Trigger Zustand persist rehydration — needed because skipHydration: true
+    // Register callback before calling rehydrate to catch sync completions
+    const unsub = useAuthStore.persist.onFinishHydration(() => {
+      setHydrated(true)
+    })
     useAuthStore.persist.rehydrate()
-    setHydrated(true)
+    // If rehydrate completed synchronously, hasHydrated is already true
+    if (useAuthStore.persist.hasHydrated()) {
+      setHydrated(true)
+    }
+    return unsub
   }, [])
 
   useEffect(() => {
