@@ -433,6 +433,24 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
 - **Sound design:** `constants/sounds.ts` (5 keys: match, like, message, modeSwitch, ceremony), `hooks/useSound.ts` (lazy-load, iOS mute respect, volume control). Assets: `assets/sounds/`
 - **Key deps:** react-native-reanimated 3, react-native-gesture-handler 2, @shopify/react-native-skia, phosphor-react-native, expo-blur, expo-haptics, expo-linear-gradient, react-native-svg, expo-av
 
+## Web App — Next.js (F33-WEB-webapp)
+- **Platform:** Next.js 15 App Router, CSS Modules (no Tamagui on web)
+- **Design tokens:** `apps/web/styles/tokens.css` — CSS custom properties: copper (#B87333), gold (#D4A843), warmWhite (#FDF8F3), charcoal (#2C2421), sage (#7A9E7E), ember (#C85A3A). 4 theme variants (light/dark × vanilla/spicy) via `data-theme` and `data-mode` attributes on `<html>`
+- **Spring animations:** `--spring` and `--spring-soft` CSS `linear()` functions for physical spring easing
+- **Layout:** Three-zone CSS Grid (72px nav rail + flexible main 720px max + 320px context panel), responsive breakpoints at 1440/1200/900/600px
+- **Typography:** `apps/web/styles/typography.css` — 5 type classes: text-hero (48px), text-section (28px), text-card-title (18px), text-body (15px), text-muted (13px)
+- **Components:** `apps/web/components/common/` — Card, Button, Input, Modal, Toast, Skeleton, EmptyState, CommandPalette, ShortcutOverlay, ModeSwitch, ThemeSwitch, AppOnlyPrompt
+- **Layout components:** `apps/web/components/layout/` — AppShell, Header (glassmorphism), NavRail, ContextPanel, BottomNav, KeyboardShortcutsProvider, PageTransition
+- **Page components:** `apps/web/components/` — discover/ (DiscoverGrid, ProfileCard, FilterSidebar), chat/ (ChatLayout, ConversationList, ChatRoom, MessageBubble, MessageInput), profile/ (ProfileView, ProfileEdit, PhotoGrid, PromptCard), feed/ (FeedList, PostCard, PostComposer, CommentSection), events/ (EventCard), groups/ (GroupCard), learn/ (ModuleCard), achievements/ (AchievementBadge, StreakCounter), marketplace/ (ProductCard, ProductDetail, ListingForm), settings/ (SettingsSidebar, Toggle, sections/*)
+- **Hooks:** `apps/web/hooks/` — useKeyboardShortcuts, useCommandPalette, useBreakpoint, useDiscoverKeyboard, useTheme, useSound, useCallGate
+- **Lib:** `apps/web/lib/` — sound-manager.ts (Web Audio API), app-store-links.ts (platform detection), analytics.ts (Umami tracking)
+- **Warm UI:** Paper grain texture, breathing copper gradient, noise overlay on elevated surfaces, nav micro-interactions, button press pulse, sound effects (like/match/message/send)
+- **Mode switch:** CSS `@property` registration for `--accent-h/s/l` enables 600ms smooth HSL interpolation between vanilla (sage) and spicy (ember)
+- **App-only features:** ConsentVault, SafeDate, spicy MEDIUM/HIGH content, voice/video calls show "Öppna i appen" prompts
+- **tsconfig paths:** `@/*` → `./app/*`, `@/components/*` → `./components/*`, `@/hooks/*` → `./hooks/*`, `@/styles/*` → `./styles/*`, `@/lib/*` → `./lib/*`
+- **Import pattern:** Always use EXPLICIT file imports (e.g. `from '@/components/common/Button'`), never barrel imports
+- **First-load JS:** 102KB shared (budget <200KB)
+
 ## Rules
 - All users verified via Swish 10 SEK + SPAR (Sweden); international expansion TBD
 - Real names NEVER shown in app — stored encrypted, released only via court order
