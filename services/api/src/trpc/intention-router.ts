@@ -2,6 +2,7 @@ import { z } from 'zod'
 import { TRPCError } from '@trpc/server'
 import { router, protectedProcedure } from './middleware.js'
 import { indexIntention, removeFromIndex, updateIntentionIndex } from '../lib/intention-index.js'
+import { generateIntentionFeed } from '../lib/intention-feed.js'
 
 const IntentionSeekingEnum = z.enum(['CASUAL', 'RELATIONSHIP', 'FRIENDSHIP', 'EXPLORATION', 'EVENT', 'OTHER'])
 const GenderEnum = z.enum(['MAN', 'WOMAN', 'NON_BINARY', 'TRANS_MAN', 'TRANS_WOMAN', 'GENDERQUEER', 'GENDERFLUID', 'AGENDER', 'BIGENDER', 'TWO_SPIRIT', 'OTHER'])
@@ -393,5 +394,73 @@ export const intentionRouter = router({
         ...intention,
         daysRemaining: calculateDaysRemaining(intention.expiresAt),
       }
+    }),
+
+  getFeed: protectedProcedure
+    .input(z.object({
+      intentionId: z.string().uuid(),
+      cursor: z.string().optional(),
+      limit: z.number().int().min(1).max(50).default(20),
+    }))
+    .query(async ({ ctx, input }) => {
+      const intention = await ctx.prisma.intention.findUnique({
+        where: { id: input.intentionId },
+        include: {
+          kinkTags: true,
+          user: {
+            include: {
+              profile: {
+                include: {
+                  photos: {
+                    orderBy: { position: 'asc' },
+                    take: 1,
+                  },
+                },
+              },
+            },
+          },
+        },
+      })
+
+      if (!intention || intention.userId !== ctx.userId) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Intention not found',
+        })
+      }
+
+      if (intention.status !== 'ACTIVE') {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Only active intentions can generate a feed',
+        })
+      }
+
+      const profile = await ctx.prisma.profile.findUnique({
+        where: { userId: ctx.userId },
+        select: {
+          userId: true,
+          gender: true,
+          orientation: true,
+          age: true,
+          spicyModeEnabled: true,
+        },
+      })
+
+      if (!profile) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Profile not found',
+        })
+      }
+
+      return generateIntentionFeed(
+        ctx.prisma,
+        intention as any,
+        profile,
+        ctx.userId,
+        input.cursor,
+        input.limit
+      )
     }),
 })

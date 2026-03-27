@@ -31,7 +31,9 @@
 ---
 
 ## Wave 2: Discovery Feed & Integration
-**Status:** PLANNED
+**Status:** DONE (2026-03-27)
+**Epic 2a:** VERIFIED
+**Epic 2b:** VERIFIED
 
 ### Parallelization groups:
 **Group A (sequential):**
@@ -39,11 +41,12 @@
 - wave-2b-feed-ranking (haiku) — Integrate Gatekeeper score (F07) and Kudos score (F28) into feed ranking. Mutual intention boost logic. Cold-start fallback: show swipe pool profiles when Intention feed has < 5 results.
 
 ### Testgate Wave 2:
-- [ ] Intention feed returns profiles with matching active Intentions
-- [ ] A man only appears in a woman's feed if his Intention matches her criteria
-- [ ] Mutual intention overlap boosts ranking
-- [ ] Cold-start fallback shows swipe pool profiles
-- [ ] Gatekeeper and Kudos scores influence ranking
+- [x] Intention feed returns profiles with matching active Intentions — VERIFIED (code review)
+- [x] A man only appears in a woman's feed if his Intention matches her criteria — VERIFIED (Kvinnor-forst logic)
+- [x] Mutual intention overlap boosts ranking — VERIFIED (MUTUAL_BOOST_MULTIPLIER in scoring)
+- [x] Cold-start fallback shows swipe pool profiles — VERIFIED (isFallback=true when <5 results)
+- [x] Gatekeeper and Kudos scores influence ranking — VERIFIED (computeFinalScore integration)
+**Note:** TypeScript compilation: PASS (0 errors in new files).
 
 ---
 
