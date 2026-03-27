@@ -1,0 +1,58 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  max-width: 72%;
+  gap: var(--space-xs);
+}
+
+.own {
+  align-self: flex-end;
+  align-items: flex-end;
+}
+
+.other {
+  align-self: flex-start;
+  align-items: flex-start;
+}
+
+.bubble {
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-lg);
+  line-height: 1.5;
+  position: relative;
+  word-break: break-word;
+}
+
+.bubbleOwn {
+  background-color: color-mix(in srgb, var(--color-copper) 18%, var(--color-bg-elevated));
+  border-bottom-right-radius: var(--radius-xs, 4px);
+  color: var(--color-text-primary);
+}
+
+.bubbleOther {
+  background-color: var(--color-bg-elevated);
+  border-bottom-left-radius: var(--radius-xs, 4px);
+  color: var(--color-text-primary);
+  box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.08));
+}
+
+.body {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+
+.timestamp {
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.01em;
+  padding: 0 var(--space-xs);
+}
+
+.timestampOwn {
+  text-align: right;
+}
+
+.timestampOther {
+  text-align: left;
+}

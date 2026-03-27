@@ -1,0 +1,45 @@
+.burst {
+  position: fixed;
+  pointer-events: none;
+  z-index: var(--z-toast);
+  transform: translate(-50%, -50%);
+}
+
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -50%);
+  animation: burst 600ms var(--spring) forwards;
+  opacity: 1;
+}
+
+@keyframes burst {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 1;
+  }
+  40% {
+    opacity: 1;
+    transform: translate(
+        calc(-50% + var(--dx) * 0.6),
+        calc(-50% + var(--dy) * 0.6)
+      )
+      scale(1.2);
+  }
+  100% {
+    transform: translate(
+        calc(-50% + var(--dx)),
+        calc(-50% + var(--dy))
+      )
+      scale(0);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .particle {
+    animation-duration: 0ms;
+  }
+}
