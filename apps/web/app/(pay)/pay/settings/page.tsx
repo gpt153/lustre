@@ -10,6 +10,13 @@ export default function PaymentSettingsPage() {
   const { isAuthenticated } = useAuth()
   const [swishAmount, setSwishAmount] = useState('100')
   const [swishThreshold, setSwishThreshold] = useState('200')
+  const [showAddCard, setShowAddCard] = useState(false)
+  const [cardNumber, setCardNumber] = useState('')
+  const [cardCvv, setCardCvv] = useState('')
+  const [cardExpiryMonth, setCardExpiryMonth] = useState('')
+  const [cardExpiryYear, setCardExpiryYear] = useState('')
+  const [cardHolderName, setCardHolderName] = useState('')
+  const [cardError, setCardError] = useState<string | null>(null)
 
   const swishStatusQuery = trpc.swishPayment.getSwishRecurringStatus.useQuery(undefined, {
     enabled: isAuthenticated,
@@ -21,6 +28,7 @@ export default function PaymentSettingsPage() {
 
   const setupSwish = trpc.swishPayment.setupSwishRecurring.useMutation()
   const cancelSwish = trpc.swishPayment.cancelSwishRecurring.useMutation()
+  const addCard = trpc.segpay.addCard.useMutation()
   const setDefaultCard = trpc.segpay.setDefaultCard.useMutation()
   const removeCard = trpc.segpay.removeCard.useMutation()
 
@@ -89,6 +97,42 @@ export default function PaymentSettingsPage() {
       cardsQuery.refetch()
     } catch (error) {
       console.error('Failed to remove card:', error)
+    }
+  }
+
+  const handleAddCard = async () => {
+    setCardError(null)
+
+    const month = parseInt(cardExpiryMonth)
+    const year = parseInt(cardExpiryYear)
+
+    if (!cardNumber || !cardCvv || !cardHolderName || isNaN(month) || isNaN(year)) {
+      setCardError('Fyll i alla fält korrekt')
+      return
+    }
+
+    if (month < 1 || month > 12) {
+      setCardError('Ogiltig utgångsmånad (1-12)')
+      return
+    }
+
+    try {
+      await addCard.mutateAsync({
+        number: cardNumber,
+        cvv: cardCvv,
+        expiryMonth: month,
+        expiryYear: year,
+        holderName: cardHolderName,
+      })
+      setShowAddCard(false)
+      setCardNumber('')
+      setCardCvv('')
+      setCardExpiryMonth('')
+      setCardExpiryYear('')
+      setCardHolderName('')
+      cardsQuery.refetch()
+    } catch (error) {
+      setCardError('Kunde inte lägga till kort. Kontrollera uppgifterna och försök igen.')
     }
   }
 
@@ -206,16 +250,16 @@ export default function PaymentSettingsPage() {
                 <Text color="$textSecondary" marginBottom="$3">
                   Inga kort registrerade ännu
                 </Text>
-                <Button
-                  backgroundColor="$primary"
-                  onPress={() => {
-                    /* TODO: Implement add card flow */
-                  }}
-                >
-                  <Text color="white" fontWeight="600">
-                    Lägg till kort
-                  </Text>
-                </Button>
+                {!showAddCard && (
+                  <Button
+                    backgroundColor="$primary"
+                    onPress={() => setShowAddCard(true)}
+                  >
+                    <Text color="white" fontWeight="600">
+                      Lägg till kort
+                    </Text>
+                  </Button>
+                )}
               </YStack>
             ) : (
               <YStack gap="$3">
@@ -276,16 +320,140 @@ export default function PaymentSettingsPage() {
                   </YStack>
                 ))}
 
-                <Button
-                  backgroundColor="$primary"
-                  onPress={() => {
-                    /* TODO: Implement add card flow */
-                  }}
-                >
-                  <Text color="white" fontWeight="600">
-                    Lägg till nytt kort
+                {!showAddCard && (
+                  <Button
+                    backgroundColor="$primary"
+                    onPress={() => setShowAddCard(true)}
+                  >
+                    <Text color="white" fontWeight="600">
+                      Lägg till nytt kort
+                    </Text>
+                  </Button>
+                )}
+              </YStack>
+            )}
+
+            {showAddCard && (
+              <YStack gap="$3" padding="$4" backgroundColor="$background" borderRadius="$2" borderWidth={1} borderColor="$primary">
+                <Text fontSize="$4" fontWeight="600" color="$text">
+                  Lägg till nytt kort
+                </Text>
+
+                {cardError && (
+                  <Text color="$red10" fontSize="$2">
+                    {cardError}
                   </Text>
-                </Button>
+                )}
+
+                <YStack gap="$2">
+                  <Label color="$text">Kortinnehavare</Label>
+                  <Input
+                    value={cardHolderName}
+                    onChangeText={setCardHolderName}
+                    placeholder="Förnamn Efternamn"
+                    borderWidth={1}
+                    borderColor="$borderColor"
+                    padding="$3"
+                    borderRadius="$2"
+                    autoComplete="cc-name"
+                  />
+                </YStack>
+
+                <YStack gap="$2">
+                  <Label color="$text">Kortnummer</Label>
+                  <Input
+                    value={cardNumber}
+                    onChangeText={setCardNumber}
+                    placeholder="1234 5678 9012 3456"
+                    keyboardType="numeric"
+                    borderWidth={1}
+                    borderColor="$borderColor"
+                    padding="$3"
+                    borderRadius="$2"
+                    autoComplete="cc-number"
+                  />
+                </YStack>
+
+                <XStack gap="$3">
+                  <YStack gap="$2" flex={1}>
+                    <Label color="$text">Månad</Label>
+                    <Input
+                      value={cardExpiryMonth}
+                      onChangeText={setCardExpiryMonth}
+                      placeholder="MM"
+                      keyboardType="numeric"
+                      borderWidth={1}
+                      borderColor="$borderColor"
+                      padding="$3"
+                      borderRadius="$2"
+                      autoComplete="cc-exp-month"
+                    />
+                  </YStack>
+
+                  <YStack gap="$2" flex={1}>
+                    <Label color="$text">År</Label>
+                    <Input
+                      value={cardExpiryYear}
+                      onChangeText={setCardExpiryYear}
+                      placeholder="ÅÅÅÅ"
+                      keyboardType="numeric"
+                      borderWidth={1}
+                      borderColor="$borderColor"
+                      padding="$3"
+                      borderRadius="$2"
+                      autoComplete="cc-exp-year"
+                    />
+                  </YStack>
+
+                  <YStack gap="$2" flex={1}>
+                    <Label color="$text">CVV</Label>
+                    <Input
+                      value={cardCvv}
+                      onChangeText={setCardCvv}
+                      placeholder="123"
+                      keyboardType="numeric"
+                      borderWidth={1}
+                      borderColor="$borderColor"
+                      padding="$3"
+                      borderRadius="$2"
+                      secureTextEntry
+                      autoComplete="cc-csc"
+                    />
+                  </YStack>
+                </XStack>
+
+                <XStack gap="$2" marginTop="$2">
+                  <Button
+                    flex={1}
+                    backgroundColor="$primary"
+                    onPress={handleAddCard}
+                    disabled={addCard.isPending}
+                  >
+                    <Text color="white" fontWeight="600">
+                      {addCard.isPending ? 'Lägger till...' : 'Spara kort'}
+                    </Text>
+                  </Button>
+                  <Button
+                    flex={1}
+                    backgroundColor="$background"
+                    borderWidth={1}
+                    borderColor="$borderColor"
+                    onPress={() => {
+                      setShowAddCard(false)
+                      setCardError(null)
+                      setCardNumber('')
+                      setCardCvv('')
+                      setCardExpiryMonth('')
+                      setCardExpiryYear('')
+                      setCardHolderName('')
+                    }}
+                    disabled={addCard.isPending}
+                  >
+                    <Text color="$text" fontWeight="600">
+                      Avbryt
+                    </Text>
+                  </Button>
+                </XStack>
               </YStack>
             )}
           </YStack>

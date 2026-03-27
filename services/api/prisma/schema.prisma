@@ -52,6 +52,9 @@ model User {
   tokenTransactions          TokenTransaction[]
   userBadges                 UserBadge[]
   userBalance                UserBalance?
+  swishAgreement             SwishRecurringAgreement?
+  segpayCards                SegpayCard[]
+  segpayTransactions         SegpayTransaction[]
   contentFilter              UserContentFilter?
   lessonProgress             UserLessonProgress[]
   userMedals                 UserMedal[]
@@ -397,7 +400,7 @@ model GatekeeperMessage {
 model UserBalance {
   id        String   @id @default(uuid()) @db.Uuid
   userId    String   @unique @map("user_id") @db.Uuid
-  balance   Int      @default(0)
+  balance   Decimal  @default(0) @db.Decimal(20, 5)
   updatedAt DateTime @updatedAt @map("updated_at")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -407,9 +410,11 @@ model UserBalance {
 model TokenTransaction {
   id          String               @id @default(uuid()) @db.Uuid
   userId      String               @map("user_id") @db.Uuid
-  amount      Int
+  amount      Decimal              @db.Decimal(20, 5)
   type        TokenTransactionType
   referenceId String?              @map("reference_id") @db.Uuid
+  description String?              @map("description")
+  serviceRef  String?              @map("service_ref")
   createdAt   DateTime             @default(now()) @map("created_at")
   user        User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -1454,4 +1459,60 @@ model IntentionKinkTag {
 
   @@unique([intentionId, kinkTagId])
   @@map("intention_kink_tags")
+}
+
+model SpreadConfig {
+  id         String   @id @default(uuid()) @db.Uuid
+  segment    String?
+  market     String?
+  multiplier Decimal  @db.Decimal(10, 5)
+  isDefault  Boolean  @default(false) @map("is_default")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@unique([segment, market])
+  @@map("spread_configs")
+}
+
+model SwishRecurringAgreement {
+  id                  String   @id @default(uuid()) @db.Uuid
+  userId              String   @unique @map("user_id") @db.Uuid
+  agreementToken      String   @map("agreement_token") @db.VarChar(500)
+  status              String   @default("PENDING")
+  autoTopupAmount     Decimal  @map("auto_topup_amount") @db.Decimal(10, 2)
+  lowBalanceThreshold Decimal  @map("low_balance_threshold") @db.Decimal(20, 5)
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("swish_recurring_agreements")
+}
+
+model SegpayCard {
+  id          String   @id @default(uuid()) @db.Uuid
+  userId      String   @map("user_id") @db.Uuid
+  cardToken   String   @map("card_token") @db.VarChar(500)
+  last4       String   @db.VarChar(4)
+  brand       String   @db.VarChar(50)
+  expiryMonth Int      @map("expiry_month")
+  expiryYear  Int      @map("expiry_year")
+  isDefault   Boolean  @default(false) @map("is_default")
+  createdAt   DateTime @default(now()) @map("created_at")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("segpay_cards")
+}
+
+model SegpayTransaction {
+  id           String   @id @default(uuid()) @db.Uuid
+  userId       String   @map("user_id") @db.Uuid
+  segpayTxId   String?  @map("segpay_tx_id") @db.VarChar(200)
+  amountSek    Decimal  @map("amount_sek") @db.Decimal(10, 2)
+  tokensCredit Decimal  @map("tokens_credit") @db.Decimal(20, 5)
+  status       String   @default("PENDING")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("segpay_transactions")
 }

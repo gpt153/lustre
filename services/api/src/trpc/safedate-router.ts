@@ -215,7 +215,7 @@ export const safedateRouter = router({
       if (lastLog && lastLog.recordedAt.getTime() > Date.now() - 5000) {
         throw new TRPCError({
           code: 'TOO_MANY_REQUESTS',
-          message: 'GPS log rate limit: max 1 log per 3 seconds',
+          message: 'GPS log rate limit: max 1 log per 5 seconds',
         })
       }
 
@@ -264,9 +264,8 @@ export const safedateRouter = router({
       })
 
       const gpsPoints = logs.map((log) => {
-        const [ivLat, ivLng] = log.iv.split(':')
-        const lat = parseFloat(decrypt(log.latEncrypted, ivLat))
-        const lng = parseFloat(decrypt(log.lngEncrypted, ivLng))
+        const lat = parseFloat(decrypt(log.latEncrypted, log.iv))
+        const lng = parseFloat(decrypt(log.lngEncrypted, log.iv))
         return { lat, lng, accuracy: log.accuracy, recordedAt: log.recordedAt }
       })
 
