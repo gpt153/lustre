@@ -186,6 +186,19 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
 - **Mobile:** Orgs tab at `apps/mobile/app/(tabs)/orgs.tsx`; detail at `/orgs/[orgId]`; admin at `/orgs/[orgId]/admin`
 - **Web:** `/orgs`, `/orgs/create`, `/orgs/[orgId]`, `/orgs/[orgId]/admin`; Orgs nav link in layout
 
+## SafeDate (F13-SAFE-safedate)
+- **Schema:** `SafeDate`, `SafetyContact`, `GPSLog` — Prisma models in `services/api/prisma/schema.prisma`
+- **Enums:** `SafeDateStatus` (ACTIVE, CHECKED_IN, ESCALATED, COMPLETED, CANCELLED)
+- **tRPC Router:** `safedate` — activate, checkIn, cancel, complete, getActive, getHistory, logGPS, getLiveLocation, escalate
+- **GPS encryption:** AES-256-GCM encrypted lat/lng at rest; `logGPS` stores IV as combined `"${ivLat}:${ivLng}"`; `getLiveLocation` uses full IV for both decrypts
+- **Safety contacts:** Up to 3 per SafeDate; SMS escalation via Twilio when check-in missed after 5 min
+- **Share token:** Unique token per SafeDate; safety contacts access live location at `/safe/[shareToken]` (public web view, no auth)
+- **Rate limiting:** GPS log ingestion rate-limited to 1 per 5 seconds per SafeDate
+- **Data retention:** GPS data scheduled for deletion 24h after SafeDate completion (unless escalated)
+- **Free forever:** Zero token cost — safety features never charged
+- **Shared components:** `packages/app/src/` — SafeDateActivateScreen, SafeDateActiveScreen, useSafeDate hook
+- **Mobile:** SafeDate tab at `apps/mobile/app/(tabs)/safedate.tsx`; settings at `apps/mobile/app/(tabs)/profile/safedate.tsx`
+
 ## ConsentVault (F14-SAFE-consent-vault)
 - **Schema:** ConsentRecord, Recording, RecordingAccess, RecordingRevocation, PlaybackLog — Prisma models in `services/api/prisma/schema.prisma`
 - **Enums:** ConsentStatus (PENDING, CONFIRMED, REVOKED), RecordingStatus (PROCESSING, READY, DELETED)
@@ -293,6 +306,19 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
 - **Feed ad display:** `FeedAdCard` integrated into `FeedScreen` (mobile) and `apps/web/app/(app)/home/page.tsx` (web); handles null body/imageUrl gracefully
 - **Budget model:** CPM costs are debited per impression atomically; CPC costs debited on click; delivery stops when `spentSEK >= dailyBudgetSEK`
 - **useAds hook:** `packages/app/src/hooks/useAds.ts` — `useCampaigns`, `useCreateCampaign`, `useUpdateTargeting`, `useAddCreative`, `useActivateCampaign`, `usePauseCampaign`, `useAnalytics`
+
+## Token Payment System (F23-PAY-token-system)
+- **Schema:** `UserBalance`, `TokenTransaction`, `SpreadConfig`, `SwishRecurringAgreement`, `SegpayCard`, `SegpayTransaction` — Prisma models in `services/api/prisma/schema.prisma`
+- **Enums:** `TokenTransactionType` (GATEKEEPER, TOPUP, REFUND, COACH_SESSION, REFERRAL)
+- **Token service:** `services/api/src/lib/tokens.ts` — `checkBalance`, `debitTokens` (atomic Prisma transaction), `creditTokens`. Balance stored as `Decimal(20,5)` for precision
+- **tRPC Router:** `token` — `getBalance`, `getTransactions`, `topup`, `deduct`, `getSpreadConfig`, `setAutoTopup`
+- **Spread pricing:** Default 3x markup on AI/hosting costs; configurable per user segment via `SpreadConfig` model (admin-only)
+- **Auto-topup:** User sets threshold + amount; triggers Swish Recurring or Segpay charge when balance drops below threshold
+- **Payment methods:** Swish Recurring (Swedish market, `SwishRecurringAgreement`), Segpay/CCBill (international, `SegpayCard` + `SegpayTransaction`)
+- **Payment page:** Separate domain `pay.lovelustre.com` — balance display, topup, transaction history, payment settings
+- **Web pages:** `apps/web/app/(pay)/pay/` — `page.tsx` (balance + history), `topup/page.tsx` (topup flow), `settings/page.tsx` (auto-topup + card management)
+- **Service integration:** Gatekeeper (20 tokens), Coach (15 tokens/min voice, 2/min text), sender always pays
+- **Design principle:** No prices visible in main app — "invisible" billing model
 
 ## Content Moderation (F24-MOD-content-moderation)
 - **Schema:** `MessageContentTag`, `Report`, `ModerationAction` — Prisma models in `services/api/prisma/schema.prisma`; `User` extended with `filteredSentCount`, `warningCount`, `isBanned`, `bannedUntil`

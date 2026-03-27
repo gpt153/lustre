@@ -2,7 +2,7 @@
 
 **Project:** Lustre (lovelustre.com)
 **Stack:** Turborepo + Expo + Next.js + Fastify + Elixir + PostgreSQL
-**Next feature number:** F31
+**Next feature number:** F32
 
 ## Planned Features
 
@@ -18,9 +18,9 @@
 | F08 | CONNECT | Matching | 2 | 5 | **DONE** (2026-03-25) |
 | F09 | CONNECT | Chat | 3 | 7 | PLANNED |
 | F10 | CONNECT | Voice & Video | 2 | 4 | **DONE** (2026-03-25) |
-| F11 | MEET | Events | 3 | 7 | PLANNED |
+| F11 | MEET | Events | 3 | 7 | **DONE** (2026-03-26) |
 | F12 | MEET | Organizations | 2 | 4 | **DONE** (2026-03-25) |
-| F13 | SAFE | SafeDate | 2 | 5 | PLANNED |
+| F13 | SAFE | SafeDate | 2 | 5 | **DONE** (2026-03-27) |
 | F14 | SAFE | ConsentVault | 3 | 6 | **DONE** (2026-03-25) |
 | F15 | LEARN | Coach Engine | 2 | 5 | **DONE** (2026-03-25) |
 | F16 | LEARN | Coach Vanilla | 2 | 5 | PLANNED |
@@ -30,14 +30,15 @@
 | F20 | SHOP | Marketplace | 3 | 6 | **DONE** (2026-03-26) |
 | F21 | SHOP | Business Shops | 2 | 4 | **DONE** (2026-03-26) |
 | F22 | SHOP | Advertising | 2 | 5 | **DONE** (2026-03-26) |
-| F23 | PAY | Token System | 3 | 7 | PLANNED |
+| F23 | PAY | Token System | 3 | 7 | **DONE** (2026-03-27) |
 | F24 | MOD | Content Moderation | 2 | 5 | **DONE** (2026-03-26) |
 | F25 | UX | Dual Mode (Vanilla/Spicy) | 2 | 4 | **DONE** (2026-03-26) |
 | F26 | ADMIN | Dashboard | 2 | 5 | **DONE** (2026-03-26) |
 | F27 | GROWTH | Migration & Onboarding | 2 | 4 | **DONE** (2026-03-26) |
-| F28 | CONNECT | Kudos / Reputation | 3 | 7 | PLANNED |
-| F29 | CONNECT | Intentions Discovery | 3 | 8 | PLANNED |
+| F28 | CONNECT | Kudos / Reputation | 3 | 7 | **DONE** (2026-03-26) |
+| F29 | CONNECT | Intentions Discovery | 3 | 8 | **DONE** (2026-03-27) |
 | F30 | CORE | Auth Fix (Swish+SPAR, Email/OAuth) | 3 | 8 | **DONE** (2026-03-26) |
+| F31 | UX | Design System | 2 | 4 | **DONE** (2026-03-27) |
 
 ## Build Order (Suggested Phases)
 
