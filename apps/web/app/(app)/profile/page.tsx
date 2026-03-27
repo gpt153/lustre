@@ -2,11 +2,13 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import styles from './page.module.css'
+import dynamic from 'next/dynamic'
 import PhotoGallery from '@/components/profile/PhotoGallery'
 import PromptCard from '@/components/profile/PromptCard'
 import KudosSection from '@/components/profile/KudosSection'
-import ProfileEdit from '@/components/profile/ProfileEdit'
 import ProfileSkeleton from '@/components/profile/ProfileSkeleton'
+
+const ProfileEdit = dynamic(() => import('@/components/profile/ProfileEdit'), { ssr: false })
 import Button from '@/components/common/Button'
 import { addToast } from '@/lib/toast-store'
 import { api as _api } from '@/lib/trpc'

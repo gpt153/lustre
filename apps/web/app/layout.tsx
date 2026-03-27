@@ -55,14 +55,21 @@ const jetbrainsMono = JetBrains_Mono({
  */
 
 export const metadata: Metadata = {
-  title: 'Lustre',
+  title: { default: 'Lustre', template: '%s | Lustre' },
   description: 'En sex-positiv dejting- och socialplattform för dig som vet vad du vill.',
   applicationName: 'Lustre',
   metadataBase: new URL('https://lovelustre.com'),
   openGraph: {
+    title: 'Lustre',
+    description: 'En sex-positiv dejting- och socialplattform för dig som vet vad du vill.',
     siteName: 'Lustre',
     locale: 'sv_SE',
     type: 'website',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Lustre',
+    description: 'En sex-positiv dejting- och socialplattform för dig som vet vad du vill.',
   },
   icons: {
     icon: [

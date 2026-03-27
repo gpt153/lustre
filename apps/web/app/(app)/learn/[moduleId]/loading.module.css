@@ -1,0 +1,13 @@
+.loading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  padding: var(--space-lg);
+  max-width: 720px;
+}
+
+.lessons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}

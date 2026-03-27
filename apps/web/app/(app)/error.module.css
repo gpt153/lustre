@@ -1,0 +1,126 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60dvh;
+  padding: 2rem;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 480px;
+  gap: 1rem;
+}
+
+.logoMark {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-copper, #B87333), var(--color-gold, #D4A843));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--color-copper, #B87333) 30%, transparent);
+}
+
+.logoL {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+  font-family: var(--font-display, system-ui, sans-serif);
+}
+
+.heading {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-charcoal, #2C2421);
+  margin: 0;
+}
+
+.body {
+  font-size: 0.9375rem;
+  color: var(--color-charcoal-60, #7a6b66);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.digest {
+  font-size: 0.8125rem;
+  color: var(--color-charcoal-40, #9a8b86);
+  margin: 0;
+}
+
+.digest code {
+  font-family: var(--font-mono, monospace);
+  background: color-mix(in srgb, var(--color-charcoal, #2C2421) 6%, transparent);
+  padding: 0.125rem 0.375rem;
+  border-radius: 4px;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  width: 100%;
+}
+
+.retryButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 280px;
+  padding: 0.75rem 2rem;
+  border-radius: 100px;
+  background: var(--color-copper, #B87333);
+  color: #fff;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+  box-shadow: 0 2px 12px color-mix(in srgb, var(--color-copper, #B87333) 35%, transparent);
+}
+
+.retryButton:hover {
+  background: color-mix(in srgb, var(--color-copper, #B87333) 85%, #000);
+}
+
+.retryButton:focus-visible {
+  outline: 2px solid var(--color-copper, #B87333);
+  outline-offset: 3px;
+}
+
+.retryButton:active {
+  transform: scale(0.97);
+}
+
+.homeLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.625rem 1.5rem;
+  border-radius: 100px;
+  border: 1.5px solid var(--color-copper, #B87333);
+  color: var(--color-copper, #B87333);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.homeLink:hover {
+  background: color-mix(in srgb, var(--color-copper, #B87333) 8%, transparent);
+}
+
+.homeLink:focus-visible {
+  outline: 2px solid var(--color-copper, #B87333);
+  outline-offset: 3px;
+}

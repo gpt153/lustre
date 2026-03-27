@@ -1,0 +1,90 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100dvh;
+  padding: var(--space-xl, 2rem);
+  background: var(--color-warm-white, #FDF8F3);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 480px;
+  gap: var(--space-md, 1rem);
+}
+
+.logoMark {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-copper, #B87333), var(--color-gold, #D4A843));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-sm, 0.5rem);
+  box-shadow: 0 4px 20px color-mix(in srgb, var(--color-copper, #B87333) 30%, transparent);
+}
+
+.logoL {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #fff;
+  font-family: var(--font-display, system-ui, sans-serif);
+  line-height: 1;
+}
+
+.heading {
+  font-size: 5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--color-copper, #B87333);
+  font-family: var(--font-display, system-ui, sans-serif);
+  margin: 0;
+}
+
+.subheading {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-charcoal, #2C2421);
+  margin: 0;
+}
+
+.body {
+  font-size: 1rem;
+  color: var(--color-charcoal-60, #7a6b66);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: var(--space-sm, 0.5rem);
+  padding: 0.75rem 2rem;
+  border-radius: 100px;
+  background: var(--color-copper, #B87333);
+  color: #fff;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+  box-shadow: 0 2px 12px color-mix(in srgb, var(--color-copper, #B87333) 35%, transparent);
+}
+
+.cta:hover {
+  background: color-mix(in srgb, var(--color-copper, #B87333) 85%, #000);
+  box-shadow: 0 4px 20px color-mix(in srgb, var(--color-copper, #B87333) 45%, transparent);
+}
+
+.cta:focus-visible {
+  outline: 2px solid var(--color-copper, #B87333);
+  outline-offset: 3px;
+}
+
+.cta:active {
+  transform: scale(0.97);
+}

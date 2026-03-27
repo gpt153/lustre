@@ -59,7 +59,7 @@ export function SkeletonText({
 }: Omit<SkeletonProps, 'shape'>) {
   if (lines === 1) return <SkeletonEl shape="text" {...props} />
   return (
-    <div>
+    <div aria-hidden="true" aria-label="Laddar...">
       {Array.from({ length: lines }, (_, i) => (
         <SkeletonEl key={i} shape="text" {...props} />
       ))}

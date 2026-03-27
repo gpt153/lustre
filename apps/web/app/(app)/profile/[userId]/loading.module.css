@@ -1,0 +1,26 @@
+.loading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  padding: var(--space-lg);
+  max-width: 720px;
+}
+
+.profileInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-top: calc(var(--space-xl) * -1);
+}
+
+.infoText {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}

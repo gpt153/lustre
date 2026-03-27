@@ -7,11 +7,13 @@ import { api as _api } from '@/lib/trpc'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const api = _api as any
+import dynamic from 'next/dynamic'
 import PostCard from '@/components/feed/PostCard'
 import FeedAdCard from '@/components/feed/FeedAdCard'
 import FeedSkeleton from '@/components/feed/FeedSkeleton'
-import PostComposer from '@/components/feed/PostComposer'
 import EmptyState from '@/components/common/EmptyState'
+
+const PostComposer = dynamic(() => import('@/components/feed/PostComposer'), { ssr: false })
 import styles from './page.module.css'
 
 interface PostItem {

@@ -146,6 +146,9 @@ export function BottomNav() {
       {/* More sheet */}
       <div
         className={`${styles.moreSheet} ${moreOpen ? styles.moreSheetOpen : ''}`}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Mer navigation"
         aria-hidden={!moreOpen}
       >
         <div className={styles.moreSheetHeader}>
@@ -178,7 +181,7 @@ export function BottomNav() {
       </div>
 
       {/* Bottom nav bar */}
-      <nav className={`${styles.bottomNav} glass`} aria-label="Mobilnavigation">
+      <nav className={`${styles.bottomNav} glass`} aria-label="Huvudnavigation">
         {mainItems.map(item => {
           const isActive = pathname === item.path || pathname?.startsWith(item.path + '/')
           return (
@@ -199,6 +202,7 @@ export function BottomNav() {
           className={`${styles.navItem} ${isMoreActive || moreOpen ? styles.navItemActive : ''}`}
           onClick={() => setMoreOpen(prev => !prev)}
           aria-expanded={moreOpen}
+          aria-haspopup="dialog"
           aria-label="Mer navigation"
         >
           <span className={styles.iconWrap}><DotsIcon /></span>
