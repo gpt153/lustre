@@ -28,11 +28,73 @@ function FieldRow({ label, children }: { label: string; children: React.ReactNod
   )
 }
 
+function getTrustScoreColor(score: number): string {
+  if (score >= 70) return '#22c55e'
+  if (score >= 40) return '#f59e0b'
+  return '#ef4444'
+}
+
+function TrustScoreBar({
+  label,
+  score,
+  weight,
+}: {
+  label: string
+  score: number
+  weight: number
+}) {
+  const color = getTrustScoreColor(score)
+  const displayScore = Math.round(score)
+
+  return (
+    <div style={{ marginBottom: '16px' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '6px',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <span style={{ ...LABEL_STYLE, marginBottom: 0, fontSize: '11px' }}>
+            {label}
+          </span>
+          <span style={{ fontSize: '11px', color: '#64748b' }}>({weight}%)</span>
+        </div>
+        <span style={{ color: color, fontSize: '13px', fontWeight: 600 }}>
+          {displayScore}
+        </span>
+      </div>
+      <div
+        style={{
+          width: '100%',
+          height: '6px',
+          backgroundColor: '#0f172a',
+          borderRadius: '3px',
+          overflow: 'hidden',
+        }}
+      >
+        <div
+          style={{
+            width: `${Math.min(score, 100)}%`,
+            height: '100%',
+            backgroundColor: color,
+            transition: 'width 0.3s ease-out',
+          }}
+        />
+      </div>
+    </div>
+  )
+}
+
 function UserDetailContent() {
   const params = useParams()
   const userId = params.userId as string
 
   const userQuery = trpc.admin.getUser.useQuery({ userId })
+
+  const trustQuery = trpc.priority.adminGetTrustScore.useQuery({ userId }, { retry: false })
 
   const suspendMutation = trpc.admin.suspendUser.useMutation({
     onSuccess: () => { userQuery.refetch() },
@@ -262,6 +324,110 @@ function UserDetailContent() {
                 </div>
               </div>
             )}
+
+            {/* Trust Score Panel */}
+            <div style={{
+              marginTop: '20px',
+              backgroundColor: '#1e293b',
+              border: '1px solid #334155',
+              borderRadius: '8px',
+              padding: '24px',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+                <h2 style={{ color: '#f1f5f9', fontSize: '16px', fontWeight: 600, margin: 0 }}>
+                  Trust Score
+                </h2>
+                {trustQuery.data && (
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '48px',
+                      height: '48px',
+                      borderRadius: '6px',
+                      backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                      border: '1px solid rgba(59, 130, 246, 0.3)',
+                    }}
+                  >
+                    <span style={{ fontSize: '20px', fontWeight: 700, color: '#3b82f6' }}>
+                      {Math.round(trustQuery.data.totalScore)}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {trustQuery.isLoading && (
+                <p style={{ color: '#94a3b8', fontSize: '13px', margin: 0 }}>
+                  Loading trust score...
+                </p>
+              )}
+
+              {trustQuery.isError && (
+                <div style={{
+                  padding: '12px',
+                  backgroundColor: 'rgba(148, 163, 184, 0.1)',
+                  border: '1px solid rgba(148, 163, 184, 0.2)',
+                  borderRadius: '6px',
+                  color: '#94a3b8',
+                  fontSize: '13px',
+                }}>
+                  No trust score data available
+                </div>
+              )}
+
+              {trustQuery.data && (
+                <>
+                  <div style={{ marginBottom: '24px' }}>
+                    <TrustScoreBar
+                      label="Kudos"
+                      score={trustQuery.data.kudosScore}
+                      weight={25}
+                    />
+                    <TrustScoreBar
+                      label="Community"
+                      score={trustQuery.data.communityScore}
+                      weight={20}
+                    />
+                    <TrustScoreBar
+                      label="Activity"
+                      score={trustQuery.data.activityScore}
+                      weight={15}
+                    />
+                    <TrustScoreBar
+                      label="Response"
+                      score={trustQuery.data.responseScore}
+                      weight={15}
+                    />
+                    <TrustScoreBar
+                      label="Profile Quality"
+                      score={trustQuery.data.profileQualityScore}
+                      weight={15}
+                    />
+                    <TrustScoreBar
+                      label="Safety"
+                      score={trustQuery.data.safetyScore}
+                      weight={10}
+                      />
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+                    <FieldRow label="Sparks Balance">
+                      {Math.round(trustQuery.data.sparksBalance)}
+                    </FieldRow>
+                    <FieldRow label="Spotlight Credits">
+                      {Math.round(trustQuery.data.spotlightCredits)}
+                    </FieldRow>
+                  </div>
+
+                  <div style={{ paddingTop: '12px', borderTop: '1px solid #334155' }}>
+                    <span style={{ ...LABEL_STYLE, fontSize: '10px', color: '#64748b' }}>
+                      Updated {new Date(trustQuery.data.updatedAt).toLocaleString('en-SE')}
+                    </span>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </div>
       )}

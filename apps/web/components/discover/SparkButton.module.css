@@ -1,0 +1,148 @@
+.container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.actionBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  transition:
+    transform 200ms ease,
+    background 200ms ease,
+    box-shadow 150ms ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  position: relative;
+
+  &:active {
+    transform: scale(0.9);
+  }
+
+  &:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+  }
+}
+
+.sparkBtn {
+  background: var(--color-gold, #D4A843);
+  color: white;
+  box-shadow: 0 4px 12px rgba(212, 168, 67, 0.4);
+
+  &:hover:not(.disabled) {
+    background: #e5b854;
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(212, 168, 67, 0.5);
+  }
+
+  &:not(.disabled):not(.confirmed) {
+    position: relative;
+  }
+}
+
+.sparkBtn.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+
+  &:hover {
+    transform: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.sparkBtn.confirmed {
+  animation: sparkPulse 600ms ease-out;
+}
+
+@keyframes sparkPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 6px 20px rgba(212, 168, 67, 0.5);
+  }
+  50% {
+    transform: scale(1.15);
+    box-shadow: 0 8px 28px rgba(212, 168, 67, 0.7);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 4px 12px rgba(212, 168, 67, 0.4);
+  }
+}
+
+/* Spark balance badge */
+.badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  min-width: 22px;
+  height: 22px;
+  background: var(--color-gold, #D4A843);
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(212, 168, 67, 0.4);
+  border: 2px solid var(--color-bg-elevated, #ffffff);
+  line-height: 1;
+}
+
+/* "Sparked you" indicator — small lightning pill badge */
+.sparkedYouIndicator {
+  position: absolute;
+  bottom: -4px;
+  left: -4px;
+  width: 24px;
+  height: 24px;
+  background: var(--color-copper, #B87333);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(184, 115, 51, 0.4);
+  border: 2px solid var(--color-bg-elevated, #ffffff);
+  animation: sparkedYouPulse 2s ease-in-out infinite;
+}
+
+@keyframes sparkedYouPulse {
+  0%,
+  100% {
+    box-shadow: 0 2px 8px rgba(184, 115, 51, 0.4);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 4px 12px rgba(184, 115, 51, 0.6);
+    transform: scale(1.1);
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .sparkBtn {
+    &:hover:not(.disabled) {
+      transform: none;
+    }
+  }
+
+  .sparkBtn.confirmed {
+    animation: none;
+  }
+
+  .sparkedYouIndicator {
+    animation: none;
+  }
+
+  .actionBtn:active {
+    transform: none;
+  }
+}

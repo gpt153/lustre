@@ -2,6 +2,7 @@
 
 import { useCallback } from 'react'
 import styles from './ProfileCard.module.css'
+import SparkButton from './SparkButton'
 
 export interface DiscoverProfile {
   id: string
@@ -11,6 +12,7 @@ export interface DiscoverProfile {
   location: string
   bio: string
   seeking?: string[]
+  sparkedYou?: boolean
 }
 
 interface ProfileCardProps {
@@ -131,6 +133,11 @@ export default function ProfileCard({
               />
             </svg>
           </button>
+
+          <SparkButton
+            recipientId={profile.id}
+            sparkedYou={profile.sparkedYou}
+          />
 
           <button
             className={[styles.actionBtn, styles.likeBtn].join(' ')}
