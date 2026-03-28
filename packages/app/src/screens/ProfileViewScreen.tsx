@@ -29,20 +29,21 @@ const HERO_HEIGHT = Dimensions.get('window').height * 0.45
 
 // Lustre design tokens
 const tokens = {
-  copper: '#B87333',
+  copper: '#894d0d',
   copperLight: '#D4A574',
   copperMuted: '#C4956A',
   gold: '#D4A843',
   goldBright: '#E8B84B',
-  warmWhite: '#FDF8F3',
+  warmWhite: '#fef8f3',
   warmCream: '#F5EDE4',
   charcoal: '#2C2421',
   warmGray: '#8B7E74',
   ember: '#E05A33',
-  surface: '#FFF8F6',
-  surfaceContainer: '#FAEBE6',
-  surfaceContainerLow: '#FFF1EC',
-  outlineVariant: '#D8C3B4',
+  surface: '#fef8f3',
+  surfaceContainer: '#f2ede8',
+  surfaceContainerLow: '#f8f3ee',
+  outlineVariant: '#d8c3b4',
+  ghostBorder: 'rgba(216, 195, 180, 0.20)',
 }
 
 export function ProfileViewScreen({ profile, isOwnProfile = false, onEdit, onLogout }: ProfileViewProps) {
@@ -118,7 +119,7 @@ export function ProfileViewScreen({ profile, isOwnProfile = false, onEdit, onLog
         {/* Dark gradient overlay */}
         <YStack position="absolute" bottom={0} left={0} right={0} height="60%">
           <LinearGradient
-            colors={['transparent', 'rgba(33, 26, 23, 0.8)']}
+            colors={['transparent', 'rgba(137, 77, 13, 0.15)', 'rgba(254, 248, 243, 1)']}
             start={[0, 0]}
             end={[0, 1]}
             width="100%"
@@ -262,7 +263,7 @@ export function ProfileViewScreen({ profile, isOwnProfile = false, onEdit, onLog
                   paddingVertical={10}
                   borderRadius={9999}
                   borderWidth={1}
-                  borderColor={tokens.outlineVariant}
+                  borderColor={tokens.ghostBorder}
                   backgroundColor={tokens.surfaceContainerLow}
                 >
                   <Text
@@ -321,7 +322,7 @@ export function ProfileViewScreen({ profile, isOwnProfile = false, onEdit, onLog
                   paddingVertical={10}
                   borderRadius={9999}
                   borderWidth={1}
-                  borderColor={tokens.outlineVariant}
+                  borderColor={tokens.ghostBorder}
                   backgroundColor={tokens.surfaceContainerLow}
                   alignItems="center"
                   gap={6}
@@ -359,8 +360,8 @@ export function ProfileViewScreen({ profile, isOwnProfile = false, onEdit, onLog
                     height={photoSize}
                     borderRadius={16}
                     overflow="hidden"
-                    borderWidth={2}
-                    borderColor={tokens.copperLight}
+                    borderWidth={1}
+                    borderColor={tokens.ghostBorder}
                     backgroundColor={tokens.surfaceContainer}
                   >
                     <Image
@@ -385,17 +386,18 @@ export function ProfileViewScreen({ profile, isOwnProfile = false, onEdit, onLog
             marginTop={32}
             width="100%"
             height={56}
-            borderRadius={16}
+            borderRadius={9999}
             overflow="hidden"
             pressStyle={{ scale: 0.98 }}
             onPress={onEdit}
-            shadowColor="rgba(137, 77, 13, 0.2)"
+            shadowColor="#2C2421"
             shadowOffset={{ width: 0, height: 8 }}
+            shadowOpacity={0.06}
             shadowRadius={24}
             elevation={4}
           >
             <LinearGradient
-              colors={[tokens.copper, '#A76526']}
+              colors={['#894d0d', '#a76526']}
               start={[0, 0]}
               end={[1, 1]}
               width="100%"
