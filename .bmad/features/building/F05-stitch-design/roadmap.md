@@ -36,13 +36,15 @@ E02 Navigation Overhaul ────────────────├─�
 - **Resultat:** notoSerifFont (9 sizes, 2 weights, italic), manropeFont (5 sizes, 4 weights), expo-loader updated with 7 font assets, tamagui.config wired, TypeScript passes
 
 ### Wave 3: E02 — Navigation Overhaul
-- **Status:** IN_PROGRESS (2026-03-29T00:10:00Z)
+- **Status:** VERIFIED (2026-03-29T00:25:00Z)
 - **Mål:** Glassmorphic floating dock med 5 tabs, inga debug-rubriker
 - **Beroenden:** E01 (tokens för färger/opacity)
 - **Verifiering:** Screenshot visar floating dock med backdrop-blur
 - **UI-checkpoint:** Ja — verifiera navigation via odin9
+- **Resultat:** Custom FloatingDock med BlurView (iOS) / solid fallback (Android), 5 tabs med copper active/outline inactive, active dot indicator, 48px borderRadius, no-line rule, paddingBottom 96 for content clearance
 
 ### Wave 4: E04 — Component Redesign
+- **Status:** IN_PROGRESS (2026-03-29T00:25:00Z)
 - **Mål:** Alla core-komponenter omdesignade enligt stitch
 - **Beroenden:** E01 (tokens), E03 (typografi)
 - **Verifiering:** Komponenter renderar korrekt, inga borders synliga

@@ -76,6 +76,10 @@ model User {
   kudosPromptsAsUser         KudosPrompt[]             @relation("kudosPromptUser")
   kudosPromptsAsRecipient    KudosPrompt[]             @relation("kudosPromptRecipient")
   intentions                 Intention[]
+  trustScore                 ProfileTrustScore?
+  sparksSent                 Spark[]                   @relation("sparksSent")
+  sparksReceived             Spark[]                   @relation("sparksReceived")
+  spotlights                 Spotlight[]
 
   @@map("users")
 }
@@ -1517,4 +1521,46 @@ model SegpayTransaction {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("segpay_transactions")
+}
+
+model ProfileTrustScore {
+  id                  String   @id @default(uuid()) @db.Uuid
+  userId              String   @unique @map("user_id") @db.Uuid
+  kudosScore          Int      @default(0) @map("kudos_score")
+  activityScore       Int      @default(0) @map("activity_score")
+  responseScore       Int      @default(0) @map("response_score")
+  profileQualityScore Int      @default(0) @map("profile_quality_score")
+  communityScore      Int      @default(0) @map("community_score")
+  safetyScore         Int      @default(0) @map("safety_score")
+  totalScore          Int      @default(0) @map("total_score")
+  sparksBalance       Int      @default(0) @map("sparks_balance")
+  spotlightCredits    Int      @default(0) @map("spotlight_credits")
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("profile_trust_scores")
+}
+
+model Spark {
+  id          String   @id @default(uuid()) @db.Uuid
+  senderId    String   @map("sender_id") @db.Uuid
+  recipientId String   @map("recipient_id") @db.Uuid
+  createdAt   DateTime @default(now()) @map("created_at")
+  sender      User     @relation("sparksSent", fields: [senderId], references: [id], onDelete: Cascade)
+  recipient   User     @relation("sparksReceived", fields: [recipientId], references: [id], onDelete: Cascade)
+
+  @@unique([senderId, recipientId])
+  @@map("sparks")
+}
+
+model Spotlight {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  startsAt  DateTime @map("starts_at")
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("spotlights")
 }
