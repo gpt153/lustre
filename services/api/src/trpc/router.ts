@@ -39,6 +39,7 @@ import { migrationRouter } from './migration-router.js'
 import { inviteRouter } from './invite-router.js'
 import { kudosRouter } from './kudos-router.js'
 import { intentionRouter } from './intention-router.js'
+import { priorityRouter } from './priority-router.js'
 
 const swishCallbackSchema = z.object({
   id: z.string(),
@@ -332,6 +333,7 @@ export const appRouter = router({
   migration: migrationRouter,
   invite: inviteRouter,
   kudos: kudosRouter,
+  priority: priorityRouter,
 })
 
 export type AppRouter = typeof appRouter
