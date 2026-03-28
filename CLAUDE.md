@@ -456,6 +456,21 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
 - **Import pattern:** Always use EXPLICIT file imports (e.g. `from '@/components/common/Button'`), never barrel imports
 - **First-load JS:** 102KB shared (budget <200KB)
 
+## Profile Priority & Earned Rewards (F35-CONNECT-profile-priority)
+- **Philosophy:** No premium tiers, no purchasable visibility. Profile priority is earned through positive behavior.
+- **Schema:** `ProfileTrustScore`, `Spark`, `Spotlight` — Prisma models in `services/api/prisma/schema.prisma`
+- **TrustScore engine:** `services/api/src/lib/trust-score.ts` — Invisible composite score (0-100) from 6 weighted sub-signals: kudos (0.25), community (0.20), activity (0.15), response (0.15), profile quality (0.15), safety (0.10). Hourly cron refresh via `refreshAllTrustScores`. Redis hash cache with 2h TTL.
+- **Activity decay:** Points in Redis sorted sets; 14d decay (app open, swipe, message, post, comment), 30d decay (profile update, event attendance/hosting)
+- **NATS consumer:** `services/api/src/lib/trust-score-consumer.ts` — 8 subscriptions (kudos.received, post.created, event.attended, event.hosted, message.sent, report.created, streak.milestone, kudos.milestone.*)
+- **Sparks:** `services/api/src/lib/spark.ts` — Earned super-likes (cannot be purchased). Weekly allocation of 1 per active user. Milestone awards: streak 7d (+1), streak 30d (+3), 10 kudos (+2), 50 kudos (+5), host event (+2), attend event (+1), referral (+3). Idempotent via Redis sets. Unique constraint on sender+recipient.
+- **Spotlight:** `services/api/src/lib/spotlight.ts` — 30-minute visibility boost (+30 to discovery ranking, capped at 100). Redis TTL key for active status. Earned via milestones: 14-day streak (1), 50 kudos (1), host event 10+ attendees (1). Idempotent via Redis sets.
+- **Discovery ranking:** `RANKING_WEIGHTS` in `services/api/src/lib/intention-scoring.ts` — rebalanced to: intention 0.55, trust 0.25, gatekeeper 0.10, kudos 0.10. Redis pipeline batch-fetch for trust scores + spotlight flags.
+- **tRPC Router:** `priority` in `services/api/src/trpc/priority-router.ts` — `getSparkBalance`, `sendSpark`, `getSparksReceived`, `getSpotlightCredits`, `activateSpotlight`, `getSpotlightStatus`, `adminGetTrustScore` (admin-only)
+- **Mobile:** `apps/mobile/components/ProfileCardStory.tsx` (SparkBadge, spark button), `apps/mobile/hooks/useSpotlight.ts`, `apps/mobile/components/SpotlightActivate.tsx`
+- **Web:** `apps/web/components/discover/SparkButton.tsx` (gold lightning on ProfileCard), `apps/web/components/profile/SpotlightActivate.tsx` (countdown timer)
+- **Admin:** TrustScore breakdown panel on `apps/admin/app/users/[userId]/page.tsx` — 6 sub-signal progress bars, sparks balance, spotlight credits (read-only)
+- **Design rule:** TrustScore is NEVER displayed to users in the UI — only visible in admin dashboard
+
 ## Rules
 - All users verified via Swish 10 SEK + SPAR (Sweden); international expansion TBD
 - Real names NEVER shown in app — stored encrypted, released only via court order
