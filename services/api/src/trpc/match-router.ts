@@ -117,7 +117,29 @@ export const matchRouter = router({
         !swipedTargetIds.has(profile.userId) && !seenTargetIds.has(profile.userId)
       )
 
-      return filteredProfiles
+      // Check for incoming sparks (profiles that sparked the viewer)
+      const incomingSparks = await ctx.prisma.spark.findMany({
+        where: {
+          recipientId: ctx.userId,
+          createdAt: { gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) },
+        },
+        select: { senderId: true },
+      })
+
+      const sparkerIds = new Set(incomingSparks.map(s => s.senderId))
+
+      const profilesWithSpark = filteredProfiles.map(profile => ({
+        ...profile,
+        sparkedYou: sparkerIds.has(profile.userId),
+      }))
+
+      const sortedProfiles = profilesWithSpark.sort((a, b) => {
+        if (a.sparkedYou && !b.sparkedYou) return -1
+        if (!a.sparkedYou && b.sparkedYou) return 1
+        return 0
+      })
+
+      return sortedProfiles
     }),
 
   swipe: protectedProcedure

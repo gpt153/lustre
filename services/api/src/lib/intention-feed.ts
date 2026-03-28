@@ -252,15 +252,38 @@ export async function generateIntentionFeed(
     })
     .filter((item): item is ScoredCandidate => item !== null)
 
-  // Step 6b: Enhance scores with gatekeeper pass rate and kudos score
+  // Step 6b: Enhance scores with trust score, gatekeeper pass rate, and kudos score
   const candidateUserIds = scored.map((s) => s.intention.userId)
+
+  // Batch-fetch trust scores and spotlight flags via Redis pipeline to avoid N+1 calls
+  const pipeline = redis.pipeline()
+  for (const uid of candidateUserIds) {
+    pipeline.hget(`trust:score:${uid}`, 'totalScore')
+    pipeline.exists(`spotlight:active:${uid}`)
+  }
+  const pipelineResults = await pipeline.exec()
+
+  const trustScoreMap = new Map<string, number>()
+  const spotlightMap = new Map<string, boolean>()
+  for (let i = 0; i < candidateUserIds.length; i++) {
+    const scoreResult = pipelineResults?.[i * 2]
+    const spotlightResult = pipelineResults?.[i * 2 + 1]
+    const rawScore = scoreResult?.[1] as string | null
+    trustScoreMap.set(candidateUserIds[i], rawScore ? parseInt(rawScore, 10) : 0)
+    spotlightMap.set(candidateUserIds[i], (spotlightResult?.[1] as number) === 1)
+  }
+
   const [kudosScores, gatekeeperRates] = await Promise.all([
     Promise.all(candidateUserIds.map((uid) => getKudosScore(prisma, uid))),
     Promise.all(candidateUserIds.map((uid) => getGatekeeperPassRate(prisma, uid))),
   ])
 
   scored.forEach((item, i) => {
-    item.score = computeFinalScore(item.score, gatekeeperRates[i], kudosScores[i])
+    let trustScore = trustScoreMap.get(item.intention.userId) ?? 0
+    if (spotlightMap.get(item.intention.userId)) {
+      trustScore = Math.min(100, trustScore + 30)
+    }
+    item.score = computeFinalScore(item.score, gatekeeperRates[i], kudosScores[i], trustScore)
   })
 
   // Step 7: Sort by score descending

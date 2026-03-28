@@ -12,9 +12,10 @@ export const SCORING_WEIGHTS = {
 export const MUTUAL_BOOST_MULTIPLIER = 1.2
 
 export const RANKING_WEIGHTS = {
-  INTENTION_SCORE: 0.70,
-  GATEKEEPER_PASS_RATE: 0.15,
-  KUDOS_SCORE: 0.15,
+  INTENTION_SCORE: 0.55,
+  TRUST_SCORE: 0.25,
+  GATEKEEPER_PASS_RATE: 0.10,
+  KUDOS_SCORE: 0.10,
 }
 
 const SCORE_CACHE_TTL = 21600 // 6 hours
@@ -212,10 +213,12 @@ export function computeIntentionScore(
 export function computeFinalScore(
   intentionScore: number,
   gatekeeperPassRate: number,
-  kudosScore: number
+  kudosScore: number,
+  trustScore: number = 0
 ): number {
   return (
     intentionScore * RANKING_WEIGHTS.INTENTION_SCORE +
+    trustScore * RANKING_WEIGHTS.TRUST_SCORE +
     gatekeeperPassRate * RANKING_WEIGHTS.GATEKEEPER_PASS_RATE +
     kudosScore * RANKING_WEIGHTS.KUDOS_SCORE
   )
