@@ -53,16 +53,17 @@ export async function recordActivityPoint(
 // ---------------------------------------------------------------------------
 
 export async function computeActivityScore(userId: string): Promise<number> {
-  const members = await redis.zrangewithscores(ACTIVITY_KEY(userId), 0, -1)
+  // zrange with WITHSCORES returns interleaved [member, score, member, score, ...]
+  const raw = await redis.zrange(ACTIVITY_KEY(userId), 0, -1, 'WITHSCORES')
 
-  if (members.length === 0) return 0
+  if (raw.length === 0) return 0
 
   const now = Date.now()
   let total = 0
 
-  for (let i = 0; i < members.length; i += 2) {
-    const member = members[i] as string
-    const score = Number(members[i + 1])
+  for (let i = 0; i < raw.length; i += 2) {
+    const member = raw[i]
+    const score = Number(raw[i + 1])
 
     const signalKey = member.split(':')[0] as keyof typeof ACTIVITY_SIGNALS
     const config = ACTIVITY_SIGNALS[signalKey]

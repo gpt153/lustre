@@ -1,15 +1,16 @@
 import { styled, YStack } from 'tamagui'
 
 export const CardBase = styled(YStack, {
-  backgroundColor: '#F5EDE4', // warmCream
+  backgroundColor: '#ffffff',   // surfaceContainerLowest — tonal layering on surface bg
   borderRadius: 16,
+  borderWidth: 0,
   padding: '$md',
 
-  // Warm-tinted shadow for depth (no borders)
-  shadowColor: '#2C2421', // charcoal
-  shadowOffset: { width: 0, height: 2 },
-  shadowOpacity: 0.1,
-  shadowRadius: 8,
+  // Ultra-diffused charcoal shadow
+  shadowColor: '#2C2421',
+  shadowOffset: { width: 0, height: 8 },
+  shadowOpacity: 0.06,
+  shadowRadius: 24,
 
   // Android elevation fallback
   elevationAndroid: 2,
@@ -17,22 +18,22 @@ export const CardBase = styled(YStack, {
   variants: {
     elevation: {
       1: {
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.04,
         shadowRadius: 8,
         elevationAndroid: 2,
       },
       2: {
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.15,
-        shadowRadius: 12,
-        elevationAndroid: 4,
+        shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 0.06,
+        shadowRadius: 24,
+        elevationAndroid: 2,
       },
       3: {
-        shadowOffset: { width: 0, height: 6 },
-        shadowOpacity: 0.2,
-        shadowRadius: 16,
-        elevationAndroid: 6,
+        shadowOffset: { width: 0, height: 12 },
+        shadowOpacity: 0.06,
+        shadowRadius: 40,
+        elevationAndroid: 2,
       },
     },
   } as const,

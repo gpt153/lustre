@@ -44,13 +44,15 @@ E02 Navigation Overhaul ────────────────├─�
 - **Resultat:** Custom FloatingDock med BlurView (iOS) / solid fallback (Android), 5 tabs med copper active/outline inactive, active dot indicator, 48px borderRadius, no-line rule, paddingBottom 96 for content clearance
 
 ### Wave 4: E04 — Component Redesign
-- **Status:** IN_PROGRESS (2026-03-29T00:25:00Z)
+- **Status:** VERIFIED (2026-03-29T00:40:00Z)
 - **Mål:** Alla core-komponenter omdesignade enligt stitch
 - **Beroenden:** E01 (tokens), E03 (typografi)
 - **Verifiering:** Komponenter renderar korrekt, inga borders synliga
 - **UI-checkpoint:** Ja — verifiera komponenter via test-skärm
+- **Resultat:** LustreButton (copper-gold LinearGradient, pill shape, ghost borders on secondary), LustreInput (no-border pill, copper focus glow), CardBase (surfaceContainerLowest, ultra-diffused 0.06 shadow), BottomSheetBase (glassmorphism 85% opacity, xl roundness 48), ModalBase (white bg, 32 radius, ultra-diffused shadow)
 
 ### Wave 5: E05 — Discover Screen
+- **Status:** IN_PROGRESS (2026-03-29T00:40:00Z)
 - **Mål:** Fullskärms-fotokort, copper-gradient overlay, action buttons
 - **Beroenden:** E01, E02, E03, E04
 - **Verifiering:** Screenshot matchar stitch-design

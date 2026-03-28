@@ -1,58 +1,115 @@
-import { styled, Button as TamaguiButton } from 'tamagui'
+import React from 'react'
+import { Pressable, type ViewStyle } from 'react-native'
+import { LinearGradient } from 'expo-linear-gradient'
+import { Text } from 'tamagui'
 
-export const LustreButton = styled(TamaguiButton, {
-  backgroundColor: '#D4A843',  // gold
-  color: '#2C2421',  // charcoal text on gold
-  borderRadius: 12,
-  paddingHorizontal: '$lg',
-  paddingVertical: '$sm',
-  fontWeight: '600',
-  fontFamily: '$heading',
+type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'danger'
 
-  pressStyle: {
-    backgroundColor: '#C9973E',  // goldDeep
-    scale: 0.95,
-    opacity: 0.9,
+interface LustreButtonProps {
+  children: React.ReactNode
+  variant?: ButtonVariant
+  onPress?: () => void
+  disabled?: boolean
+  style?: ViewStyle
+  [key: string]: unknown
+}
+
+const BASE_STYLE: ViewStyle = {
+  borderRadius: 9999,
+  alignItems: 'center',
+  justifyContent: 'center',
+  paddingHorizontal: 24,
+  paddingVertical: 12,
+  overflow: 'hidden',
+}
+
+const VARIANT_STYLES: Record<ButtonVariant, ViewStyle> = {
+  primary: {
+    ...BASE_STYLE,
   },
-
-  hoverStyle: {
-    backgroundColor: '#E8B84B',  // goldBright
+  secondary: {
+    ...BASE_STYLE,
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: 'rgba(216, 195, 180, 0.20)',
   },
+  outline: {
+    ...BASE_STYLE,
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: 'rgba(216, 195, 180, 0.20)',
+  },
+  danger: {
+    ...BASE_STYLE,
+    backgroundColor: '#E05A33',
+  },
+}
 
-  variants: {
-    variant: {
-      secondary: {
-        backgroundColor: 'transparent',
-        borderWidth: 1,
-        borderColor: '#B87333',  // copper
-        color: '#B87333',
-        pressStyle: {
-          backgroundColor: '#D4A574',  // copperLight fill
-          color: '#2C2421',
-          scale: 0.95,
-        },
-        hoverStyle: {
-          backgroundColor: 'rgba(184, 115, 51, 0.1)',
-        },
-      },
-      outline: {
-        backgroundColor: 'transparent',
-        borderWidth: 1,
-        borderColor: '#B87333',
-        color: '#B87333',
-        pressStyle: {
-          backgroundColor: 'rgba(184, 115, 51, 0.1)',
-          scale: 0.95,
-        },
-      },
-      danger: {
-        backgroundColor: '#E05A33',  // ember
-        color: '#FDF8F3',  // warmWhite
-        pressStyle: {
-          backgroundColor: '#C84A28',
-          scale: 0.95,
-        },
-      },
-    },
-  } as const,
-})
+const TEXT_COLOR: Record<ButtonVariant, string> = {
+  primary: '#ffffff',
+  secondary: '#894d0d',
+  outline: '#894d0d',
+  danger: '#FDF8F3',
+}
+
+export function LustreButton({
+  children,
+  variant = 'primary',
+  onPress,
+  disabled,
+  style,
+  ...rest
+}: LustreButtonProps) {
+  const variantStyle = VARIANT_STYLES[variant]
+  const textColor = TEXT_COLOR[variant]
+
+  const content = (
+    <Text
+      color={textColor as never}
+      fontWeight="600"
+      fontFamily="$heading"
+      fontSize={16}
+    >
+      {children}
+    </Text>
+  )
+
+  if (variant === 'primary') {
+    return (
+      <Pressable
+        onPress={onPress}
+        disabled={disabled}
+        style={({ pressed }) => [
+          BASE_STYLE,
+          { opacity: disabled ? 0.5 : pressed ? 0.9 : 1, transform: [{ scale: pressed ? 0.95 : 1 }] },
+          style,
+        ]}
+        {...rest}
+      >
+        <LinearGradient
+          colors={['#894d0d', '#a76526']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={{ borderRadius: 9999, width: '100%', alignItems: 'center', justifyContent: 'center', paddingVertical: 12, paddingHorizontal: 24 }}
+        >
+          {content}
+        </LinearGradient>
+      </Pressable>
+    )
+  }
+
+  return (
+    <Pressable
+      onPress={onPress}
+      disabled={disabled}
+      style={({ pressed }) => [
+        variantStyle,
+        { opacity: disabled ? 0.5 : pressed ? 0.9 : 1, transform: [{ scale: pressed ? 0.95 : 1 }] },
+        style,
+      ]}
+      {...rest}
+    >
+      {content}
+    </Pressable>
+  )
+}

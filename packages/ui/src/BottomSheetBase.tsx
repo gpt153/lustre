@@ -21,12 +21,12 @@ export function BottomSheetBase({ visible, onClose, children, snapHeight }: Bott
   useEffect(() => {
     if (visible) {
       Animated.parallel([
-        Animated.spring(translateY, { toValue: 0, damping: 25, stiffness: 100, useNativeDriver: true }),
+        Animated.spring(translateY, { toValue: 0, damping: 20, stiffness: 120, useNativeDriver: true }),
         Animated.timing(backdropOpacity, { toValue: 1, duration: 200, useNativeDriver: true }),
       ]).start()
     } else {
       Animated.parallel([
-        Animated.spring(translateY, { toValue: sheetHeight, damping: 25, stiffness: 100, useNativeDriver: true }),
+        Animated.spring(translateY, { toValue: sheetHeight, damping: 20, stiffness: 120, useNativeDriver: true }),
         Animated.timing(backdropOpacity, { toValue: 0, duration: 200, useNativeDriver: true }),
       ]).start()
     }
@@ -40,10 +40,21 @@ export function BottomSheetBase({ visible, onClose, children, snapHeight }: Bott
         <Animated.View style={styles.backdrop} />
       </TouchableWithoutFeedback>
       <Animated.View style={[styles.sheetContainer, { height: sheetHeight, transform: [{ translateY }] }]}>
-        <YStack backgroundColor="#F5EDE4" borderTopLeftRadius={20} borderTopRightRadius={20} flex={1} overflow="hidden">
+        <YStack
+          backgroundColor="rgba(254,248,243,0.85)"
+          borderTopLeftRadius={48}
+          borderTopRightRadius={48}
+          flex={1}
+          overflow="hidden"
+        >
           {/* Drag handle */}
           <XStack justifyContent="center" paddingVertical="$xs">
-            <YStack width={40} height={4} borderRadius={2} backgroundColor="#C4956A" />
+            <YStack
+              width={40}
+              height={4}
+              borderRadius={2}
+              backgroundColor="rgba(137, 77, 13, 0.40)"
+            />
           </XStack>
           <YStack flex={1} padding="$md">
             {children}

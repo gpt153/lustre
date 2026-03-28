@@ -36,7 +36,15 @@ body {
   font-size: 15px;
   line-height: 1.6;
   color: var(--color-text-primary);
-  background: var(--color-bg-primary);
+  background-color: var(--color-bg-primary);
+  /* Warm paper-like texture — single full-screen gradient, no tiling */
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(184, 115, 51, 0.03) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(212, 168, 67, 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 60% 80%, rgba(184, 115, 51, 0.02) 0%, transparent 50%);
+  background-attachment: fixed;
+  background-size: 100vw 100vh;
+  background-repeat: no-repeat;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;

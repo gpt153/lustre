@@ -17,7 +17,7 @@ export function ModalBase({ visible, onClose, children }: ModalBaseProps) {
     if (visible) {
       Animated.parallel([
         Animated.timing(backdropOpacity, { toValue: 1, duration: 200, useNativeDriver: true }),
-        Animated.spring(contentScale, { toValue: 1, damping: 20, stiffness: 100, useNativeDriver: true }),
+        Animated.spring(contentScale, { toValue: 1, damping: 18, stiffness: 100, useNativeDriver: true }),
         Animated.timing(contentOpacity, { toValue: 1, duration: 200, useNativeDriver: true }),
       ]).start()
     } else {
@@ -37,7 +37,17 @@ export function ModalBase({ visible, onClose, children }: ModalBaseProps) {
         <Animated.View style={styles.backdrop} />
       </TouchableWithoutFeedback>
       <Animated.View style={[styles.contentWrapper, { opacity: contentOpacity, transform: [{ scale: contentScale }] }]}>
-        <YStack backgroundColor="#F5EDE4" borderRadius={20} padding="$md" maxWidth={400} width="90%">
+        <YStack
+          backgroundColor="#ffffff"
+          borderRadius={32}
+          padding="$md"
+          maxWidth={400}
+          width="90%"
+          shadowColor="#2C2421"
+          shadowOffset={{ width: 0, height: 16 }}
+          shadowOpacity={0.06}
+          shadowRadius={48}
+        >
           {children}
         </YStack>
       </Animated.View>
@@ -55,7 +65,6 @@ const styles = StyleSheet.create({
   backdrop: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(44, 36, 33, 0.6)',
-    // Note: backdrop-filter works on web only, not RN
   },
   contentWrapper: {
     justifyContent: 'center',

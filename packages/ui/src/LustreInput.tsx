@@ -1,35 +1,37 @@
 import { styled, Input } from 'tamagui'
 
 export const LustreInput = styled(Input, {
-  borderRadius: 12,
-  borderWidth: 1,
-  borderColor: '#C4956A',  // copperMuted
-  backgroundColor: '#FDF8F3',  // warmWhite
-  color: '#2C2421',  // charcoal
+  borderRadius: 9999,
+  borderWidth: 0,
+  backgroundColor: '#f8f3ee',  // surfaceContainerLow
+  color: '#1d1b19',             // onSurface
   paddingHorizontal: '$md',
   paddingVertical: '$sm',
   fontSize: 16,
-  placeholderTextColor: '#8B7E74',  // warmGray
+  placeholderTextColor: '#524439',  // onSurfaceVariant
 
   focusStyle: {
-    borderColor: '#B87333',  // copper
-    borderWidth: 2,
-    outlineColor: 'rgba(184, 115, 51, 0.2)',
-    outlineWidth: 3,
-    outlineStyle: 'solid',
+    backgroundColor: '#ece7e2',  // surfaceContainerHigh
+    shadowColor: '#894d0d',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
   },
 
   hoverStyle: {
-    borderColor: '#D4A574',  // copperLight
+    backgroundColor: '#f2ede8',  // surfaceContainer
   },
 
   variants: {
     error: {
       true: {
-        borderColor: '#E05A33',  // ember
+        backgroundColor: 'rgba(224, 90, 51, 0.08)',  // ember tint, no border
         focusStyle: {
-          borderColor: '#E05A33',
-          outlineColor: 'rgba(224, 90, 51, 0.2)',
+          backgroundColor: 'rgba(224, 90, 51, 0.12)',
+          shadowColor: '#E05A33',
+          shadowOffset: { width: 0, height: 0 },
+          shadowOpacity: 0.15,
+          shadowRadius: 8,
         },
       },
     },
