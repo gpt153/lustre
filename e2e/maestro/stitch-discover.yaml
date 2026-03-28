@@ -1,0 +1,25 @@
+appId: com.lovelustre.app
+---
+- launchApp:
+    clearState: true
+
+# Login via dev login
+- tapOn: "Dev Login"
+- waitForAnimationToEnd
+
+# Discover is default tab
+- takeScreenshot: "stitch/discover_default"
+
+# Sub-tabs
+- tapOn:
+    text: "Intentioner"
+    optional: true
+- takeScreenshot: "stitch/discover_intentions"
+- tapOn:
+    text: "Bläddra"
+    optional: true
+- takeScreenshot: "stitch/discover_browse"
+- tapOn:
+    text: "Matchningar"
+    optional: true
+- takeScreenshot: "stitch/discover_matches"

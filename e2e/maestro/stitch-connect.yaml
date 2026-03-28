@@ -1,0 +1,6 @@
+appId: com.lovelustre.app
+---
+- launchApp
+- tapOn: "Connect"
+- waitForAnimationToEnd
+- takeScreenshot: "stitch/connect_list"

@@ -1,0 +1,7 @@
+appId: com.lovelustre.app
+---
+- runFlow: stitch-discover.yaml
+- runFlow: stitch-connect.yaml
+- runFlow: stitch-explore.yaml
+- runFlow: stitch-learn.yaml
+- runFlow: stitch-profile.yaml

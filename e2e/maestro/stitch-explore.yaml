@@ -1,0 +1,6 @@
+appId: com.lovelustre.app
+---
+- launchApp
+- tapOn: "Explore"
+- waitForAnimationToEnd
+- takeScreenshot: "stitch/explore_main"
