@@ -2,7 +2,11 @@ import { createTamagui } from 'tamagui'
 import { shorthands } from '@tamagui/shorthands'
 import { tokens as defaultTokens } from '@tamagui/themes'
 import { lustreThemes } from './themes'
-import { lustreColorTokens, lustreShadowTokens } from './tokens'
+import {
+  lustreColorTokens,
+  lustreShadowTokens,
+  lustreRoundnessTokens,
+} from './tokens'
 import { generalSansFont, interFont } from './fonts'
 
 const headingFont = generalSansFont
@@ -14,10 +18,27 @@ const tokens = {
     ...defaultTokens.color,
     ...lustreColorTokens,
   },
-  shadows: {
-    ...defaultTokens.shadows,
-    ...lustreShadowTokens,
+  space: {
+    ...defaultTokens.space,
+    xs: 4,
+    sm: 8,
+    md: 16,
+    lg: 24,
+    xl: 32,
+    '2xl': 48,
   },
+  size: {
+    ...defaultTokens.size,
+  },
+  radius: {
+    ...defaultTokens.radius,
+    sm: lustreRoundnessTokens.sm,
+    md: lustreRoundnessTokens.md,
+    lg: lustreRoundnessTokens.lg,
+    xl: lustreRoundnessTokens.xl,
+    full: lustreRoundnessTokens.full,
+  },
+  ...((defaultTokens as any).shadows ? { shadows: { ...(defaultTokens as any).shadows, ...lustreShadowTokens } } : {}),
 }
 
 export const config = createTamagui({

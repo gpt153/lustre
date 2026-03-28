@@ -1,5 +1,6 @@
 /**
  * Lustre Custom Themes (Light/Dark + Vanilla/Spicy)
+ * Updated to stitch design system specification
  */
 
 import { createTheme } from 'tamagui'
@@ -7,33 +8,40 @@ import { lustreColorTokens } from './tokens'
 
 /**
  * Light Theme - Vanilla
- * Warm, inviting palette with copper primary and gold accents
+ * Stitch surface hierarchy with ghost borders and ultra-diffused shadows
  */
 export const light_vanilla = createTheme({
-  background: lustreColorTokens.warmWhite,
-  backgroundFocus: lustreColorTokens.warmCream,
-  backgroundHover: lustreColorTokens.warmCream,
-  backgroundPress: '#F0E8DB',
-  backgroundDisabled: '#EFEFEF',
-  borderColor: lustreColorTokens.copperMuted,
-  color: lustreColorTokens.charcoal,
-  colorFocus: lustreColorTokens.charcoal,
-  colorHover: lustreColorTokens.charcoal,
-  colorPress: lustreColorTokens.charcoal,
-  colorDisabled: lustreColorTokens.warmGray,
-  colorTransparent: 'rgba(44, 36, 33, 0.5)',
-  placeholderColor: lustreColorTokens.warmGray,
+  background: lustreColorTokens.surface,
+  backgroundFocus: lustreColorTokens.surfaceContainerHigh,
+  backgroundHover: lustreColorTokens.surfaceContainerLow,
+  backgroundPress: lustreColorTokens.surfaceContainer,
+  backgroundDisabled: lustreColorTokens.surfaceContainerHighest,
+  borderColor: lustreColorTokens.ghostBorder,
+  color: lustreColorTokens.onSurface,
+  colorFocus: lustreColorTokens.onSurface,
+  colorHover: lustreColorTokens.onSurface,
+  colorPress: lustreColorTokens.onSurface,
+  colorDisabled: lustreColorTokens.onSurfaceVariant,
+  colorTransparent: 'rgba(29, 27, 25, 0.5)',
+  placeholderColor: lustreColorTokens.onSurfaceVariant,
   primary: lustreColorTokens.copper,
-  primaryDark: lustreColorTokens.copperLight,
+  primaryDark: lustreColorTokens.primaryContainer,
   primaryLight: lustreColorTokens.goldBright,
-  secondary: lustreColorTokens.copperLight,
+  secondary: lustreColorTokens.secondary,
   secondaryDark: lustreColorTokens.goldDeep,
-  secondaryLight: lustreColorTokens.goldBright,
+  secondaryLight: lustreColorTokens.secondaryContainer,
   accent: lustreColorTokens.gold,
-  accentBackground: '#FEF9F0',
+  accentBackground: lustreColorTokens.surfaceContainerLowest,
   modeAccent: lustreColorTokens.sage,
-  shadow: 'rgba(184, 115, 51, 0.08)',
-  shadowColor: 'rgba(184, 115, 51, 0.12)',
+  shadow: 'rgba(44, 36, 33, 0.04)',
+  shadowColor: 'rgba(44, 36, 33, 0.06)',
+  // Stitch extended surface tokens
+  surfaceContainerLow: lustreColorTokens.surfaceContainerLow,
+  surfaceContainerHigh: lustreColorTokens.surfaceContainerHigh,
+  onSurfaceVariant: lustreColorTokens.onSurfaceVariant,
+  outline: lustreColorTokens.outline,
+  outlineVariant: lustreColorTokens.outlineVariant,
+  ghostBorder: lustreColorTokens.ghostBorder,
 })
 
 /**
@@ -47,22 +55,22 @@ export const light_spicy = createTheme({
 
 /**
  * Dark Theme - Vanilla
- * Rich, premium dark palette with copper and gold highlights
+ * Stitch dark surface hierarchy with ultra-diffused shadows
  */
 export const dark_vanilla = createTheme({
-  background: '#1A1614',
-  backgroundFocus: lustreColorTokens.charcoal,
-  backgroundHover: '#3D332E',
-  backgroundPress: '#4A3E38',
-  backgroundDisabled: '#2A2420',
-  borderColor: '#3D332E',
-  color: lustreColorTokens.warmCream,
-  colorFocus: lustreColorTokens.warmCream,
-  colorHover: lustreColorTokens.warmCream,
-  colorPress: lustreColorTokens.warmCream,
-  colorDisabled: '#8B7E74',
-  colorTransparent: 'rgba(245, 237, 228, 0.5)',
-  placeholderColor: '#8B7E74',
+  background: '#1e1b18',
+  backgroundFocus: '#2d2a26',
+  backgroundHover: '#221f1c',
+  backgroundPress: '#383430',
+  backgroundDisabled: '#1e1b18',
+  borderColor: 'rgba(107, 79, 58, 0.25)',
+  color: '#ede0d4',
+  colorFocus: '#ede0d4',
+  colorHover: '#ede0d4',
+  colorPress: '#ede0d4',
+  colorDisabled: '#B0A49E',
+  colorTransparent: 'rgba(237, 224, 212, 0.5)',
+  placeholderColor: '#B0A49E',
   primary: lustreColorTokens.copperLight,
   primaryDark: lustreColorTokens.copper,
   primaryLight: lustreColorTokens.goldBright,
@@ -70,10 +78,17 @@ export const dark_vanilla = createTheme({
   secondaryDark: lustreColorTokens.goldDeep,
   secondaryLight: lustreColorTokens.copper,
   accent: lustreColorTokens.goldBright,
-  accentBackground: '#3D3228',
+  accentBackground: '#2d2a26',
   modeAccent: lustreColorTokens.sage,
-  shadow: 'rgba(184, 115, 51, 0.15)',
-  shadowColor: 'rgba(184, 115, 51, 0.25)',
+  shadow: 'rgba(44, 36, 33, 0.04)',
+  shadowColor: 'rgba(44, 36, 33, 0.06)',
+  // Stitch extended surface tokens
+  surfaceContainerLow: '#1e1b18',
+  surfaceContainerHigh: '#2d2a26',
+  onSurfaceVariant: '#B0A49E',
+  outline: '#6B4F3A',
+  outlineVariant: '#3D3330',
+  ghostBorder: 'rgba(107, 79, 58, 0.25)',
 })
 
 /**
