@@ -38,8 +38,8 @@ export function IntentionProfileCard({
       {isFallback && (
         <XStack
           backgroundColor="$gray4"
-          paddingHorizontal="$2"
-          paddingVertical="$1"
+          paddingHorizontal="$xs"
+          paddingVertical="$xs"
           borderRadius="$2"
           alignSelf="flex-start"
           marginBottom="$2"
@@ -50,15 +50,15 @@ export function IntentionProfileCard({
         </XStack>
       )}
 
-      <XStack justifyContent="space-between" alignItems="flex-start" marginBottom="$2" gap="$2">
+      <XStack justifyContent="space-between" alignItems="flex-start" marginBottom="$2" gap="$xs">
         <Text fontSize="$6" fontWeight="700" color="#D4A843">
           {compatibilityScore}%
         </Text>
-        <YStack flex={1} gap="$1">
+        <YStack flex={1} gap="$xs">
           <Text fontSize="$4" fontWeight="600" color="$color">
             {displayName}
           </Text>
-          <XStack gap="$1" alignItems="center">
+          <XStack gap="$xs" alignItems="center">
             <Text fontSize="$2" color="$gray11">
               {intentionSeeking.toLowerCase()}
             </Text>
@@ -72,9 +72,9 @@ export function IntentionProfileCard({
       </XStack>
 
       {matchedIntentionTags.length > 0 && (
-        <XStack flexWrap="wrap" gap="$1" marginBottom="$2">
+        <XStack flexWrap="wrap" gap="$xs" marginBottom="$2">
           {matchedIntentionTags.map((tag) => (
-            <XStack key={tag} backgroundColor="#B87333" paddingHorizontal="$2" paddingVertical="$1" borderRadius="$4">
+            <XStack key={tag} backgroundColor="#B87333" paddingHorizontal="$xs" paddingVertical="$xs" borderRadius="$4">
               <Text fontSize="$2" color="white" fontWeight="500">
                 {tag}
               </Text>

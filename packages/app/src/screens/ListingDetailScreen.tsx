@@ -73,7 +73,7 @@ export function ListingDetailScreen({ listingId, onBuySuccess, onClose }: Listin
   return (
     <YStack flex={1} backgroundColor="$background">
       <ScrollView flex={1}>
-        <YStack gap="$4" padding="$4">
+        <YStack gap="$md" padding="$md">
           {/* Images */}
           {listing.images && listing.images.length > 0 && (
             <FlatList
@@ -103,7 +103,7 @@ export function ListingDetailScreen({ listingId, onBuySuccess, onClose }: Listin
           )}
 
           {/* Title and Price */}
-          <YStack gap="$2">
+          <YStack gap="$xs">
             <Text fontSize={24} fontWeight="700" color="$color">
               {listing.title}
             </Text>
@@ -114,7 +114,7 @@ export function ListingDetailScreen({ listingId, onBuySuccess, onClose }: Listin
 
           {/* Description */}
           {listing.description && (
-            <YStack gap="$2">
+            <YStack gap="$xs">
               <Text fontSize={14} fontWeight="600" color="$color">
                 Beskrivning
               </Text>
@@ -125,12 +125,12 @@ export function ListingDetailScreen({ listingId, onBuySuccess, onClose }: Listin
           )}
 
           {/* Category and Seller */}
-          <YStack gap="$2">
-            <XStack gap="$2" alignItems="center">
+          <YStack gap="$xs">
+            <XStack gap="$xs" alignItems="center">
               <XStack
                 backgroundColor="$pink2"
                 borderRadius="$2"
-                paddingHorizontal="$2"
+                paddingHorizontal="$xs"
                 paddingVertical={4}
               >
                 <Text fontSize={12} color="$pink8" fontWeight="500">
@@ -148,11 +148,11 @@ export function ListingDetailScreen({ listingId, onBuySuccess, onClose }: Listin
 
           {/* Shipping Options */}
           {listing.shippingOptions && listing.shippingOptions.length > 0 && (
-            <YStack gap="$2">
+            <YStack gap="$xs">
               <Text fontSize={14} fontWeight="600" color="$color">
                 Leveransalternativ
               </Text>
-              <YStack gap="$2">
+              <YStack gap="$xs">
                 {listing.shippingOptions.map((option) => (
                   <TouchableOpacity
                     key={option}
@@ -161,7 +161,7 @@ export function ListingDetailScreen({ listingId, onBuySuccess, onClose }: Listin
                     <XStack
                       backgroundColor={selectedShippingOption === option ? '$pink2' : '$gray4'}
                       borderRadius="$2"
-                      padding="$3"
+                      padding="$sm"
                       borderWidth={1}
                       borderColor={selectedShippingOption === option ? '$pink8' : '$gray6'}
                     >
@@ -183,7 +183,7 @@ export function ListingDetailScreen({ listingId, onBuySuccess, onClose }: Listin
 
       {/* Buy Button */}
       {!isOwnListing && (
-        <YStack padding="$4" borderTopWidth={1} borderTopColor="$borderColor">
+        <YStack padding="$md" borderTopWidth={1} borderTopColor="$borderColor">
           <Button
             onPress={handleBuyPress}
             disabled={createOrderMutation.isPending}

@@ -196,7 +196,7 @@ export const appRouter = router({
         const accessToken = await generateAccessToken(user.id)
         const refreshToken = await generateRefreshToken(user.id)
         await createSession(ctx.prisma, user.id, accessToken, ctx.req)
-        return { accessToken, refreshToken }
+        return { accessToken, refreshToken, user: { id: user.id, displayName: user.displayName } }
       }),
 
     requestPasswordReset: publicProcedure

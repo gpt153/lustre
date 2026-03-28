@@ -36,8 +36,8 @@ function CampaignRow({ name, status, dailyBudgetSEK, spentSEK, onPress }: Campai
         borderRadius="$3"
         borderWidth={1}
         borderColor="$borderColor"
-        padding="$4"
-        gap="$2"
+        padding="$md"
+        gap="$xs"
       >
         <XStack justifyContent="space-between" alignItems="center">
           <Text fontSize="$4" fontWeight="700" color="$text" flex={1} numberOfLines={1}>
@@ -46,15 +46,15 @@ function CampaignRow({ name, status, dailyBudgetSEK, spentSEK, onPress }: Campai
           <XStack
             backgroundColor={STATUS_COLORS[status]}
             borderRadius="$10"
-            paddingHorizontal="$2"
-            paddingVertical="$1"
+            paddingHorizontal="$xs"
+            paddingVertical="$xs"
           >
             <Text fontSize="$2" color="white" fontWeight="600">
               {STATUS_LABELS[status]}
             </Text>
           </XStack>
         </XStack>
-        <XStack gap="$4">
+        <XStack gap="$md">
           <Text fontSize="$3" color="$textSecondary">
             Daglig budget:{' '}
             <Text fontWeight="600" color="$text">
@@ -94,8 +94,8 @@ export function AdsManagerScreen({ onCampaignPress, onCreatePress }: AdsManagerS
       <XStack
         justifyContent="space-between"
         alignItems="center"
-        padding="$4"
-        paddingBottom="$2"
+        padding="$md"
+        paddingBottom="$xs"
       >
         <Text fontSize="$6" fontWeight="700" color="$text">
           Mina kampanjer
@@ -113,7 +113,7 @@ export function AdsManagerScreen({ onCampaignPress, onCreatePress }: AdsManagerS
       </XStack>
 
       {!campaigns || campaigns.length === 0 ? (
-        <YStack flex={1} alignItems="center" justifyContent="center" padding="$8" gap="$4">
+        <YStack flex={1} alignItems="center" justifyContent="center" padding="$xl" gap="$md">
           <Text color="$textSecondary" fontSize="$4" textAlign="center">
             Du har inga kampanjer ännu
           </Text>
@@ -131,7 +131,7 @@ export function AdsManagerScreen({ onCampaignPress, onCreatePress }: AdsManagerS
         <FlatList
           data={campaigns}
           keyExtractor={(item) => item.id}
-          contentContainerStyle={{ padding: 16, gap: 12 }}
+          contentContainerStyle={{ padding: "$md", gap: 12 }}
           renderItem={({ item }) => (
             <CampaignRow
               name={item.name}

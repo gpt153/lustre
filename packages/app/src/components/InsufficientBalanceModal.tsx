@@ -29,8 +29,8 @@ export function InsufficientBalanceModal({ isOpen, onClose }: InsufficientBalanc
       dismissOnSnapToBottom
     >
       <Sheet.Overlay />
-      <Sheet.Frame padding="$4" gap="$4">
-        <YStack gap="$3">
+      <Sheet.Frame padding="$md" gap="$md">
+        <YStack gap="$sm">
           <Text fontSize="$6" fontWeight="700" color="$color">
             Fyll på ditt konto
           </Text>
@@ -39,7 +39,7 @@ export function InsufficientBalanceModal({ isOpen, onClose }: InsufficientBalanc
           </Text>
         </YStack>
 
-        <YStack gap="$2">
+        <YStack gap="$xs">
           <Button
             size="$5"
             backgroundColor="$pink10"

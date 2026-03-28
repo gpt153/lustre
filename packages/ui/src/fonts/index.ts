@@ -1,60 +1,71 @@
 import { createFont } from '@tamagui/core'
-import { createInterFont } from '@tamagui/font-inter'
 
 /**
- * General Sans font definition for Lustre
- * Using Fontshare/Fontsource variable font fallback
- * Actual font loading is handled by:
- * - Expo: expo-font with @fontsource-variable/general-sans
- * - Web: next/font/local or CSS import
+ * Noto Serif font — used for all headings (display, headline)
+ *
+ * Size scale:
+ *   1=12  2=14  3=16  4=18  5=24  6=28  7=32  8=40  9=56
+ *
+ * Typography tokens:
+ *   display-lg  → size 9  (56px) NotoSerif Bold,  letterSpacing -1.12
+ *   display-md  → size 8  (40px) NotoSerif Bold
+ *   headline-lg → size 7  (32px) NotoSerif Bold
+ *   headline-md → size 6  (28px) NotoSerif Regular
+ *   headline-sm → size 5  (24px) NotoSerif Regular
  */
-export const generalSansFont = createFont({
-  family: 'General Sans',
+export const notoSerifFont = createFont({
+  family: 'NotoSerif_400Regular',
   size: {
-    1: 14,
-    2: 16,
-    3: 18,
-    4: 20,
+    1: 12,
+    2: 14,
+    3: 16,
+    4: 18,
     5: 24,
     6: 28,
     7: 32,
     8: 40,
+    9: 56,
   },
   lineHeight: {
-    1: 1.3,
-    2: 1.3,
-    3: 1.3,
-    4: 1.3,
-    5: 1.3,
-    6: 1.3,
-    7: 1.3,
-    8: 1.3,
+    1: 16,
+    2: 20,
+    3: 22,
+    4: 24,
+    5: 32,
+    6: 36,
+    7: 40,
+    8: 48,
+    9: 64,
   },
   weight: {
-    1: '400',
-    2: '500',
-    3: '600',
-    4: '700',
+    4: '400',
+    7: '700',
   },
   letterSpacing: {
-    1: 0,
-    2: 0,
+    // display-lg tight letter-spacing: -0.02em × 56px = -1.12
+    9: -1.12,
   },
-  // $brand variant for Lustre logo text
-  $brand: {
-    weight: '600',
-    size: 5, // 24px
-    letterSpacing: 2,
-    lineHeight: 1.3,
+  face: {
+    400: { normal: 'NotoSerif_400Regular', italic: 'NotoSerif_400Regular_Italic' },
+    700: { normal: 'NotoSerif_700Bold' },
   },
 })
 
 /**
- * Inter font definition for body text
- * Using Tamagui's built-in createInterFont
+ * Manrope font — used for all body text, labels
+ *
+ * Size scale:
+ *   1=12  2=14  3=16  4=18  5=20
+ *
+ * Typography tokens:
+ *   body-lg   → size 4 (18px) Manrope Medium   (weight 500)
+ *   body-md   → size 3 (16px) Manrope Regular  (weight 400)
+ *   body-sm   → size 2 (14px) Manrope Regular  (weight 400)
+ *   label-lg  → size 2 (14px) Manrope SemiBold (weight 600)
+ *   label-md  → size 1 (12px) Manrope Medium   (weight 500)
  */
-
-export const interFont = createInterFont({
+export const manropeFont = createFont({
+  family: 'Manrope_400Regular',
   size: {
     1: 12,
     2: 14,
@@ -63,15 +74,26 @@ export const interFont = createInterFont({
     5: 20,
   },
   lineHeight: {
-    1: 1.5,
-    2: 1.5,
-    3: 1.5,
-    4: 1.5,
-    5: 1.5,
+    1: 16,
+    2: 20,
+    3: 24,
+    4: 26,
+    5: 28,
   },
   weight: {
-    1: '400',
-    2: '500',
-    3: '600',
+    4: '400',
+    5: '500',
+    6: '600',
+    7: '700',
+  },
+  face: {
+    400: { normal: 'Manrope_400Regular' },
+    500: { normal: 'Manrope_500Medium' },
+    600: { normal: 'Manrope_600SemiBold' },
+    700: { normal: 'Manrope_700Bold' },
   },
 })
+
+// Backwards-compatible aliases (kept so existing $heading/$body refs continue to work)
+export const generalSansFont = notoSerifFont
+export const interFont = manropeFont

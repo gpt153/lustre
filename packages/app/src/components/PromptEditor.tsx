@@ -21,7 +21,7 @@ export function PromptEditor({
   const charCount = response.length
 
   return (
-    <CardBase elevation={1} gap="$3">
+    <CardBase elevation={1} gap="$sm">
       <XStack justifyContent="space-between" alignItems="flex-start">
         <Text
           fontSize={14}
@@ -36,8 +36,8 @@ export function PromptEditor({
           size="$2"
           onPress={onDelete}
           variant="danger"
-          paddingHorizontal="$2"
-          paddingVertical="$1"
+          paddingHorizontal="$xs"
+          paddingVertical="$xs"
         >
           ✕
         </LustreButton>
@@ -54,7 +54,7 @@ export function PromptEditor({
         borderColor="#C4956A"
         backgroundColor="#FDF8F3"
         color="#2C2421"
-        padding="$3"
+        padding="$sm"
         fontSize={16}
         placeholderTextColor="#8B7E74"
       />

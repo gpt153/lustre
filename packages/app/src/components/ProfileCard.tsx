@@ -28,8 +28,8 @@ export function ProfileCard({ displayName, age, gender, orientation, thumbnailUr
           <Text fontSize="$5" color="$warmWhite">{displayName[0]?.toUpperCase()}</Text>
         </YStack>
       )}
-      <YStack flex={1} gap="$1" marginLeft="$3">
-        <XStack alignItems="center" gap="$1">
+      <YStack flex={1} gap="$xs" marginLeft="$3">
+        <XStack alignItems="center" gap="$xs">
           <Text fontWeight="600" color="$color">{displayName}</Text>
           {verified && <Text color="#D4A843" fontSize="$2">✓</Text>}
         </XStack>

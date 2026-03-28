@@ -76,11 +76,11 @@ function MultiSelect({
   label: string
 }) {
   return (
-    <YStack gap="$2">
+    <YStack gap="$xs">
       <Text color="$gray11" fontSize="$2" fontWeight="600">
         {label}
       </Text>
-      <XStack flexWrap="wrap" gap="$2">
+      <XStack flexWrap="wrap" gap="$xs">
         {options.map((opt) => (
           <TouchableOpacity
             key={opt.value}
@@ -93,8 +93,8 @@ function MultiSelect({
           >
             <XStack
               backgroundColor={selected.includes(opt.value) ? '$blue9' : '$gray3'}
-              paddingHorizontal="$3"
-              paddingVertical="$2"
+              paddingHorizontal="$sm"
+              paddingVertical="$xs"
               borderRadius="$4"
               borderWidth={1}
               borderColor={selected.includes(opt.value) ? '$blue9' : '$gray4'}
@@ -126,17 +126,17 @@ function SingleSelect({
   label: string
 }) {
   return (
-    <YStack gap="$2">
+    <YStack gap="$xs">
       <Text color="$gray11" fontSize="$2" fontWeight="600">
         {label}
       </Text>
-      <XStack flexWrap="wrap" gap="$2">
+      <XStack flexWrap="wrap" gap="$xs">
         {options.map((opt) => (
           <TouchableOpacity key={opt.value} onPress={() => onChange(opt.value)}>
             <XStack
               backgroundColor={selected === opt.value ? '$blue9' : '$gray3'}
-              paddingHorizontal="$3"
-              paddingVertical="$2"
+              paddingHorizontal="$sm"
+              paddingVertical="$xs"
               borderRadius="$4"
               borderWidth={1}
               borderColor={selected === opt.value ? '$blue9' : '$gray4'}
@@ -214,7 +214,7 @@ export function CreateIntentionScreen({ onSuccess }: CreateIntentionScreenProps)
 
   return (
     <ScrollView backgroundColor="$background" flex={1}>
-      <YStack padding="$4" gap="$4" paddingBottom="$8">
+      <YStack padding="$md" gap="$md" paddingBottom="$8">
         <Text fontSize="$6" fontWeight="600" color="$text">
           Skapa ny intention
         </Text>
@@ -238,11 +238,11 @@ export function CreateIntentionScreen({ onSuccess }: CreateIntentionScreenProps)
           </Text>
         )}
 
-        <YStack gap="$2">
+        <YStack gap="$xs">
           <Text color="$gray11" fontSize="$2" fontWeight="600">
             Ålder
           </Text>
-          <XStack gap="$2" alignItems="center">
+          <XStack gap="$xs" alignItems="center">
             <Input
               flex={1}
               placeholder="Min"
@@ -274,7 +274,7 @@ export function CreateIntentionScreen({ onSuccess }: CreateIntentionScreenProps)
           )}
         </YStack>
 
-        <YStack gap="$2">
+        <YStack gap="$xs">
           <Text color="$gray11" fontSize="$2" fontWeight="600">
             Sökradie (km)
           </Text>

@@ -11,8 +11,8 @@ export function ProfileKudosSection({ userId }: ProfileKudosSectionProps) {
   if (isLoading || !data || data.totalCount === 0) return null
 
   return (
-    <YStack gap="$2" paddingVertical="$3">
-      <XStack alignItems="center" gap="$2">
+    <YStack gap="$xs" paddingVertical="$3">
+      <XStack alignItems="center" gap="$xs">
         <Text fontSize="$5" fontWeight="bold">
           Kudos
         </Text>
@@ -20,7 +20,7 @@ export function ProfileKudosSection({ userId }: ProfileKudosSectionProps) {
           {data.totalCount} totalt
         </Text>
       </XStack>
-      <XStack flexWrap="wrap" gap="$2">
+      <XStack flexWrap="wrap" gap="$xs">
         {data.badges.slice(0, 8).map((badge) => (
           <XStack
             key={badge.badgeId}
@@ -29,7 +29,7 @@ export function ProfileKudosSection({ userId }: ProfileKudosSectionProps) {
             paddingVertical="$1.5"
             borderRadius="$4"
             alignItems="center"
-            gap="$1"
+            gap="$xs"
           >
             <Text fontSize="$3" fontWeight="500">
               {badge.name}

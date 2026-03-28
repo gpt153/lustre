@@ -15,7 +15,7 @@ export function AiQualifiedBadge({ size = 'small' }: AiQualifiedBadgeProps) {
       paddingVertical="$0.5"
       borderRadius="$2"
       alignItems="center"
-      gap="$1"
+      gap="$xs"
     >
       <Text fontSize={fontSize} color="$green11">AI-qualified</Text>
     </XStack>

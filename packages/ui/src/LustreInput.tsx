@@ -6,8 +6,8 @@ export const LustreInput = styled(Input, {
   borderColor: '#C4956A',  // copperMuted
   backgroundColor: '#FDF8F3',  // warmWhite
   color: '#2C2421',  // charcoal
-  paddingHorizontal: 16,
-  paddingVertical: 12,
+  paddingHorizontal: '$md',
+  paddingVertical: '$sm',
   fontSize: 16,
   placeholderTextColor: '#8B7E74',  // warmGray
 

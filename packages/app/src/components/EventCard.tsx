@@ -36,12 +36,12 @@ export function EventCard({ event, onPress }: EventCardProps) {
       marginBottom="$2"
     >
       <Card.Header>
-        <YStack gap="$1" width="100%">
-          <XStack justifyContent="space-between" alignItems="center" gap="$2">
+        <YStack gap="$xs" width="100%">
+          <XStack justifyContent="space-between" alignItems="center" gap="$xs">
             <Text fontWeight="700" fontSize="$5" flex={1}>
               {event.title}
             </Text>
-            <Card bordered paddingHorizontal="$2" paddingVertical="$1" backgroundColor={typeColor}>
+            <Card bordered paddingHorizontal="$xs" paddingVertical="$xs" backgroundColor={typeColor}>
               <Text color="white" fontSize="$1" fontWeight="600">
                 {event.type}
               </Text>

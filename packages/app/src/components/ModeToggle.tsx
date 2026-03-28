@@ -20,7 +20,7 @@ export function ModeToggle() {
         <YStack
           backgroundColor={mode === 'vanilla' ? '$green8' : 'transparent'}
           borderRadius="$4"
-          paddingVertical="$2"
+          paddingVertical="$xs"
           paddingHorizontal="$3"
           alignItems="center"
         >
@@ -42,7 +42,7 @@ export function ModeToggle() {
         <YStack
           backgroundColor={mode === 'spicy' ? '$pink8' : 'transparent'}
           borderRadius="$4"
-          paddingVertical="$2"
+          paddingVertical="$xs"
           paddingHorizontal="$3"
           alignItems="center"
         >

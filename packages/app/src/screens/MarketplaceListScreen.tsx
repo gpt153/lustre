@@ -59,7 +59,7 @@ export function MarketplaceListScreen({ onListingPress, onCreatePress }: Marketp
 
   return (
     <YStack flex={1} backgroundColor="$background">
-      <XStack paddingHorizontal="$4" paddingVertical="$3" alignItems="center" justifyContent="space-between">
+      <XStack paddingHorizontal="$md" paddingVertical="$sm" alignItems="center" justifyContent="space-between">
         <Text fontSize={20} fontWeight="700" color="$color">
           Shop
         </Text>
@@ -70,15 +70,15 @@ export function MarketplaceListScreen({ onListingPress, onCreatePress }: Marketp
         </TouchableOpacity>
       </XStack>
 
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} paddingHorizontal="$4" height={45}>
-        <XStack gap="$2" paddingVertical="$2">
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} paddingHorizontal="$md" height={45}>
+        <XStack gap="$xs" paddingVertical="$xs">
           {CATEGORIES.map((cat) => (
             <TouchableOpacity key={cat.value} onPress={() => handleCategoryChange(cat.value)}>
               <XStack
                 backgroundColor={selectedCategory === cat.value ? '$pink8' : '$gray4'}
                 borderRadius="$3"
-                paddingHorizontal="$3"
-                paddingVertical="$2"
+                paddingHorizontal="$sm"
+                paddingVertical="$xs"
               >
                 <Text
                   fontSize={13}
@@ -109,13 +109,13 @@ export function MarketplaceListScreen({ onListingPress, onCreatePress }: Marketp
         refreshControl={<RefreshControl refreshing={false} onRefresh={() => refetch()} tintColor="#B87333" colors={['#B87333']} />}
         ListFooterComponent={
           isFetchingNextPage ? (
-            <YStack padding="$4" alignItems="center">
+            <YStack padding="$md" alignItems="center">
               <Spinner color="$primary" />
             </YStack>
           ) : null
         }
         ListEmptyComponent={
-          <YStack flex={1} alignItems="center" justifyContent="center" padding="$6">
+          <YStack flex={1} alignItems="center" justifyContent="center" padding="$lg">
             <Text color="$gray10">Inga annonser ännu</Text>
           </YStack>
         }

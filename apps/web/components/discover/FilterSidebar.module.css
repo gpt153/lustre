@@ -63,10 +63,10 @@
 
 .sectionLabel {
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--color-text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 2px;
   margin: 0;
 }
 
@@ -134,43 +134,54 @@
   flex-shrink: 0;
 }
 
-/* Checkboxes */
+/* Pill chips (replaces checkboxes) */
 
 .checkboxGroup {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
-.checkboxLabel {
-  display: flex;
-  align-items: center;
-  gap: var(--space-md);
+.chipButton {
+  padding: 8px 20px;
+  border-radius: 9999px;
+  border: 1.5px solid rgba(184, 115, 51, 0.4);
+  background: transparent;
   cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-copper);
+  transition: all 200ms ease;
+}
 
-  &:hover .checkboxText {
-    color: var(--color-text-primary);
-  }
+.chipButton:hover {
+  border-color: var(--color-copper);
+  background: rgba(184, 115, 51, 0.06);
+}
+
+.chipButtonSelected {
+  background: var(--color-copper);
+  border-color: var(--color-copper);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.chipButtonSelected:hover {
+  background: var(--color-copper);
+  color: #ffffff;
+}
+
+/* Legacy checkbox support */
+.checkboxLabel {
+  display: none;
 }
 
 .checkbox {
-  width: 16px;
-  height: 16px;
-  border-radius: 4px;
-  accent-color: var(--color-copper);
-  cursor: pointer;
-  flex-shrink: 0;
-
-  &:focus-visible {
-    outline: var(--focus-ring);
-    outline-offset: var(--focus-ring-offset);
-  }
+  display: none;
 }
 
 .checkboxText {
-  font-size: 13px;
-  color: var(--color-text-muted);
-  transition: color 150ms ease;
+  display: none;
 }
 
 /* Apply button */

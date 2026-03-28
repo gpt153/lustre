@@ -181,14 +181,14 @@ export function SafeDateActiveScreen({ safeDate }: Props) {
 
   return (
     <ScrollView>
-      <YStack padding="$4" gap="$5">
+      <YStack padding="$md" gap="$md">
         <XStack justifyContent="space-between" alignItems="center">
           <H2 color="$color">SafeDate aktiv</H2>
           <XStack
             backgroundColor="$backgroundHover"
             borderRadius="$10"
-            paddingHorizontal="$3"
-            paddingVertical="$1"
+            paddingHorizontal="$sm"
+            paddingVertical="$xs"
           >
             <Text color={statusColor(safeDate.status)} fontWeight="600" fontSize="$3">
               {statusLabel(safeDate.status)}
@@ -199,8 +199,8 @@ export function SafeDateActiveScreen({ safeDate }: Props) {
         <YStack
           backgroundColor="$backgroundHover"
           borderRadius="$4"
-          padding="$4"
-          gap="$2"
+          padding="$md"
+          gap="$xs"
           alignItems="center"
         >
           <Text color="$colorSecondary" fontSize="$3">Tid kvar</Text>
@@ -214,7 +214,7 @@ export function SafeDateActiveScreen({ safeDate }: Props) {
           </Text>
         </YStack>
 
-        <YStack gap="$1">
+        <YStack gap="$xs">
           <Text color="$colorSecondary" fontSize="$2">Du träffar</Text>
           <Text color="$color" fontSize="$4">{safeDate.targetDescription}</Text>
         </YStack>
@@ -283,14 +283,14 @@ export function SafeDateActiveScreen({ safeDate }: Props) {
             backgroundColor="rgba(0,0,0,0.6)"
             alignItems="center"
             justifyContent="center"
-            padding="$6"
+            padding="$lg"
             zIndex={100}
           >
             <YStack
               backgroundColor="$background"
               borderRadius="$4"
-              padding="$5"
-              gap="$4"
+              padding="$md"
+              gap="$md"
               width="100%"
               maxWidth={360}
             >
@@ -301,7 +301,7 @@ export function SafeDateActiveScreen({ safeDate }: Props) {
                 Verifiera att du är i säkerhet med din PIN-kod.
               </Text>
 
-              <YStack gap="$2">
+              <YStack gap="$xs">
                 <Label htmlFor="checkin-pin" color="$color">PIN-kod</Label>
                 <Input
                   id="checkin-pin"
@@ -318,7 +318,7 @@ export function SafeDateActiveScreen({ safeDate }: Props) {
                 )}
               </YStack>
 
-              <XStack gap="$3">
+              <XStack gap="$sm">
                 <Button
                   flex={1}
                   size="$4"

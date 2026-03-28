@@ -12,10 +12,10 @@ export function SpicyGateBanner({ onSettings }: SpicyGateBannerProps) {
       borderRadius="$4"
       borderWidth={1}
       borderColor="$red6"
-      padding="$4"
-      gap="$3"
+      padding="$md"
+      gap="$sm"
     >
-      <XStack alignItems="center" gap="$3">
+      <XStack alignItems="center" gap="$sm">
         <YStack
           width={48}
           height={48}
@@ -28,15 +28,15 @@ export function SpicyGateBanner({ onSettings }: SpicyGateBannerProps) {
           <Text fontSize={24}>🔒</Text>
         </YStack>
 
-        <YStack flex={1} gap="$1">
-          <XStack alignItems="center" gap="$2">
+        <YStack flex={1} gap="$xs">
+          <XStack alignItems="center" gap="$xs">
             <Text fontSize={15} fontWeight="700" color="$color">
               Spicy Mode
             </Text>
             <XStack
               backgroundColor="$red8"
               borderRadius={12}
-              paddingHorizontal="$2"
+              paddingHorizontal="$xs"
               paddingVertical={2}
             >
               <Text fontSize={10} fontWeight="700" color="white">
@@ -54,7 +54,7 @@ export function SpicyGateBanner({ onSettings }: SpicyGateBannerProps) {
         <YStack
           backgroundColor="$red10"
           borderRadius="$3"
-          paddingVertical="$2"
+          paddingVertical="$xs"
           paddingHorizontal="$3"
           alignItems="center"
         >

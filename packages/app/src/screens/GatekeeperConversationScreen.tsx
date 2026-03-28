@@ -68,13 +68,13 @@ export function GatekeeperConversationScreen({
   const renderMessage = ({ item }: { item: Message }) => (
     <XStack
       justifyContent={item.role === 'USER' ? 'flex-end' : 'flex-start'}
-      paddingHorizontal="$3"
-      paddingVertical="$1"
+      paddingHorizontal="$sm"
+      paddingVertical="$xs"
     >
       <YStack
         backgroundColor={item.role === 'USER' ? '$primary' : '$gray4'}
-        paddingHorizontal="$3"
-        paddingVertical="$2"
+        paddingHorizontal="$sm"
+        paddingVertical="$xs"
         borderRadius="$4"
         maxWidth="80%"
       >
@@ -88,12 +88,12 @@ export function GatekeeperConversationScreen({
   return (
     <>
       <YStack flex={1}>
-        <YStack padding="$3" borderBottomWidth={1} borderColor="$borderColor">
+        <YStack padding="$sm" borderBottomWidth={1} borderColor="$borderColor">
           <Text color="$textSecondary" fontSize="$2">
             Gatekeeper för {recipientName}
           </Text>
           {decision === 'PASS' && (
-            <XStack alignItems="center" gap="$2" marginTop="$1">
+            <XStack alignItems="center" gap="$xs" marginTop="$1">
               <AiQualifiedBadge />
               <Text color="$green11" fontSize="$2">Kvalificerad!</Text>
             </XStack>
@@ -115,7 +115,7 @@ export function GatekeeperConversationScreen({
         />
 
         {!isComplete && (
-          <XStack padding="$3" gap="$2" borderTopWidth={1} borderColor="$borderColor">
+          <XStack padding="$sm" gap="$xs" borderTopWidth={1} borderColor="$borderColor">
             <Input
               flex={1}
               value={input}

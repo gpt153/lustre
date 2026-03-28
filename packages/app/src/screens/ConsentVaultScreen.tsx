@@ -23,8 +23,8 @@ function StatusBadge({ status }: { status: RecordingStatus }) {
       borderWidth={1}
       borderColor={colorMap[status]}
       borderRadius="$2"
-      paddingHorizontal="$2"
-      paddingVertical="$1"
+      paddingHorizontal="$xs"
+      paddingVertical="$xs"
     >
       {status}
     </Text>
@@ -44,7 +44,7 @@ export function ConsentVaultScreen({ onNewRecording, onPlayback }: Props) {
 
   return (
     <ScrollView>
-      <YStack padding="$4" gap="$4">
+      <YStack padding="$md" gap="$md">
         <XStack alignItems="center" justifyContent="space-between">
           <H2 color="$color">ConsentVault</H2>
           <Button theme="active" size="$3" onPress={onNewRecording}>
@@ -53,13 +53,13 @@ export function ConsentVaultScreen({ onNewRecording, onPlayback }: Props) {
         </XStack>
 
         {recordings.length === 0 ? (
-          <YStack alignItems="center" justifyContent="center" paddingVertical="$8">
+          <YStack alignItems="center" justifyContent="center" paddingVertical="$xl">
             <Text color="$colorSecondary" fontSize="$4">
               Geen opnames
             </Text>
           </YStack>
         ) : (
-          <YStack gap="$3">
+          <YStack gap="$sm">
             {recordings.map((recording: {
               id: string
               status: RecordingStatus
@@ -69,11 +69,11 @@ export function ConsentVaultScreen({ onNewRecording, onPlayback }: Props) {
                 key={recording.id}
                 backgroundColor="$backgroundHover"
                 borderRadius="$4"
-                padding="$3"
-                gap="$3"
+                padding="$sm"
+                gap="$sm"
               >
                 <XStack alignItems="center" justifyContent="space-between">
-                  <YStack gap="$1">
+                  <YStack gap="$xs">
                     <Text color="$color" fontSize="$2" fontWeight="600">
                       {new Date(recording.createdAt).toLocaleDateString('nl-NL', {
                         year: 'numeric',
@@ -87,7 +87,7 @@ export function ConsentVaultScreen({ onNewRecording, onPlayback }: Props) {
                   <StatusBadge status={recording.status} />
                 </XStack>
 
-                <XStack gap="$2" flexWrap="wrap">
+                <XStack gap="$xs" flexWrap="wrap">
                   {recording.status === 'READY' && (
                     <Button
                       size="$3"

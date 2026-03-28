@@ -85,13 +85,13 @@ export function SafeDateActivateScreen({ onActivated }: Props) {
 
   return (
     <ScrollView>
-      <YStack padding="$4" gap="$5">
+      <YStack padding="$md" gap="$md">
         <H2 color="$color">SafeDate</H2>
         <Text color="$colorSecondary">
           SafeDate håller koll på dig under din dejt och meddelar dina kontakter om du inte checkar in i tid.
         </Text>
 
-        <YStack gap="$2">
+        <YStack gap="$xs">
           <Label htmlFor="target-description" color="$color">
             Vem träffar du?
           </Label>
@@ -105,9 +105,9 @@ export function SafeDateActivateScreen({ onActivated }: Props) {
           />
         </YStack>
 
-        <YStack gap="$2">
+        <YStack gap="$xs">
           <Label color="$color">Varaktighet</Label>
-          <XStack flexWrap="wrap" gap="$2">
+          <XStack flexWrap="wrap" gap="$xs">
             {DURATION_OPTIONS.map(option => (
               <Button
                 key={option.value}
@@ -123,7 +123,7 @@ export function SafeDateActivateScreen({ onActivated }: Props) {
           </XStack>
         </YStack>
 
-        <YStack gap="$2">
+        <YStack gap="$xs">
           <Label htmlFor="pin-input" color="$color">
             PIN-kod (4–8 siffror)
           </Label>
@@ -141,7 +141,7 @@ export function SafeDateActivateScreen({ onActivated }: Props) {
           </Text>
         </YStack>
 
-        <YStack gap="$3">
+        <YStack gap="$sm">
           <Label color="$color">Säkerhetskontakter ({contacts.length})</Label>
           <Text color="$colorSecondary" fontSize="$2">
             Dessa kontakter meddelas via SMS om du inte checkar in i tid.
@@ -154,8 +154,8 @@ export function SafeDateActivateScreen({ onActivated }: Props) {
               justifyContent="space-between"
               backgroundColor="$backgroundHover"
               borderRadius="$3"
-              padding="$3"
-              gap="$2"
+              padding="$sm"
+              gap="$xs"
             >
               <YStack flex={1}>
                 <Text color="$color" fontWeight="600">{contact.name}</Text>
@@ -171,7 +171,7 @@ export function SafeDateActivateScreen({ onActivated }: Props) {
             </XStack>
           ))}
 
-          <YStack gap="$2" borderWidth={1} borderColor="$borderColor" borderRadius="$3" padding="$3">
+          <YStack gap="$xs" borderWidth={1} borderColor="$borderColor" borderRadius="$3" padding="$sm">
             <Label color="$color" fontSize="$2">Lägg till kontakt</Label>
             <Input
               value={newContactName}

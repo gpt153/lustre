@@ -44,8 +44,8 @@ export function InviteScreen() {
   return (
     <YStack flex={1} backgroundColor="$background">
       <XStack
-        paddingHorizontal="$4"
-        paddingVertical="$3"
+        paddingHorizontal="$md"
+        paddingVertical="$sm"
         alignItems="center"
         borderBottomWidth={1}
         borderBottomColor="$borderColor"
@@ -56,23 +56,23 @@ export function InviteScreen() {
       </XStack>
 
       <ScrollView flex={1} showsVerticalScrollIndicator={false}>
-        <YStack paddingHorizontal="$4" paddingVertical="$4" gap="$6">
+        <YStack paddingHorizontal="$md" paddingVertical="$md" gap="$lg">
           {/* Current Link Section */}
-          <YStack gap="$3">
+          <YStack gap="$sm">
             <Text fontSize={14} fontWeight="600" color="$gray11">
               Din inbjudningslänk
             </Text>
 
             {currentLink ? (
-              <YStack gap="$2">
+              <YStack gap="$xs">
                 <XStack
                   borderWidth={1}
                   borderColor="$borderColor"
                   borderRadius="$3"
-                  paddingHorizontal="$3"
-                  paddingVertical="$2"
+                  paddingHorizontal="$sm"
+                  paddingVertical="$xs"
                   alignItems="center"
-                  gap="$2"
+                  gap="$xs"
                   backgroundColor="$gray1"
                 >
                   <Input
@@ -83,14 +83,14 @@ export function InviteScreen() {
                     fontFamily="$mono"
                     color="$color"
                     borderWidth={0}
-                    paddingHorizontal="$0"
+                    paddingHorizontal="$xs"
                   />
                   <Button size="$3" backgroundColor="$pink10" color="white" onPress={handleCopy}>
                     {copied ? '✓' : 'Kopiera'}
                   </Button>
                 </XStack>
 
-                <XStack gap="$2">
+                <XStack gap="$xs">
                   <Button
                     flex={1}
                     size="$3"
@@ -118,8 +118,8 @@ export function InviteScreen() {
           </YStack>
 
           {/* Stats Section */}
-          <YStack gap="$3" backgroundColor="$gray1" borderRadius="$4" padding="$4">
-            <YStack gap="$2">
+          <YStack gap="$sm" backgroundColor="$gray1" borderRadius="$4" padding="$md">
+            <YStack gap="$xs">
               <XStack justifyContent="space-between" alignItems="center">
                 <Text fontSize={14} color="$gray11">
                   Du har bjudit in
@@ -133,7 +133,7 @@ export function InviteScreen() {
               </Text>
             </YStack>
 
-            <YStack gap="$2">
+            <YStack gap="$xs">
               <XStack justifyContent="space-between" alignItems="center">
                 <Text fontSize={14} color="$gray11">
                   Token tjänade
@@ -147,22 +147,22 @@ export function InviteScreen() {
 
           {/* Rewards List Section */}
           {(rewards?.given?.length ?? 0) > 0 && (
-            <YStack gap="$3">
+            <YStack gap="$sm">
               <Text fontSize={14} fontWeight="600" color="$gray11">
                 Din inbjudningshistorik
               </Text>
 
-              <YStack gap="$2">
+              <YStack gap="$xs">
                 {rewards?.given?.map((reward) => (
                   <XStack
                     key={reward.id}
                     backgroundColor="$gray2"
                     borderRadius="$3"
-                    padding="$3"
+                    padding="$sm"
                     justifyContent="space-between"
                     alignItems="center"
                   >
-                    <YStack gap="$1" flex={1}>
+                    <YStack gap="$xs" flex={1}>
                       <Text fontSize={12} color="$gray10">
                         {formatDate(reward.createdAt)}
                       </Text>

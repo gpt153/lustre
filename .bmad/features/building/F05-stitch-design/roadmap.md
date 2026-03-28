@@ -28,12 +28,15 @@ E02 Navigation Overhaul ────────────────├─�
 - **Resultat:** 48 stitch-tokens, surface-hierarki, gradients, ghost borders, ultra-diffused shadows, roundness-tokens
 
 ### Wave 2: E03 — Typography System
+- **Status:** VERIFIED (2026-03-29T00:10:00Z)
 - **Mål:** Noto Serif + Manrope installerade och konfigurerade
 - **Beroenden:** E01 (tokens refererar typografi-tokens)
 - **Verifiering:** Fonter laddas korrekt i Expo, screenshot visar serif-headlines
 - **UI-checkpoint:** Ja — verifiera typografi på en skärm via odin9
+- **Resultat:** notoSerifFont (9 sizes, 2 weights, italic), manropeFont (5 sizes, 4 weights), expo-loader updated with 7 font assets, tamagui.config wired, TypeScript passes
 
 ### Wave 3: E02 — Navigation Overhaul
+- **Status:** IN_PROGRESS (2026-03-29T00:10:00Z)
 - **Mål:** Glassmorphic floating dock med 5 tabs, inga debug-rubriker
 - **Beroenden:** E01 (tokens för färger/opacity)
 - **Verifiering:** Screenshot visar floating dock med backdrop-blur

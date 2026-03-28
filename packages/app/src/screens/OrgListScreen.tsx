@@ -41,8 +41,8 @@ export function OrgListScreen({ onOrgPress, onCreatePress }: OrgListScreenProps)
 
   return (
     <YStack flex={1} backgroundColor="$background">
-      <YStack paddingHorizontal="$3" paddingVertical="$2" gap="$2">
-        <XStack gap="$2" alignItems="center">
+      <YStack paddingHorizontal="$sm" paddingVertical="$xs" gap="$xs">
+        <XStack gap="$xs" alignItems="center">
           <Input
             flex={1}
             placeholder="Search organizations..."
@@ -52,7 +52,7 @@ export function OrgListScreen({ onOrgPress, onCreatePress }: OrgListScreenProps)
             borderWidth={1}
             borderColor="$borderColor"
             borderRadius="$3"
-            paddingHorizontal="$3"
+            paddingHorizontal="$sm"
           />
           <Button size="$3" backgroundColor="$primary" color="white" onPress={onCreatePress}>
             +
@@ -64,7 +64,7 @@ export function OrgListScreen({ onOrgPress, onCreatePress }: OrgListScreenProps)
         data={displayOrgs}
         keyExtractor={(item: { id: string }) => item.id}
         renderItem={({ item }: { item: typeof displayOrgs[number] }) => (
-          <YStack paddingHorizontal="$3" paddingVertical="$2">
+          <YStack paddingHorizontal="$sm" paddingVertical="$xs">
             <OrgCard
               org={item}
               onPress={onOrgPress}
@@ -89,13 +89,13 @@ export function OrgListScreen({ onOrgPress, onCreatePress }: OrgListScreenProps)
         }
         ListFooterComponent={
           (searchQuery ? searchResults.isLoading : orgsQuery.isFetchingNextPage) ? (
-            <YStack padding="$4" alignItems="center">
+            <YStack padding="$md" alignItems="center">
               <Spinner color="$primary" />
             </YStack>
           ) : null
         }
         ListEmptyComponent={
-          <YStack flex={1} alignItems="center" justifyContent="center" padding="$6">
+          <YStack flex={1} alignItems="center" justifyContent="center" padding="$lg">
             <Text color="$textSecondary">
               {searchQuery ? 'No organizations found' : 'No organizations yet. Create one!'}
             </Text>

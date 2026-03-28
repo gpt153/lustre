@@ -7,10 +7,10 @@ import {
   lustreShadowTokens,
   lustreRoundnessTokens,
 } from './tokens'
-import { generalSansFont, interFont } from './fonts'
+import { notoSerifFont, manropeFont } from './fonts'
 
-const headingFont = generalSansFont
-const bodyFont = interFont
+const headingFont = notoSerifFont
+const bodyFont = manropeFont
 
 const tokens = {
   ...defaultTokens,

@@ -36,7 +36,7 @@ function ProductCard({ title, thumbnail, price, onPress }: ProductCardProps) {
         ) : (
           <YStack width="100%" height={160} backgroundColor="$backgroundHover" />
         )}
-        <YStack padding="$3" gap="$1">
+        <YStack padding="$sm" gap="$xs">
           <Text fontWeight="700" color="$text" numberOfLines={2}>
             {title}
           </Text>
@@ -65,7 +65,7 @@ export function BusinessShopScreen({ onProductPress }: BusinessShopScreenProps) 
 
   if (products.length === 0) {
     return (
-      <YStack flex={1} alignItems="center" justifyContent="center" padding="$8">
+      <YStack flex={1} alignItems="center" justifyContent="center" padding="$xl">
         <Text color="$textSecondary" fontSize="$4">
           Inga produkter ännu
         </Text>

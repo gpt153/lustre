@@ -10,6 +10,7 @@ export interface DiscoverProfile {
   photos: string[]
   location: string
   bio: string
+  seeking?: string[]
 }
 
 interface ProfileCardProps {
@@ -93,9 +94,24 @@ export default function ProfileCard({
         {/* Name + age overlay */}
         <div className={styles.overlay}>
           <div className={styles.nameRow}>
-            <span className={styles.name}>{profile.displayName}</span>
-            <span className={styles.age}>{profile.age}</span>
+            <span className={styles.name}>{profile.displayName}, {profile.age}</span>
           </div>
+          <p className={styles.location}>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <path
+                d="M6 1C4.1 1 2.5 2.6 2.5 4.5C2.5 7.1 6 11 6 11C6 11 9.5 7.1 9.5 4.5C9.5 2.6 7.9 1 6 1ZM6 6C5.2 6 4.5 5.3 4.5 4.5C4.5 3.7 5.2 3 6 3C6.8 3 7.5 3.7 7.5 4.5C7.5 5.3 6.8 6 6 6Z"
+                fill="currentColor"
+              />
+            </svg>
+            {profile.location}
+          </p>
+          {profile.seeking && profile.seeking.length > 0 && (
+            <div className={styles.chips}>
+              {profile.seeking.map((s) => (
+                <span key={s} className={styles.chip}>{s}</span>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Action buttons — revealed on hover/focus */}

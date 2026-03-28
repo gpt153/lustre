@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { createTRPCProxyClient, httpBatchLink } from '@trpc/client'
+import superjson from 'superjson'
 
 function getAuthToken(): string | null {
   if (typeof window === 'undefined') return null
@@ -24,6 +25,7 @@ function getAuthToken(): string | null {
 export const api = createTRPCProxyClient<any>({
   links: [
     httpBatchLink({
+      transformer: superjson,
       url: '/trpc',
       headers() {
         const token = getAuthToken()

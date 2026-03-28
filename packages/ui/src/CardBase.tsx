@@ -3,10 +3,10 @@ import { styled, YStack } from 'tamagui'
 export const CardBase = styled(YStack, {
   backgroundColor: '#F5EDE4', // warmCream
   borderRadius: 16,
-  padding: '$3',
+  padding: '$md',
 
-  // Copper-tinted shadow for depth (no borders)
-  shadowColor: '#C4956A', // copperMuted
+  // Warm-tinted shadow for depth (no borders)
+  shadowColor: '#2C2421', // charcoal
   shadowOffset: { width: 0, height: 2 },
   shadowOpacity: 0.1,
   shadowRadius: 8,

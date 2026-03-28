@@ -84,8 +84,8 @@ export function OnboardingWizard({ onComplete, isSubmitting = false, onStep }: O
 
   return (
     <ScrollView>
-      <YStack padding="$4" gap="$4" minHeight="100%">
-        <XStack justifyContent="center" gap="$1" marginBottom="$2">
+      <YStack padding="$md" gap="$md" minHeight="100%">
+        <XStack justifyContent="center" gap="$xs" marginBottom="$2">
           {[1,2,3,4,5].map(s => (
             <YStack key={s} width={40} height={4} borderRadius={2}
               backgroundColor={s <= step ? '$primary' : '$borderColor'} />
@@ -93,14 +93,14 @@ export function OnboardingWizard({ onComplete, isSubmitting = false, onStep }: O
         </XStack>
 
         {step === 1 && (
-          <YStack gap="$4">
+          <YStack gap="$md">
             <H2 color="$text">Välkommen!</H2>
             <Text color="$textSecondary">Låt oss sätta upp din profil.</Text>
-            <YStack gap="$1">
+            <YStack gap="$xs">
               <Text color="$textSecondary" fontSize="$2">Visningsnamn</Text>
               <Input value={displayName} onChangeText={setDisplayName} placeholder="Välj ett visningsnamn" />
             </YStack>
-            <YStack gap="$1">
+            <YStack gap="$xs">
               <Text color="$textSecondary" fontSize="$2">Ålder</Text>
               <Input value={age} onChangeText={setAge} keyboardType="numeric" placeholder="Din ålder" />
             </YStack>
@@ -108,11 +108,11 @@ export function OnboardingWizard({ onComplete, isSubmitting = false, onStep }: O
         )}
 
         {step === 2 && (
-          <YStack gap="$4">
+          <YStack gap="$md">
             <H2 color="$text">Identitet</H2>
-            <YStack gap="$1">
+            <YStack gap="$xs">
               <Text color="$textSecondary" fontSize="$2">Kön</Text>
-              <XStack flexWrap="wrap" gap="$1">
+              <XStack flexWrap="wrap" gap="$xs">
                 {GENDERS.map(g => (
                   <Button key={g} size="$2" onPress={() => setGender(g)}
                     backgroundColor={gender === g ? '$primary' : '$backgroundHover'}
@@ -122,9 +122,9 @@ export function OnboardingWizard({ onComplete, isSubmitting = false, onStep }: O
                 ))}
               </XStack>
             </YStack>
-            <YStack gap="$1">
+            <YStack gap="$xs">
               <Text color="$textSecondary" fontSize="$2">Orientering</Text>
-              <XStack flexWrap="wrap" gap="$1">
+              <XStack flexWrap="wrap" gap="$xs">
                 {ORIENTATIONS.map(o => (
                   <Button key={o} size="$2" onPress={() => setOrientation(o)}
                     backgroundColor={orientation === o ? '$primary' : '$backgroundHover'}
@@ -138,11 +138,11 @@ export function OnboardingWizard({ onComplete, isSubmitting = false, onStep }: O
         )}
 
         {step === 3 && (
-          <YStack gap="$4">
+          <YStack gap="$md">
             <H2 color="$text">Preferenser</H2>
-            <YStack gap="$1">
+            <YStack gap="$xs">
               <Text color="$textSecondary" fontSize="$2">Innehållspreferens</Text>
-              <XStack flexWrap="wrap" gap="$1">
+              <XStack flexWrap="wrap" gap="$xs">
                 {CONTENT_PREFS.map(c => (
                   <Button key={c} size="$2" onPress={() => setContentPreference(c)}
                     backgroundColor={contentPreference === c ? '$primary' : '$backgroundHover'}
@@ -152,9 +152,9 @@ export function OnboardingWizard({ onComplete, isSubmitting = false, onStep }: O
                 ))}
               </XStack>
             </YStack>
-            <YStack gap="$1">
+            <YStack gap="$xs">
               <Text color="$textSecondary" fontSize="$2">Relationstyp (frivilligt)</Text>
-              <XStack flexWrap="wrap" gap="$1">
+              <XStack flexWrap="wrap" gap="$xs">
                 {RELATIONSHIP_TYPES.map(r => (
                   <Button key={r} size="$2" onPress={() => setRelationshipType(r === relationshipType ? '' : r)}
                     backgroundColor={relationshipType === r ? '$primary' : '$backgroundHover'}
@@ -168,22 +168,22 @@ export function OnboardingWizard({ onComplete, isSubmitting = false, onStep }: O
         )}
 
         {step === 4 && (
-          <YStack gap="$4">
+          <YStack gap="$md">
             <H2 color="$text">Foton</H2>
             <Text color="$textSecondary">Fotouppladding är tillgänglig efter att profilen skapats. Du kan lägga till foton från din profilsida.</Text>
           </YStack>
         )}
 
         {step === 5 && (
-          <YStack gap="$4">
+          <YStack gap="$md">
             <H2 color="$text">Nästan klart!</H2>
-            <YStack gap="$1">
+            <YStack gap="$xs">
               <Text color="$textSecondary" fontSize="$2">Om mig (frivilligt)</Text>
               <TextArea value={bio} onChangeText={setBio} placeholder="Berätta om dig själv..." numberOfLines={4} />
             </YStack>
-            <YStack gap="$1">
+            <YStack gap="$xs">
               <Text color="$textSecondary" fontSize="$2">Letar efter (frivilligt)</Text>
-              <XStack flexWrap="wrap" gap="$1">
+              <XStack flexWrap="wrap" gap="$xs">
                 {SEEKING_OPTIONS.map(s => (
                   <Button key={s} size="$2" onPress={() => toggleSeeking(s)}
                     backgroundColor={seeking.includes(s) ? '$primary' : '$backgroundHover'}

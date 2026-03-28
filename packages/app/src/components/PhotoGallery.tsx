@@ -20,9 +20,9 @@ interface PhotoGalleryProps {
 
 export function PhotoGallery({ photos, editable = false, onDelete, onUpload }: PhotoGalleryProps) {
   return (
-    <YStack gap="$2">
+    <YStack gap="$xs">
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <XStack gap="$2" padding="$1">
+        <XStack gap="$xs" padding="$xs">
           {photos.map((photo) => (
             <YStack key={photo.id} position="relative">
               <Image

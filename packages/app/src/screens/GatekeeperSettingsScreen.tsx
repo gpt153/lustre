@@ -18,7 +18,7 @@ export function GatekeeperSettingsScreen() {
 
   if (isLoading) {
     return (
-      <YStack padding="$4" alignItems="center">
+      <YStack padding="$md" alignItems="center">
         <Text>Laddar...</Text>
       </YStack>
     )
@@ -68,7 +68,7 @@ export function GatekeeperSettingsScreen() {
 
   return (
     <ScrollView>
-      <YStack padding="$4" gap="$6">
+      <YStack padding="$md" gap="$lg">
         <H2 color="$text">Gatekeeper</H2>
         <Text color="$textSecondary">
           AI Gatekeeper kvalificerar personer som vill kontakta dig baserat på dina preferenser.
@@ -86,9 +86,9 @@ export function GatekeeperSettingsScreen() {
           </Switch>
         </XStack>
 
-        <YStack gap="$2">
+        <YStack gap="$xs">
           <Label color="$text">Nivå</Label>
-          <XStack gap="$2">
+          <XStack gap="$xs">
             {(['MILD', 'STANDARD', 'STRICT'] as const).map(level => (
               <Button
                 key={level}
@@ -105,9 +105,9 @@ export function GatekeeperSettingsScreen() {
           </XStack>
         </YStack>
 
-        <YStack gap="$2">
+        <YStack gap="$xs">
           <Label color="$text">AI-ton</Label>
-          <XStack gap="$2">
+          <XStack gap="$xs">
             {(['FORMAL', 'CASUAL', 'FLIRTY'] as const).map(tone => (
               <Button
                 key={tone}
@@ -124,10 +124,10 @@ export function GatekeeperSettingsScreen() {
           </XStack>
         </YStack>
 
-        <YStack gap="$2">
+        <YStack gap="$xs">
           <Label color="$text">Egna frågor ({customQuestions.length}/10)</Label>
           {customQuestions.map((q, i) => (
-            <XStack key={i} justifyContent="space-between" alignItems="center" gap="$2">
+            <XStack key={i} justifyContent="space-between" alignItems="center" gap="$xs">
               <Text color="$text" flex={1}>{q}</Text>
               <Button size="$2" onPress={() => removeQuestion(i)} chromeless>
                 <Text color="$red10">Ta bort</Text>
@@ -135,7 +135,7 @@ export function GatekeeperSettingsScreen() {
             </XStack>
           ))}
           {customQuestions.length < 10 && (
-            <XStack gap="$2">
+            <XStack gap="$xs">
               <Input
                 flex={1}
                 value={newQuestion}
@@ -150,10 +150,10 @@ export function GatekeeperSettingsScreen() {
           )}
         </YStack>
 
-        <YStack gap="$2">
+        <YStack gap="$xs">
           <Label color="$text">Dealbreakers ({dealbreakers.length}/10)</Label>
           {dealbreakers.map((d, i) => (
-            <XStack key={i} justifyContent="space-between" alignItems="center" gap="$2">
+            <XStack key={i} justifyContent="space-between" alignItems="center" gap="$xs">
               <Text color="$text" flex={1}>{d}</Text>
               <Button size="$2" onPress={() => removeDealbreaker(i)} chromeless>
                 <Text color="$red10">Ta bort</Text>
@@ -161,7 +161,7 @@ export function GatekeeperSettingsScreen() {
             </XStack>
           ))}
           {dealbreakers.length < 10 && (
-            <XStack gap="$2">
+            <XStack gap="$xs">
               <Input
                 flex={1}
                 value={newDealbreaker}

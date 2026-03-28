@@ -90,11 +90,20 @@ export default function BrowsePage() {
     async function fetchProfiles() {
       try {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const result = await (api as any).match.getDiscoveryStack.query()
+        const result = await (api as any).match.getDiscoveryStack.query({})
         if (cancelled) return
 
         if (Array.isArray(result) && result.length > 0) {
-          setProfiles(result)
+          // API returns photo objects { id, url, ... } — map to string[]
+          const mapped = result.map((p: Record<string, unknown>) => ({
+            ...p,
+            photos: Array.isArray(p.photos)
+              ? p.photos.map((ph: unknown) =>
+                  typeof ph === 'string' ? ph : (ph as { url: string }).url
+                )
+              : [],
+          }))
+          setProfiles(mapped as DiscoverProfile[])
         } else {
           // Empty result — show mock data in development
           setProfiles(MOCK_PROFILES)
@@ -170,11 +179,16 @@ export default function BrowsePage() {
   return (
     <div>
       <div className={styles.header}>
-        <h1 className={styles.heading}>Bläddra profiler</h1>
+        <div>
+          <h1 className={styles.heading}>Kurerat för dig</h1>
+          <p className={styles.subtitle}>
+            Hittade {profiles.length} matchningar idag
+          </p>
+        </div>
         <p className={styles.hint}>
-          Tryck <kbd className={styles.kbd}>L</kbd> för gilla ·{' '}
-          <kbd className={styles.kbd}>P</kbd> för passa ·{' '}
-          <kbd className={styles.kbd}>←→↑↓</kbd> för navigera
+          <kbd className={styles.kbd}>L</kbd> gilla ·{' '}
+          <kbd className={styles.kbd}>P</kbd> passa ·{' '}
+          <kbd className={styles.kbd}>←→↑↓</kbd> navigera
         </p>
       </div>
 

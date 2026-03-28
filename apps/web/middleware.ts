@@ -4,16 +4,16 @@ const APP_HOSTNAME = 'app.lovelustre.com'
 const PAY_HOSTNAME = 'pay.lovelustre.com'
 
 export function middleware(request: NextRequest) {
-  const hostname = request.headers.get('host') ?? ''
+  const host = (request.headers.get('host') ?? '').split(':')[0]
   const pathname = request.nextUrl.pathname
 
-  // On app.lovelustre.com, redirect root to /home
-  if (hostname === APP_HOSTNAME && pathname === '/') {
-    return NextResponse.redirect(new URL('/home', request.url))
+  // app.lovelustre.com — redirect root to /discover
+  if (host === APP_HOSTNAME && pathname === '/') {
+    return NextResponse.redirect(new URL('/discover', request.url))
   }
 
-  // On pay.lovelustre.com, rewrite all paths to /pay prefix
-  if (hostname === PAY_HOSTNAME) {
+  // pay.lovelustre.com — rewrite all paths to /pay prefix
+  if (host === PAY_HOSTNAME) {
     if (pathname === '/') {
       return NextResponse.rewrite(new URL('/pay', request.url))
     }

@@ -4,8 +4,8 @@ export const LustreButton = styled(TamaguiButton, {
   backgroundColor: '#D4A843',  // gold
   color: '#2C2421',  // charcoal text on gold
   borderRadius: 12,
-  paddingHorizontal: 24,
-  paddingVertical: 12,
+  paddingHorizontal: '$lg',
+  paddingVertical: '$sm',
   fontWeight: '600',
   fontFamily: '$heading',
 

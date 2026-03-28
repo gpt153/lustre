@@ -221,13 +221,13 @@ export function AdCreateScreen({ onSuccess, onCancel }: AdCreateScreenProps) {
   return (
     <YStack flex={1}>
       {/* Step indicator */}
-      <XStack padding="$4" gap="$2" alignItems="center">
+      <XStack padding="$md" gap="$xs" alignItems="center">
         {stepTitles.map((title, index) => {
           const stepNum = (index + 1) as 1 | 2 | 3
           const isActive = step === stepNum
           const isDone = step > stepNum
           return (
-            <XStack key={stepNum} flex={1} alignItems="center" gap="$2">
+            <XStack key={stepNum} flex={1} alignItems="center" gap="$xs">
               <YStack
                 width={28}
                 height={28}
@@ -254,15 +254,15 @@ export function AdCreateScreen({ onSuccess, onCancel }: AdCreateScreenProps) {
       </XStack>
 
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <YStack padding="$4" gap="$5" flex={1}>
+        <YStack padding="$md" gap="$md" flex={1}>
           {/* Step 1: Campaign info */}
           {step === 1 && (
-            <YStack gap="$4">
+            <YStack gap="$md">
               <Text fontSize="$5" fontWeight="700" color="$text">
                 Kampanjinformation
               </Text>
 
-              <YStack gap="$2">
+              <YStack gap="$xs">
                 <Text fontSize="$3" color="$textSecondary" fontWeight="600">
                   Kampanjnamn
                 </Text>
@@ -274,11 +274,11 @@ export function AdCreateScreen({ onSuccess, onCancel }: AdCreateScreenProps) {
                 />
               </YStack>
 
-              <YStack gap="$2">
+              <YStack gap="$xs">
                 <Text fontSize="$3" color="$textSecondary" fontWeight="600">
                   Format
                 </Text>
-                <XStack gap="$2" flexWrap="wrap">
+                <XStack gap="$xs" flexWrap="wrap">
                   {(Object.keys(FORMAT_LABELS) as AdFormat[]).map((f) => (
                     <SelectOption
                       key={f}
@@ -291,11 +291,11 @@ export function AdCreateScreen({ onSuccess, onCancel }: AdCreateScreenProps) {
                 </XStack>
               </YStack>
 
-              <YStack gap="$2">
+              <YStack gap="$xs">
                 <Text fontSize="$3" color="$textSecondary" fontWeight="600">
                   Betalningsmodell
                 </Text>
-                <XStack gap="$2" flexWrap="wrap">
+                <XStack gap="$xs" flexWrap="wrap">
                   {(Object.keys(BILLING_LABELS) as BillingModel[]).map((b) => (
                     <SelectOption
                       key={b}
@@ -308,7 +308,7 @@ export function AdCreateScreen({ onSuccess, onCancel }: AdCreateScreenProps) {
                 </XStack>
               </YStack>
 
-              <YStack gap="$2">
+              <YStack gap="$xs">
                 <Text fontSize="$3" color="$textSecondary" fontWeight="600">
                   Daglig budget (SEK, minst 100)
                 </Text>
@@ -321,7 +321,7 @@ export function AdCreateScreen({ onSuccess, onCancel }: AdCreateScreenProps) {
                 />
               </YStack>
 
-              <YStack gap="$2">
+              <YStack gap="$xs">
                 <Text fontSize="$3" color="$textSecondary" fontWeight="600">
                   Totalbudget (SEK, valfritt)
                 </Text>
@@ -338,16 +338,16 @@ export function AdCreateScreen({ onSuccess, onCancel }: AdCreateScreenProps) {
 
           {/* Step 2: Targeting */}
           {step === 2 && (
-            <YStack gap="$4">
+            <YStack gap="$md">
               <Text fontSize="$5" fontWeight="700" color="$text">
                 Inriktning
               </Text>
 
-              <YStack gap="$3">
+              <YStack gap="$sm">
                 <Text fontSize="$3" color="$textSecondary" fontWeight="600">
                   Åldersintervall: {ageMin}–{ageMax} år
                 </Text>
-                <XStack gap="$3" alignItems="center">
+                <XStack gap="$sm" alignItems="center">
                   <Text fontSize="$2" color="$textSecondary" width={30}>
                     Min
                   </Text>
@@ -379,11 +379,11 @@ export function AdCreateScreen({ onSuccess, onCancel }: AdCreateScreenProps) {
                 </XStack>
               </YStack>
 
-              <YStack gap="$2">
+              <YStack gap="$xs">
                 <Text fontSize="$3" color="$textSecondary" fontWeight="600">
                   Kön (lämna tomt för alla)
                 </Text>
-                <XStack gap="$2" flexWrap="wrap">
+                <XStack gap="$xs" flexWrap="wrap">
                   {GENDER_OPTIONS.map((opt) => (
                     <SelectOption
                       key={opt.value}
@@ -396,11 +396,11 @@ export function AdCreateScreen({ onSuccess, onCancel }: AdCreateScreenProps) {
                 </XStack>
               </YStack>
 
-              <YStack gap="$2">
+              <YStack gap="$xs">
                 <Text fontSize="$3" color="$textSecondary" fontWeight="600">
                   Sexuell läggning (lämna tomt för alla)
                 </Text>
-                <XStack gap="$2" flexWrap="wrap">
+                <XStack gap="$xs" flexWrap="wrap">
                   {ORIENTATION_OPTIONS.map((opt) => (
                     <SelectOption
                       key={opt.value}
@@ -413,11 +413,11 @@ export function AdCreateScreen({ onSuccess, onCancel }: AdCreateScreenProps) {
                 </XStack>
               </YStack>
 
-              <YStack gap="$2">
+              <YStack gap="$xs">
                 <Text fontSize="$3" color="$textSecondary" fontWeight="600">
                   Relationsstatus (lämna tomt för alla)
                 </Text>
-                <XStack gap="$2" flexWrap="wrap">
+                <XStack gap="$xs" flexWrap="wrap">
                   {RELATIONSHIP_OPTIONS.map((opt) => (
                     <SelectOption
                       key={opt.value}
@@ -434,12 +434,12 @@ export function AdCreateScreen({ onSuccess, onCancel }: AdCreateScreenProps) {
 
           {/* Step 3: Creative */}
           {step === 3 && (
-            <YStack gap="$4">
+            <YStack gap="$md">
               <Text fontSize="$5" fontWeight="700" color="$text">
                 Annonsinnehåll
               </Text>
 
-              <YStack gap="$2">
+              <YStack gap="$xs">
                 <XStack justifyContent="space-between">
                   <Text fontSize="$3" color="$textSecondary" fontWeight="600">
                     Rubrik (max 80 tecken)
@@ -456,7 +456,7 @@ export function AdCreateScreen({ onSuccess, onCancel }: AdCreateScreenProps) {
                 />
               </YStack>
 
-              <YStack gap="$2">
+              <YStack gap="$xs">
                 <XStack justifyContent="space-between">
                   <Text fontSize="$3" color="$textSecondary" fontWeight="600">
                     Brödtext (max 200 tecken, valfritt)
@@ -475,7 +475,7 @@ export function AdCreateScreen({ onSuccess, onCancel }: AdCreateScreenProps) {
                 />
               </YStack>
 
-              <YStack gap="$2">
+              <YStack gap="$xs">
                 <Text fontSize="$3" color="$textSecondary" fontWeight="600">
                   Bild-URL (valfritt)
                 </Text>
@@ -489,7 +489,7 @@ export function AdCreateScreen({ onSuccess, onCancel }: AdCreateScreenProps) {
                 />
               </YStack>
 
-              <YStack gap="$2">
+              <YStack gap="$xs">
                 <Text fontSize="$3" color="$textSecondary" fontWeight="600">
                   Länk (CTA)
                 </Text>
@@ -509,7 +509,7 @@ export function AdCreateScreen({ onSuccess, onCancel }: AdCreateScreenProps) {
             <YStack
               backgroundColor="$red2"
               borderRadius="$3"
-              padding="$3"
+              padding="$sm"
               borderWidth={1}
               borderColor="$red6"
             >
@@ -520,7 +520,7 @@ export function AdCreateScreen({ onSuccess, onCancel }: AdCreateScreenProps) {
           )}
 
           {/* Action buttons */}
-          <XStack gap="$3" justifyContent="flex-end" paddingBottom="$4">
+          <XStack gap="$sm" justifyContent="flex-end" paddingBottom="$md">
             {step === 1 && (
               <Button
                 size="$3"
@@ -562,7 +562,7 @@ export function AdCreateScreen({ onSuccess, onCancel }: AdCreateScreenProps) {
                 onPress={handleStep1Next}
                 disabled={createCampaign.isPending}
               >
-                <XStack gap="$2" alignItems="center">
+                <XStack gap="$xs" alignItems="center">
                   {createCampaign.isPending && <Spinner color="white" size="small" />}
                   <Text color="white" fontWeight="700">
                     Nästa
@@ -579,7 +579,7 @@ export function AdCreateScreen({ onSuccess, onCancel }: AdCreateScreenProps) {
                 onPress={handleStep2Save}
                 disabled={updateTargeting.isPending}
               >
-                <XStack gap="$2" alignItems="center">
+                <XStack gap="$xs" alignItems="center">
                   {updateTargeting.isPending && <Spinner color="white" size="small" />}
                   <Text color="white" fontWeight="700">
                     Spara inriktning
@@ -596,7 +596,7 @@ export function AdCreateScreen({ onSuccess, onCancel }: AdCreateScreenProps) {
                 onPress={handleStep3Add}
                 disabled={addCreative.isPending}
               >
-                <XStack gap="$2" alignItems="center">
+                <XStack gap="$xs" alignItems="center">
                   {addCreative.isPending && <Spinner color="white" size="small" />}
                   <Text color="white" fontWeight="700">
                     Lägg till annons

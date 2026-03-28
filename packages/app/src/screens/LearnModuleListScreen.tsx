@@ -25,8 +25,8 @@ export function LearnModuleListScreen({ onModulePress, onSpicySettings, onAchiev
   return (
     <YStack flex={1} backgroundColor="$background">
       <XStack
-        paddingHorizontal="$4"
-        paddingVertical="$3"
+        paddingHorizontal="$md"
+        paddingVertical="$sm"
         alignItems="center"
         justifyContent="space-between"
         borderBottomWidth={1}
@@ -43,14 +43,14 @@ export function LearnModuleListScreen({ onModulePress, onSpicySettings, onAchiev
       </XStack>
 
       <ScrollView flex={1}>
-        <YStack paddingHorizontal="$4" paddingTop="$3" paddingBottom="$6" gap="$4">
+        <YStack paddingHorizontal="$md" paddingTop="$sm" paddingBottom="$lg" gap="$md">
           {/* Vanilla Modules Section */}
           {vanillaModules.length > 0 && (
-            <YStack gap="$3">
+            <YStack gap="$sm">
               <Text fontSize={17} fontWeight="700" color="$color">
                 Moduler
               </Text>
-              <YStack gap="$2">
+              <YStack gap="$xs">
                 {vanillaModules.map((module) => (
                   <TouchableOpacity
                     key={module.id}
@@ -60,8 +60,8 @@ export function LearnModuleListScreen({ onModulePress, onSpicySettings, onAchiev
                     <XStack
                       backgroundColor="$gray2"
                       borderRadius="$4"
-                      padding="$3"
-                      gap="$3"
+                      padding="$sm"
+                      gap="$sm"
                       alignItems="flex-start"
                       opacity={module.isUnlocked ? 1 : 0.5}
                     >
@@ -79,8 +79,8 @@ export function LearnModuleListScreen({ onModulePress, onSpicySettings, onAchiev
                         </Text>
                       </YStack>
 
-                      <YStack flex={1} gap="$1">
-                        <XStack alignItems="center" gap="$2">
+                      <YStack flex={1} gap="$xs">
+                        <XStack alignItems="center" gap="$xs">
                           <Text fontSize={15} fontWeight="600" color="$color" flex={1}>
                             {module.title}
                           </Text>
@@ -91,11 +91,11 @@ export function LearnModuleListScreen({ onModulePress, onSpicySettings, onAchiev
                           {module.description}
                         </Text>
 
-                        <XStack alignItems="center" gap="$2" marginTop="$1">
+                        <XStack alignItems="center" gap="$xs" marginTop="$1">
                           <XStack
                             backgroundColor="$gray4"
                             borderRadius="$2"
-                            paddingHorizontal="$2"
+                            paddingHorizontal="$xs"
                             paddingVertical={2}
                           >
                             <Text fontSize={11} color="$gray11">
@@ -107,7 +107,7 @@ export function LearnModuleListScreen({ onModulePress, onSpicySettings, onAchiev
                             <XStack
                               backgroundColor="$yellow3"
                               borderRadius="$2"
-                              paddingHorizontal="$2"
+                              paddingHorizontal="$xs"
                               paddingVertical={2}
                             >
                               <Text fontSize={11} color="$yellow11">
@@ -131,7 +131,7 @@ export function LearnModuleListScreen({ onModulePress, onSpicySettings, onAchiev
           )}
 
           {/* Spicy Modules Section */}
-          <YStack gap="$3">
+          <YStack gap="$sm">
             <Text fontSize={17} fontWeight="700" color="$color">
               Spicy Modules 🌶️
             </Text>
@@ -139,7 +139,7 @@ export function LearnModuleListScreen({ onModulePress, onSpicySettings, onAchiev
             {spicyModules.length === 0 ? (
               <SpicyGateBanner onSettings={onSpicySettings} />
             ) : (
-              <YStack gap="$2">
+              <YStack gap="$xs">
                 {spicyModules.map((module) => (
                   <TouchableOpacity
                     key={module.id}
@@ -149,8 +149,8 @@ export function LearnModuleListScreen({ onModulePress, onSpicySettings, onAchiev
                     <XStack
                       backgroundColor="$gray2"
                       borderRadius="$4"
-                      padding="$3"
-                      gap="$3"
+                      padding="$sm"
+                      gap="$sm"
                       alignItems="flex-start"
                       opacity={module.isUnlocked ? 1 : 0.5}
                     >
@@ -168,8 +168,8 @@ export function LearnModuleListScreen({ onModulePress, onSpicySettings, onAchiev
                         </Text>
                       </YStack>
 
-                      <YStack flex={1} gap="$1">
-                        <XStack alignItems="center" gap="$2">
+                      <YStack flex={1} gap="$xs">
+                        <XStack alignItems="center" gap="$xs">
                           <Text fontSize={15} fontWeight="600" color="$color" flex={1}>
                             {module.title}
                           </Text>
@@ -180,11 +180,11 @@ export function LearnModuleListScreen({ onModulePress, onSpicySettings, onAchiev
                           {module.description}
                         </Text>
 
-                        <XStack alignItems="center" gap="$2" marginTop="$1">
+                        <XStack alignItems="center" gap="$xs" marginTop="$1">
                           <XStack
                             backgroundColor="$red3"
                             borderRadius="$2"
-                            paddingHorizontal="$2"
+                            paddingHorizontal="$xs"
                             paddingVertical={2}
                           >
                             <Text fontSize={11} color="$red11" fontWeight="700">
@@ -195,7 +195,7 @@ export function LearnModuleListScreen({ onModulePress, onSpicySettings, onAchiev
                           <XStack
                             backgroundColor="$gray4"
                             borderRadius="$2"
-                            paddingHorizontal="$2"
+                            paddingHorizontal="$xs"
                             paddingVertical={2}
                           >
                             <Text fontSize={11} color="$gray11">
@@ -207,7 +207,7 @@ export function LearnModuleListScreen({ onModulePress, onSpicySettings, onAchiev
                             <XStack
                               backgroundColor="$yellow3"
                               borderRadius="$2"
-                              paddingHorizontal="$2"
+                              paddingHorizontal="$xs"
                               paddingVertical={2}
                             >
                               <Text fontSize={11} color="$yellow11">

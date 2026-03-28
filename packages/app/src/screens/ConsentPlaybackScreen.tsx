@@ -11,7 +11,7 @@ export function ConsentPlaybackScreen({ recordingId, onClose }: Props) {
 
   if (tokenQuery.isLoading) {
     return (
-      <YStack flex={1} alignItems="center" justifyContent="center" gap="$3">
+      <YStack flex={1} alignItems="center" justifyContent="center" gap="$sm">
         <Spinner />
         <Text color="$colorSecondary">Loading playback token...</Text>
       </YStack>
@@ -20,7 +20,7 @@ export function ConsentPlaybackScreen({ recordingId, onClose }: Props) {
 
   if (tokenQuery.error) {
     return (
-      <YStack padding="$4" gap="$5" flex={1}>
+      <YStack padding="$md" gap="$md" flex={1}>
         <H2 color="$color">Playback</H2>
         <Text color="$red10">{tokenQuery.error.message}</Text>
         <Button theme="active" size="$4" onPress={onClose}>
@@ -36,14 +36,14 @@ export function ConsentPlaybackScreen({ recordingId, onClose }: Props) {
     : '—'
 
   return (
-    <YStack padding="$4" gap="$5" flex={1}>
+    <YStack padding="$md" gap="$md" flex={1}>
       <H2 color="$color">Playback</H2>
 
       <YStack
         backgroundColor="$backgroundHover"
         borderRadius="$4"
-        padding="$4"
-        gap="$3"
+        padding="$md"
+        gap="$sm"
       >
         <Text color="$color" fontWeight="600" fontSize="$3">
           DRM License Token
@@ -56,8 +56,8 @@ export function ConsentPlaybackScreen({ recordingId, onClose }: Props) {
       <YStack
         backgroundColor="$backgroundHover"
         borderRadius="$4"
-        padding="$4"
-        gap="$3"
+        padding="$md"
+        gap="$sm"
       >
         <Text color="$color" fontWeight="600" fontSize="$3">
           Streaming URL
@@ -70,7 +70,7 @@ export function ConsentPlaybackScreen({ recordingId, onClose }: Props) {
       <YStack
         backgroundColor="$yellow2"
         borderRadius="$4"
-        padding="$3"
+        padding="$sm"
         borderWidth={1}
         borderColor="$yellow6"
       >

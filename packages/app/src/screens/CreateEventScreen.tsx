@@ -46,12 +46,12 @@ export function CreateEventScreen({ onSuccess }: CreateEventScreenProps) {
 
   return (
     <ScrollView backgroundColor="$background" flex={1}>
-      <YStack padding="$4" gap="$4">
+      <YStack padding="$md" gap="$md">
         <Text fontSize="$6" fontWeight="600" color="$text">
           Create Event
         </Text>
 
-        <YStack gap="$2">
+        <YStack gap="$xs">
           <Text color="$textSecondary" fontSize="$2" fontWeight="600">
             Title
           </Text>
@@ -63,7 +63,7 @@ export function CreateEventScreen({ onSuccess }: CreateEventScreenProps) {
             borderWidth={1}
             borderColor={errors.title ? '$red400' : '$borderColor'}
             borderRadius="$3"
-            paddingHorizontal="$3"
+            paddingHorizontal="$sm"
           />
           {errors.title && (
             <Text color="$red400" fontSize="$2">
@@ -72,7 +72,7 @@ export function CreateEventScreen({ onSuccess }: CreateEventScreenProps) {
           )}
         </YStack>
 
-        <YStack gap="$2">
+        <YStack gap="$xs">
           <Text color="$textSecondary" fontSize="$2" fontWeight="600">
             Description (Optional)
           </Text>
@@ -84,16 +84,16 @@ export function CreateEventScreen({ onSuccess }: CreateEventScreenProps) {
             borderWidth={1}
             borderColor="$borderColor"
             borderRadius="$3"
-            paddingHorizontal="$3"
+            paddingHorizontal="$sm"
             minHeight={100}
           />
         </YStack>
 
-        <YStack gap="$2">
+        <YStack gap="$xs">
           <Text color="$textSecondary" fontSize="$2" fontWeight="600">
             Event Type
           </Text>
-          <YStack gap="$2">
+          <YStack gap="$xs">
             {(['ONLINE', 'IRL', 'HYBRID'] as const).map((t) => (
               <Button
                 key={t}
@@ -108,7 +108,7 @@ export function CreateEventScreen({ onSuccess }: CreateEventScreenProps) {
           </YStack>
         </YStack>
 
-        <YStack gap="$2">
+        <YStack gap="$xs">
           <Text color="$textSecondary" fontSize="$2" fontWeight="600">
             Date and Time (ISO format)
           </Text>
@@ -120,7 +120,7 @@ export function CreateEventScreen({ onSuccess }: CreateEventScreenProps) {
             borderWidth={1}
             borderColor={errors.startsAt ? '$red400' : '$borderColor'}
             borderRadius="$3"
-            paddingHorizontal="$3"
+            paddingHorizontal="$sm"
           />
           {errors.startsAt && (
             <Text color="$red400" fontSize="$2">
@@ -130,7 +130,7 @@ export function CreateEventScreen({ onSuccess }: CreateEventScreenProps) {
         </YStack>
 
         {type === 'IRL' && (
-          <YStack gap="$2">
+          <YStack gap="$xs">
             <Text color="$textSecondary" fontSize="$2" fontWeight="600">
               Location
             </Text>
@@ -142,7 +142,7 @@ export function CreateEventScreen({ onSuccess }: CreateEventScreenProps) {
               borderWidth={1}
               borderColor={errors.locationName ? '$red400' : '$borderColor'}
               borderRadius="$3"
-              paddingHorizontal="$3"
+              paddingHorizontal="$sm"
             />
             {errors.locationName && (
               <Text color="$red400" fontSize="$2">
@@ -152,7 +152,7 @@ export function CreateEventScreen({ onSuccess }: CreateEventScreenProps) {
           </YStack>
         )}
 
-        <YStack gap="$2">
+        <YStack gap="$xs">
           <Text color="$textSecondary" fontSize="$2" fontWeight="600">
             Price (SEK, Optional)
           </Text>
@@ -164,7 +164,7 @@ export function CreateEventScreen({ onSuccess }: CreateEventScreenProps) {
             borderWidth={1}
             borderColor="$borderColor"
             borderRadius="$3"
-            paddingHorizontal="$3"
+            paddingHorizontal="$sm"
             keyboardType="decimal-pad"
           />
         </YStack>

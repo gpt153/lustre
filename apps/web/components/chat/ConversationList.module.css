@@ -20,11 +20,38 @@
 }
 
 .heading {
-  font-size: 1.125rem;
+  font-family: 'Noto Serif', 'Georgia', serif;
+  font-size: 1.5rem;
   font-weight: 700;
   color: var(--color-text-primary);
   margin: 0;
   letter-spacing: -0.01em;
+}
+
+/* Search */
+.searchWrap {
+  padding: 0 var(--space-lg) var(--space-md);
+  flex-shrink: 0;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 10px 16px 10px 40px;
+  border: none;
+  border-radius: 9999px;
+  background: rgba(44, 36, 33, 0.04);
+  font-size: 14px;
+  color: var(--color-text-primary);
+  outline: none;
+  transition: box-shadow 200ms ease;
+}
+
+.searchInput:focus {
+  box-shadow: 0 0 0 1px rgba(184, 115, 51, 0.3);
+}
+
+.searchInput::placeholder {
+  color: var(--color-text-muted);
 }
 
 .unreadCount {

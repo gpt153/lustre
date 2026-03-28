@@ -32,7 +32,7 @@ export function MigrationScreen() {
 
   if (importSuccess) {
     return (
-      <YStack flex={1} alignItems="center" justifyContent="center" padding="$6" gap="$4">
+      <YStack flex={1} alignItems="center" justifyContent="center" padding="$lg" gap="$md">
         <Text fontSize="$8">
         </Text>
         <H2 color="$text" textAlign="center">
@@ -63,8 +63,8 @@ export function MigrationScreen() {
 
   return (
     <ScrollView>
-      <YStack padding="$4" gap="$5">
-        <YStack gap="$2">
+      <YStack padding="$md" gap="$md">
+        <YStack gap="$xs">
           <H2 color="$text">Importera från BodyContact</H2>
           <Text fontSize="$3" color="$textSecondary">
             Hämta din publika profilbeskrivning och foton från BodyContact och importera dem till din
@@ -72,12 +72,12 @@ export function MigrationScreen() {
           </Text>
         </YStack>
 
-        <YStack gap="$3">
-          <YStack gap="$1">
+        <YStack gap="$sm">
+          <YStack gap="$xs">
             <Text fontSize="$2" color="$textSecondary" fontWeight="600">
               BodyContact-användarnamn
             </Text>
-            <XStack gap="$2">
+            <XStack gap="$xs">
               <Input
                 flex={1}
                 value={localUsername}
@@ -107,7 +107,7 @@ export function MigrationScreen() {
             <YStack
               backgroundColor="#FEF2F2"
               borderRadius="$3"
-              padding="$3"
+              padding="$sm"
               borderWidth={1}
               borderColor="#FECACA"
             >
@@ -120,21 +120,21 @@ export function MigrationScreen() {
         </YStack>
 
         {previewQuery.data && (
-          <YStack gap="$4">
+          <YStack gap="$md">
             <YStack
               backgroundColor="$background"
               borderRadius="$4"
               borderWidth={1}
               borderColor="$borderColor"
-              padding="$4"
-              gap="$3"
+              padding="$md"
+              gap="$sm"
             >
               <Text fontSize="$4" fontWeight="700" color="$text">
                 Förhandsgranskning
               </Text>
 
               {previewQuery.data.bio ? (
-                <YStack gap="$1">
+                <YStack gap="$xs">
                   <Text fontSize="$2" color="$textSecondary" fontWeight="600">
                     Profilbeskrivning
                   </Text>
@@ -149,11 +149,11 @@ export function MigrationScreen() {
               )}
 
               {previewQuery.data.photoUrls.length > 0 ? (
-                <YStack gap="$2">
+                <YStack gap="$xs">
                   <Text fontSize="$2" color="$textSecondary" fontWeight="600">
                     Foton ({previewQuery.data.photoUrls.length} hittade)
                   </Text>
-                  <XStack flexWrap="wrap" gap="$2">
+                  <XStack flexWrap="wrap" gap="$xs">
                     {previewQuery.data.photoUrls.map((url, i) => (
                       <Image
                         key={i}
@@ -176,15 +176,15 @@ export function MigrationScreen() {
             <YStack
               backgroundColor="#F0FDF4"
               borderRadius="$3"
-              padding="$3"
+              padding="$sm"
               borderWidth={1}
               borderColor="#BBF7D0"
-              gap="$2"
+              gap="$xs"
             >
               <Text fontSize="$3" fontWeight="700" color="#166534">
                 Vad importeras
               </Text>
-              <YStack gap="$1">
+              <YStack gap="$xs">
                 {previewQuery.data.bio ? (
                   <Text fontSize="$2" color="#15803D">
                     Profilbeskrivning ({previewQuery.data.bio.length} tecken)
@@ -207,11 +207,11 @@ export function MigrationScreen() {
             <YStack
               backgroundColor="$backgroundHover"
               borderRadius="$3"
-              padding="$3"
+              padding="$sm"
               borderWidth={1}
               borderColor={consent ? '$primary' : '$borderColor'}
             >
-              <XStack gap="$3" alignItems="flex-start">
+              <XStack gap="$sm" alignItems="flex-start">
                 <Button
                   size="$2"
                   onPress={() => setConsent(!consent)}
@@ -239,7 +239,7 @@ export function MigrationScreen() {
               <YStack
                 backgroundColor="#FEF2F2"
                 borderRadius="$3"
-                padding="$3"
+                padding="$sm"
                 borderWidth={1}
                 borderColor="#FECACA"
               >
@@ -258,7 +258,7 @@ export function MigrationScreen() {
               size="$4"
             >
               {importMutation.isPending ? (
-                <XStack gap="$2" alignItems="center">
+                <XStack gap="$xs" alignItems="center">
                   <Spinner color="white" size="small" />
                   <Text color="white">Importerar...</Text>
                 </XStack>

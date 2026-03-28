@@ -68,7 +68,7 @@ export function CallScreen({
         {RemoteVideoView ? (
           <RemoteVideoView />
         ) : (
-          <YStack alignItems="center" gap="$4">
+          <YStack alignItems="center" gap="$md">
             <YStack
               width={80}
               height={80}
@@ -113,10 +113,10 @@ export function CallScreen({
           left={0}
           right={0}
           justifyContent="center"
-          gap="$8"
-          paddingHorizontal="$6"
+          gap="$xl"
+          paddingHorizontal="$lg"
         >
-          <YStack alignItems="center" gap="$2">
+          <YStack alignItems="center" gap="$xs">
             <TouchableOpacity
               onPress={rejectCall}
               style={{
@@ -134,7 +134,7 @@ export function CallScreen({
               Decline
             </Text>
           </YStack>
-          <YStack alignItems="center" gap="$2">
+          <YStack alignItems="center" gap="$xs">
             <TouchableOpacity
               onPress={acceptCall}
               style={{
@@ -163,10 +163,10 @@ export function CallScreen({
           left={0}
           right={0}
           justifyContent="center"
-          gap="$6"
-          paddingHorizontal="$6"
+          gap="$lg"
+          paddingHorizontal="$lg"
         >
-          <YStack alignItems="center" gap="$2">
+          <YStack alignItems="center" gap="$xs">
             <TouchableOpacity
               onPress={toggleMute}
               style={{
@@ -185,7 +185,7 @@ export function CallScreen({
             </Text>
           </YStack>
 
-          <YStack alignItems="center" gap="$2">
+          <YStack alignItems="center" gap="$xs">
             <TouchableOpacity
               onPress={toggleCamera}
               style={{
@@ -204,7 +204,7 @@ export function CallScreen({
             </Text>
           </YStack>
 
-          <YStack alignItems="center" gap="$2">
+          <YStack alignItems="center" gap="$xs">
             <TouchableOpacity
               onPress={toggleBlur}
               style={{
@@ -223,7 +223,7 @@ export function CallScreen({
             </Text>
           </YStack>
 
-          <YStack alignItems="center" gap="$2">
+          <YStack alignItems="center" gap="$xs">
             <TouchableOpacity
               onPress={endCall}
               style={{

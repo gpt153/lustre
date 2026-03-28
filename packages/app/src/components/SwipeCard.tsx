@@ -11,9 +11,10 @@ const CARD_HEIGHT = screenHeight * 0.75
 interface SwipeCardProfile {
   displayName: string
   age?: number
-  bio?: string
+  bio?: string | null
   distance?: number
-  photos?: Array<{ url?: string; thumbnailLarge?: string }>
+  photos?: Array<{ url?: string | null; thumbnailLarge?: string | null }>
+  [key: string]: unknown
 }
 
 interface SwipeCardProps {

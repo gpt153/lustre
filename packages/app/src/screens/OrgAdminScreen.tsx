@@ -30,14 +30,14 @@ export function OrgAdminScreen({ orgId }: OrgAdminScreenProps) {
 
   return (
     <ScrollView backgroundColor="$background" flex={1}>
-      <YStack padding="$4" gap="$4">
-        <YStack gap="$2">
+      <YStack padding="$md" gap="$md">
+        <YStack gap="$xs">
           <Text fontSize="$6" fontWeight="600" color="$text">
             Admin Panel
           </Text>
         </YStack>
 
-        <YStack gap="$2">
+        <YStack gap="$xs">
           <Text color="$textSecondary" fontSize="$2" fontWeight="600">
             Request Verification
           </Text>
@@ -52,7 +52,7 @@ export function OrgAdminScreen({ orgId }: OrgAdminScreenProps) {
           </Button>
         </YStack>
 
-        <YStack gap="$2" borderTopWidth={1} borderTopColor="$borderColor" paddingTopHorizontal="$4">
+        <YStack gap="$xs" borderTopWidth={1} borderTopColor="$borderColor" paddingTopHorizontal="$4">
           <Text color="$textSecondary" fontSize="$2" fontWeight="600">
             Members ({members.length})
           </Text>
@@ -64,10 +64,10 @@ export function OrgAdminScreen({ orgId }: OrgAdminScreenProps) {
           keyExtractor={(item: { id: string }) => item.id}
           renderItem={({ item }: { item: typeof members[number] }) => (
             <YStack
-              paddingVertical="$2"
+              paddingVertical="$xs"
               borderBottomWidth={1}
               borderBottomColor="$borderColor"
-              gap="$1"
+              gap="$xs"
             >
               <XStack justifyContent="space-between" alignItems="center">
                 <Text color="$text" fontSize="$3" fontWeight="600">
@@ -81,8 +81,8 @@ export function OrgAdminScreen({ orgId }: OrgAdminScreenProps) {
                         ? '$blue100'
                         : '$gray200'
                   }
-                  paddingHorizontal="$2"
-                  paddingVertical="$1"
+                  paddingHorizontal="$xs"
+                  paddingVertical="$xs"
                   borderRadius={6}
                 >
                   <Text

@@ -13,6 +13,8 @@
     "ios": "expo run:ios"
   },
   "dependencies": {
+    "@expo-google-fonts/manrope": "^0.4.2",
+    "@expo-google-fonts/noto-serif": "^0.4.2",
     "@hookform/resolvers": "^3.9.0",
     "@livekit/react-native-webrtc": "^125.0.5",
     "@lustre/api": "workspace:*",
@@ -27,7 +29,7 @@
     "expo-av": "~15.0.2",
     "expo-blur": "~14.0.3",
     "expo-constants": "~17.0.0",
-    "expo-font": "~12.0.0",
+    "expo-font": "~13.0.4",
     "expo-haptics": "~14.0.1",
     "expo-image-picker": "~16.0.6",
     "expo-linear-gradient": "~14.0.2",

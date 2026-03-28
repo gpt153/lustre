@@ -69,10 +69,10 @@ export function EducationQuizScreen({ quizId, onComplete, onBack }: EducationQui
     return (
       <YStack flex={1} backgroundColor="$background">
         <XStack
-          paddingHorizontal="$4"
-          paddingVertical="$3"
+          paddingHorizontal="$md"
+          paddingVertical="$sm"
           alignItems="center"
-          gap="$3"
+          gap="$sm"
           borderBottomWidth={1}
           borderBottomColor="$borderColor"
         >
@@ -84,8 +84,8 @@ export function EducationQuizScreen({ quizId, onComplete, onBack }: EducationQui
           </Text>
         </XStack>
 
-        <YStack flex={1} alignItems="center" justifyContent="center" gap="$4" paddingHorizontal="$4">
-          <YStack alignItems="center" gap="$2">
+        <YStack flex={1} alignItems="center" justifyContent="center" gap="$md" paddingHorizontal="$md">
+          <YStack alignItems="center" gap="$xs">
             <Text fontSize={48} fontWeight="700" color="$pink8">
               {score}/{quiz.questions.length}
             </Text>
@@ -94,7 +94,7 @@ export function EducationQuizScreen({ quizId, onComplete, onBack }: EducationQui
             </Text>
           </YStack>
 
-          <YStack alignItems="center" gap="$2">
+          <YStack alignItems="center" gap="$xs">
             <Text fontSize={20} fontWeight="700" color="$color">
               {Math.round((score / quiz.questions.length) * 100)}%
             </Text>
@@ -104,8 +104,8 @@ export function EducationQuizScreen({ quizId, onComplete, onBack }: EducationQui
             <YStack
               backgroundColor="$pink8"
               borderRadius="$3"
-              paddingHorizontal="$4"
-              paddingVertical="$3"
+              paddingHorizontal="$md"
+              paddingVertical="$sm"
               minWidth={200}
               alignItems="center"
             >
@@ -122,10 +122,10 @@ export function EducationQuizScreen({ quizId, onComplete, onBack }: EducationQui
   return (
     <YStack flex={1} backgroundColor="$background">
       <XStack
-        paddingHorizontal="$4"
-        paddingVertical="$3"
+        paddingHorizontal="$md"
+        paddingVertical="$sm"
         alignItems="center"
-        gap="$3"
+        gap="$sm"
         borderBottomWidth={1}
         borderBottomColor="$borderColor"
       >
@@ -138,16 +138,16 @@ export function EducationQuizScreen({ quizId, onComplete, onBack }: EducationQui
       </XStack>
 
       <ScrollView flex={1}>
-        <YStack paddingHorizontal="$4" paddingVertical="$4" gap="$4" paddingBottom="$6">
+        <YStack paddingHorizontal="$md" paddingVertical="$md" gap="$md" paddingBottom="$lg">
           {currentQuestion && (
             <>
-              <YStack gap="$3">
+              <YStack gap="$sm">
                 <Text fontSize={16} fontWeight="600" color="$color" lineHeight="$1.5">
                   {currentQuestion.question}
                 </Text>
               </YStack>
 
-              <YStack gap="$2">
+              <YStack gap="$xs">
                 {currentQuestion.options.map((option, idx) => {
                   const isSelected = selectedAnswers[currentIndex] === idx
                   const isCorrect = idx === currentQuestion.correctIndex
@@ -170,7 +170,7 @@ export function EducationQuizScreen({ quizId, onComplete, onBack }: EducationQui
                       <YStack
                         backgroundColor={backgroundColor}
                         borderRadius="$3"
-                        padding="$3"
+                        padding="$sm"
                         borderWidth={isSelected ? 2 : 0}
                         borderColor={showFeedback && isSelected ? (isCorrect ? '$green8' : '$red8') : undefined}
                       >
@@ -197,7 +197,7 @@ export function EducationQuizScreen({ quizId, onComplete, onBack }: EducationQui
                 <YStack
                   backgroundColor="$blue3"
                   borderRadius="$3"
-                  padding="$3"
+                  padding="$sm"
                   borderLeftWidth={3}
                   borderLeftColor="$blue8"
                 >
@@ -215,8 +215,8 @@ export function EducationQuizScreen({ quizId, onComplete, onBack }: EducationQui
                   <YStack
                     backgroundColor="$pink8"
                     borderRadius="$3"
-                    paddingHorizontal="$4"
-                    paddingVertical="$3"
+                    paddingHorizontal="$md"
+                    paddingVertical="$sm"
                     alignItems="center"
                     marginTop="$2"
                   >

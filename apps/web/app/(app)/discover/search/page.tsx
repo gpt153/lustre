@@ -30,7 +30,18 @@ export default function SearchPage() {
         orientations: filters.orientations.length > 0 ? filters.orientations : undefined,
         seeking: filters.seeking.length > 0 ? filters.seeking : undefined,
       })
-      setProfiles(Array.isArray(result) ? result : [])
+      const raw = Array.isArray(result) ? result : []
+      // API returns photo objects { id, url, ... } — map to string[]
+      setProfiles(
+        raw.map((p: Record<string, unknown>) => ({
+          ...p,
+          photos: Array.isArray(p.photos)
+            ? p.photos.map((ph: unknown) =>
+                typeof ph === 'string' ? ph : (ph as { url: string }).url
+              )
+            : [],
+        })) as DiscoverProfile[]
+      )
     } catch {
       setProfiles([])
     } finally {

@@ -54,10 +54,10 @@ export function EducationPodcastScreen({ topicSlug, onBack }: EducationPodcastSc
   return (
     <YStack flex={1} backgroundColor="$background">
       <XStack
-        paddingHorizontal="$4"
-        paddingVertical="$3"
+        paddingHorizontal="$md"
+        paddingVertical="$sm"
         alignItems="center"
-        gap="$3"
+        gap="$sm"
         borderBottomWidth={1}
         borderBottomColor="$borderColor"
       >
@@ -70,7 +70,7 @@ export function EducationPodcastScreen({ topicSlug, onBack }: EducationPodcastSc
       </XStack>
 
       <ScrollView flex={1}>
-        <YStack paddingHorizontal="$4" paddingVertical="$4" gap="$4" paddingBottom="$6">
+        <YStack paddingHorizontal="$md" paddingVertical="$md" gap="$md" paddingBottom="$lg">
           {!podcast ? (
             <YStack alignItems="center" justifyContent="center" minHeight={200}>
               <Text fontSize={14} color="$gray10" textAlign="center">
@@ -79,7 +79,7 @@ export function EducationPodcastScreen({ topicSlug, onBack }: EducationPodcastSc
             </YStack>
           ) : (
             <>
-              <YStack gap="$2">
+              <YStack gap="$xs">
                 <Text fontSize={18} fontWeight="700" color="$color">
                   {podcast.title}
                 </Text>
@@ -91,9 +91,9 @@ export function EducationPodcastScreen({ topicSlug, onBack }: EducationPodcastSc
               <YStack
                 backgroundColor="$gray2"
                 borderRadius="$4"
-                padding="$4"
+                padding="$md"
                 alignItems="center"
-                gap="$4"
+                gap="$md"
               >
                 <TouchableOpacity onPress={handlePlayPause} activeOpacity={0.7}>
                   <YStack

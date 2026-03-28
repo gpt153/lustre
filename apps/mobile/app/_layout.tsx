@@ -3,15 +3,13 @@ import { Slot, useRouter, useSegments } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { TamaguiProvider } from 'tamagui'
 import { tamaguiConfig } from '@lustre/ui'
-import { loadLustreFonts } from '@lustre/ui/src/fonts/expo-loader'
+import { loadLustreFonts, useFonts } from '@lustre/ui/src/fonts/expo-loader'
 import { TRPCProvider } from '@lustre/api'
 import { StatusBar } from 'expo-status-bar'
 import Constants from 'expo-constants'
 import { useAuth } from '@lustre/app'
-import { ToastContainer } from '@/components/ToastContainer'
-import { ModeTransition } from '@/components/ModeTransition'
 
-const API_URL = Constants.expoConfig?.extra?.apiUrl ?? 'http://localhost:4000'
+const API_URL = Constants.expoConfig?.extra?.apiUrl ?? 'https://api.lovelustre.com'
 
 // Keep splash screen visible while loading fonts
 SplashScreen.preventAutoHideAsync()
@@ -26,11 +24,7 @@ function useProtectedRoute() {
 
     if (!auth.isAuthenticated && !inAuthGroup) {
       router.replace('/(auth)/welcome')
-    } else if (auth.isAuthenticated && auth.needsPayment && !inAuthGroup) {
-      router.replace('/(auth)/payment')
-    } else if (auth.isAuthenticated && auth.needsDisplayName && !inAuthGroup) {
-      router.replace('/(auth)/display-name')
-    } else if (auth.isAuthenticated && !auth.needsPayment && !auth.needsDisplayName && inAuthGroup) {
+    } else if (auth.isAuthenticated && inAuthGroup) {
       router.replace('/(tabs)')
     }
   }, [auth.isAuthenticated, auth.needsPayment, auth.needsDisplayName, segments])
@@ -57,11 +51,8 @@ export default function RootLayout() {
   return (
     <TamaguiProvider config={tamaguiConfig}>
       <TRPCProvider apiUrl={API_URL}>
-        <ModeTransition>
-          <StatusBar style="auto" />
-          {fontsLoaded ? <AuthGate /> : <Slot />}
-          <ToastContainer />
-        </ModeTransition>
+        <StatusBar style="auto" />
+        {fontsLoaded ? <AuthGate /> : <Slot />}
       </TRPCProvider>
     </TamaguiProvider>
   )

@@ -25,15 +25,15 @@ export function OrgCard({ org, onPress }: OrgCardProps) {
       asChild
       onPress={() => onPress(org.id)}
     >
-      <YStack width="100%" gap="$2">
+      <YStack width="100%" gap="$xs">
         <XStack justifyContent="space-between" alignItems="center">
           <Text fontWeight="600" color="$text" fontSize="$4" flex={1}>
             {org.name}
           </Text>
           <XStack
             backgroundColor="$blue100"
-            paddingHorizontal="$2"
-            paddingVertical="$1"
+            paddingHorizontal="$xs"
+            paddingVertical="$xs"
             borderRadius={6}
           >
             <Text
@@ -50,7 +50,7 @@ export function OrgCard({ org, onPress }: OrgCardProps) {
           {descriptionPreview}
         </Text>
 
-        <XStack gap="$2" alignItems="center">
+        <XStack gap="$xs" alignItems="center">
           <Text color="$textSecondary" fontSize="$1">
             {org._count.members} {org._count.members === 1 ? 'member' : 'members'}
           </Text>

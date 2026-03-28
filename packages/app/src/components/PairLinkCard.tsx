@@ -13,14 +13,14 @@ interface PairLinkCardProps {
 
 export function PairLinkCard({ members, onMemberPress }: PairLinkCardProps) {
   return (
-    <XStack gap="$2" flexWrap="wrap">
+    <XStack gap="$xs" flexWrap="wrap">
       {members.map(member => (
         <XStack
           key={member.userId}
           backgroundColor="$backgroundHover"
           borderRadius={12}
-          padding="$2"
-          gap="$2"
+          padding="$xs"
+          gap="$xs"
           alignItems="center"
           pressStyle={{ opacity: 0.8 }}
           onPress={() => onMemberPress?.(member.userId)}

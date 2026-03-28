@@ -27,6 +27,7 @@ const MOCK_MESSAGES: Message[] = [
 interface ChatRoomProps {
   conversationId: string
   participantName?: string
+  participantPhotos?: { url: string }[]
 }
 
 function groupMessagesByDate(messages: Message[]) {
@@ -53,6 +54,7 @@ function groupMessagesByDate(messages: Message[]) {
 export default function ChatRoom({
   conversationId,
   participantName,
+  participantPhotos,
 }: ChatRoomProps) {
   const [messages, setMessages] = useState<Message[]>([])
   const [loading, setLoading] = useState(true)
@@ -204,15 +206,35 @@ export default function ChatRoom({
       <div className={styles.container}>
         {/* Header */}
         {participantName && (
-          <div className={styles.header}>
-            <div className={styles.headerAvatar}>
-              {participantName.charAt(0).toUpperCase()}
+          <>
+            <div className={styles.header}>
+              <div className={styles.headerAvatar}>
+                {participantName.charAt(0).toUpperCase()}
+              </div>
+              <div className={styles.headerInfo}>
+                <span className={styles.headerName}>{participantName}</span>
+                <span className={styles.headerStatus}>I Stockholm nu</span>
+              </div>
+              <div className={styles.headerActions}>
+                <button type="button" className={styles.headerActionBtn} aria-label="Videosamtal" title="Videosamtal">
+                  <span aria-hidden="true">📹</span>
+                </button>
+                <button type="button" className={styles.headerActionBtn} aria-label="Röstsamtal" title="Röstsamtal">
+                  <span aria-hidden="true">📞</span>
+                </button>
+              </div>
             </div>
-            <div className={styles.headerInfo}>
-              <span className={styles.headerName}>{participantName}</span>
-              <span className={styles.headerStatus}>Aktiv nyligen</span>
-            </div>
-          </div>
+            {participantPhotos && participantPhotos.length > 0 && (
+              <div className={styles.photoStrip}>
+                {participantPhotos.map((photo, i) => (
+                  <div key={i} className={styles.photoThumb}>
+                    <img src={photo.url} alt="" className={styles.photoThumbImg} />
+                    {i === 0 && <div className={styles.onlineDot} />}
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
         )}
 
         {/* Messages */}

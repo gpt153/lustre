@@ -109,6 +109,9 @@ const MOCK_POSTS: FeedItem[] = [
   },
 ]
 
+const FEED_TABS = ['Alla', 'Följer', 'Populärt'] as const
+type FeedTab = (typeof FEED_TABS)[number]
+
 export default function FeedPage() {
   const [items, setItems] = useState<FeedItem[]>([])
   const [cursor, setCursor] = useState<string | null>(null)
@@ -116,6 +119,7 @@ export default function FeedPage() {
   const [isFetchingMore, setIsFetchingMore] = useState(false)
   const [hasMore, setHasMore] = useState(true)
   const [composerOpen, setComposerOpen] = useState(false)
+  const [activeTab, setActiveTab] = useState<FeedTab>('Alla')
   const sentinelRef = useRef<HTMLDivElement>(null)
   const isMounted = useRef(true)
 
@@ -191,6 +195,19 @@ export default function FeedPage() {
     <div className={styles.page}>
       <header className={styles.header}>
         <h1 className={styles.heading}>Flöde</h1>
+        <nav className={styles.tabs} aria-label="Flödesfilter">
+          {FEED_TABS.map((tab) => (
+            <button
+              key={tab}
+              type="button"
+              className={[styles.tab, activeTab === tab ? styles.tabActive : ''].join(' ')}
+              onClick={() => setActiveTab(tab)}
+              aria-current={activeTab === tab ? 'page' : undefined}
+            >
+              {tab}
+            </button>
+          ))}
+        </nav>
       </header>
 
       <main

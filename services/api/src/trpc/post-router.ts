@@ -182,9 +182,11 @@ export const postRouter = router({
           )
         )
         ${isVanilla ? Prisma.sql`AND NOT EXISTS (
-          SELECT 1 FROM post_media pm
-          WHERE pm.post_id = p.id
-          AND pm.nudity_level IN ('MEDIUM', 'HIGH')
+          SELECT 1 FROM content_tags ct2
+          JOIN post_media pm2 ON pm2.id = ct2.post_media_id
+          WHERE pm2.post_id = p.id
+          AND ct2.dimension = 'NUDITY'
+          AND ct2.value IN ('MEDIUM', 'HIGH')
         )` : Prisma.empty}
       `
 

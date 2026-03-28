@@ -70,9 +70,9 @@ export function CoachSessionScreen({
     <YStack flex={1} backgroundColor="$background">
       {/* Header */}
       <YStack
-        paddingHorizontal="$4"
-        paddingTop="$6"
-        paddingBottom="$4"
+        paddingHorizontal="$md"
+        paddingTop="$lg"
+        paddingBottom="$md"
         alignItems="center"
         borderBottomWidth={1}
         borderBottomColor="$borderColor"
@@ -99,8 +99,8 @@ export function CoachSessionScreen({
       </YStack>
 
       {/* Timer */}
-      <YStack flex={1} alignItems="center" justifyContent="center" gap="$4">
-        <YStack alignItems="center" gap="$2">
+      <YStack flex={1} alignItems="center" justifyContent="center" gap="$md">
+        <YStack alignItems="center" gap="$xs">
           <Text fontSize={56} fontWeight="300" color="$color" letterSpacing={2}>
             {formatTimer(elapsed)}
           </Text>
@@ -125,7 +125,7 @@ export function CoachSessionScreen({
       </YStack>
 
       {/* Controls */}
-      <YStack paddingHorizontal="$6" paddingBottom="$8" gap="$4">
+      <YStack paddingHorizontal="$lg" paddingBottom="$2xl" gap="$md">
         {mode === 'VOICE' && (
           <XStack justifyContent="center">
             <TouchableOpacity

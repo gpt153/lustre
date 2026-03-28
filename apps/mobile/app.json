@@ -28,6 +28,9 @@
     "extra": {
       "apiUrl": "https://api.lovelustre.com"
     },
-    "plugins": ["expo-router"]
+    "plugins": [
+      "expo-router",
+      "expo-font"
+    ]
   }
 }

@@ -41,12 +41,12 @@ export function CreateGroupScreen({ onSuccess }: CreateGroupScreenProps) {
 
   return (
     <ScrollView backgroundColor="$background" flex={1}>
-      <YStack padding="$4" gap="$4">
+      <YStack padding="$md" gap="$md">
         <Text fontSize="$6" fontWeight="600" color="$text">
           Create Group
         </Text>
 
-        <YStack gap="$2">
+        <YStack gap="$xs">
           <Text color="$textSecondary" fontSize="$2" fontWeight="600">
             Name
           </Text>
@@ -58,7 +58,7 @@ export function CreateGroupScreen({ onSuccess }: CreateGroupScreenProps) {
             borderWidth={1}
             borderColor={errors.name ? '$red400' : '$borderColor'}
             borderRadius="$3"
-            paddingHorizontal="$3"
+            paddingHorizontal="$sm"
           />
           {errors.name && (
             <Text color="$red400" fontSize="$2">
@@ -67,7 +67,7 @@ export function CreateGroupScreen({ onSuccess }: CreateGroupScreenProps) {
           )}
         </YStack>
 
-        <YStack gap="$2">
+        <YStack gap="$xs">
           <Text color="$textSecondary" fontSize="$2" fontWeight="600">
             Description (Optional)
           </Text>
@@ -79,12 +79,12 @@ export function CreateGroupScreen({ onSuccess }: CreateGroupScreenProps) {
             borderWidth={1}
             borderColor="$borderColor"
             borderRadius="$3"
-            paddingHorizontal="$3"
+            paddingHorizontal="$sm"
             minHeight={100}
           />
         </YStack>
 
-        <YStack gap="$2">
+        <YStack gap="$xs">
           <Text color="$textSecondary" fontSize="$2" fontWeight="600">
             Category
           </Text>
@@ -96,7 +96,7 @@ export function CreateGroupScreen({ onSuccess }: CreateGroupScreenProps) {
             borderWidth={1}
             borderColor={errors.category ? '$red400' : '$borderColor'}
             borderRadius="$3"
-            paddingHorizontal="$3"
+            paddingHorizontal="$sm"
           />
           {errors.category && (
             <Text color="$red400" fontSize="$2">
@@ -105,11 +105,11 @@ export function CreateGroupScreen({ onSuccess }: CreateGroupScreenProps) {
           )}
         </YStack>
 
-        <YStack gap="$2">
+        <YStack gap="$xs">
           <Text color="$textSecondary" fontSize="$2" fontWeight="600">
             Visibility
           </Text>
-          <YStack gap="$2">
+          <YStack gap="$xs">
             <Button
               size="$3"
               backgroundColor={visibility === 'OPEN' ? '$primary' : '$gray300'}

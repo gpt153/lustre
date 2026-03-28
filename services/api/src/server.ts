@@ -39,8 +39,10 @@ async function start() {
   await server.register(cors, {
     origin: [
       'http://localhost:3000',
+      'http://localhost:3111',
       'http://localhost:8081',
       'http://localhost:19006',
+      'http://10.0.2.2:4000',
     ],
   })
 

@@ -23,7 +23,7 @@ export function PromptPicker({ visible, onSelect, onClose, selectedKeys }: Promp
 
   return (
     <BottomSheetBase visible={visible} onClose={onClose}>
-      <YStack gap="$4" flex={1}>
+      <YStack gap="$md" flex={1}>
         <Text
           fontSize={18}
           fontWeight="600"
@@ -34,7 +34,7 @@ export function PromptPicker({ visible, onSelect, onClose, selectedKeys }: Promp
         </Text>
 
         <ScrollView showsVerticalScrollIndicator={false}>
-          <YStack gap="$2">
+          <YStack gap="$xs">
             {availablePrompts.map(([key, label]) => (
               <CardBase
                 key={key}

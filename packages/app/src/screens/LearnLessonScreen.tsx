@@ -66,7 +66,7 @@ export function LearnLessonScreen({
 
   if (!module || !lesson) {
     return (
-      <YStack flex={1} alignItems="center" justifyContent="center" paddingHorizontal="$4">
+      <YStack flex={1} alignItems="center" justifyContent="center" paddingHorizontal="$md">
         <Text fontSize={16} color="$gray10">
           Lektionen hittades inte.
         </Text>
@@ -77,8 +77,8 @@ export function LearnLessonScreen({
   return (
     <YStack flex={1} backgroundColor="$background">
       <XStack
-        paddingHorizontal="$4"
-        paddingVertical="$3"
+        paddingHorizontal="$md"
+        paddingVertical="$sm"
         alignItems="flex-start"
         justifyContent="space-between"
         borderBottomWidth={1}
@@ -93,7 +93,7 @@ export function LearnLessonScreen({
           <XStack
             backgroundColor="$red8"
             borderRadius={12}
-            paddingHorizontal="$2"
+            paddingHorizontal="$xs"
             paddingVertical={2}
           >
             <Text fontSize={10} fontWeight="700" color="white">
@@ -104,12 +104,12 @@ export function LearnLessonScreen({
       </XStack>
 
       <ScrollView flex={1}>
-        <YStack paddingHorizontal="$4" paddingTop="$4" paddingBottom="$6" gap="$5">
-          <YStack gap="$2">
+        <YStack paddingHorizontal="$md" paddingTop="$md" paddingBottom="$lg" gap="$md">
+          <YStack gap="$xs">
             <XStack
               backgroundColor="$gray4"
               borderRadius="$2"
-              paddingHorizontal="$2"
+              paddingHorizontal="$xs"
               paddingVertical={2}
               alignSelf="flex-start"
             >
@@ -126,9 +126,9 @@ export function LearnLessonScreen({
             <XStack
               backgroundColor="$green2"
               borderRadius="$4"
-              padding="$3"
+              padding="$sm"
               alignItems="center"
-              gap="$2"
+              gap="$xs"
               borderWidth={1}
               borderColor="$green6"
             >
@@ -139,7 +139,7 @@ export function LearnLessonScreen({
             </XStack>
           )}
 
-          <YStack gap="$3">
+          <YStack gap="$sm">
             <Text fontSize={17} fontWeight="600" color="$color">
               Starta session
             </Text>
@@ -157,9 +157,9 @@ export function LearnLessonScreen({
                     borderRadius="$4"
                     borderWidth={2}
                     borderColor={isStarting ? '$pink9' : '$gray4'}
-                    padding="$4"
+                    padding="$md"
                     alignItems="flex-start"
-                    gap="$3"
+                    gap="$sm"
                     opacity={startingPersona && !isStarting ? 0.5 : 1}
                   >
                     <YStack
@@ -174,7 +174,7 @@ export function LearnLessonScreen({
                       <Text fontSize={22}>{option.emoji}</Text>
                     </YStack>
 
-                    <YStack flex={1} gap="$1">
+                    <YStack flex={1} gap="$xs">
                       <Text fontSize={16} fontWeight="600" color="$color">
                         {option.title}
                       </Text>

@@ -81,12 +81,12 @@ export function ProfileEditScreen({ initialValues, onSave, onSavePrompts, onCanc
   return (
     <>
       <ScrollView backgroundColor="#FDF8F3">
-        <YStack padding="$4" gap="$4" paddingBottom="$8">
+        <YStack padding="$md" gap="$md" paddingBottom="$8">
           <H2 color="#2C2421" fontFamily="$heading">
             Redigera profil
           </H2>
 
-          <YStack gap="$2">
+          <YStack gap="$xs">
             <Text color="#8B7E74" fontSize={14} fontFamily="$heading">
               Visningsnamn
             </Text>
@@ -97,7 +97,7 @@ export function ProfileEditScreen({ initialValues, onSave, onSavePrompts, onCanc
             />
           </YStack>
 
-          <YStack gap="$2">
+          <YStack gap="$xs">
             <Text color="#8B7E74" fontSize={14} fontFamily="$heading">
               Ålder
             </Text>
@@ -109,11 +109,11 @@ export function ProfileEditScreen({ initialValues, onSave, onSavePrompts, onCanc
             />
           </YStack>
 
-          <YStack gap="$2">
+          <YStack gap="$xs">
             <Text color="#8B7E74" fontSize={14} fontFamily="$heading">
               Kön
             </Text>
-            <XStack flexWrap="wrap" gap="$2">
+            <XStack flexWrap="wrap" gap="$xs">
               {GENDERS.map(g => (
                 <LustreButton
                   key={g}
@@ -122,8 +122,8 @@ export function ProfileEditScreen({ initialValues, onSave, onSavePrompts, onCanc
                   backgroundColor={gender === g ? '#B87333' : '#F5EDE4'}
                   color={gender === g ? '#FDF8F3' : '#2C2421'}
                   borderRadius={8}
-                  paddingHorizontal="$2"
-                  paddingVertical="$2"
+                  paddingHorizontal="$xs"
+                  paddingVertical="$xs"
                 >
                   {g.replace(/_/g, ' ').toLowerCase()}
                 </LustreButton>
@@ -131,11 +131,11 @@ export function ProfileEditScreen({ initialValues, onSave, onSavePrompts, onCanc
             </XStack>
           </YStack>
 
-          <YStack gap="$2">
+          <YStack gap="$xs">
             <Text color="#8B7E74" fontSize={14} fontFamily="$heading">
               Orientering
             </Text>
-            <XStack flexWrap="wrap" gap="$2">
+            <XStack flexWrap="wrap" gap="$xs">
               {ORIENTATIONS.map(o => (
                 <LustreButton
                   key={o}
@@ -144,8 +144,8 @@ export function ProfileEditScreen({ initialValues, onSave, onSavePrompts, onCanc
                   backgroundColor={orientation === o ? '#B87333' : '#F5EDE4'}
                   color={orientation === o ? '#FDF8F3' : '#2C2421'}
                   borderRadius={8}
-                  paddingHorizontal="$2"
-                  paddingVertical="$2"
+                  paddingHorizontal="$xs"
+                  paddingVertical="$xs"
                 >
                   {o.replace(/_/g, ' ').toLowerCase()}
                 </LustreButton>
@@ -153,11 +153,11 @@ export function ProfileEditScreen({ initialValues, onSave, onSavePrompts, onCanc
             </XStack>
           </YStack>
 
-          <YStack gap="$2">
+          <YStack gap="$xs">
             <Text color="#8B7E74" fontSize={14} fontFamily="$heading">
               Relationstyp
             </Text>
-            <XStack flexWrap="wrap" gap="$2">
+            <XStack flexWrap="wrap" gap="$xs">
               {RELATIONSHIP_TYPES.map(r => (
                 <LustreButton
                   key={r}
@@ -166,8 +166,8 @@ export function ProfileEditScreen({ initialValues, onSave, onSavePrompts, onCanc
                   backgroundColor={relationshipType === r ? '#B87333' : '#F5EDE4'}
                   color={relationshipType === r ? '#FDF8F3' : '#2C2421'}
                   borderRadius={8}
-                  paddingHorizontal="$2"
-                  paddingVertical="$2"
+                  paddingHorizontal="$xs"
+                  paddingVertical="$xs"
                 >
                   {r.replace(/_/g, ' ').toLowerCase()}
                 </LustreButton>
@@ -175,12 +175,12 @@ export function ProfileEditScreen({ initialValues, onSave, onSavePrompts, onCanc
             </XStack>
           </YStack>
 
-          <YStack gap="$2">
+          <YStack gap="$xs">
             <Text color="#8B7E74" fontSize={14} fontFamily="$heading">
               Frågor
             </Text>
 
-            <YStack gap="$2">
+            <YStack gap="$xs">
               {prompts.map((prompt, index) => (
                 <PromptEditor
                   key={`${prompt.promptKey}-${index}`}
@@ -197,7 +197,7 @@ export function ProfileEditScreen({ initialValues, onSave, onSavePrompts, onCanc
                   variant="secondary"
                   onPress={() => setShowPromptPicker(true)}
                   width="100%"
-                  paddingVertical="$3"
+                  paddingVertical="$sm"
                 >
                   + Lägg till fråga
                 </LustreButton>
@@ -205,7 +205,7 @@ export function ProfileEditScreen({ initialValues, onSave, onSavePrompts, onCanc
             </YStack>
           </YStack>
 
-          <XStack gap="$3" justifyContent="flex-end" paddingTop="$4">
+          <XStack gap="$sm" justifyContent="flex-end" paddingTop="$md">
             <LustreButton
               variant="secondary"
               onPress={onCancel}

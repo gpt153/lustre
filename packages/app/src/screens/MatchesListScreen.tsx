@@ -27,7 +27,7 @@ export function MatchesListScreen({ onMatchPress }: MatchesListScreenProps) {
         const photoUrl = matchedUser?.photos?.[0]?.thumbnailMedium || matchedUser?.photos?.[0]?.url
 
         return (
-          <YStack paddingHorizontal="$3" paddingVertical="$2">
+          <YStack paddingHorizontal="$sm" paddingVertical="$xs">
             <Button
               unstyled
               onPress={() => onMatchPress?.(matchedUser?.userId)}
@@ -37,7 +37,7 @@ export function MatchesListScreen({ onMatchPress }: MatchesListScreenProps) {
               borderRadius="$3"
               overflow="hidden"
             >
-              <XStack gap="$3" padding="$3" width="100%">
+              <XStack gap="$sm" padding="$sm" width="100%">
                 {photoUrl ? (
                   <Image
                     source={{ uri: photoUrl }}
@@ -60,8 +60,8 @@ export function MatchesListScreen({ onMatchPress }: MatchesListScreenProps) {
                   </YStack>
                 )}
 
-                <YStack flex={1} justifyContent="center" gap="$1">
-                  <XStack alignItems="center" gap="$2">
+                <YStack flex={1} justifyContent="center" gap="$xs">
+                  <XStack alignItems="center" gap="$xs">
                     <Text fontSize="$4" fontWeight="bold" color="$textPrimary">
                       {matchedUser?.displayName}
                     </Text>
@@ -100,7 +100,7 @@ export function MatchesListScreen({ onMatchPress }: MatchesListScreenProps) {
         />
       }
       ListEmptyComponent={
-        <YStack flex={1} alignItems="center" justifyContent="center" padding="$6">
+        <YStack flex={1} alignItems="center" justifyContent="center" padding="$lg">
           <Text color="$textSecondary">No matches yet. Keep swiping!</Text>
         </YStack>
       }

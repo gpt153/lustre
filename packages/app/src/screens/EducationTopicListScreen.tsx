@@ -38,8 +38,8 @@ export function EducationTopicListScreen({ onTopicPress }: EducationTopicListScr
   return (
     <YStack flex={1} backgroundColor="$background">
       <YStack
-        paddingHorizontal="$4"
-        paddingVertical="$3"
+        paddingHorizontal="$md"
+        paddingVertical="$sm"
         borderBottomWidth={1}
         borderBottomColor="$borderColor"
       >
@@ -49,10 +49,10 @@ export function EducationTopicListScreen({ onTopicPress }: EducationTopicListScr
       </YStack>
 
       <ScrollView flex={1}>
-        <YStack paddingHorizontal="$4" paddingTop="$3" paddingBottom="$6" gap="$4">
+        <YStack paddingHorizontal="$md" paddingTop="$sm" paddingBottom="$lg" gap="$md">
           {/* Category filter buttons */}
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            <XStack gap="$2" paddingRight="$4">
+            <XStack gap="$xs" paddingRight="$md">
               {CATEGORIES.map((category) => (
                 <TouchableOpacity
                   key={category}
@@ -62,8 +62,8 @@ export function EducationTopicListScreen({ onTopicPress }: EducationTopicListScr
                   <YStack
                     backgroundColor={selectedCategory === category ? '$pink8' : '$gray2'}
                     borderRadius="$3"
-                    paddingHorizontal="$3"
-                    paddingVertical="$2"
+                    paddingHorizontal="$sm"
+                    paddingVertical="$xs"
                     minWidth={80}
                     alignItems="center"
                   >
@@ -81,7 +81,7 @@ export function EducationTopicListScreen({ onTopicPress }: EducationTopicListScr
           </ScrollView>
 
           {/* Topic cards */}
-          <YStack gap="$3">
+          <YStack gap="$sm">
             {topics.length === 0 ? (
               <Text fontSize={14} color="$gray10" textAlign="center" marginTop="$4">
                 Inga ämnen tillgängliga
@@ -96,10 +96,10 @@ export function EducationTopicListScreen({ onTopicPress }: EducationTopicListScr
                   <YStack
                     backgroundColor="$gray2"
                     borderRadius="$4"
-                    padding="$3"
-                    gap="$2"
+                    padding="$sm"
+                    gap="$xs"
                   >
-                    <XStack alignItems="center" gap="$2" justifyContent="space-between">
+                    <XStack alignItems="center" gap="$xs" justifyContent="space-between">
                       <Text fontSize={15} fontWeight="600" color="$color" flex={1}>
                         {topic.title}
                       </Text>
@@ -107,7 +107,7 @@ export function EducationTopicListScreen({ onTopicPress }: EducationTopicListScr
                         <YStack
                           backgroundColor="$pink3"
                           borderRadius="$2"
-                          paddingHorizontal="$2"
+                          paddingHorizontal="$xs"
                           paddingVertical={2}
                         >
                           <Text fontSize={11} color="$pink11" fontWeight="600">

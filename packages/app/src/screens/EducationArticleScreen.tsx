@@ -39,10 +39,10 @@ export function EducationArticleScreen({ articleId, onBack }: EducationArticleSc
   return (
     <YStack flex={1} backgroundColor="$background">
       <XStack
-        paddingHorizontal="$4"
-        paddingVertical="$3"
+        paddingHorizontal="$md"
+        paddingVertical="$sm"
         alignItems="center"
-        gap="$3"
+        gap="$sm"
         borderBottomWidth={1}
         borderBottomColor="$borderColor"
       >
@@ -55,17 +55,17 @@ export function EducationArticleScreen({ articleId, onBack }: EducationArticleSc
       </XStack>
 
       <ScrollView flex={1}>
-        <YStack paddingHorizontal="$4" paddingVertical="$4" gap="$4" paddingBottom="$6">
-          <YStack gap="$2">
+        <YStack paddingHorizontal="$md" paddingVertical="$md" gap="$md" paddingBottom="$lg">
+          <YStack gap="$xs">
             <Text fontSize={18} fontWeight="700" color="$color">
               {article.title}
             </Text>
             {article.readingTimeMinutes && (
-              <XStack alignItems="center" gap="$2">
+              <XStack alignItems="center" gap="$xs">
                 <YStack
                   backgroundColor="$gray3"
                   borderRadius="$2"
-                  paddingHorizontal="$2"
+                  paddingHorizontal="$xs"
                   paddingVertical={2}
                 >
                   <Text fontSize={12} color="$gray11">
@@ -84,7 +84,7 @@ export function EducationArticleScreen({ articleId, onBack }: EducationArticleSc
             <YStack
               backgroundColor="$gray2"
               borderRadius="$3"
-              padding="$3"
+              padding="$sm"
               borderLeftWidth={3}
               borderLeftColor="$gray9"
             >

@@ -49,7 +49,7 @@ export function PostImageGallery({ media }: PostImageGalleryProps) {
         ))}
       </ScrollView>
       {media.length > 1 && (
-        <XStack justifyContent="center" gap="$1" marginTop="$2">
+        <XStack justifyContent="center" gap="$xs" marginTop="$2">
           {media.map((_, i) => (
             <YStack
               key={i}

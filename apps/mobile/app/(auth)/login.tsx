@@ -1,7 +1,7 @@
-import { YStack, Text, H2, Input, Pressable } from 'tamagui'
+import { YStack, Text, H2, Input } from 'tamagui'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
-import { Platform } from 'react-native'
+import { Platform, Pressable } from 'react-native'
 import { trpc } from '@lustre/api'
 import { useAuthStore } from '@lustre/app'
 import { LustreButton } from '@lustre/ui'
@@ -13,10 +13,15 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
 
+  const setUser = useAuthStore((state) => state.setUser)
+
   const loginMutation = trpc.auth.loginWithEmail.useMutation({
     onSuccess: (data) => {
       setTokens(data.accessToken, data.refreshToken)
-      router.replace('/(app)')
+      if (data.user) {
+        setUser(data.user.id, data.user.displayName)
+      }
+      router.replace('/(tabs)')
     },
     onError: (err) => setError(err.message),
   })

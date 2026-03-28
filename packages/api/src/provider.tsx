@@ -10,7 +10,7 @@ interface TRPCProviderProps {
   getToken?: () => string | null
 }
 
-export function TRPCProvider({ children, apiUrl = 'http://localhost:4000', getToken }: TRPCProviderProps) {
+export function TRPCProvider({ children, apiUrl = 'https://api.lovelustre.com', getToken }: TRPCProviderProps) {
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: {
       queries: {

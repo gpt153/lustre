@@ -2,10 +2,19 @@ import { YStack, XStack, Text, H1, Spinner } from 'tamagui'
 import { LustreButton } from '@lustre/ui'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
+import { Alert } from 'react-native'
+import { Platform } from 'react-native'
+import Constants from 'expo-constants'
+import { useAuthStore } from '@lustre/app/src/stores/authStore'
+
+const API_URL = Constants.expoConfig?.extra?.apiUrl ?? 'https://api.lovelustre.com'
 
 export default function WelcomeScreen() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
+  const [devLoading, setDevLoading] = useState(false)
+  const setTokens = useAuthStore((s) => s.setTokens)
+  const setUser = useAuthStore((s) => s.setUser)
 
   const handleSignup = () => {
     setIsLoading(true)
@@ -15,6 +24,25 @@ export default function WelcomeScreen() {
   const handleLogin = () => {
     setIsLoading(true)
     router.push('/(auth)/login')
+  }
+
+  const handleDevLogin = async () => {
+    setDevLoading(true)
+    try {
+      const res = await fetch(`${API_URL}/api/dev/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ displayName: 'Samuel' }),
+      })
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const data = await res.json()
+      setTokens(data.accessToken, data.refreshToken)
+      setUser(data.user.id, data.user.displayName)
+    } catch (err) {
+      Alert.alert('Dev Login Failed', `Kunde inte nå API:t (${API_URL}).\n\n${err}`)
+    } finally {
+      setDevLoading(false)
+    }
   }
 
   return (
@@ -75,6 +103,25 @@ export default function WelcomeScreen() {
       >
         Vi verifierar din identitet via Swish
       </Text>
+
+      {(
+        <LustreButton
+          width="100%"
+          variant="outline"
+          onPress={handleDevLogin}
+          disabled={devLoading}
+          marginTop="$4"
+          borderColor="$gray8"
+        >
+          {devLoading ? (
+            <Spinner size="small" color="$gray8" />
+          ) : (
+            <Text color="$gray8" fontSize="$2">
+              Dev Login (Samuel)
+            </Text>
+          )}
+        </LustreButton>
+      )}
     </YStack>
   )
 }

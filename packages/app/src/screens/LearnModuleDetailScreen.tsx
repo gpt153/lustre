@@ -41,7 +41,7 @@ export function LearnModuleDetailScreen({
 
   if (!module) {
     return (
-      <YStack flex={1} alignItems="center" justifyContent="center" paddingHorizontal="$4">
+      <YStack flex={1} alignItems="center" justifyContent="center" paddingHorizontal="$md">
         <Text fontSize={16} color="$gray10">
           Modulen hittades inte.
         </Text>
@@ -52,8 +52,8 @@ export function LearnModuleDetailScreen({
   return (
     <YStack flex={1} backgroundColor="$background">
       <XStack
-        paddingHorizontal="$4"
-        paddingVertical="$3"
+        paddingHorizontal="$md"
+        paddingVertical="$sm"
         alignItems="center"
         borderBottomWidth={1}
         borderBottomColor="$borderColor"
@@ -66,9 +66,9 @@ export function LearnModuleDetailScreen({
       </XStack>
 
       <ScrollView flex={1}>
-        <YStack paddingHorizontal="$4" paddingTop="$4" paddingBottom="$6" gap="$4">
-          <YStack gap="$2">
-            <XStack alignItems="center" gap="$2">
+        <YStack paddingHorizontal="$md" paddingTop="$md" paddingBottom="$lg" gap="$md">
+          <YStack gap="$xs">
+            <XStack alignItems="center" gap="$xs">
               <YStack
                 width={36}
                 height={36}
@@ -94,9 +94,9 @@ export function LearnModuleDetailScreen({
             <XStack
               backgroundColor="$yellow2"
               borderRadius="$4"
-              padding="$3"
+              padding="$sm"
               alignItems="center"
-              gap="$2"
+              gap="$xs"
               borderWidth={1}
               borderColor="$yellow6"
             >
@@ -107,7 +107,7 @@ export function LearnModuleDetailScreen({
             </XStack>
           )}
 
-          <YStack gap="$2">
+          <YStack gap="$xs">
             <Text fontSize={17} fontWeight="600" color="$color">
               Lektioner
             </Text>
@@ -123,9 +123,9 @@ export function LearnModuleDetailScreen({
                   <XStack
                     backgroundColor="$gray2"
                     borderRadius="$4"
-                    padding="$3"
+                    padding="$sm"
                     alignItems="center"
-                    gap="$3"
+                    gap="$sm"
                     opacity={canTap ? 1 : 0.5}
                   >
                     <YStack

@@ -68,7 +68,7 @@ export function CoachStartScreen({ onSessionStarted, onBack }: CoachStartScreenP
   }
 
   return (
-    <YStack flex={1} backgroundColor="$background" paddingHorizontal="$4" paddingTop="$4">
+    <YStack flex={1} backgroundColor="$background" paddingHorizontal="$md" paddingTop="$md">
       <XStack alignItems="center" marginBottom="$5">
         <TouchableOpacity onPress={onBack} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
           <Text fontSize={16} color="$pink10">
@@ -84,7 +84,7 @@ export function CoachStartScreen({ onSessionStarted, onBack }: CoachStartScreenP
         Vem vill du ha en session med?
       </Text>
 
-      <YStack gap="$3" marginBottom="$6">
+      <YStack gap="$sm" marginBottom="$6">
         {PERSONAS.map((persona) => {
           const isSelected = selectedPersona === persona.key
           return (
@@ -94,9 +94,9 @@ export function CoachStartScreen({ onSessionStarted, onBack }: CoachStartScreenP
                 borderRadius="$4"
                 borderWidth={2}
                 borderColor={isSelected ? '$pink9' : '$gray4'}
-                padding="$4"
+                padding="$md"
                 alignItems="flex-start"
-                gap="$3"
+                gap="$sm"
               >
                 <YStack
                   width={48}
@@ -110,7 +110,7 @@ export function CoachStartScreen({ onSessionStarted, onBack }: CoachStartScreenP
                     {persona.name[0]}
                   </Text>
                 </YStack>
-                <YStack flex={1} gap="$1">
+                <YStack flex={1} gap="$xs">
                   <Text fontSize={16} fontWeight="600" color="$color">
                     {persona.name}
                   </Text>
@@ -133,7 +133,7 @@ export function CoachStartScreen({ onSessionStarted, onBack }: CoachStartScreenP
         Välj läge
       </Text>
 
-      <XStack gap="$3" marginBottom="$6">
+      <XStack gap="$sm" marginBottom="$6">
         {MODES.map((mode) => {
           const isSelected = selectedMode === mode.key
           return (
@@ -147,10 +147,10 @@ export function CoachStartScreen({ onSessionStarted, onBack }: CoachStartScreenP
                 borderRadius="$4"
                 borderWidth={2}
                 borderColor={isSelected ? '$pink9' : '$gray4'}
-                paddingVertical="$4"
+                paddingVertical="$md"
                 alignItems="center"
                 justifyContent="center"
-                gap="$2"
+                gap="$xs"
               >
                 <Text fontSize={24}>{mode.key === 'VOICE' ? '🎙️' : '💬'}</Text>
                 <Text

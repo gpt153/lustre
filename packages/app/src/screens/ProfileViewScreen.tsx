@@ -1,9 +1,9 @@
-import { YStack, XStack, Text, ScrollView } from 'tamagui'
+import { YStack, XStack, Text, ScrollView, Image } from 'tamagui'
+import { LinearGradient } from '@tamagui/linear-gradient'
 import { CardBase, LustreButton } from '@lustre/ui'
 import { PROMPT_OPTIONS } from '@lustre/api'
-import { ProfilePhotoSection } from '../components/ProfilePhotoSection'
-import { ProfilePromptSection } from '../components/ProfilePromptSection'
 import { ProfileKudosSection } from '../components/ProfileKudosSection'
+import { Dimensions } from 'react-native'
 
 interface ProfileViewProps {
   profile: {
@@ -22,6 +22,27 @@ interface ProfileViewProps {
   isOwnProfile?: boolean
   onEdit?: () => void
   onLogout?: () => void
+}
+
+const SCREEN_WIDTH = Dimensions.get('window').width
+const HERO_HEIGHT = Dimensions.get('window').height * 0.45
+
+// Lustre design tokens
+const tokens = {
+  copper: '#B87333',
+  copperLight: '#D4A574',
+  copperMuted: '#C4956A',
+  gold: '#D4A843',
+  goldBright: '#E8B84B',
+  warmWhite: '#FDF8F3',
+  warmCream: '#F5EDE4',
+  charcoal: '#2C2421',
+  warmGray: '#8B7E74',
+  ember: '#E05A33',
+  surface: '#FFF8F6',
+  surfaceContainer: '#FAEBE6',
+  surfaceContainerLow: '#FFF1EC',
+  outlineVariant: '#D8C3B4',
 }
 
 export function ProfileViewScreen({ profile, isOwnProfile = false, onEdit, onLogout }: ProfileViewProps) {
@@ -67,54 +88,202 @@ export function ProfileViewScreen({ profile, isOwnProfile = false, onEdit, onLog
 
   const contentItems = renderContent()
 
+  // Separate hero photo from remaining content items
+  const heroPhoto = profile.photos.length > 0 ? profile.photos[0] : null
+  const remainingPhotos = profile.photos.slice(1)
+  const promptItems = contentItems.filter((item) => item.type === 'prompt')
+  const nonHeroPhotoItems = contentItems.filter(
+    (item) => item.type === 'photo' && item.key !== 'photo-0'
+  )
+
+  // Bio from first prompt or fallback
+  const bioPrompt = promptItems.find(
+    (item) => item.data.promptKey === 'about_me' || item.data.promptKey === 'bio'
+  )
+  const otherPrompts = promptItems.filter((item) => item !== bioPrompt)
+
   return (
-    <ScrollView>
-      <YStack
-        backgroundColor="#FDF8F3"
-        minHeight="100%"
-        paddingBottom="$6"
-      >
-        {isOwnProfile && onEdit && (
-          <XStack
-            paddingHorizontal="$4"
-            paddingTop="$4"
-            paddingBottom="$2"
-            justifyContent="flex-end"
-          >
-            <LustreButton
-              size="$3"
-              onPress={onEdit}
-              variant="secondary"
-            >
-              Redigera
-            </LustreButton>
-          </XStack>
+    <ScrollView backgroundColor={tokens.surface} showsVerticalScrollIndicator={false}>
+      {/* Hero Section */}
+      <YStack position="relative" height={HERO_HEIGHT} width="100%">
+        {heroPhoto && (
+          <Image
+            source={{ uri: heroPhoto.thumbnailMedium || heroPhoto.url }}
+            width="100%"
+            height="100%"
+            objectFit="cover"
+          />
         )}
 
-        <YStack gap="$4" paddingHorizontal="$4" paddingVertical="$4">
-          {contentItems.map((item) => (
-            item.type === 'photo' ? (
-              <ProfilePhotoSection
-                key={item.key}
-                photoUrl={item.data.thumbnailMedium || item.data.url}
-                showInfo={item.key === 'photo-0'}
-                displayName={item.key === 'photo-0' ? profile.displayName : undefined}
-                age={item.key === 'photo-0' ? profile.age : undefined}
-              />
-            ) : (
-              <ProfilePromptSection
-                key={item.key}
-                promptKey={item.data.promptKey}
-                promptLabel={PROMPT_OPTIONS[item.data.promptKey] || item.data.promptKey}
-                response={item.data.response}
-              />
-            )
-          ))}
+        {/* Dark gradient overlay */}
+        <YStack position="absolute" bottom={0} left={0} right={0} height="60%">
+          <LinearGradient
+            colors={['transparent', 'rgba(33, 26, 23, 0.8)']}
+            start={[0, 0]}
+            end={[0, 1]}
+            width="100%"
+            height="100%"
+          />
+        </YStack>
 
-          {profile.relationshipType && (
-            <CardBase elevation={1} gap="$2">
+        {/* Name, age, badge overlaid on hero */}
+        <YStack
+          position="absolute"
+          bottom={48}
+          left={24}
+          right={24}
+          zIndex={10}
+          gap={4}
+        >
+          <XStack alignItems="center" gap={8}>
+            <Text
+              fontFamily="$heading"
+              fontSize={32}
+              fontWeight="700"
+              color="white"
+            >
+              {profile.displayName}, {profile.age}
+            </Text>
+            {profile.verified && (
+              <Text fontSize={22} color={tokens.copperLight}>
+                ✓
+              </Text>
+            )}
+          </XStack>
+          <XStack alignItems="center" gap={6}>
+            <Text fontSize={14} color="rgba(255,255,255,0.9)">
+              📍
+            </Text>
+            <Text
+              fontSize={14}
+              color="rgba(255,255,255,0.9)"
+              letterSpacing={0.5}
+            >
+              Stockholm
+            </Text>
+          </XStack>
+        </YStack>
+      </YStack>
+
+      {/* Main Content Canvas — rounded top overlapping hero */}
+      <YStack
+        backgroundColor={tokens.surface}
+        borderTopLeftRadius={40}
+        borderTopRightRadius={40}
+        marginTop={-24}
+        position="relative"
+        zIndex={20}
+        paddingTop={40}
+        paddingHorizontal={24}
+        paddingBottom={48}
+      >
+        {/* Stats Row */}
+        <XStack alignItems="center" gap={24} marginBottom={40} paddingHorizontal={8}>
+          <XStack alignItems="center" gap={8}>
+            <Text fontSize={18} color={tokens.copper}>🏅</Text>
+            <Text fontWeight="600" fontSize={14} color={tokens.charcoal}>
+              4 kudos
+            </Text>
+          </XStack>
+          <XStack alignItems="center" gap={8}>
+            <Text fontSize={18} color={tokens.copper}>🎖️</Text>
+            <Text fontWeight="600" fontSize={14} color={tokens.charcoal}>
+              2 badges
+            </Text>
+          </XStack>
+        </XStack>
+
+        {/* Om mig (Bio) Section */}
+        {(bioPrompt || sortedPrompts.length > 0) && (
+          <YStack marginBottom={48}>
+            <Text
+              fontFamily="$heading"
+              fontSize={22}
+              fontWeight="700"
+              color={tokens.charcoal}
+              marginBottom={16}
+            >
+              Om mig
+            </Text>
+            {bioPrompt ? (
               <Text
-                color="#8B7E74"
+                fontSize={15}
+                color={tokens.warmGray}
+                lineHeight={26}
+                opacity={0.9}
+              >
+                {bioPrompt.data.response}
+              </Text>
+            ) : sortedPrompts.length > 0 ? (
+              <Text
+                fontSize={15}
+                color={tokens.warmGray}
+                lineHeight={26}
+                opacity={0.9}
+              >
+                {sortedPrompts[0].response}
+              </Text>
+            ) : null}
+          </YStack>
+        )}
+
+        {/* Prompts — remaining prompts as cards */}
+        {(bioPrompt ? otherPrompts : promptItems.slice(1)).map((item) => (
+          <YStack key={item.key} marginBottom={24}>
+            <CardBase elevation={1} gap="$sm">
+              <Text
+                color={tokens.warmGray}
+                fontFamily="$heading"
+                fontSize={14}
+                fontWeight="600"
+              >
+                {PROMPT_OPTIONS[item.data.promptKey] || item.data.promptKey}
+              </Text>
+              <Text
+                color={tokens.charcoal}
+                fontSize={16}
+                fontWeight="500"
+                lineHeight={24}
+              >
+                {item.data.response}
+              </Text>
+            </CardBase>
+          </YStack>
+        ))}
+
+        {/* Interest Tags — copper-outlined rounded pills */}
+        {profile.seeking.length > 0 && (
+          <YStack marginBottom={48}>
+            <XStack flexWrap="wrap" gap={12}>
+              {profile.seeking.map((s: string) => (
+                <YStack
+                  key={s}
+                  paddingHorizontal={20}
+                  paddingVertical={10}
+                  borderRadius={9999}
+                  borderWidth={1}
+                  borderColor={tokens.outlineVariant}
+                  backgroundColor={tokens.surfaceContainerLow}
+                >
+                  <Text
+                    fontSize={14}
+                    fontWeight="500"
+                    color={tokens.copper}
+                  >
+                    {s.replace(/_/g, ' ').toLowerCase()}
+                  </Text>
+                </YStack>
+              ))}
+            </XStack>
+          </YStack>
+        )}
+
+        {/* Relation */}
+        {profile.relationshipType && (
+          <YStack marginBottom={24}>
+            <CardBase elevation={1} gap="$xs">
+              <Text
+                color={tokens.warmGray}
                 fontFamily="$heading"
                 fontSize={14}
                 fontWeight="600"
@@ -122,100 +291,142 @@ export function ProfileViewScreen({ profile, isOwnProfile = false, onEdit, onLog
                 Relation
               </Text>
               <Text
-                color="#2C2421"
+                color={tokens.charcoal}
                 fontSize={16}
                 fontWeight="500"
               >
                 {profile.relationshipType.replace(/_/g, ' ').toLowerCase()}
               </Text>
             </CardBase>
-          )}
+          </YStack>
+        )}
 
-          {profile.seeking.length > 0 && (
-            <CardBase elevation={1} gap="$2">
-              <Text
-                color="#8B7E74"
-                fontFamily="$heading"
-                fontSize={14}
-                fontWeight="600"
-              >
-                Letar efter
-              </Text>
-              <XStack flexWrap="wrap" gap="$2">
-                {profile.seeking.map((s: string) => (
-                  <YStack
-                    key={s}
-                    backgroundColor="#D4A574"
-                    paddingHorizontal="$3"
-                    paddingVertical="$2"
-                    borderRadius={12}
-                  >
-                    <Text
-                      fontSize={14}
-                      fontWeight="600"
-                      color="#2C2421"
-                    >
-                      {s.replace(/_/g, ' ').toLowerCase()}
-                    </Text>
-                  </YStack>
-                ))}
-              </XStack>
-            </CardBase>
-          )}
-
-          {profile.kinkTags.length > 0 && (
-            <CardBase elevation={1} gap="$2">
-              <Text
-                color="#8B7E74"
-                fontFamily="$heading"
-                fontSize={14}
-                fontWeight="600"
-              >
-                Intressen
-              </Text>
-              <XStack flexWrap="wrap" gap="$2">
-                {profile.kinkTags.map((kt: any) => (
-                  <YStack
-                    key={kt.kinkTag.name}
-                    backgroundColor="#D4A574"
-                    paddingHorizontal="$3"
-                    paddingVertical="$2"
-                    borderRadius={12}
-                    flexDirection="row"
-                    alignItems="center"
-                    gap="$1"
-                  >
-                    <Text
-                      fontSize={14}
-                      fontWeight="600"
-                      color="#2C2421"
-                    >
-                      {kt.kinkTag.name}
-                    </Text>
-                    <Text
-                      fontSize={12}
-                    >
-                      {kt.interestLevel === 'LOVE' ? '❤️' : kt.interestLevel === 'LIKE' ? '👍' : '🤔'}
-                    </Text>
-                  </YStack>
-                ))}
-              </XStack>
-            </CardBase>
-          )}
-
-          <ProfileKudosSection userId={profile.userId} />
-
-          {isOwnProfile && onLogout && (
-            <LustreButton
-              onPress={onLogout}
-              variant="danger"
-              width="100%"
-              marginTop="$4"
+        {/* Kink Tags — copper-outlined rounded pills */}
+        {profile.kinkTags.length > 0 && (
+          <YStack marginBottom={48}>
+            <Text
+              fontFamily="$heading"
+              fontSize={22}
+              fontWeight="700"
+              color={tokens.charcoal}
+              marginBottom={16}
             >
-              Logga ut
-            </LustreButton>
-          )}
-        </YStack>
+              Intressen
+            </Text>
+            <XStack flexWrap="wrap" gap={12}>
+              {profile.kinkTags.map((kt: any) => (
+                <XStack
+                  key={kt.kinkTag.name}
+                  paddingHorizontal={20}
+                  paddingVertical={10}
+                  borderRadius={9999}
+                  borderWidth={1}
+                  borderColor={tokens.outlineVariant}
+                  backgroundColor={tokens.surfaceContainerLow}
+                  alignItems="center"
+                  gap={6}
+                >
+                  <Text
+                    fontSize={14}
+                    fontWeight="500"
+                    color={tokens.copper}
+                  >
+                    {kt.kinkTag.name}
+                  </Text>
+                  <Text fontSize={12}>
+                    {kt.interestLevel === 'LOVE' ? '❤️' : kt.interestLevel === 'LIKE' ? '👍' : '🤔'}
+                  </Text>
+                </XStack>
+              ))}
+            </XStack>
+          </YStack>
+        )}
+
+        {/* Photo Grid — 2-column layout with rounded corners and copper border */}
+        {remainingPhotos.length > 0 && (
+          <YStack marginBottom={48}>
+            <XStack flexWrap="wrap" gap={12}>
+              {remainingPhotos.map((photo: any, index: number) => {
+                const isLarge = index === 0 && remainingPhotos.length >= 3
+                const photoSize = isLarge
+                  ? (SCREEN_WIDTH - 48 - 12) * (2 / 3)
+                  : (SCREEN_WIDTH - 48 - 12) / 2
+
+                return (
+                  <YStack
+                    key={`grid-photo-${index}`}
+                    width={isLarge ? '100%' : photoSize}
+                    height={photoSize}
+                    borderRadius={16}
+                    overflow="hidden"
+                    borderWidth={2}
+                    borderColor={tokens.copperLight}
+                    backgroundColor={tokens.surfaceContainer}
+                  >
+                    <Image
+                      source={{ uri: photo.thumbnailMedium || photo.url }}
+                      width="100%"
+                      height="100%"
+                      objectFit="cover"
+                    />
+                  </YStack>
+                )
+              })}
+            </XStack>
+          </YStack>
+        )}
+
+        {/* Kudos Section */}
+        <ProfileKudosSection userId={profile.userId} />
+
+        {/* Redigera profil — full-width copper gradient button */}
+        {isOwnProfile && onEdit && (
+          <YStack
+            marginTop={32}
+            width="100%"
+            height={56}
+            borderRadius={16}
+            overflow="hidden"
+            pressStyle={{ scale: 0.98 }}
+            onPress={onEdit}
+            shadowColor="rgba(137, 77, 13, 0.2)"
+            shadowOffset={{ width: 0, height: 8 }}
+            shadowRadius={24}
+            elevation={4}
+          >
+            <LinearGradient
+              colors={[tokens.copper, '#A76526']}
+              start={[0, 0]}
+              end={[1, 1]}
+              width="100%"
+              height="100%"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <Text
+                color="white"
+                fontWeight="700"
+                fontSize={14}
+                letterSpacing={2}
+                textTransform="uppercase"
+              >
+                Redigera profil
+              </Text>
+            </LinearGradient>
+          </YStack>
+        )}
+
+        {/* Logga ut */}
+        {isOwnProfile && onLogout && (
+          <LustreButton
+            onPress={onLogout}
+            variant="danger"
+            width="100%"
+            marginTop="$4"
+          >
+            Logga ut
+          </LustreButton>
+        )}
       </YStack>
     </ScrollView>
   )

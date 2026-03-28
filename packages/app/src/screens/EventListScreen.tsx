@@ -19,7 +19,7 @@ export function EventListScreen({ onEventPress }: { onEventPress?: (eventId: str
 
   return (
     <YStack flex={1}>
-      <XStack padding="$2" gap="$2">
+      <XStack padding="$xs" gap="$xs">
         {([undefined, 'ONLINE', 'IRL', 'HYBRID'] as EventType[]).map((t) => (
           <Button
             key={t ?? 'all'}
@@ -37,7 +37,7 @@ export function EventListScreen({ onEventPress }: { onEventPress?: (eventId: str
         renderItem={({ item }: { item: any }) => <EventCard event={item} onPress={() => onEventPress?.(item.id)} />}
         contentContainerStyle={{ padding: 8 }}
         ListEmptyComponent={
-          <YStack padding="$4" alignItems="center">
+          <YStack padding="$md" alignItems="center">
             <Text color="$gray9">Inga evenemang</Text>
           </YStack>
         }

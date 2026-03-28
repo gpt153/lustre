@@ -39,12 +39,12 @@ export function ConsentConfirmScreen({ onConfirmed }: Props) {
 
   if (confirmed) {
     return (
-      <YStack padding="$4" gap="$5" flex={1} justifyContent="center" alignItems="center">
+      <YStack padding="$md" gap="$md" flex={1} justifyContent="center" alignItems="center">
         <YStack
           backgroundColor="$green3"
           borderRadius="$4"
-          padding="$5"
-          gap="$3"
+          padding="$md"
+          gap="$sm"
           width="100%"
           alignItems="center"
           borderWidth={1}
@@ -67,13 +67,13 @@ export function ConsentConfirmScreen({ onConfirmed }: Props) {
 
   return (
     <ScrollView>
-      <YStack padding="$4" gap="$5">
+      <YStack padding="$md" gap="$md">
         <H2 color="$color">Confirm Consent</H2>
         <Text color="$colorSecondary">
           Enter the Consent Record ID shared by the initiator to confirm your consent.
         </Text>
 
-        <YStack gap="$2">
+        <YStack gap="$xs">
           <Text color="$color" fontWeight="600">
             Consent Record ID
           </Text>
@@ -89,13 +89,13 @@ export function ConsentConfirmScreen({ onConfirmed }: Props) {
         <YStack
           backgroundColor="$backgroundHover"
           borderRadius="$4"
-          padding="$3"
-          gap="$2"
+          padding="$sm"
+          gap="$xs"
         >
           <Text color="$color" fontWeight="600" fontSize="$3">
             Location
           </Text>
-          <XStack alignItems="center" gap="$2">
+          <XStack alignItems="center" gap="$xs">
             <Text color="$green10" fontSize="$2">
               GPS Active
             </Text>

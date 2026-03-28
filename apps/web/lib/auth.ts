@@ -36,7 +36,7 @@ export async function login(email: string, password: string): Promise<AuthResult
     const result = await api.auth.loginWithEmail.mutate({ email, password })
 
     const token: string = result?.token ?? result?.accessToken
-    const userId: string = result?.userId
+    const userId: string = result?.userId ?? result?.user?.id
     const refreshToken: string | undefined = result?.refreshToken
 
     if (!token || !userId) {
@@ -90,7 +90,7 @@ export async function refreshToken(): Promise<AuthResult> {
     })
 
     const token: string = result?.token ?? result?.accessToken
-    const userId: string = result?.userId
+    const userId: string = result?.userId ?? result?.user?.id
     const newRefreshToken: string | undefined = result?.refreshToken
 
     if (!token || !userId) {

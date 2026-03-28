@@ -105,8 +105,8 @@ export function CreateListingScreen({ onSuccess }: CreateListingScreenProps) {
   return (
     <YStack flex={1} backgroundColor="$background">
       <ScrollView flex={1}>
-        <YStack padding="$4" gap="$4">
-          <YStack gap="$2">
+        <YStack padding="$md" gap="$md">
+          <YStack gap="$xs">
             <Text fontSize={16} fontWeight="600" color="$color">
               Titel
             </Text>
@@ -115,14 +115,14 @@ export function CreateListingScreen({ onSuccess }: CreateListingScreenProps) {
               value={title}
               onChangeText={setTitle}
               fontSize={14}
-              padding="$3"
+              padding="$sm"
               borderWidth={1}
               borderColor="$borderColor"
               borderRadius="$3"
             />
           </YStack>
 
-          <YStack gap="$2">
+          <YStack gap="$xs">
             <Text fontSize={16} fontWeight="600" color="$color">
               Beskrivning
             </Text>
@@ -131,7 +131,7 @@ export function CreateListingScreen({ onSuccess }: CreateListingScreenProps) {
               value={description}
               onChangeText={setDescription}
               fontSize={14}
-              padding="$3"
+              padding="$sm"
               borderWidth={1}
               borderColor="$borderColor"
               borderRadius="$3"
@@ -141,7 +141,7 @@ export function CreateListingScreen({ onSuccess }: CreateListingScreenProps) {
             />
           </YStack>
 
-          <YStack gap="$2">
+          <YStack gap="$xs">
             <Text fontSize={16} fontWeight="600" color="$color">
               Pris (SEK)
             </Text>
@@ -150,7 +150,7 @@ export function CreateListingScreen({ onSuccess }: CreateListingScreenProps) {
               value={priceInSEK}
               onChangeText={setPriceInSEK}
               fontSize={14}
-              padding="$3"
+              padding="$sm"
               borderWidth={1}
               borderColor="$borderColor"
               borderRadius="$3"
@@ -158,11 +158,11 @@ export function CreateListingScreen({ onSuccess }: CreateListingScreenProps) {
             />
           </YStack>
 
-          <YStack gap="$2">
+          <YStack gap="$xs">
             <Text fontSize={16} fontWeight="600" color="$color">
               Kategori
             </Text>
-            <XStack gap="$2" flexWrap="wrap">
+            <XStack gap="$xs" flexWrap="wrap">
               {CATEGORIES.map((cat) => (
                 <TouchableOpacity
                   key={cat.value}
@@ -171,8 +171,8 @@ export function CreateListingScreen({ onSuccess }: CreateListingScreenProps) {
                   <XStack
                     backgroundColor={selectedCategory === cat.value ? '$pink8' : '$gray4'}
                     borderRadius="$2"
-                    paddingHorizontal="$3"
-                    paddingVertical="$2"
+                    paddingHorizontal="$sm"
+                    paddingVertical="$xs"
                   >
                     <Text
                       fontSize={12}
@@ -187,11 +187,11 @@ export function CreateListingScreen({ onSuccess }: CreateListingScreenProps) {
             </XStack>
           </YStack>
 
-          <YStack gap="$2">
+          <YStack gap="$xs">
             <Text fontSize={16} fontWeight="600" color="$color">
               Leveransalternativ
             </Text>
-            <YStack gap="$2">
+            <YStack gap="$xs">
               {SHIPPING_OPTIONS.map((option) => (
                 <TouchableOpacity
                   key={option.value}
@@ -200,7 +200,7 @@ export function CreateListingScreen({ onSuccess }: CreateListingScreenProps) {
                   <XStack
                     backgroundColor={selectedShipping.includes(option.value) ? '$pink2' : '$gray4'}
                     borderRadius="$2"
-                    padding="$3"
+                    padding="$sm"
                     borderWidth={1}
                     borderColor={selectedShipping.includes(option.value) ? '$pink8' : '$gray6'}
                   >
@@ -217,7 +217,7 @@ export function CreateListingScreen({ onSuccess }: CreateListingScreenProps) {
             </YStack>
           </YStack>
 
-          <YStack gap="$2">
+          <YStack gap="$xs">
             <Text fontSize={16} fontWeight="600" color="$color">
               Bilder (max 8)
             </Text>
@@ -225,7 +225,7 @@ export function CreateListingScreen({ onSuccess }: CreateListingScreenProps) {
               <XStack
                 backgroundColor={imageUris.length >= 8 ? '$gray6' : '$pink2'}
                 borderRadius="$3"
-                padding="$4"
+                padding="$md"
                 alignItems="center"
                 justifyContent="center"
                 opacity={imageUris.length >= 8 ? 0.5 : 1}
@@ -241,7 +241,7 @@ export function CreateListingScreen({ onSuccess }: CreateListingScreenProps) {
             </TouchableOpacity>
 
             {imageUris.length > 0 && (
-              <XStack gap="$2" flexWrap="wrap">
+              <XStack gap="$xs" flexWrap="wrap">
                 {imageUris.map((uri, index) => (
                   <TouchableOpacity
                     key={index}
@@ -265,7 +265,7 @@ export function CreateListingScreen({ onSuccess }: CreateListingScreenProps) {
         </YStack>
       </ScrollView>
 
-      <YStack padding="$4" borderTopWidth={1} borderTopColor="$borderColor" gap="$2">
+      <YStack padding="$md" borderTopWidth={1} borderTopColor="$borderColor" gap="$xs">
         <Button
           onPress={handleSubmit}
           disabled={createMutation.isPending}

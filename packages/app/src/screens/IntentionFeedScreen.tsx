@@ -28,14 +28,14 @@ export function IntentionFeedScreen({ intentionId }: IntentionFeedScreenProps) {
     <FlatList
       data={results}
       keyExtractor={(item) => `${item.userId}-${item.photoUrl || 'fallback'}`}
-      contentContainerStyle={{ padding: 16, paddingBottom: 80 }}
+      contentContainerStyle={{ padding: "$md", paddingBottom: 80 }}
       ListHeaderComponent={
         <Text fontSize="$5" fontWeight="600" color="$text" marginBottom="$4">
           Matchande profiler
         </Text>
       }
       ListEmptyComponent={
-        <YStack alignItems="center" justifyContent="center" padding="$8" gap="$2">
+        <YStack alignItems="center" justifyContent="center" padding="$xl" gap="$xs">
           <Text fontSize="$4" color="$gray11" fontWeight="600">
             Inga profiler än
           </Text>
@@ -63,7 +63,7 @@ export function IntentionFeedScreen({ intentionId }: IntentionFeedScreenProps) {
       onEndReachedThreshold={0.5}
       ListFooterComponent={
         isFetchingNextPage ? (
-          <YStack alignItems="center" padding="$4">
+          <YStack alignItems="center" padding="$md">
             <Spinner color="$blue9" />
           </YStack>
         ) : null

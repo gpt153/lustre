@@ -26,10 +26,10 @@ export function EducationArticleListScreen({
   return (
     <YStack flex={1} backgroundColor="$background">
       <XStack
-        paddingHorizontal="$4"
-        paddingVertical="$3"
+        paddingHorizontal="$md"
+        paddingVertical="$sm"
         alignItems="center"
-        gap="$3"
+        gap="$sm"
         borderBottomWidth={1}
         borderBottomColor="$borderColor"
       >
@@ -42,7 +42,7 @@ export function EducationArticleListScreen({
       </XStack>
 
       <ScrollView flex={1}>
-        <YStack paddingHorizontal="$4" paddingVertical="$3" gap="$2" paddingBottom="$6">
+        <YStack paddingHorizontal="$md" paddingVertical="$sm" gap="$xs" paddingBottom="$lg">
           {articles.length === 0 ? (
             <YStack alignItems="center" justifyContent="center" minHeight={200}>
               <Text fontSize={14} color="$gray10" textAlign="center">
@@ -59,10 +59,10 @@ export function EducationArticleListScreen({
                 <YStack
                   backgroundColor="$gray2"
                   borderRadius="$3"
-                  padding="$3"
-                  gap="$2"
+                  padding="$sm"
+                  gap="$xs"
                 >
-                  <XStack alignItems="flex-start" justifyContent="space-between" gap="$2">
+                  <XStack alignItems="flex-start" justifyContent="space-between" gap="$xs">
                     <Text fontSize={14} fontWeight="600" color="$color" flex={1}>
                       {article.title}
                     </Text>

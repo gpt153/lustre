@@ -10,8 +10,8 @@ export function StreakWidget({ currentStreak, longestStreak }: StreakWidgetProps
     <XStack
       backgroundColor="$gray2"
       borderRadius="$4"
-      padding="$3"
-      gap="$3"
+      padding="$sm"
+      gap="$sm"
       alignItems="center"
     >
       <Text fontSize={28}>{currentStreak > 0 ? '🔥' : '💤'}</Text>

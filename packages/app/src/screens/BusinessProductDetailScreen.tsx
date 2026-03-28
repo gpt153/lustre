@@ -22,7 +22,7 @@ export function BusinessProductDetailScreen({ productId }: BusinessProductDetail
 
   if (!product) {
     return (
-      <YStack flex={1} alignItems="center" justifyContent="center" padding="$8">
+      <YStack flex={1} alignItems="center" justifyContent="center" padding="$xl">
         <Text color="$textSecondary">Produkten hittades inte</Text>
       </YStack>
     )
@@ -59,7 +59,7 @@ export function BusinessProductDetailScreen({ productId }: BusinessProductDetail
 
         {images.length > 1 && (
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ padding: 8 }}>
-            <XStack gap="$2">
+            <XStack gap="$xs">
               {images.map((img, index) => (
                 <YStack
                   key={img.id}
@@ -81,7 +81,7 @@ export function BusinessProductDetailScreen({ productId }: BusinessProductDetail
           </ScrollView>
         )}
 
-        <YStack padding="$4" gap="$3">
+        <YStack padding="$md" gap="$sm">
           <Text fontSize="$6" fontWeight="700" color="$text">
             {product.title}
           </Text>

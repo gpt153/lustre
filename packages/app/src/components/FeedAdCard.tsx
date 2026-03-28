@@ -72,7 +72,7 @@ export function FeedAdCard({
       ) : null}
 
       {/* Headline + body */}
-      <YStack paddingHorizontal="$3" paddingTop="$3" gap="$2">
+      <YStack paddingHorizontal="$3" paddingTop="$3" gap="$xs">
         <Text fontWeight="700" fontSize="$4" color="$text">
           {headline}
         </Text>

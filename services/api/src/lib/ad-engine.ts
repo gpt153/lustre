@@ -45,6 +45,7 @@ export async function selectAd(
   ctaUrl: string
   sponsor: string | null
 } | null> {
+  try {
   // 1. Fetch user profile with kink tags
   const profile = await prisma.profile.findUnique({
     where: { userId },
@@ -189,4 +190,8 @@ export async function selectAd(
   }
 
   return null
+  } catch {
+    // Ad system tables may not exist yet — gracefully return no ad
+    return null
+  }
 }

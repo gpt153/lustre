@@ -38,8 +38,8 @@ export function GroupListScreen({ onGroupPress, onCreatePress }: GroupListScreen
 
   return (
     <YStack flex={1} backgroundColor="$background">
-      <YStack paddingHorizontal="$3" paddingVertical="$2" gap="$2">
-        <XStack gap="$2" alignItems="center">
+      <YStack paddingHorizontal="$sm" paddingVertical="$xs" gap="$xs">
+        <XStack gap="$xs" alignItems="center">
           <Input
             flex={1}
             placeholder="Search groups..."
@@ -49,7 +49,7 @@ export function GroupListScreen({ onGroupPress, onCreatePress }: GroupListScreen
             borderWidth={1}
             borderColor="$borderColor"
             borderRadius="$3"
-            paddingHorizontal="$3"
+            paddingHorizontal="$sm"
           />
           <Button size="$3" backgroundColor="$primary" color="white" onPress={onCreatePress}>
             +
@@ -61,7 +61,7 @@ export function GroupListScreen({ onGroupPress, onCreatePress }: GroupListScreen
         data={displayGroups}
         keyExtractor={(item: { id: string }) => item.id}
         renderItem={({ item }: { item: typeof displayGroups[number] }) => (
-          <YStack paddingHorizontal="$3" paddingVertical="$2">
+          <YStack paddingHorizontal="$sm" paddingVertical="$xs">
             <GroupCard
               group={item}
               onPress={onGroupPress}
@@ -86,13 +86,13 @@ export function GroupListScreen({ onGroupPress, onCreatePress }: GroupListScreen
         }
         ListFooterComponent={
           (searchQuery ? searchResults.isLoading : groups.isFetchingNextPage) ? (
-            <YStack padding="$4" alignItems="center">
+            <YStack padding="$md" alignItems="center">
               <Spinner color="$primary" />
             </YStack>
           ) : null
         }
         ListEmptyComponent={
-          <YStack flex={1} alignItems="center" justifyContent="center" padding="$6">
+          <YStack flex={1} alignItems="center" justifyContent="center" padding="$lg">
             <Text color="$textSecondary">
               {searchQuery ? 'No groups found' : 'No groups yet. Create one!'}
             </Text>

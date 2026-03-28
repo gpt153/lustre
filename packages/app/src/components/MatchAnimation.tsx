@@ -171,7 +171,7 @@ export function MatchAnimation({ visible, matchedProfile, onDismiss }: MatchAnim
           flex={1}
           alignItems="center"
           justifyContent="center"
-          padding="$4"
+          padding="$md"
           pointerEvents="box-none"
         >
           <TouchableWithoutFeedback onPress={() => {}}>
@@ -179,9 +179,9 @@ export function MatchAnimation({ visible, matchedProfile, onDismiss }: MatchAnim
               <YStack
                 backgroundColor={ANIMATION_COLORS.warmCream}
                 borderRadius={20}
-                padding="$6"
+                padding="$lg"
                 alignItems="center"
-                gap="$4"
+                gap="$md"
                 maxWidth={300}
                 alignSelf="center"
                 borderWidth={1}
@@ -253,7 +253,7 @@ export function MatchAnimation({ visible, matchedProfile, onDismiss }: MatchAnim
                 <Animated.View style={{ opacity: textOpacity }}>
                   <XStack
                     alignItems="center"
-                    gap="$2"
+                    gap="$xs"
                     justifyContent="center"
                     flexWrap="wrap"
                   >

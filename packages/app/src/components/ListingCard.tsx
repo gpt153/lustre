@@ -30,7 +30,7 @@ export function ListingCard({ listing }: ListingCardProps) {
       backgroundColor="$gray2"
       borderRadius="$4"
       overflow="hidden"
-      gap="$2"
+      gap="$xs"
       paddingBottom="$3"
     >
       {imageUrl ? (
@@ -55,7 +55,7 @@ export function ListingCard({ listing }: ListingCardProps) {
         </YStack>
       )}
 
-      <YStack paddingHorizontal="$3" gap="$2">
+      <YStack paddingHorizontal="$3" gap="$xs">
         <Text fontSize={15} fontWeight="600" color="$color" numberOfLines={2}>
           {listing.title}
         </Text>
@@ -67,7 +67,7 @@ export function ListingCard({ listing }: ListingCardProps) {
           <XStack
             backgroundColor="$pink2"
             borderRadius="$2"
-            paddingHorizontal="$2"
+            paddingHorizontal="$xs"
             paddingVertical={2}
           >
             <Text fontSize={12} color="$pink8" fontWeight="500">

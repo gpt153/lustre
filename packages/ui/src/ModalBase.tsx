@@ -37,7 +37,7 @@ export function ModalBase({ visible, onClose, children }: ModalBaseProps) {
         <Animated.View style={styles.backdrop} />
       </TouchableWithoutFeedback>
       <Animated.View style={[styles.contentWrapper, { opacity: contentOpacity, transform: [{ scale: contentScale }] }]}>
-        <YStack backgroundColor="#F5EDE4" borderRadius={20} padding="$4" maxWidth={400} width="90%">
+        <YStack backgroundColor="#F5EDE4" borderRadius={20} padding="$md" maxWidth={400} width="90%">
           {children}
         </YStack>
       </Animated.View>

@@ -12,4 +12,8 @@ config.resolver.nodeModulesPaths = [
   path.resolve(monorepoRoot, 'node_modules'),
 ]
 
+// Support ESM-only packages (.mjs) and resolve pnpm structure
+config.resolver.sourceExts = [...(config.resolver.sourceExts || []), 'mjs']
+config.resolver.unstable_enablePackageExports = true
+
 module.exports = config

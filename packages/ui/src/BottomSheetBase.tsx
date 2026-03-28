@@ -42,10 +42,10 @@ export function BottomSheetBase({ visible, onClose, children, snapHeight }: Bott
       <Animated.View style={[styles.sheetContainer, { height: sheetHeight, transform: [{ translateY }] }]}>
         <YStack backgroundColor="#F5EDE4" borderTopLeftRadius={20} borderTopRightRadius={20} flex={1} overflow="hidden">
           {/* Drag handle */}
-          <XStack justifyContent="center" paddingVertical="$2">
+          <XStack justifyContent="center" paddingVertical="$xs">
             <YStack width={40} height={4} borderRadius={2} backgroundColor="#C4956A" />
           </XStack>
-          <YStack flex={1} padding="$4">
+          <YStack flex={1} padding="$md">
             {children}
           </YStack>
         </YStack>

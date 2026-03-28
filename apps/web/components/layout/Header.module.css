@@ -2,23 +2,24 @@
 
 .header {
   grid-area: header;
-  height: 56px;
+  height: 64px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 var(--space-lg);
+  padding: 0 48px;
   z-index: var(--z-sticky);
   position: sticky;
   top: 0;
   /* Glassmorphism */
-  background: rgba(26, 22, 20, 0.72);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--color-border);
+  background: rgba(253, 248, 243, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: none;
+  box-shadow: 0 20px 40px rgba(44, 36, 33, 0.06);
 }
 
-[data-theme="light"] .header {
-  background: rgba(253, 248, 243, 0.80);
+[data-theme="dark"] .header {
+  background: rgba(26, 22, 20, 0.72);
 }
 
 @supports not (backdrop-filter: blur(12px)) {

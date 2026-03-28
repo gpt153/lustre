@@ -54,12 +54,12 @@ export function BadgeSelectionScreen({
 
   return (
     <ScrollView>
-      <YStack padding="$4" gap="$4">
+      <YStack padding="$md" gap="$md">
         <Text fontSize="$7" fontWeight="bold">
           Kudos till {recipientName}
         </Text>
 
-        <YStack gap="$2">
+        <YStack gap="$xs">
           <Text fontSize="$4" fontWeight="600">
             Beskriv din upplevelse
           </Text>
@@ -79,11 +79,11 @@ export function BadgeSelectionScreen({
         </YStack>
 
         {suggestedIds.length > 0 && (
-          <YStack gap="$2">
+          <YStack gap="$xs">
             <Text fontSize="$4" fontWeight="600">
               Föreslagna badges
             </Text>
-            <XStack flexWrap="wrap" gap="$2">
+            <XStack flexWrap="wrap" gap="$xs">
               {suggestedIds.map((id) => {
                 const badge = allBadges.find((b: any) => b.id === id)
                 if (!badge) return null
@@ -103,11 +103,11 @@ export function BadgeSelectionScreen({
         )}
 
         {badges.map((category: any) => (
-          <YStack key={category.id} gap="$2">
+          <YStack key={category.id} gap="$xs">
             <Text fontSize="$4" fontWeight="600">
               {category.name}
             </Text>
-            <XStack flexWrap="wrap" gap="$2">
+            <XStack flexWrap="wrap" gap="$xs">
               {category.badges.map((badge: any) => (
                 <Button
                   key={badge.id}
@@ -126,7 +126,7 @@ export function BadgeSelectionScreen({
           {selectedBadgeIds.size}/6 badges valda
         </Text>
 
-        <XStack gap="$3">
+        <XStack gap="$sm">
           <Button flex={1} theme="gray" onPress={onCancel}>
             Avbryt
           </Button>

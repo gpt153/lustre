@@ -30,15 +30,15 @@ export function KudosPromptSheet({ prompt, onAccept, onDismiss }: KudosPromptShe
       dismissOnSnapToBottom
     >
       <Sheet.Overlay />
-      <Sheet.Frame padding="$4">
-        <YStack gap="$4" alignItems="center">
+      <Sheet.Frame padding="$md">
+        <YStack gap="$md" alignItems="center">
           <Text fontSize="$6" fontWeight="bold" textAlign="center">
             Vill du lämna kudos till {prompt.recipient.displayName ?? 'denna person'}?
           </Text>
           <Text fontSize="$3" color="$gray10" textAlign="center">
             Välj badges som beskriver din upplevelse
           </Text>
-          <XStack gap="$3" width="100%">
+          <XStack gap="$sm" width="100%">
             <Button
               flex={1}
               theme="gray"

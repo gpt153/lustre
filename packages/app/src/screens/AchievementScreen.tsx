@@ -16,8 +16,8 @@ export function AchievementScreen() {
   return (
     <YStack flex={1} backgroundColor="$background">
       <XStack
-        paddingHorizontal="$4"
-        paddingVertical="$3"
+        paddingHorizontal="$md"
+        paddingVertical="$sm"
         alignItems="center"
         borderBottomWidth={1}
         borderBottomColor="$borderColor"
@@ -28,19 +28,19 @@ export function AchievementScreen() {
       </XStack>
 
       <ScrollView flex={1}>
-        <YStack paddingHorizontal="$4" paddingTop="$3" paddingBottom="$6" gap="$5">
-          <YStack gap="$2">
+        <YStack paddingHorizontal="$md" paddingTop="$sm" paddingBottom="$lg" gap="$md">
+          <YStack gap="$xs">
             <Text fontSize={17} fontWeight="700" color="$color">
               Streak
             </Text>
             <StreakWidget currentStreak={streak.currentStreak} longestStreak={streak.longestStreak} />
           </YStack>
 
-          <YStack gap="$2">
+          <YStack gap="$xs">
             <Text fontSize={17} fontWeight="700" color="$color">
               Ranking
             </Text>
-            <YStack backgroundColor="$gray2" borderRadius="$4" padding="$4" alignItems="center" gap="$1">
+            <YStack backgroundColor="$gray2" borderRadius="$4" padding="$md" alignItems="center" gap="$xs">
               <Text fontSize={28}>🏆</Text>
               {leaderboard && leaderboard.totalUsers > 0 ? (
                 <>
@@ -59,20 +59,20 @@ export function AchievementScreen() {
             </YStack>
           </YStack>
 
-          <YStack gap="$2">
+          <YStack gap="$xs">
             <Text fontSize={17} fontWeight="700" color="$color">
               Märken ({badges.filter((b) => b.earned).length}/{badges.length})
             </Text>
-            <XStack flexWrap="wrap" gap="$2">
+            <XStack flexWrap="wrap" gap="$xs">
               {badges.map((badge) => (
                 <YStack
                   key={badge.id}
                   width="30%"
                   backgroundColor="$gray2"
                   borderRadius="$3"
-                  padding="$2"
+                  padding="$xs"
                   alignItems="center"
-                  gap="$1"
+                  gap="$xs"
                   opacity={badge.earned ? 1 : 0.35}
                 >
                   <Text fontSize={24}>{badge.icon}</Text>
@@ -84,18 +84,18 @@ export function AchievementScreen() {
             </XStack>
           </YStack>
 
-          <YStack gap="$2">
+          <YStack gap="$xs">
             <Text fontSize={17} fontWeight="700" color="$color">
               Medaljer ({medals.filter((m) => m.earned).length}/{medals.length})
             </Text>
-            <YStack gap="$2">
+            <YStack gap="$xs">
               {medals.map((medal) => (
                 <XStack
                   key={medal.id}
                   backgroundColor="$gray2"
                   borderRadius="$4"
-                  padding="$3"
-                  gap="$3"
+                  padding="$sm"
+                  gap="$sm"
                   alignItems="center"
                   opacity={medal.earned ? 1 : 0.35}
                 >

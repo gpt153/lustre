@@ -79,15 +79,15 @@ export function GroupModerationScreen({ groupId }: GroupModerationScreenProps) {
       <XStack
         borderBottomWidth={1}
         borderBottomColor="$borderColor"
-        paddingHorizontal="$3"
-        gap="$2"
+        paddingHorizontal="$sm"
+        gap="$xs"
       >
         <Button
           chromeless
           onPress={() => setActiveTab('pending')}
           borderBottomWidth={activeTab === 'pending' ? 2 : 0}
           borderBottomColor="$primary"
-          paddingBottom="$3"
+          paddingBottom="$sm"
           marginBottom="$-3"
         >
           <Text color={activeTab === 'pending' ? '$primary' : '$textSecondary'} fontWeight="600">
@@ -99,7 +99,7 @@ export function GroupModerationScreen({ groupId }: GroupModerationScreenProps) {
           onPress={() => setActiveTab('members')}
           borderBottomWidth={activeTab === 'members' ? 2 : 0}
           borderBottomColor="$primary"
-          paddingBottom="$3"
+          paddingBottom="$sm"
           marginBottom="$-3"
         >
           <Text color={activeTab === 'members' ? '$primary' : '$textSecondary'} fontWeight="600">
@@ -114,7 +114,7 @@ export function GroupModerationScreen({ groupId }: GroupModerationScreenProps) {
           }}
           borderBottomWidth={activeTab === 'settings' ? 2 : 0}
           borderBottomColor="$primary"
-          paddingBottom="$3"
+          paddingBottom="$sm"
           marginBottom="$-3"
         >
           <Text color={activeTab === 'settings' ? '$primary' : '$textSecondary'} fontWeight="600">
@@ -128,11 +128,11 @@ export function GroupModerationScreen({ groupId }: GroupModerationScreenProps) {
           data={pendingQuery.data ?? []}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <YStack paddingHorizontal="$3" paddingVertical="$2" borderBottomWidth={1} borderBottomColor="$borderColor" gap="$2">
+            <YStack paddingHorizontal="$sm" paddingVertical="$xs" borderBottomWidth={1} borderBottomColor="$borderColor" gap="$xs">
               <Text fontWeight="600" color="$text">
                 {item.user.displayName}
               </Text>
-              <XStack gap="$2">
+              <XStack gap="$xs">
                 <Button
                   size="$2"
                   flex={1}
@@ -155,7 +155,7 @@ export function GroupModerationScreen({ groupId }: GroupModerationScreenProps) {
             </YStack>
           )}
           ListEmptyComponent={
-            <YStack padding="$6" alignItems="center">
+            <YStack padding="$lg" alignItems="center">
               <Text color="$textSecondary">No pending members</Text>
             </YStack>
           }
@@ -173,7 +173,7 @@ export function GroupModerationScreen({ groupId }: GroupModerationScreenProps) {
           data={members}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <YStack paddingHorizontal="$3" paddingVertical="$2" borderBottomWidth={1} borderBottomColor="$borderColor" gap="$2">
+            <YStack paddingHorizontal="$sm" paddingVertical="$xs" borderBottomWidth={1} borderBottomColor="$borderColor" gap="$xs">
               <XStack justifyContent="space-between" alignItems="center">
                 <YStack flex={1}>
                   <Text fontWeight="600" color="$text">
@@ -198,13 +198,13 @@ export function GroupModerationScreen({ groupId }: GroupModerationScreenProps) {
           onEndReachedThreshold={0.5}
           ListFooterComponent={
             membersQuery.isFetchingNextPage ? (
-              <YStack padding="$4" alignItems="center">
+              <YStack padding="$md" alignItems="center">
                 <Spinner color="$primary" />
               </YStack>
             ) : null
           }
           ListEmptyComponent={
-            <YStack padding="$6" alignItems="center">
+            <YStack padding="$lg" alignItems="center">
               <Text color="$textSecondary">No members yet</Text>
             </YStack>
           }
@@ -219,8 +219,8 @@ export function GroupModerationScreen({ groupId }: GroupModerationScreenProps) {
 
       {activeTab === 'settings' && (
         <ScrollView flex={1}>
-          <YStack padding="$4" gap="$4">
-            <YStack gap="$2">
+          <YStack padding="$md" gap="$md">
+            <YStack gap="$xs">
               <Text color="$textSecondary" fontSize="$2" fontWeight="600">
                 Name
               </Text>
@@ -231,11 +231,11 @@ export function GroupModerationScreen({ groupId }: GroupModerationScreenProps) {
                 borderWidth={1}
                 borderColor="$borderColor"
                 borderRadius="$3"
-                paddingHorizontal="$3"
+                paddingHorizontal="$sm"
               />
             </YStack>
 
-            <YStack gap="$2">
+            <YStack gap="$xs">
               <Text color="$textSecondary" fontSize="$2" fontWeight="600">
                 Description
               </Text>
@@ -246,12 +246,12 @@ export function GroupModerationScreen({ groupId }: GroupModerationScreenProps) {
                 borderWidth={1}
                 borderColor="$borderColor"
                 borderRadius="$3"
-                paddingHorizontal="$3"
+                paddingHorizontal="$sm"
                 minHeight={100}
               />
             </YStack>
 
-            <YStack gap="$2">
+            <YStack gap="$xs">
               <Text color="$textSecondary" fontSize="$2" fontWeight="600">
                 Category
               </Text>
@@ -262,15 +262,15 @@ export function GroupModerationScreen({ groupId }: GroupModerationScreenProps) {
                 borderWidth={1}
                 borderColor="$borderColor"
                 borderRadius="$3"
-                paddingHorizontal="$3"
+                paddingHorizontal="$sm"
               />
             </YStack>
 
-            <YStack gap="$2">
+            <YStack gap="$xs">
               <Text color="$textSecondary" fontSize="$2" fontWeight="600">
                 Visibility
               </Text>
-              <YStack gap="$2">
+              <YStack gap="$xs">
                 <Button
                   size="$3"
                   backgroundColor={groupVisibility === 'OPEN' ? '$primary' : '$gray300'}

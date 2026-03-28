@@ -137,8 +137,8 @@ export function IntentionProfileCard({
           )}
         </YStack>
 
-        <YStack padding="$4" gap="$3">
-          <YStack gap="$1">
+        <YStack padding="$md" gap="$sm">
+          <YStack gap="$xs">
             <XStack justifyContent="space-between" alignItems="center">
               <Text fontSize="$4" fontWeight="700" color="#2C2421">
                 {displayName}
@@ -169,7 +169,7 @@ export function IntentionProfileCard({
           )}
 
           {matchedIntentionTags.length > 0 && (
-            <YStack gap="$1">
+            <YStack gap="$xs">
               <Text fontSize="$2" fontWeight="500" color="#8B7E74">
                 Matchade taggar:
               </Text>

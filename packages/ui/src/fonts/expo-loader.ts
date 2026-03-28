@@ -1,56 +1,72 @@
 /**
  * Expo font loader for Lustre typography
- * Loads General Sans and Inter fonts before rendering the app
+ *
+ * Loads Noto Serif (serif headings) and Manrope (sans-serif body) before
+ * rendering the app.  The splash screen must be kept visible until this
+ * resolves — see apps/mobile/app/_layout.tsx for the integration.
  *
  * Usage in app/_layout.tsx:
- * const fontsLoaded = useFonts();
- * if (!fontsLoaded) {
- *   return <SplashScreen />;
- * }
+ *   import { loadLustreFonts } from '@lustre/ui/src/fonts/expo-loader'
+ *   await loadLustreFonts()       // inside an async effect
  */
 
 import * as React from 'react'
 import * as Font from 'expo-font'
+import {
+  NotoSerif_400Regular,
+  NotoSerif_400Regular_Italic,
+  NotoSerif_700Bold,
+} from '@expo-google-fonts/noto-serif'
+import {
+  Manrope_400Regular,
+  Manrope_500Medium,
+  Manrope_600SemiBold,
+  Manrope_700Bold,
+} from '@expo-google-fonts/manrope'
 
 /**
- * Load all fonts required by Lustre
- * Returns a promise that resolves when all fonts are loaded
+ * Load all Lustre fonts via expo-font.
+ * Returns a promise that resolves when every font asset is ready.
  */
-export async function loadLustreFonts() {
-  try {
-    await Font.loadAsync({
-      // General Sans variable font - for headings and logo
-      'GeneralSans-Regular': require('@fontsource-variable/general-sans/files/general-sans-latin-wght.ttf'),
-      'GeneralSans-Medium': require('@fontsource-variable/general-sans/files/general-sans-latin-wght.ttf'),
-      'GeneralSans-SemiBold': require('@fontsource-variable/general-sans/files/general-sans-latin-wght.ttf'),
-      'GeneralSans-Bold': require('@fontsource-variable/general-sans/files/general-sans-latin-wght.ttf'),
-
-      // Inter fonts - for body text
-      'Inter-Regular': require('@fontsource/inter/files/inter-latin-400-normal.ttf'),
-      'Inter-Medium': require('@fontsource/inter/files/inter-latin-500-normal.ttf'),
-      'Inter-SemiBold': require('@fontsource/inter/files/inter-latin-600-normal.ttf'),
-    })
-  } catch (error) {
-    console.error('Error loading Lustre fonts:', error)
-    throw error
-  }
+export async function loadLustreFonts(): Promise<void> {
+  await Font.loadAsync({
+    // Noto Serif — headings
+    NotoSerif_400Regular,
+    NotoSerif_400Regular_Italic,
+    NotoSerif_700Bold,
+    // Manrope — body / labels
+    Manrope_400Regular,
+    Manrope_500Medium,
+    Manrope_600SemiBold,
+    Manrope_700Bold,
+  })
 }
 
 /**
- * Hook to load fonts in Expo app
- * Usage:
- * const fontsLoaded = useFonts();
- * if (!fontsLoaded) return <SplashScreen />;
+ * Hook to load Lustre fonts in an Expo component tree.
+ *
+ * Returns `true` once all fonts are loaded.
+ *
+ * Example:
+ *   const fontsLoaded = useFonts()
+ *   if (!fontsLoaded) return <SplashScreen />
  */
-export function useFonts() {
+export function useFonts(): boolean {
   const [fontsLoaded, setFontsLoaded] = React.useState(false)
 
   React.useEffect(() => {
-    async function loadFonts() {
+    let cancelled = false
+
+    async function load() {
       await loadLustreFonts()
-      setFontsLoaded(true)
+      if (!cancelled) setFontsLoaded(true)
     }
-    loadFonts()
+
+    load()
+
+    return () => {
+      cancelled = true
+    }
   }, [])
 
   return fontsLoaded

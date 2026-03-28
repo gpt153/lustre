@@ -40,8 +40,8 @@ export function CoachHistoryScreen({ onNewSession }: CoachHistoryScreenProps) {
   return (
     <YStack flex={1} backgroundColor="$background">
       <XStack
-        paddingHorizontal="$4"
-        paddingVertical="$3"
+        paddingHorizontal="$md"
+        paddingVertical="$sm"
         alignItems="center"
         justifyContent="space-between"
         borderBottomWidth={1}
@@ -63,24 +63,24 @@ export function CoachHistoryScreen({ onNewSession }: CoachHistoryScreenProps) {
 
       <ScrollView flex={1}>
         {sessions.length === 0 ? (
-          <YStack flex={1} alignItems="center" justifyContent="center" paddingTop="$10" gap="$3">
+          <YStack flex={1} alignItems="center" justifyContent="center" paddingTop="$2xl" gap="$sm">
             <Text fontSize={16} color="$gray10">
               Inga sessioner ännu
             </Text>
-            <Text fontSize={14} color="$gray9" textAlign="center" paddingHorizontal="$6">
+            <Text fontSize={14} color="$gray9" textAlign="center" paddingHorizontal="$lg">
               Starta en session med Axel eller Sophia för att komma igång.
             </Text>
           </YStack>
         ) : (
-          <YStack paddingHorizontal="$4" paddingTop="$2" gap="$2">
+          <YStack paddingHorizontal="$md" paddingTop="$xs" gap="$xs">
             {sessions.map((session) => (
               <XStack
                 key={session.id}
                 backgroundColor="$gray2"
                 borderRadius="$4"
-                padding="$3"
+                padding="$sm"
                 alignItems="center"
-                gap="$3"
+                gap="$sm"
               >
                 <YStack
                   width={44}
@@ -95,15 +95,15 @@ export function CoachHistoryScreen({ onNewSession }: CoachHistoryScreenProps) {
                   </Text>
                 </YStack>
 
-                <YStack flex={1} gap="$1">
-                  <XStack alignItems="center" gap="$2">
+                <YStack flex={1} gap="$xs">
+                  <XStack alignItems="center" gap="$xs">
                     <Text fontSize={15} fontWeight="600" color="$color">
                       {personaLabel(session.persona)}
                     </Text>
                     <XStack
                       backgroundColor="$gray4"
                       borderRadius="$2"
-                      paddingHorizontal="$2"
+                      paddingHorizontal="$xs"
                       paddingVertical={2}
                     >
                       <Text fontSize={11} color="$gray11">
@@ -116,7 +116,7 @@ export function CoachHistoryScreen({ onNewSession }: CoachHistoryScreenProps) {
                   </Text>
                 </YStack>
 
-                <YStack alignItems="flex-end" gap="$1">
+                <YStack alignItems="flex-end" gap="$xs">
                   <Text fontSize={14} fontWeight="600" color="$color">
                     {formatDuration(session.durationSecs)}
                   </Text>

@@ -41,22 +41,22 @@ function IntentionCard({
       <YStack
         backgroundColor="$background"
         borderRadius="$3"
-        padding="$3"
+        padding="$sm"
         marginBottom="$2"
         borderWidth={1}
         borderColor="$borderColor"
-        gap="$2"
+        gap="$xs"
       >
         <XStack justifyContent="space-between" alignItems="flex-start">
-          <YStack flex={1} gap="$1">
+          <YStack flex={1} gap="$xs">
             <Text fontWeight="600" color="$text" fontSize="$4">
               {intention.seeking.toLowerCase()}
             </Text>
-            <XStack gap="$2" alignItems="center">
+            <XStack gap="$xs" alignItems="center">
               <XStack
                 backgroundColor={getStatusColor(isPaused, isExpired)}
-                paddingHorizontal="$2"
-                paddingVertical="$1"
+                paddingHorizontal="$xs"
+                paddingVertical="$xs"
                 borderRadius="$2"
               >
                 <Text fontSize="$1" color="white" fontWeight="600">
@@ -72,7 +72,7 @@ function IntentionCard({
           </YStack>
         </XStack>
 
-        <XStack gap="$2" justifyContent="flex-end">
+        <XStack gap="$xs" justifyContent="flex-end">
           {!isExpired && (
             <Button
               size="$2"
@@ -153,9 +153,9 @@ export function IntentionListScreen({ onCreatePress, onIntentionPress }: Intenti
     <FlatList
       data={intentions}
       keyExtractor={(item) => item.id}
-      contentContainerStyle={{ padding: 16, paddingBottom: 120 }}
+      contentContainerStyle={{ padding: "$md", paddingBottom: 120 }}
       ListHeaderComponent={
-        <YStack gap="$3" marginBottom="$4">
+        <YStack gap="$sm" marginBottom="$4">
           <Text fontSize="$6" fontWeight="600" color="$text">
             Mina intentioner
           </Text>
@@ -172,7 +172,7 @@ export function IntentionListScreen({ onCreatePress, onIntentionPress }: Intenti
         </YStack>
       }
       ListEmptyComponent={
-        <YStack alignItems="center" justifyContent="center" padding="$8" gap="$2">
+        <YStack alignItems="center" justifyContent="center" padding="$xl" gap="$xs">
           <Text fontSize="$4" color="$gray11" fontWeight="600">
             Inga intentioner ännu
           </Text>

@@ -19,7 +19,7 @@ export function CreatePostScreen({ onSuccess, onCancel }: CreatePostScreenProps)
   }
 
   return (
-    <YStack flex={1} padding="$4" gap="$4" backgroundColor="$background">
+    <YStack flex={1} padding="$md" gap="$md" backgroundColor="$background">
       <XStack justifyContent="space-between" alignItems="center">
         <Button chromeless onPress={onCancel}>
           <Text color="$textSecondary">Cancel</Text>
@@ -28,7 +28,7 @@ export function CreatePostScreen({ onSuccess, onCancel }: CreatePostScreenProps)
         <Button
           backgroundColor="$primary"
           borderRadius="$3"
-          paddingHorizontal="$4"
+          paddingHorizontal="$md"
           onPress={handleSubmit}
           disabled={!text.trim() || createPost.isPending}
         >

@@ -19,9 +19,9 @@ export function ProfilePromptSection({
     <CardBase
       elevation={1}
       position="relative"
-      gap="$3"
+      gap="$sm"
     >
-      <YStack gap="$2" flex={1} paddingRight={onLike ? '$10' : undefined}>
+      <YStack gap="$xs" flex={1} paddingRight={onLike ? '$10' : undefined}>
         <Text
           color="#8B7E74"
           fontFamily="$heading"

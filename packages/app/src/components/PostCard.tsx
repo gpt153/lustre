@@ -21,8 +21,8 @@ export function PostCard({ post, onLike, onUnlike, onShowLess }: PostCardProps) 
   const timeAgo = getTimeAgo(post.createdAt)
 
   return (
-    <CardBase gap="$3">
-      <XStack alignItems="center" gap="$2">
+    <CardBase gap="$sm">
+      <XStack alignItems="center" gap="$xs">
         {post.author.avatarUrl ? (
           <Image
             source={{ uri: post.author.avatarUrl }}
@@ -56,7 +56,7 @@ export function PostCard({ post, onLike, onUnlike, onShowLess }: PostCardProps) 
         <PostImageGallery media={post.media} />
       )}
 
-      <XStack alignItems="center" gap="$3">
+      <XStack alignItems="center" gap="$sm">
         <Button
           size="$3"
           chromeless

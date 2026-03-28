@@ -9,25 +9,52 @@
 /* ---- Header ---- */
 .header {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: var(--space-xl);
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 40px;
 }
 
 .heading {
-  font-size: 26px;
-  font-weight: 800;
+  font-family: 'Noto Serif', 'Georgia', serif;
+  font-size: 32px;
+  font-weight: 700;
   color: var(--color-text-primary);
   margin: 0;
-  letter-spacing: -0.03em;
-  background: linear-gradient(
-    120deg,
-    var(--color-text-primary) 60%,
-    var(--color-copper-light)
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  letter-spacing: -0.02em;
+}
+
+/* ---- Tab pills ---- */
+.tabs {
+  display: flex;
+  gap: 8px;
+}
+
+.tab {
+  padding: 8px 24px;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  background: rgba(44, 36, 33, 0.04);
+  transition: all 200ms ease;
+}
+
+.tab:hover {
+  background: rgba(184, 115, 51, 0.08);
+  color: var(--color-copper);
+}
+
+.tabActive {
+  background: var(--color-copper);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.tabActive:hover {
+  background: var(--color-copper);
+  color: #ffffff;
 }
 
 /* ---- Feed ---- */

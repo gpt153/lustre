@@ -49,13 +49,13 @@ export function OrgDetailScreen({ orgId, onAdminPress }: OrgDetailScreenProps) {
 
   return (
     <ScrollView backgroundColor="$background" flex={1}>
-      <YStack padding="$4" gap="$4">
-        <YStack gap="$2">
-          <XStack justifyContent="space-between" alignItems="flex-start" gap="$2">
+      <YStack padding="$md" gap="$md">
+        <YStack gap="$xs">
+          <XStack justifyContent="space-between" alignItems="flex-start" gap="$xs">
             <YStack flex={1}>
               <H2 color="$text">{org.name}</H2>
-              <XStack gap="$2" alignItems="center" marginTop="$2">
-                <XStack backgroundColor="$blue100" paddingHorizontal="$2" paddingVertical="$1" borderRadius={6}>
+              <XStack gap="$xs" alignItems="center" marginTop="$2">
+                <XStack backgroundColor="$blue100" paddingHorizontal="$xs" paddingVertical="$xs" borderRadius={6}>
                   <Text fontSize="$1" fontWeight="600" color="$primary">
                     {org.type}
                   </Text>
@@ -74,7 +74,7 @@ export function OrgDetailScreen({ orgId, onAdminPress }: OrgDetailScreenProps) {
         </YStack>
 
         {org.description && (
-          <YStack gap="$1">
+          <YStack gap="$xs">
             <Text color="$textSecondary" fontSize="$2" fontWeight="600">
               About
             </Text>
@@ -85,7 +85,7 @@ export function OrgDetailScreen({ orgId, onAdminPress }: OrgDetailScreenProps) {
         )}
 
         {org.locationName && (
-          <YStack gap="$1">
+          <YStack gap="$xs">
             <Text color="$textSecondary" fontSize="$2" fontWeight="600">
               Location
             </Text>
@@ -96,7 +96,7 @@ export function OrgDetailScreen({ orgId, onAdminPress }: OrgDetailScreenProps) {
         )}
 
         {org.contactEmail && (
-          <YStack gap="$1">
+          <YStack gap="$xs">
             <Text color="$textSecondary" fontSize="$2" fontWeight="600">
               Contact
             </Text>
@@ -106,7 +106,7 @@ export function OrgDetailScreen({ orgId, onAdminPress }: OrgDetailScreenProps) {
           </YStack>
         )}
 
-        <YStack gap="$2">
+        <YStack gap="$xs">
           {!org.isMember ? (
             <Button
               size="$3"

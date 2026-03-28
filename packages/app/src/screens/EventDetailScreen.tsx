@@ -24,11 +24,11 @@ export function EventDetailScreen({ eventId, currentUserId }: { eventId: string;
 
   return (
     <ScrollView>
-      <YStack padding="$4" gap="$3">
+      <YStack padding="$md" gap="$sm">
         <Text fontSize="$7" fontWeight="700">
           {event.title}
         </Text>
-        <XStack gap="$2">
+        <XStack gap="$xs">
           <Text color="$gray10">{event.type}</Text>
           <Text color="$gray10">•</Text>
           <Text color="$gray10">{new Date(event.startsAt).toLocaleDateString('sv-SE')}</Text>

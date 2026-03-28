@@ -40,14 +40,14 @@ export function ConsentInitiateScreen({ onSuccess }: Props) {
   if (consentRecordId) {
     return (
       <ScrollView>
-        <YStack padding="$4" gap="$5">
+        <YStack padding="$md" gap="$md">
           <H2 color="$color">Request Sent</H2>
 
           <YStack
             backgroundColor="$green3"
             borderRadius="$4"
-            padding="$4"
-            gap="$3"
+            padding="$md"
+            gap="$sm"
             borderWidth={1}
             borderColor="$green6"
           >
@@ -65,8 +65,8 @@ export function ConsentInitiateScreen({ onSuccess }: Props) {
           <YStack
             backgroundColor="$backgroundHover"
             borderRadius="$4"
-            padding="$4"
-            gap="$2"
+            padding="$md"
+            gap="$xs"
           >
             <Text color="$color" fontWeight="600">
               Next step
@@ -86,13 +86,13 @@ export function ConsentInitiateScreen({ onSuccess }: Props) {
 
   return (
     <ScrollView>
-      <YStack padding="$4" gap="$5">
+      <YStack padding="$md" gap="$md">
         <H2 color="$color">New Consent Request</H2>
         <Text color="$colorSecondary">
           Start a consent recording session. The other participant will receive a request to confirm.
         </Text>
 
-        <YStack gap="$2">
+        <YStack gap="$xs">
           <Text color="$color" fontWeight="600">
             Participant ID
           </Text>
@@ -111,13 +111,13 @@ export function ConsentInitiateScreen({ onSuccess }: Props) {
         <YStack
           backgroundColor="$backgroundHover"
           borderRadius="$4"
-          padding="$3"
-          gap="$2"
+          padding="$sm"
+          gap="$xs"
         >
           <Text color="$color" fontWeight="600" fontSize="$3">
             Location
           </Text>
-          <XStack alignItems="center" gap="$2">
+          <XStack alignItems="center" gap="$xs">
             <Text color="$green10" fontSize="$2">
               GPS Active
             </Text>
@@ -130,8 +130,8 @@ export function ConsentInitiateScreen({ onSuccess }: Props) {
         <YStack
           backgroundColor="$backgroundHover"
           borderRadius="$4"
-          padding="$3"
-          gap="$2"
+          padding="$sm"
+          gap="$xs"
         >
           <Text color="$color" fontWeight="600" fontSize="$3">
             Bluetooth Proximity

@@ -1,6 +1,8 @@
 'use client'
 
+import { useState } from 'react'
 import { useTheme } from '@/hooks/useTheme'
+import { logout } from '@/lib/auth'
 import styles from './Header.module.css'
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
@@ -29,6 +31,7 @@ const MoonIcon = () => (
 
 export function Header() {
   const { toggleTheme, toggleMode, isSpicy, isDark } = useTheme()
+  const [menuOpen, setMenuOpen] = useState(false)
 
   return (
     <header className={styles.header} role="banner">
@@ -67,14 +70,36 @@ export function Header() {
           {isDark ? <SunIcon /> : <MoonIcon />}
         </button>
 
-        {/* User avatar placeholder */}
-        <button
-          className={styles.avatarButton}
-          aria-label="Användarmeny"
-          title="Användarmeny"
-        >
-          <div className={styles.avatar} aria-hidden="true" />
-        </button>
+        {/* User avatar + menu */}
+        <div style={{ position: 'relative' }}>
+          <button
+            className={styles.avatarButton}
+            aria-label="Användarmeny"
+            title="Användarmeny"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            <div className={styles.avatar} aria-hidden="true" />
+          </button>
+          {menuOpen && (
+            <div style={{
+              position: 'absolute', right: 0, top: '100%', marginTop: 4,
+              background: 'var(--color-surface, #fff)', borderRadius: 8,
+              boxShadow: '0 4px 16px rgba(0,0,0,0.12)', padding: '4px 0',
+              minWidth: 160, zIndex: 100,
+            }}>
+              <button
+                onClick={() => { setMenuOpen(false); logout() }}
+                style={{
+                  display: 'block', width: '100%', padding: '10px 16px',
+                  background: 'none', border: 'none', textAlign: 'left',
+                  cursor: 'pointer', fontSize: 14, color: 'var(--color-text, #333)',
+                }}
+              >
+                Logga ut
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </header>
   )

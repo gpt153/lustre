@@ -1,6 +1,6 @@
-import { useCallback, useMemo } from 'react'
-import { FlatList, RefreshControl, TouchableOpacity } from 'react-native'
-import { YStack, XStack, Text, Spinner, Image, Circle } from 'tamagui'
+import { useCallback, useMemo, useState } from 'react'
+import { FlatList, RefreshControl, TouchableOpacity, TextInput, StyleSheet } from 'react-native'
+import { YStack, XStack, Text, Spinner, Image, Circle, ScrollView } from 'tamagui'
 import { useRouter } from 'expo-router'
 import { useChat } from '../hooks/useChat'
 
@@ -21,17 +21,31 @@ function formatTime(date: Date): string {
   const diffHours = Math.floor(diffMs / 3600000)
   const diffDays = Math.floor(diffMs / 86400000)
 
-  if (diffMins < 1) return 'now'
-  if (diffMins < 60) return `${diffMins}m ago`
-  if (diffHours < 24) return `${diffHours}h ago`
-  if (diffDays < 7) return `${diffDays}d ago`
+  if (diffMins < 1) return 'Nu'
+  if (diffMins < 60) return `${diffMins}m sedan`
+  if (diffHours < 24) return `${diffHours}h sedan`
+  if (diffDays < 7) return `${diffDays}d sedan`
 
-  return messageDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+  return messageDate.toLocaleDateString('sv-SE', { month: 'short', day: 'numeric' })
 }
+
+// Colors from Lustre design tokens
+const COPPER = '#B87333'
+const COPPER_LIGHT = '#D4A574'
+const GOLD = '#D4A843'
+const WARM_WHITE = '#FDF8F3'
+const WARM_CREAM = '#F5EDE4'
+const CHARCOAL = '#2C2421'
+const WARM_GRAY = '#8B7E74'
+const SAGE = '#7A9E7E'
+const SURFACE_CONTAINER_LOW = '#f8f3ee'
+const OUTLINE_VARIANT = '#d8c3b4'
 
 export function ConversationListScreen() {
   const router = useRouter()
   const { conversations, isLoading, refetch } = useChat()
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchFocused, setSearchFocused] = useState(false)
 
   const handleConversationPress = useCallback(
     (conversationId: string, displayName: string | null | undefined) => {
@@ -39,7 +53,7 @@ export function ConversationListScreen() {
         pathname: '/chat/[conversationId]',
         params: {
           conversationId,
-          displayName: displayName || 'Unknown',
+          displayName: displayName || 'Okänd',
         },
       })
     },
@@ -48,117 +62,385 @@ export function ConversationListScreen() {
 
   const conversationList = useMemo(() => conversations, [conversations])
 
+  const totalUnread = useMemo(
+    () => conversationList?.reduce((sum, c) => sum + (c.unreadCount || 0), 0) ?? 0,
+    [conversationList]
+  )
+
+  // Filter for "new matches" — recent conversations with no messages yet
+  const newMatches = useMemo(
+    () =>
+      conversationList?.filter(
+        (c) => !c.lastMessage?.content
+      ) ?? [],
+    [conversationList]
+  )
+
+  // Filter conversations based on search query
+  const filteredConversations = useMemo(() => {
+    if (!searchQuery.trim()) return conversationList
+    const query = searchQuery.toLowerCase()
+    return conversationList?.filter(
+      (c) =>
+        c.otherParticipant?.displayName?.toLowerCase().includes(query) ||
+        c.lastMessage?.content?.toLowerCase().includes(query)
+    )
+  }, [conversationList, searchQuery])
+
   if (isLoading) {
     return (
-      <YStack flex={1} alignItems="center" justifyContent="center" backgroundColor="$background">
-        <Spinner color="$primary" />
+      <YStack flex={1} alignItems="center" justifyContent="center" backgroundColor={WARM_WHITE}>
+        <Spinner color={COPPER} />
       </YStack>
     )
   }
 
-  return (
-    <FlatList
-      data={conversationList}
-      keyExtractor={(item) => item.id}
-      renderItem={({ item }) => (
-        <TouchableOpacity
-          onPress={() => handleConversationPress(item.id, item.otherParticipant?.displayName)}
-          activeOpacity={0.7}
+  const renderHeader = () => (
+    <YStack paddingHorizontal={24} paddingTop={16} paddingBottom={8} backgroundColor={WARM_WHITE}>
+      {/* Title + Unread Badge */}
+      <XStack alignItems="center" gap={12} marginBottom={24}>
+        <Text
+          fontSize={34}
+          fontWeight="bold"
+          color={COPPER}
+          fontFamily="$heading"
         >
+          Meddelanden
+        </Text>
+        {totalUnread > 0 && (
           <YStack
-            paddingHorizontal="$4"
-            paddingVertical="$3"
-            borderBottomColor="$borderColor"
-            borderBottomWidth={1}
+            backgroundColor={COPPER}
+            paddingHorizontal={10}
+            paddingVertical={4}
+            borderRadius={999}
+            elevation={1}
           >
-            <XStack alignItems="center" space="$3" flex={1}>
-              {/* Avatar */}
-              {item.otherParticipant?.photoUrl ? (
-                <Image
-                  source={{ uri: item.otherParticipant.photoUrl }}
-                  width={48}
-                  height={48}
-                  borderRadius="$3"
-                />
-              ) : (
-                <YStack
-                  width={48}
-                  height={48}
-                  backgroundColor="$primary"
-                  alignItems="center"
-                  justifyContent="center"
-                  borderRadius="$3"
-                >
-                  <Text color="white" fontWeight="bold" fontSize={14}>
-                    {getInitials(item.otherParticipant?.displayName)}
+            <Text fontSize={12} fontWeight="bold" color="white">
+              {totalUnread}
+            </Text>
+          </YStack>
+        )}
+      </XStack>
+
+      {/* Search Bar */}
+      <YStack marginBottom={28}>
+        <TextInput
+          style={[
+            styles.searchInput,
+            searchFocused && styles.searchInputFocused,
+          ]}
+          placeholder="Sök bland dina kontakter..."
+          placeholderTextColor={WARM_GRAY}
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          onFocus={() => setSearchFocused(true)}
+          onBlur={() => setSearchFocused(false)}
+        />
+      </YStack>
+
+      {/* Nya matchningar */}
+      {newMatches.length > 0 && (
+        <YStack marginBottom={28}>
+          <Text
+            fontSize={20}
+            fontWeight="bold"
+            color={CHARCOAL}
+            fontFamily="$heading"
+            marginBottom={16}
+            paddingHorizontal={2}
+          >
+            Nya matchningar
+          </Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ gap: 20, paddingBottom: 8 }}
+          >
+            {newMatches.map((match) => (
+              <TouchableOpacity
+                key={match.id}
+                onPress={() =>
+                  handleConversationPress(
+                    match.id,
+                    match.otherParticipant?.displayName
+                  )
+                }
+                activeOpacity={0.7}
+              >
+                <YStack alignItems="center" gap={8}>
+                  <YStack
+                    padding={2}
+                    borderRadius={999}
+                    borderWidth={2}
+                    borderColor={GOLD}
+                  >
+                    {match.otherParticipant?.photoUrl ? (
+                      <YStack position="relative">
+                        <Image
+                          source={{ uri: match.otherParticipant.photoUrl }}
+                          width={64}
+                          height={64}
+                          borderRadius={999}
+                        />
+                        {/* Online indicator */}
+                        <YStack
+                          position="absolute"
+                          bottom={0}
+                          right={0}
+                          width={16}
+                          height={16}
+                          backgroundColor={SAGE}
+                          borderRadius={999}
+                          borderWidth={2}
+                          borderColor={WARM_WHITE}
+                        />
+                      </YStack>
+                    ) : (
+                      <YStack position="relative">
+                        <YStack
+                          width={64}
+                          height={64}
+                          backgroundColor={COPPER}
+                          alignItems="center"
+                          justifyContent="center"
+                          borderRadius={999}
+                        >
+                          <Text color="white" fontWeight="bold" fontSize={18}>
+                            {getInitials(match.otherParticipant?.displayName)}
+                          </Text>
+                        </YStack>
+                        <YStack
+                          position="absolute"
+                          bottom={0}
+                          right={0}
+                          width={16}
+                          height={16}
+                          backgroundColor={SAGE}
+                          borderRadius={999}
+                          borderWidth={2}
+                          borderColor={WARM_WHITE}
+                        />
+                      </YStack>
+                    )}
+                  </YStack>
+                  <Text
+                    fontSize={12}
+                    fontWeight="bold"
+                    color={CHARCOAL}
+                    numberOfLines={1}
+                  >
+                    {match.otherParticipant?.displayName?.split(' ')[0] || 'Okänd'}
                   </Text>
                 </YStack>
-              )}
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </YStack>
+      )}
+    </YStack>
+  )
 
-              {/* Message content */}
-              <YStack flex={1}>
-                <XStack alignItems="center" justifyContent="space-between" space="$2">
-                  <Text
-                    fontSize={16}
-                    fontWeight="600"
-                    color="$text"
-                    numberOfLines={1}
-                    flex={1}
-                  >
-                    {item.otherParticipant?.displayName || 'Unknown User'}
-                  </Text>
-                  <Text fontSize={12} color="$textSecondary">
-                    {formatTime(item.createdAt)}
-                  </Text>
-                </XStack>
+  return (
+    <YStack flex={1} backgroundColor={WARM_WHITE}>
+      <FlatList
+        data={filteredConversations}
+        keyExtractor={(item) => item.id}
+        ListHeaderComponent={renderHeader}
+        renderItem={({ item }) => {
+          const isUnread = item.unreadCount > 0
+          const isRecent = (() => {
+            const diffMs = new Date().getTime() - new Date(item.createdAt).getTime()
+            return diffMs < 86400000 // less than 24h
+          })()
 
-                <XStack alignItems="center" justifyContent="space-between" marginTop="$1" space="$2">
-                  <Text
-                    fontSize={14}
-                    color="$textSecondary"
-                    numberOfLines={1}
-                    flex={1}
-                  >
-                    {item.lastMessage?.content || 'No messages yet'}
-                  </Text>
-
-                  {/* Unread badge */}
-                  {item.unreadCount > 0 && (
-                    <Circle
-                      size={24}
-                      backgroundColor="$primary"
+          return (
+            <TouchableOpacity
+              onPress={() =>
+                handleConversationPress(
+                  item.id,
+                  item.otherParticipant?.displayName
+                )
+              }
+              activeOpacity={0.7}
+            >
+              <XStack
+                alignItems="center"
+                gap={16}
+                paddingVertical={16}
+                paddingHorizontal={24}
+                backgroundColor={isUnread ? 'white' : 'transparent'}
+                borderRadius={12}
+                marginHorizontal={8}
+              >
+                {/* Avatar */}
+                <YStack position="relative" flexShrink={0}>
+                  {item.otherParticipant?.photoUrl ? (
+                    <Image
+                      source={{ uri: item.otherParticipant.photoUrl }}
+                      width={56}
+                      height={56}
+                      borderRadius={999}
+                      style={
+                        isUnread
+                          ? { borderWidth: 2, borderColor: `${COPPER}1A` }
+                          : undefined
+                      }
+                    />
+                  ) : (
+                    <YStack
+                      width={56}
+                      height={56}
+                      backgroundColor={isUnread ? COPPER : COPPER_LIGHT}
                       alignItems="center"
                       justifyContent="center"
+                      borderRadius={999}
                     >
-                      <Text fontSize={12} fontWeight="bold" color="white">
-                        {item.unreadCount > 99 ? '99+' : item.unreadCount}
+                      <Text color="white" fontWeight="bold" fontSize={16}>
+                        {getInitials(item.otherParticipant?.displayName)}
                       </Text>
-                    </Circle>
+                    </YStack>
                   )}
-                </XStack>
-              </YStack>
-            </XStack>
+                  {/* Online dot — show randomly for demo, in prod use real status */}
+                  {isUnread && (
+                    <YStack
+                      position="absolute"
+                      bottom={0}
+                      right={0}
+                      width={16}
+                      height={16}
+                      backgroundColor={SAGE}
+                      borderRadius={999}
+                      borderWidth={2}
+                      borderColor={isUnread ? 'white' : WARM_WHITE}
+                    />
+                  )}
+                </YStack>
+
+                {/* Content */}
+                <YStack flex={1} minWidth={0}>
+                  <XStack justifyContent="space-between" alignItems="baseline" marginBottom={4}>
+                    <Text
+                      fontSize={17}
+                      fontWeight="bold"
+                      color={CHARCOAL}
+                      numberOfLines={1}
+                      flex={1}
+                      opacity={isUnread ? 1 : 0.8}
+                    >
+                      {item.otherParticipant?.displayName || 'Okänd'}
+                    </Text>
+                    <Text
+                      fontSize={11}
+                      fontWeight={isRecent ? 'bold' : '400'}
+                      color={isRecent ? COPPER : WARM_GRAY}
+                      textTransform="uppercase"
+                      letterSpacing={0.8}
+                      marginLeft={8}
+                    >
+                      {formatTime(item.createdAt)}
+                    </Text>
+                  </XStack>
+
+                  <XStack justifyContent="space-between" alignItems="center">
+                    <Text
+                      fontSize={14}
+                      color={isUnread ? CHARCOAL : WARM_GRAY}
+                      fontWeight={isUnread ? '600' : '400'}
+                      numberOfLines={1}
+                      flex={1}
+                    >
+                      {item.lastMessage?.content || 'Inget meddelande ännu'}
+                    </Text>
+
+                    {/* Unread dot */}
+                    {isUnread && (
+                      <YStack
+                        width={10}
+                        height={10}
+                        backgroundColor={COPPER}
+                        borderRadius={999}
+                        marginLeft={16}
+                        flexShrink={0}
+                      />
+                    )}
+                  </XStack>
+                </YStack>
+              </XStack>
+            </TouchableOpacity>
+          )
+        }}
+        refreshControl={
+          <RefreshControl
+            refreshing={isLoading}
+            onRefresh={() => refetch()}
+            tintColor={COPPER}
+            colors={[COPPER]}
+          />
+        }
+        ListEmptyComponent={
+          <YStack flex={1} alignItems="center" justifyContent="center" padding={48}>
+            <Text color={WARM_GRAY} fontSize={18} fontWeight="600" marginBottom={8}>
+              Inga konversationer ännu
+            </Text>
+            <Text color={WARM_GRAY} fontSize={14} textAlign="center">
+              Börja matcha för att starta en chatt
+            </Text>
           </YStack>
-        </TouchableOpacity>
-      )}
-      refreshControl={
-        <RefreshControl
-          refreshing={isLoading}
-          onRefresh={() => refetch()}
-          tintColor="#B87333"
-          colors={['#B87333']}
-        />
-      }
-      ListEmptyComponent={
-        <YStack flex={1} alignItems="center" justifyContent="center" padding="$6">
-          <Text color="$textSecondary" fontSize={16}>
-            No conversations yet
-          </Text>
-          <Text color="$textSecondary" fontSize={14} marginTop="$2">
-            Start matching to begin chatting
-          </Text>
-        </YStack>
-      }
-    />
+        }
+        ItemSeparatorComponent={() => (
+          <YStack height={2} marginHorizontal={24} />
+        )}
+        contentContainerStyle={{ paddingBottom: 100 }}
+      />
+
+      {/* Floating Action Button */}
+      <TouchableOpacity
+        style={styles.fab}
+        activeOpacity={0.85}
+        onPress={() => {
+          // Navigate to new chat or discover
+        }}
+      >
+        <Text fontSize={28} color="white" fontWeight="300">
+          +
+        </Text>
+      </TouchableOpacity>
+    </YStack>
   )
 }
+
+const styles = StyleSheet.create({
+  searchInput: {
+    width: '100%',
+    backgroundColor: SURFACE_CONTAINER_LOW,
+    borderRadius: 12,
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    fontSize: 15,
+    fontWeight: '500',
+    color: CHARCOAL,
+    borderWidth: 2,
+    borderColor: 'transparent',
+  },
+  searchInputFocused: {
+    borderColor: `${COPPER}4D`, // 30% opacity
+    backgroundColor: 'white',
+  },
+  fab: {
+    position: 'absolute',
+    right: 24,
+    bottom: 100,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 8,
+    shadowColor: '#894d0d',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    // Copper gradient approximation — using primary copper
+    backgroundColor: '#894d0d',
+  },
+})

@@ -1,5 +1,6 @@
 import { useRouter } from 'expo-router'
-import { YStack, XStack, Text, ScrollView, Pressable } from 'tamagui'
+import { YStack, XStack, Text, ScrollView } from 'tamagui'
+import { Pressable } from 'react-native'
 
 export default function ExploreHubScreen() {
   const router = useRouter()

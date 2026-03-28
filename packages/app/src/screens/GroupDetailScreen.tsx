@@ -29,13 +29,13 @@ export function GroupDetailScreen({ groupId, onModerationPress }: GroupDetailScr
 
   return (
     <ScrollView backgroundColor="$background" flex={1}>
-      <YStack padding="$4" gap="$4">
-        <YStack gap="$2">
-          <XStack justifyContent="space-between" alignItems="flex-start" gap="$2">
+      <YStack padding="$md" gap="$md">
+        <YStack gap="$xs">
+          <XStack justifyContent="space-between" alignItems="flex-start" gap="$xs">
             <YStack flex={1}>
               <H2 color="$text">{group.name}</H2>
-              <XStack gap="$2" alignItems="center" marginTop="$2">
-                <XStack backgroundColor={group.visibility === 'OPEN' ? '$green100' : '$gray300'} paddingHorizontal="$2" paddingVertical="$1" borderRadius={6}>
+              <XStack gap="$xs" alignItems="center" marginTop="$2">
+                <XStack backgroundColor={group.visibility === 'OPEN' ? '$green100' : '$gray300'} paddingHorizontal="$xs" paddingVertical="$xs" borderRadius={6}>
                   <Text fontSize="$1" fontWeight="600" color={group.visibility === 'OPEN' ? '#2E7D32' : '#424242'}>
                     {group.visibility === 'OPEN' ? 'OPEN' : 'PRIVATE'}
                   </Text>
@@ -49,7 +49,7 @@ export function GroupDetailScreen({ groupId, onModerationPress }: GroupDetailScr
         </YStack>
 
         {group.description && (
-          <YStack gap="$1">
+          <YStack gap="$xs">
             <Text color="$textSecondary" fontSize="$2" fontWeight="600">
               About
             </Text>
@@ -59,7 +59,7 @@ export function GroupDetailScreen({ groupId, onModerationPress }: GroupDetailScr
           </YStack>
         )}
 
-        <YStack gap="$2">
+        <YStack gap="$xs">
           {!group.isMember ? (
             <Button
               size="$3"
@@ -98,7 +98,7 @@ export function GroupDetailScreen({ groupId, onModerationPress }: GroupDetailScr
           )}
         </YStack>
 
-        <YStack gap="$2" borderTopWidth={1} borderTopColor="$borderColor" paddingTopHorizontal="$4">
+        <YStack gap="$xs" borderTopWidth={1} borderTopColor="$borderColor" paddingTopHorizontal="$4">
           <Text color="$textSecondary" fontSize="$2" fontWeight="600">
             Members
           </Text>
@@ -107,7 +107,7 @@ export function GroupDetailScreen({ groupId, onModerationPress }: GroupDetailScr
           </Text>
         </YStack>
 
-        <YStack gap="$2" borderTopWidth={1} borderTopColor="$borderColor" paddingTopHorizontal="$4">
+        <YStack gap="$xs" borderTopWidth={1} borderTopColor="$borderColor" paddingTopHorizontal="$4">
           <Text color="$textSecondary" fontSize="$2" fontWeight="600">
             Group Feed
           </Text>

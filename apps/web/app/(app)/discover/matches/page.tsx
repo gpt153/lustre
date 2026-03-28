@@ -27,7 +27,17 @@ export default function MatchesPage() {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const result = await (api as any).match.getMatches.query()
         if (!cancelled) {
-          setMatches(Array.isArray(result) ? result : [])
+          const raw = Array.isArray(result) ? result : []
+          setMatches(
+            raw.map((m: Record<string, unknown>) => ({
+              ...m,
+              photos: Array.isArray(m.photos)
+                ? m.photos.map((ph: unknown) =>
+                    typeof ph === 'string' ? ph : (ph as { url: string }).url
+                  )
+                : [],
+            })) as Match[]
+          )
         }
       } catch {
         if (!cancelled) setMatches([])

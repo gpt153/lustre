@@ -79,9 +79,9 @@ export function OrderStatusScreen({ orderId, onConfirmDelivery }: OrderStatusScr
   return (
     <YStack flex={1} backgroundColor="$background">
       <ScrollView flex={1}>
-        <YStack padding="$4" gap="$4">
+        <YStack padding="$md" gap="$md">
           {/* Order Header */}
-          <YStack gap="$2" borderBottomWidth={1} borderBottomColor="$borderColor" paddingBottom="$4">
+          <YStack gap="$xs" borderBottomWidth={1} borderBottomColor="$borderColor" paddingBottom="$md">
             <Text fontSize={20} fontWeight="700" color="$color">
               Beställning #{order.id.slice(0, 8).toUpperCase()}
             </Text>
@@ -91,10 +91,10 @@ export function OrderStatusScreen({ orderId, onConfirmDelivery }: OrderStatusScr
           </YStack>
 
           {/* Timeline */}
-          <YStack gap="$3">
+          <YStack gap="$sm">
             {timeline.map((step, index) => (
-              <XStack key={step.key} gap="$3" alignItems="flex-start">
-                <YStack alignItems="center" gap="$3">
+              <XStack key={step.key} gap="$sm" alignItems="flex-start">
+                <YStack alignItems="center" gap="$sm">
                   <XStack
                     width={32}
                     height={32}
@@ -121,7 +121,7 @@ export function OrderStatusScreen({ orderId, onConfirmDelivery }: OrderStatusScr
                   )}
                 </YStack>
 
-                <YStack flex={1} paddingTop="$1" gap="$1">
+                <YStack flex={1} paddingTop="$1" gap="$xs">
                   <Text
                     fontSize={14}
                     fontWeight={step.completed ? '600' : '500'}
@@ -141,14 +141,14 @@ export function OrderStatusScreen({ orderId, onConfirmDelivery }: OrderStatusScr
 
           {/* Tracking Information */}
           {order.trackingNumber && (
-            <YStack gap="$2" borderTopWidth={1} borderTopColor="$borderColor" paddingTop="$4">
+            <YStack gap="$xs" borderTopWidth={1} borderTopColor="$borderColor" paddingTop="$md">
               <Text fontSize={14} fontWeight="600" color="$color">
                 Spårningsnummer
               </Text>
               <XStack
                 backgroundColor="$gray4"
                 borderRadius="$3"
-                padding="$3"
+                padding="$sm"
                 alignItems="center"
               >
                 <Text fontSize={13} color="$color" fontFamily="$mono" flex={1}>
@@ -159,12 +159,12 @@ export function OrderStatusScreen({ orderId, onConfirmDelivery }: OrderStatusScr
           )}
 
           {/* Order Details */}
-          <YStack gap="$3" borderTopWidth={1} borderTopColor="$borderColor" paddingTop="$4">
+          <YStack gap="$sm" borderTopWidth={1} borderTopColor="$borderColor" paddingTop="$md">
             <Text fontSize={14} fontWeight="600" color="$color">
               Orderdetaljer
             </Text>
 
-            <YStack gap="$2">
+            <YStack gap="$xs">
               {order.listing?.images && order.listing.images.length > 0 && (
                 <YStack
                   width="100%"
@@ -228,7 +228,7 @@ export function OrderStatusScreen({ orderId, onConfirmDelivery }: OrderStatusScr
             <YStack
               backgroundColor="$blue2"
               borderRadius="$3"
-              padding="$3"
+              padding="$sm"
               borderLeftWidth={4}
               borderLeftColor="$blue8"
             >
@@ -243,7 +243,7 @@ export function OrderStatusScreen({ orderId, onConfirmDelivery }: OrderStatusScr
 
       {/* Confirm Delivery Button */}
       {isShipped && (
-        <YStack padding="$4" borderTopWidth={1} borderTopColor="$borderColor">
+        <YStack padding="$md" borderTopWidth={1} borderTopColor="$borderColor">
           <Button
             onPress={handleConfirmDelivery}
             disabled={confirmDeliveryMutation.isPending}
