@@ -573,6 +573,9 @@ export function ProfileCardStory({
             {profile.location ? (
               <Text style={styles.locationText}>{profile.location}</Text>
             ) : null}
+            {profile.sparkedYou ? (
+              <SparkBadge style={{ marginTop: 4 }} />
+            ) : null}
           </View>
 
           {/* Action buttons */}
@@ -589,11 +592,12 @@ export function ProfileCardStory({
 
               <AnimatedPressable
                 accessibilityRole="button"
-                accessibilityLabel="SuperLike"
-                onPress={onSuperLike}
-                style={styles.actionBtn}
+                accessibilityLabel="Spark"
+                onPress={onSpark}
+                style={[styles.actionBtn, sparkDisabled && styles.actionBtnDisabled]}
+                disabled={sparkDisabled}
               >
-                <Star size={24} weight="fill" color={COLORS.gold} />
+                <Lightning size={24} weight="fill" color={sparkDisabled ? '#999' : COLORS.gold} />
               </AnimatedPressable>
 
               <AnimatedPressable
@@ -695,6 +699,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'rgba(253,248,243,0.15)',
+  },
+  actionBtnDisabled: {
+    opacity: 0.4,
   },
 
   // Prompt segment
