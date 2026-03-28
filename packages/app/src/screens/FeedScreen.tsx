@@ -6,12 +6,13 @@ import { PostCard } from '../components/PostCard'
 import { FeedAdCard } from '../components/FeedAdCard'
 import { useFeed } from '../hooks/useFeed'
 
-const COPPER = '#B87333'
-const COPPER_DARK = '#894D0D'
+const COPPER = '#894d0d'
+const COPPER_DARK = '#a76526'
 const GOLD = '#D4A843'
-const WARM_WHITE = '#FDF8F3'
+const WARM_WHITE = '#fef8f3'
 const CHARCOAL = '#2C2421'
 const WARM_GRAY = '#8B7E74'
+const SURFACE_CONTAINER = '#f2ede8'
 
 type FeedPost = {
   type: 'post'
@@ -77,7 +78,7 @@ export function FeedScreen({ onCreatePost }: { onCreatePost?: () => void }) {
   const items = feed.posts as unknown as FeedItem[]
 
   return (
-    <YStack flex={1} backgroundColor={WARM_WHITE}>
+    <YStack flex={1} backgroundColor={SURFACE_CONTAINER}>
       {/* Header */}
       <YStack paddingTop={8} paddingHorizontal={20} paddingBottom={12}>
         <Text
@@ -101,7 +102,7 @@ export function FeedScreen({ onCreatePost }: { onCreatePost?: () => void }) {
                 paddingHorizontal={20}
                 paddingVertical={10}
                 borderRadius={999}
-                backgroundColor={activeTab === tab ? COPPER : `${CHARCOAL}08`}
+                backgroundColor={activeTab === tab ? COPPER : 'rgba(29, 27, 25, 0.04)'}
               >
                 <Text
                   fontSize={14}
@@ -124,7 +125,7 @@ export function FeedScreen({ onCreatePost }: { onCreatePost?: () => void }) {
         }
         contentContainerStyle={styles.feedList}
         renderItem={({ item }: { item: FeedItem }) => (
-          <YStack marginBottom={24}>
+          <YStack marginBottom={16}>
             {item.type === 'ad' ? (
               <FeedAdCard
                 campaignId={item.campaignId}
@@ -173,6 +174,7 @@ export function FeedScreen({ onCreatePost }: { onCreatePost?: () => void }) {
               color={CHARCOAL}
               textAlign="center"
               marginBottom={8}
+              fontFamily="$heading"
             >
               Inga inlägg ännu
             </Text>
@@ -198,14 +200,14 @@ export function FeedScreen({ onCreatePost }: { onCreatePost?: () => void }) {
           <YStack
             width={60}
             height={60}
-            borderRadius={30}
+            borderRadius={9999}
             backgroundColor={COPPER}
             alignItems="center"
             justifyContent="center"
-            shadowColor={COPPER_DARK}
+            shadowColor="#2C2421"
             shadowOffset={{ width: 0, height: 8 }}
-            shadowOpacity={0.3}
-            shadowRadius={16}
+            shadowOpacity={0.06}
+            shadowRadius={24}
             elevationAndroid={8}
           >
             <Text fontSize={28} color="white" fontWeight="300">+</Text>

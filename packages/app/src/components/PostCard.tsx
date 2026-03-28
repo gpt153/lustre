@@ -28,10 +28,10 @@ export function PostCard({ post, onLike, onUnlike, onShowLess }: PostCardProps) 
             source={{ uri: post.author.avatarUrl }}
             width={48}
             height={48}
-            borderRadius={24}
+            borderRadius={9999}
           />
         ) : (
-          <YStack width={48} height={48} borderRadius={24} backgroundColor="$warmGray" alignItems="center" justifyContent="center">
+          <YStack width={48} height={48} borderRadius={9999} backgroundColor="#857467" alignItems="center" justifyContent="center">
             <Text fontSize="$4" color="$warmWhite">{(post.author.displayName ?? '?')[0]}</Text>
           </YStack>
         )}
@@ -62,7 +62,7 @@ export function PostCard({ post, onLike, onUnlike, onShowLess }: PostCardProps) 
           chromeless
           onPress={() => post.isLiked ? onUnlike(post.id) : onLike(post.id)}
         >
-          <Text color={post.isLiked ? '$primary' : '$textSecondary'}>
+          <Text color={post.isLiked ? '#894d0d' : '$textSecondary'}>
             {post.isLiked ? '♥' : '♡'} {post.likeCount > 0 ? post.likeCount : ''}
           </Text>
         </Button>

@@ -15,12 +15,12 @@ import { useChatRoom } from '../hooks/useChatRoom'
 import { useAuthStore } from '../stores/authStore'
 import { trpc } from '@lustre/api'
 
-const COPPER = '#B87333'
-const COPPER_DARK = '#894D0D'
+const COPPER = '#894d0d'
+const COPPER_DARK = '#a76526'
 const GOLD = '#D4A843'
-const WARM_WHITE = '#FDF8F3'
+const WARM_WHITE = '#fef8f3'
 const CHARCOAL = '#2C2421'
-const WARM_BEIGE = '#F5EFE6'
+const WARM_BEIGE = '#f8f3ee'
 const WARM_GRAY = '#8B7E74'
 
 interface ChatRoomScreenProps {
@@ -169,8 +169,7 @@ export function ChatRoomScreen({
           paddingHorizontal={20}
           paddingBottom={8}
           backgroundColor={`${WARM_WHITE}E6`}
-          borderBottomWidth={StyleSheet.hairlineWidth}
-          borderBottomColor="rgba(184, 115, 51, 0.1)"
+          borderBottomWidth={0}
         >
           <XStack alignItems="center" justifyContent="space-between">
             <TouchableOpacity
@@ -294,7 +293,7 @@ export function ChatRoomScreen({
                     <YStack alignItems="flex-end" marginBottom={16}>
                       <YStack style={styles.sentBubbleOuter}>
                         <LinearGradient
-                          colors={[COPPER, COPPER_DARK]}
+                          colors={['#894d0d', '#a76526']}
                           start={{ x: 0, y: 0 }}
                           end={{ x: 1, y: 1 }}
                           style={styles.sentBubble}
@@ -396,7 +395,7 @@ export function ChatRoomScreen({
           <XStack
             alignItems="center"
             gap={10}
-            backgroundColor="#FFF1EC"
+            backgroundColor="#f8f3ee"
             paddingHorizontal={16}
             paddingVertical={8}
             borderRadius={24}
@@ -452,8 +451,8 @@ const styles = StyleSheet.create({
     height: 72,
     borderRadius: 12,
     overflow: 'hidden',
-    borderWidth: 1.5,
-    borderColor: COPPER,
+    borderWidth: 1,
+    borderColor: 'rgba(216, 195, 180, 0.20)',
   },
   photoImage: {
     width: '100%',
@@ -485,11 +484,11 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 4,
   },
   receivedBubble: {
-    backgroundColor: WARM_BEIGE,
+    backgroundColor: '#f8f3ee',
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderRadius: 20,
-    borderTopLeftRadius: 4,
+    borderBottomLeftRadius: 4,
   },
   messageAvatar: {
     width: 24,

@@ -30,16 +30,17 @@ function formatTime(date: Date): string {
 }
 
 // Colors from Lustre design tokens
-const COPPER = '#B87333'
+const COPPER = '#894d0d'
 const COPPER_LIGHT = '#D4A574'
 const GOLD = '#D4A843'
-const WARM_WHITE = '#FDF8F3'
+const WARM_WHITE = '#fef8f3'
 const WARM_CREAM = '#F5EDE4'
 const CHARCOAL = '#2C2421'
 const WARM_GRAY = '#8B7E74'
 const SAGE = '#7A9E7E'
 const SURFACE_CONTAINER_LOW = '#f8f3ee'
 const OUTLINE_VARIANT = '#d8c3b4'
+const ON_SURFACE_VARIANT = '#524439'
 
 export function ConversationListScreen() {
   const router = useRouter()
@@ -172,7 +173,7 @@ export function ConversationListScreen() {
                     padding={2}
                     borderRadius={999}
                     borderWidth={2}
-                    borderColor={GOLD}
+                    borderColor="rgba(216,195,180,0.20)"
                   >
                     {match.otherParticipant?.photoUrl ? (
                       <YStack position="relative">
@@ -266,11 +267,9 @@ export function ConversationListScreen() {
               <XStack
                 alignItems="center"
                 gap={16}
-                paddingVertical={16}
-                paddingHorizontal={24}
-                backgroundColor={isUnread ? 'white' : 'transparent'}
-                borderRadius={12}
-                marginHorizontal={8}
+                padding={16}
+                backgroundColor={SURFACE_CONTAINER_LOW}
+                borderRadius={16}
               >
                 {/* Avatar */}
                 <YStack position="relative" flexShrink={0}>
@@ -280,11 +279,7 @@ export function ConversationListScreen() {
                       width={56}
                       height={56}
                       borderRadius={999}
-                      style={
-                        isUnread
-                          ? { borderWidth: 2, borderColor: `${COPPER}1A` }
-                          : undefined
-                      }
+                      style={{ borderWidth: 2, borderColor: 'rgba(216,195,180,0.20)' }}
                     />
                   ) : (
                     <YStack
@@ -387,10 +382,7 @@ export function ConversationListScreen() {
             </Text>
           </YStack>
         }
-        ItemSeparatorComponent={() => (
-          <YStack height={2} marginHorizontal={24} />
-        )}
-        contentContainerStyle={{ paddingBottom: 100 }}
+        contentContainerStyle={{ gap: 12, paddingHorizontal: 16, paddingBottom: 100 }}
       />
 
       {/* Floating Action Button */}
@@ -413,18 +405,20 @@ const styles = StyleSheet.create({
   searchInput: {
     width: '100%',
     backgroundColor: SURFACE_CONTAINER_LOW,
-    borderRadius: 12,
-    paddingVertical: 16,
-    paddingHorizontal: 16,
+    borderRadius: 9999,
+    paddingVertical: 14,
+    paddingHorizontal: 20,
     fontSize: 15,
     fontWeight: '500',
     color: CHARCOAL,
-    borderWidth: 2,
-    borderColor: 'transparent',
+    borderWidth: 0,
   },
   searchInputFocused: {
-    borderColor: `${COPPER}4D`, // 30% opacity
-    backgroundColor: 'white',
+    backgroundColor: '#ece7e2',
+    shadowColor: '#894d0d',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.12,
+    shadowRadius: 8,
   },
   fab: {
     position: 'absolute',
@@ -432,15 +426,14 @@ const styles = StyleSheet.create({
     bottom: 100,
     width: 56,
     height: 56,
-    borderRadius: 28,
+    borderRadius: 9999,
     alignItems: 'center',
     justifyContent: 'center',
-    elevation: 8,
-    shadowColor: '#894d0d',
+    elevation: 4,
+    shadowColor: '#2C2421',
     shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.3,
-    shadowRadius: 12,
-    // Copper gradient approximation — using primary copper
+    shadowOpacity: 0.06,
+    shadowRadius: 24,
     backgroundColor: '#894d0d',
   },
 })

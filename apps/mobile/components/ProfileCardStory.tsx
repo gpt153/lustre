@@ -7,7 +7,7 @@
  *   - Full-bleed photo or prompt segment filling the card
  *   - Segmented progress bar pinned to the top
  *   - Name / age / location overlay at the bottom-left
- *   - Like / Pass / SuperLike action buttons in a blurred pill at the bottom
+ *   - Like / Pass / Spark action buttons in a blurred pill at the bottom
  *
  * Gesture composition:
  *   Gesture.Race(
@@ -46,7 +46,8 @@ import {
   GestureDetector,
 } from 'react-native-gesture-handler'
 import { LinearGradient } from 'expo-linear-gradient'
-import { Heart, X, Star } from 'phosphor-react-native'
+import { Heart, X, Lightning } from 'phosphor-react-native'
+import { SparkBadge } from './SparkBadge'
 import * as Haptics from 'expo-haptics'
 import { COLORS, SPACING } from '@/constants/tokens'
 import { SPRING, TIMING } from '@/constants/animations'
@@ -96,13 +97,17 @@ export interface ProfileCardStoryProfile {
   location?: string
   photos: ProfilePhoto[]
   prompts: ProfilePrompt[]
+  sparkedYou?: boolean
 }
 
 export interface ProfileCardStoryProps {
   profile: ProfileCardStoryProfile
   onLike: () => void
   onPass: () => void
-  onSuperLike: () => void
+  onSpark: () => void
+  sparkBalance?: number
+  /** Disable the Spark button when balance is 0 or profile was already sparked. */
+  sparkDisabled?: boolean
   /** Reanimated shared value driven by parent swipe gesture (for parallax). */
   swipeX?: ReturnType<typeof useSharedValue<number>>
   style?: object
@@ -245,7 +250,8 @@ interface AccessibleFallbackProps {
   segments: Segment[]
   onLike: () => void
   onPass: () => void
-  onSuperLike: () => void
+  onSpark: () => void
+  sparkDisabled?: boolean
 }
 
 function AccessibleFallback({
@@ -253,7 +259,8 @@ function AccessibleFallback({
   segments,
   onLike,
   onPass,
-  onSuperLike,
+  onSpark,
+  sparkDisabled,
 }: AccessibleFallbackProps) {
   return (
     <ScrollView
@@ -294,12 +301,13 @@ function AccessibleFallback({
         </AnimatedPressable>
         <AnimatedPressable
           accessibilityRole="button"
-          accessibilityLabel="SuperLike"
-          onPress={onSuperLike}
-          style={styles.a11yActionBtn}
+          accessibilityLabel="Spark"
+          onPress={onSpark}
+          style={[styles.a11yActionBtn, sparkDisabled && styles.actionBtnDisabled]}
+          disabled={sparkDisabled}
         >
-          <Star size={28} weight="fill" color={COLORS.gold} />
-          <Text style={styles.a11yActionLabel}>SuperLike</Text>
+          <Lightning size={28} weight="fill" color={sparkDisabled ? '#999' : COLORS.gold} />
+          <Text style={styles.a11yActionLabel}>Spark</Text>
         </AnimatedPressable>
         <AnimatedPressable
           accessibilityRole="button"
@@ -323,7 +331,9 @@ export function ProfileCardStory({
   profile,
   onLike,
   onPass,
-  onSuperLike,
+  onSpark,
+  sparkBalance,
+  sparkDisabled,
   swipeX: externalSwipeX,
   style,
 }: ProfileCardStoryProps) {
@@ -512,7 +522,8 @@ export function ProfileCardStory({
         segments={segments}
         onLike={onLike}
         onPass={onPass}
-        onSuperLike={onSuperLike}
+        onSpark={onSpark}
+        sparkDisabled={sparkDisabled}
       />
     )
   }
