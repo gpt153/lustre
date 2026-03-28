@@ -397,19 +397,24 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
 - **Web:** `/discover/intentions` (dashboard), `/discover/intentions/new` (create), `/discover/intentions/[intentionId]` (feed), `/discover/intentions/[intentionId]/edit` (edit)
 - **Shared UI:** `packages/ui/src/IntentionProfileCard.tsx` — intent-first card (score badge → tags → bio → photo)
 
-## Design System (F31-UX-design-system)
-- **Design tokens:** `packages/ui/src/tokens.ts` — 12 brand colors (copper #B87333, gold #D4A843, warmWhite #FDF8F3, charcoal #2C2421, etc.), shadow tokens
-- **Themes:** `packages/ui/src/themes.ts` — 4 variants: light_vanilla, light_spicy, dark_vanilla, dark_spicy. Copper/gold accents throughout.
-- **Typography:** `packages/ui/src/fonts/` — General Sans (headings), Inter (body). Expo loader (`expo-loader.ts`), Next.js loader (`next-loader.ts`)
+## Design System (F31-UX-design-system + F05-stitch-design)
+- **Stitch design system ("The Digital Boutique Hotel"):** Implemented via F05-stitch-design — transforms app from generic prototype to high-end editorial aesthetic
+- **Stitch primary color:** `#894d0d` (dark copper — NOT the old `#B87333`)
+- **Design tokens:** `packages/tokens/` — 48 stitch tokens including surface hierarchy (8 levels: surfaceContainerLowest #ffffff → surfaceDim #ded9d4), copper-gold gradients, ghost borders rgba(216,195,180,0.20), ultra-diffused shadows (max 0.06 opacity, charcoal #2C2421)
+- **Themes:** `packages/ui/src/themes.ts` — 4 variants: light_vanilla, light_spicy, dark_vanilla, dark_spicy
+- **Typography:** Noto Serif (headlines, `$heading`) + Manrope (body, `$body`) — configured in `packages/ui/src/fonts/`, loaded via `expo-loader.ts`
+- **No-Line Rule:** Zero visible 1px borders in the app — only ghost borders (rgba(216,195,180,0.20)) allowed
 - **Logo:** `packages/ui/src/LustreLogo.tsx`, `LogoBrand.tsx` — PNG assets with brand text
-- **Core components:** `packages/ui/src/` — CardBase (copper shadow), LustreButton (gold/copper/ember variants), LustreInput (copper focus glow), ModalBase (spring animation), BottomSheetBase (slide-up spring)
+- **Core components:** `packages/ui/src/` — LustreButton (copper-gold LinearGradient primary, ghost border secondary, pill 9999 radius), LustreInput (no-border pill, copper focus glow), CardBase (surfaceContainerLowest bg, ultra-diffused 0.06 shadow), ModalBase (white bg, 32 radius, spring animation), BottomSheetBase (glassmorphism 85% opacity, 48 radius)
 - **Tamagui config:** `packages/ui/src/tamagui.config.ts` — all tokens and themes wired
-- **Mobile nav:** `apps/mobile/app/(tabs)/_layout.tsx` — 5 bottom tabs (Discover, Connect, Explore, Learn, Profile) with copper active tint
+- **Mobile nav:** `apps/mobile/app/(tabs)/_layout.tsx` — Glassmorphic floating dock (custom FloatingDock with BlurView/solid fallback), 5 tabs (Discover, Connect, Explore, Learn, Profile), copper active + dot indicator, 48px borderRadius, no borders
+- **Screen implementations:** All mobile screens use stitch design — Discover (full-bleed swipe cards, copper-charcoal gradient), Chat (editorial list, copper gradient sent bubbles), Feed (tonal layering), Explore (tonal cards, Swedish labels), Profile (asymmetric hero gradient, ghost borders)
 - **Web header:** `apps/web/app/(app)/components/Header.tsx` — glassmorphism styling with backdrop-filter blur
 - **Swipe mechanics:** `packages/app/src/hooks/useSwipeGesture.ts` — Reanimated 3 gesture handling with spring physics
 - **Profile redesign:** `ProfilePrompt` Prisma model, scrollable photo+prompt layout, prompt CRUD in profile router
 - **Haptics:** `packages/app/src/hooks/useHaptics.ts` — expo-haptics with Platform detection and web fallback
 - **Match animation:** `packages/app/src/components/MatchAnimation.tsx` — Lottie animation with scale+opacity fallback
+- **E2E tests:** `e2e/maestro/stitch-*.yaml` — 6 Maestro flows for visual regression testing on odin9
 
 ## UX Design Excellence — Native Mobile (F32-UX-design-excellence)
 - **Platform:** Expo/React Native only (web is F33)
