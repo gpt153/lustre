@@ -431,9 +431,19 @@ async function start() {
 
   startEscalationService()
 
+  startTrustScoreConsumer(prisma).catch((err) => {
+    server.log.error('Failed to start trust-score consumer:', err)
+  })
+
   setInterval(() => {
     autoConfirmOrders(prisma).catch((err) => {
       server.log.error('Failed to auto-confirm orders:', err)
+    })
+  }, 60 * 60 * 1000)
+
+  setInterval(() => {
+    refreshAllTrustScores(prisma).catch((err) => {
+      server.log.error('Failed to refresh trust scores:', err)
     })
   }, 60 * 60 * 1000)
 
