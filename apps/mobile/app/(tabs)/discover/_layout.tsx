@@ -4,13 +4,14 @@ export default function DiscoverLayout() {
   return (
     <Stack
       screenOptions={{
-        headerStyle: { backgroundColor: '#2C2421' },
-        headerTintColor: '#F5EDE4',
+        headerStyle: { backgroundColor: '#fef8f3' },
+        headerTintColor: '#1d1b19',
+        headerShadowVisible: false,
         headerBackTitle: 'Back',
       }}
     >
-      <Stack.Screen name="index" options={{ title: 'Discover', headerShown: true }} />
-      <Stack.Screen name="search" options={{ title: 'Search', headerShown: true }} />
+      <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="search" options={{ title: 'Sök', headerShown: true }} />
     </Stack>
   )
 }

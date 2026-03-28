@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react'
 import { StyleSheet, Dimensions, Pressable, View } from 'react-native'
+import { LinearGradient } from 'expo-linear-gradient'
 import { YStack, XStack, Text, Spinner } from 'tamagui'
 import Animated, { useAnimatedStyle } from 'react-native-reanimated'
 import { GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler'
@@ -18,14 +19,17 @@ const STACKED_CARD_SCALE_2 = 0.90
 const STACKED_CARD_TRANSLATE_Y_1 = 10
 const STACKED_CARD_TRANSLATE_Y_2 = 20
 
-// Lustre design tokens
-const COPPER = '#B87333'
+// Lustre design tokens — stitch palette
+const COPPER = '#894d0d'
 const GOLD = '#D4A843'
-const WARM_WHITE = '#FDF8F3'
+const WARM_WHITE = '#fef8f3'
 const CHARCOAL = '#2C2421'
 const COPPER_LIGHT = '#D4A574'
 const GOLD_BRIGHT = '#E8B84B'
 const EMBER = '#E05A33'
+const ON_SURFACE_VARIANT = '#524439'
+const OUTLINE = '#857467'
+const GHOST_BORDER = 'rgba(216, 195, 180, 0.20)'
 
 // Seeking labels in Swedish
 const SEEKING_LABELS: Record<string, string> = {
@@ -145,7 +149,7 @@ export function DiscoverScreen() {
           backgroundColor={WARM_WHITE}
           gap="$md"
         >
-          <Text fontSize={24} fontWeight="bold" color={CHARCOAL}>
+          <Text fontSize={24} fontFamily="$heading" fontWeight="700" color={CHARCOAL}>
             Inga fler profiler
           </Text>
           <Text color={COPPER_LIGHT} fontSize={15}>
@@ -291,16 +295,18 @@ export function DiscoverScreen() {
 
                   {/* Like */}
                   <Pressable
-                    style={[
-                      styles.actionButton,
-                      styles.likeButton,
-                      likePressed && styles.likeButtonActive,
-                      discovery.isSwiping && styles.buttonDisabled,
-                    ]}
+                    style={[styles.actionButton, likePressed && styles.likeButtonActive, discovery.isSwiping && styles.buttonDisabled]}
                     onPress={handleLikeButton}
                     disabled={discovery.isSwiping}
                   >
-                    <LikeIcon />
+                    <LinearGradient
+                      colors={['#894d0d', '#a76526']}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 1 }}
+                      style={styles.likeGradient}
+                    >
+                      <LikeIcon />
+                    </LinearGradient>
                   </Pressable>
                 </View>
               </SwipeCard>
@@ -343,7 +349,7 @@ const styles = StyleSheet.create({
   },
   logoText: {
     fontSize: 24,
-    fontFamily: 'NotoSerif-Bold',
+    fontFamily: 'NotoSerif_700Bold',
     color: COPPER,
     letterSpacing: -0.5,
   },
@@ -399,12 +405,14 @@ const styles = StyleSheet.create({
   tabText: {
     fontSize: 13,
     fontWeight: '500',
+    fontFamily: 'Manrope_500Medium',
     color: 'rgba(255,255,255,0.6)',
     letterSpacing: 0.5,
   },
   tabTextActive: {
     color: '#FFFFFF',
     fontWeight: '700',
+    fontFamily: 'Manrope_700Bold',
   },
   tabIndicator: {
     height: 2,
@@ -433,9 +441,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 9999,
-    backgroundColor: 'rgba(255,255,255,0.1)',
+    backgroundColor: 'rgba(255,255,255,0.08)',
     borderWidth: 1,
-    borderColor: 'rgba(184,115,51,0.3)',
+    borderColor: GHOST_BORDER,
   },
   chipText: {
     fontSize: 12,
@@ -444,7 +452,7 @@ const styles = StyleSheet.create({
   },
   profileName: {
     fontSize: 34,
-    fontFamily: 'NotoSerif-Bold',
+    fontFamily: 'NotoSerif_700Bold',
     color: '#FFFFFF',
     letterSpacing: -0.5,
   },
@@ -472,17 +480,17 @@ const styles = StyleSheet.create({
   actionButton: {
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
+    shadowColor: '#2C2421',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 6,
+    shadowOpacity: 0.06,
+    shadowRadius: 16,
+    elevation: 4,
   },
   passButton: {
     width: 56,
     height: 56,
-    borderRadius: 28,
-    backgroundColor: CHARCOAL,
+    borderRadius: 9999,
+    backgroundColor: '#1d1b19',
   },
   passButtonActive: {
     backgroundColor: EMBER,
@@ -493,9 +501,9 @@ const styles = StyleSheet.create({
     fontWeight: '300',
   },
   superLikeButton: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
+    width: 48,
+    height: 48,
+    borderRadius: 9999,
     backgroundColor: GOLD,
   },
   superLikeIconText: {
@@ -503,17 +511,28 @@ const styles = StyleSheet.create({
     color: CHARCOAL,
   },
   likeButton: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: COPPER,
+    width: 64,
+    height: 64,
+    borderRadius: 9999,
   },
   likeButtonActive: {
-    backgroundColor: GOLD_BRIGHT,
+    opacity: 0.85,
   },
   likeIconText: {
     fontSize: 26,
     color: '#FFFFFF',
+  },
+  likeGradient: {
+    width: 64,
+    height: 64,
+    borderRadius: 9999,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#2C2421',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.06,
+    shadowRadius: 24,
+    elevation: 4,
   },
   buttonDisabled: {
     opacity: 0.5,
@@ -524,7 +543,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 12,
     backgroundColor: COPPER,
-    borderRadius: 12,
+    borderRadius: 9999,
     marginTop: 8,
   },
   refreshButtonText: {
