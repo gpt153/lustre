@@ -12,3 +12,6 @@ export type { ColorKey, ColorValue, ModeColorSet } from './colors'
 
 export { SHADOWS } from './shadows'
 export type { ShadowKey, ShadowToken } from './shadows'
+
+export { POLAROID, POLAROID_ROTATIONS, POLAROID_SHADOW, getPolaroidDimensions } from './polaroid'
+export type { PolaroidDimensions } from './polaroid'

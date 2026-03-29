@@ -15,6 +15,10 @@ export { BottomSheetBase } from './BottomSheetBase'
 export { KudosBadgeTag } from './KudosBadgeTag'
 export { IntentionProfileCard } from './IntentionProfileCard'
 export type { IntentionProfileCardProps } from './IntentionProfileCard'
+export { PolaroidCard } from './PolaroidCard'
+export type { PolaroidCardProps } from './PolaroidCard'
+export { PolaroidStack } from './PolaroidStack'
+export type { PolaroidStackProps } from './PolaroidStack'
 
 // Font exports
 export { generalSansFont, interFont } from './fonts'

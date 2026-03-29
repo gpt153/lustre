@@ -1,7 +1,7 @@
 /**
  * Expo font loader for Lustre typography
  *
- * Loads Noto Serif (serif headings) and Manrope (sans-serif body) before
+ * Loads Noto Serif (serif headings), Manrope (sans-serif body), and Caveat (Polaroid captions) before
  * rendering the app.  The splash screen must be kept visible until this
  * resolves — see apps/mobile/app/_layout.tsx for the integration.
  *
@@ -23,6 +23,10 @@ import {
   Manrope_600SemiBold,
   Manrope_700Bold,
 } from '@expo-google-fonts/manrope'
+import {
+  Caveat_400Regular,
+  Caveat_700Bold,
+} from '@expo-google-fonts/caveat'
 
 /**
  * Load all Lustre fonts via expo-font.
@@ -39,6 +43,9 @@ export async function loadLustreFonts(): Promise<void> {
     Manrope_500Medium,
     Manrope_600SemiBold,
     Manrope_700Bold,
+    // Caveat — Polaroid captions
+    Caveat_400Regular,
+    Caveat_700Bold,
   })
 }
 

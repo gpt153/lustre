@@ -12,6 +12,7 @@
     "@tamagui/font-inter": "^1.114",
     "@tamagui/shorthands": "^1.114",
     "@fontsource/inter": "^5.1",
+    "@expo-google-fonts/caveat": "^0.2",
     "react": "^18.3"
   },
   "devDependencies": {
