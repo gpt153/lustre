@@ -19,6 +19,8 @@ export { PolaroidCard } from './PolaroidCard'
 export type { PolaroidCardProps } from './PolaroidCard'
 export { PolaroidStack } from './PolaroidStack'
 export type { PolaroidStackProps } from './PolaroidStack'
+export { PolaroidAvatar } from './PolaroidAvatar'
+export type { PolaroidAvatarProps } from './PolaroidAvatar'
 
 // Font exports
 export { generalSansFont, interFont } from './fonts'

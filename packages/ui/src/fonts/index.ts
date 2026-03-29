@@ -94,6 +94,24 @@ export const manropeFont = createFont({
   },
 })
 
+/**
+ * Caveat handwritten font — used for Polaroid captions and handwritten notes
+ *
+ * Size scale:
+ *   1=12  2=14  3=16  4=18  5=20  6=24  7=30
+ */
+export const handwrittenFont = createFont({
+  family: 'Caveat_400Regular',
+  size: { 1: 12, 2: 14, 3: 16, 4: 18, 5: 20, 6: 24, 7: 30 },
+  lineHeight: { 1: 16, 2: 18, 3: 20, 4: 22, 5: 24, 6: 28, 7: 36 },
+  weight: { 4: '400', 7: '700' },
+  letterSpacing: { 4: 0 },
+  face: {
+    400: { normal: 'Caveat_400Regular' },
+    700: { normal: 'Caveat_700Bold' },
+  },
+})
+
 // Backwards-compatible aliases (kept so existing $heading/$body refs continue to work)
 export const generalSansFont = notoSerifFont
 export const interFont = manropeFont

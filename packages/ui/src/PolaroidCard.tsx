@@ -12,7 +12,15 @@ import Animated, {
   useAnimatedStyle,
   withSpring,
 } from 'react-native-reanimated'
-import { getPolaroidDimensions, SHADOWS } from '@lustre/tokens'
+import { getPolaroidDimensions } from '@lustre/tokens'
+
+const WARM_SHADOW = {
+  shadowColor: '#2E1500',
+  shadowOffset: { width: 0, height: 8 },
+  shadowOpacity: 0.12,
+  shadowRadius: 24,
+  elevation: 4,
+}
 
 // Inlined spring config from apps/mobile/constants/animations.ts
 const SPRING_SNAPPY = { damping: 25, stiffness: 200, mass: 0.8 }
@@ -22,13 +30,15 @@ export interface PolaroidCardProps {
   /** Card width in pixels — drives all other dimensions via golden-ratio tokens */
   cardWidth: number
   /** Image source — URI or local require() */
-  imageSource: ImageSourcePropType
+  imageSource?: ImageSourcePropType
+  /** Image URL string — resolved to { uri } */
+  imageUrl?: string
+  /** Alt text for the image (accessibility) */
+  imageAlt?: string
   /** Optional caption text rendered in the white bottom strip */
   caption?: string
   /** Rotation in degrees (default 0) */
   rotation?: number
-  /** Shadow intensity variant (default 'md') */
-  shadow?: 'sm' | 'md' | 'lg'
   /** Press handler */
   onPress?: () => void
   /** Absolute overlay rendered on top of the image area */
@@ -42,16 +52,17 @@ export interface PolaroidCardProps {
 export function PolaroidCard({
   cardWidth,
   imageSource,
+  imageUrl,
+  imageAlt,
   caption,
   rotation = 0,
-  shadow = 'md',
   onPress,
   children,
   style,
   accessibilityLabel,
 }: PolaroidCardProps) {
   const dims = useMemo(() => getPolaroidDimensions(cardWidth), [cardWidth])
-  const shadowToken = SHADOWS[shadow]
+  const resolvedSource = imageUrl ? { uri: imageUrl } : imageSource!
 
   const scale = useSharedValue(1)
 
@@ -75,7 +86,7 @@ export function PolaroidCard({
     backgroundColor: '#FFFFFF',
     borderRadius: 4,
     overflow: 'hidden',
-    ...shadowToken,
+    ...WARM_SHADOW,
   }
 
   const imageContainerStyle: ViewStyle = {
@@ -102,9 +113,10 @@ export function PolaroidCard({
       {/* Image area */}
       <View style={imageContainerStyle}>
         <Image
-          source={imageSource}
+          source={resolvedSource}
           style={{ width: dims.imageWidth, height: dims.imageHeight }}
           resizeMode="cover"
+          accessibilityLabel={imageAlt}
         />
         {/* Overlay children sit absolutely on top of the image */}
         {children != null && (

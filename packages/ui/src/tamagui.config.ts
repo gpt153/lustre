@@ -7,7 +7,7 @@ import {
   lustreShadowTokens,
   lustreRoundnessTokens,
 } from './tokens'
-import { notoSerifFont, manropeFont } from './fonts'
+import { notoSerifFont, manropeFont, handwrittenFont } from './fonts'
 
 const headingFont = notoSerifFont
 const bodyFont = manropeFont
@@ -46,6 +46,7 @@ export const config = createTamagui({
   fonts: {
     heading: headingFont,
     body: bodyFont,
+    handwritten: handwrittenFont,
   },
   themes: lustreThemes,
   tokens,

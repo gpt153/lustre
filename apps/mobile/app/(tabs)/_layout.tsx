@@ -238,6 +238,7 @@ export default function TabLayout() {
       <Tabs.Screen name="groups"   options={{ href: null }} />
       <Tabs.Screen name="orgs"     options={{ href: null }} />
       <Tabs.Screen name="safedate" options={{ href: null }} />
+      <Tabs.Screen name="polaroid-test" options={{ href: null }} />
     </Tabs>
   )
 }
