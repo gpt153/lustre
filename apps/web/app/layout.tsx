@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter, JetBrains_Mono, Caveat } from 'next/font/google'
+import { Inter, JetBrains_Mono, Caveat, Epilogue, Be_Vietnam_Pro } from 'next/font/google'
 import { Providers } from './providers'
 import '@/styles/globals.css'
 
@@ -36,6 +36,30 @@ const caveat = Caveat({
   display: 'swap',
   preload: false,
   weight: ['400', '700'],
+})
+
+/*
+ * Epilogue — headlines (font-headline in Stitch)
+ * Loaded from Google Fonts via next/font
+ */
+const epilogue = Epilogue({
+  subsets: ['latin'],
+  variable: '--font-epilogue',
+  display: 'swap',
+  preload: false,
+  weight: ['400', '600', '700', '800'],
+})
+
+/*
+ * Be Vietnam Pro — labels/captions (font-label in Stitch)
+ * Loaded from Google Fonts via next/font
+ */
+const beVietnamPro = Be_Vietnam_Pro({
+  subsets: ['latin'],
+  variable: '--font-be-vietnam-pro',
+  display: 'swap',
+  preload: false,
+  weight: ['400', '500', '600'],
 })
 
 /*
@@ -116,7 +140,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
       lang="sv"
       data-theme="dark"
       data-mode="vanilla"
-      className={`${inter.variable} ${jetbrainsMono.variable} ${caveat.variable}`}
+      className={`${inter.variable} ${jetbrainsMono.variable} ${caveat.variable} ${epilogue.variable} ${beVietnamPro.variable}`}
       suppressHydrationWarning
     >
       <head>

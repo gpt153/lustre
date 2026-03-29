@@ -1,16 +1,16 @@
 .grid {
-  column-count: 4;
-  column-gap: 24px;
+  column-count: 3;
+  column-gap: 2rem;
 }
 
 .item {
   break-inside: avoid;
-  margin-bottom: 24px;
+  margin-bottom: 2.5rem;
   display: inline-block;
   width: 100%;
 }
 
-/* 8 rotation variations */
+/* 8 rotation variations matching Stitch */
 .item:nth-child(8n+1) { --polaroid-rotation: -3deg; }
 .item:nth-child(8n+2) { --polaroid-rotation: 2deg; }
 .item:nth-child(8n+3) { --polaroid-rotation: -1.5deg; }
@@ -20,9 +20,12 @@
 .item:nth-child(8n+7) { --polaroid-rotation: -2deg; }
 .item:nth-child(8n+8) { --polaroid-rotation: 3.5deg; }
 
-@media (max-width: 1199px) {
-  .grid { column-count: 3; }
+/* Responsive breakpoints */
+@media (min-width: 1440px) {
+  .grid { column-count: 4; }
 }
+
+/* Default (900-1439px): 3 columns */
 
 @media (max-width: 899px) {
   .grid { column-count: 2; }

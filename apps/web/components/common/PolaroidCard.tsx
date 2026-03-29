@@ -50,14 +50,17 @@ export default function PolaroidCard({
           : undefined
       }
     >
+      <div className={styles.topBorder} />
       <img
         src={imageUrl}
         alt={imageAlt}
         className={styles.image}
         loading="lazy"
       />
-      {caption && <span className={styles.caption}>{caption}</span>}
-      {children && <div className={styles.children}>{children}</div>}
+      <div className={styles.captionArea}>
+        {caption && <span className={styles.caption}>{caption}</span>}
+        {children && <div className={styles.children}>{children}</div>}
+      </div>
     </div>
   )
 }

@@ -3,9 +3,9 @@
   display: flex;
   flex-direction: column;
   aspect-ratio: var(--polaroid-card-aspect);
-  background: var(--polaroid-bg);
+  background: var(--polaroid-bg, #ffffff);
   box-shadow: var(--polaroid-shadow);
-  padding: var(--polaroid-border-top) var(--polaroid-border-side) var(--polaroid-border-bottom);
+  padding: 0 var(--polaroid-border-side);
   transform: rotate(var(--polaroid-rotation));
   transition:
     transform var(--transition-spring),
@@ -14,13 +14,20 @@
   will-change: transform;
 }
 
+/* Top border spacer — padding-top % is relative to WIDTH, matching Polaroid 600 */
+.topBorder {
+  height: 0;
+  padding-top: var(--polaroid-border-top);
+  flex-shrink: 0;
+}
+
 .hoverable {
   cursor: pointer;
 }
 
 .hoverable:hover {
   --polaroid-rotation: 0deg;
-  transform: rotate(0deg) translateY(-8px);
+  transform: rotate(0deg) translateY(-8px) scale(1.02);
   box-shadow: var(--polaroid-shadow-hover);
 }
 
@@ -38,28 +45,32 @@
   flex-shrink: 0;
 }
 
-.caption {
+/* Caption area — fills the remaining bottom space (≈26.70% of card width) */
+.captionArea {
   flex: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  min-height: 0;
+  position: relative;
+}
+
+.caption {
   font-family: var(--font-caveat, 'Caveat', cursive);
   font-size: 18px;
   font-weight: 400;
-  color: var(--polaroid-caption-color);
+  color: var(--stitch-on-surface, #211a17);
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 100%;
   padding: 0 4px;
-  min-height: 0;
 }
 
 .children {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  width: 100%;
   z-index: 1;
 }
 
@@ -97,6 +108,6 @@
   }
 
   .hoverable:hover {
-    transform: rotate(0deg) translateY(-8px);
+    transform: rotate(0deg) translateY(-8px) scale(1.02);
   }
 }

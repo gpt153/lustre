@@ -303,19 +303,43 @@
 
 /* ============================================================
    11. POLAROID DESIGN SYSTEM
-   Exact proportions from a Polaroid 600 instant photo card.
+   Material 3 color palette from Stitch + Polaroid 600 proportions.
    ============================================================ */
 :root {
+  /* — Stitch Material 3 Color Palette — */
+  --stitch-primary: #894d0d;
+  --stitch-primary-container: #a76526;
+  --stitch-surface: #fff8f6;
+  --stitch-surface-container-lowest: #ffffff;
+  --stitch-surface-container-low: #fff1ec;
+  --stitch-surface-container: #faebe6;
+  --stitch-surface-container-high: #f4e5e0;
+  --stitch-surface-container-highest: #eedfda;
+  --stitch-on-surface: #211a17;
+  --stitch-on-surface-variant: #524439;
+  --stitch-outline: #857467;
+  --stitch-outline-variant: #d8c3b4;
+  --stitch-secondary: #795900;
+  --stitch-secondary-container: #fece65;
+  --stitch-tertiary: #9f3c1e;
+  --stitch-tertiary-container: #bf5334;
+
+  /* — Polaroid 600 Proportions — */
   --polaroid-card-aspect: 88 / 107;
   --polaroid-image-aspect: 79 / 77;
   --polaroid-border-side: 5.11%;
   --polaroid-border-top: 7.39%;
   --polaroid-border-bottom: 26.70%;
-  --polaroid-bg: #FFFFFF;
-  --polaroid-caption-color: #2C2421;
-  --polaroid-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
-  --polaroid-shadow-hover: 0 8px 32px rgba(0, 0, 0, 0.25);
+  --polaroid-bg: #ffffff;
+  --polaroid-caption-color: #211a17;
+
+  /* — Polaroid Shadows (Stitch-matched) — */
+  --polaroid-shadow: 0 10px 30px -10px rgba(33, 26, 23, 0.15);
+  --polaroid-shadow-hover: 0 12px 40px -10px rgba(33, 26, 23, 0.2);
   --polaroid-rotation: 0deg;
+
+  /* — Stitch Background Gradient — */
+  --stitch-gradient: linear-gradient(135deg, #fff8f6 0%, #faebe6 50%, #f4e5e0 100%);
 }
 
 /* ============================================================
