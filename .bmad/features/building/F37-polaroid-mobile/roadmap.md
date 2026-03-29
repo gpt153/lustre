@@ -88,7 +88,22 @@ Create Polaroid token constants, install Caveat font, build base PolaroidCard an
 
 Replace SwipeCard/ProfileCardStory with Polaroid-based discovery cards. Highest-risk wave — must preserve gesture composition, Ken Burns, story segments, accessibility.
 
-**Status:** NOT STARTED
+**Status:** DONE — 2026-03-29
+
+### Epics: ALL VERIFIED
+- 2a PolaroidProfileCard — VERIFIED (841 lines, full story system, gestures, Ken Burns, Caveat caption)
+- 2b Discovery refactor — VERIFIED (PolaroidCard replaces SwipeCard, SwipeStamp as children, behind-card rotation)
+- 2c CopperPick — VERIFIED (PolaroidCard with "Dagens val" caption, entrance animations, action buttons)
+- 2d Discover index wiring — VERIFIED (no changes needed, imports work)
+
+### Testgate: CODE REVIEW PASS (visual verification deferred to APK build)
+- [x] Discovery renders PolaroidCard (not SwipeCard)
+- [x] Caption shows name in Caveat
+- [x] Action buttons below card (DiscoverScreen) + on Polaroid strip (PolaroidProfileCard)
+- [x] SwipeStamp overlays preserved
+- [x] Behind-card peek with rotation ±2°
+- [x] CopperPick renders as Polaroid with "Dagens val"
+- [ ] Visual verification — deferred to APK build
 
 ### Tasks:
 

@@ -1,0 +1,33 @@
+.grid {
+  column-count: 4;
+  column-gap: 24px;
+}
+
+.item {
+  break-inside: avoid;
+  margin-bottom: 24px;
+  display: inline-block;
+  width: 100%;
+}
+
+/* 8 rotation variations */
+.item:nth-child(8n+1) { --polaroid-rotation: -3deg; }
+.item:nth-child(8n+2) { --polaroid-rotation: 2deg; }
+.item:nth-child(8n+3) { --polaroid-rotation: -1.5deg; }
+.item:nth-child(8n+4) { --polaroid-rotation: 4deg; }
+.item:nth-child(8n+5) { --polaroid-rotation: -5deg; }
+.item:nth-child(8n+6) { --polaroid-rotation: 1deg; }
+.item:nth-child(8n+7) { --polaroid-rotation: -2deg; }
+.item:nth-child(8n+8) { --polaroid-rotation: 3.5deg; }
+
+@media (max-width: 1199px) {
+  .grid { column-count: 3; }
+}
+
+@media (max-width: 899px) {
+  .grid { column-count: 2; }
+}
+
+@media (max-width: 599px) {
+  .grid { column-count: 1; }
+}

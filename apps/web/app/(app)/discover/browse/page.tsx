@@ -2,12 +2,22 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import EmptyState from '@/components/common/EmptyState'
-import ProfileCard from '@/components/discover/ProfileCard'
+import PolaroidCard from '@/components/common/PolaroidCard'
+import PolaroidMasonryGrid from '@/components/common/PolaroidMasonryGrid'
+import SparkButton from '@/components/discover/SparkButton'
 import DiscoverSkeleton from '@/components/discover/DiscoverSkeleton'
 import { useDiscoverKeyboard } from '@/hooks/useDiscoverKeyboard'
 import { api } from '@/lib/trpc'
-import type { DiscoverProfile } from '@/components/discover/ProfileCard'
 import styles from './page.module.css'
+
+export interface DiscoverProfile {
+  id: string
+  displayName: string
+  age: number
+  photos: string[]
+  location: string
+  bio: string
+}
 
 /* ---- Mock data — used as fallback when the API is not reachable ---- */
 
@@ -192,23 +202,43 @@ export default function BrowsePage() {
         </p>
       </div>
 
-      <div
-        className={styles.grid}
-        role="list"
-        aria-label={`${profiles.length} profiler`}
-      >
+      <PolaroidMasonryGrid>
         {profiles.map((profile, index) => (
-          <div key={profile.id} role="listitem">
-            <ProfileCard
-              profile={profile}
-              onLike={handleLike}
-              onPass={handlePass}
-              isFocused={focusedIndex === index}
-              cardIndex={index}
-            />
-          </div>
+          <PolaroidCard
+            key={profile.id}
+            imageUrl={profile.photos[0] ?? ''}
+            imageAlt={`${profile.displayName}s profilbild`}
+            caption={`${profile.displayName}, ${profile.age}`}
+            stack={index < 3}
+            hoverable
+            className={focusedIndex === index ? styles.cardFocused : undefined}
+          >
+            <div className={styles.polaroidActions}>
+              <button
+                className={`${styles.actionBtn} ${styles.passBtn}`}
+                onClick={() => handlePass(profile.id)}
+                aria-label={`Passa ${profile.displayName}`}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                </svg>
+              </button>
+
+              <SparkButton recipientId={profile.id} />
+
+              <button
+                className={`${styles.actionBtn} ${styles.likeBtn}`}
+                onClick={() => handleLike(profile.id)}
+                aria-label={`Gilla ${profile.displayName}`}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="currentColor" />
+                </svg>
+              </button>
+            </div>
+          </PolaroidCard>
         ))}
-      </div>
+      </PolaroidMasonryGrid>
     </div>
   )
 }

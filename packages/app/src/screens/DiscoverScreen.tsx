@@ -1,50 +1,41 @@
 import { useState, useCallback } from 'react'
-import { StyleSheet, Dimensions, Pressable, View } from 'react-native'
+import { StyleSheet, Dimensions, Pressable, View, type ImageSourcePropType } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
-import { YStack, XStack, Text, Spinner } from 'tamagui'
+import { YStack, Text, Spinner } from 'tamagui'
 import Animated, { useAnimatedStyle } from 'react-native-reanimated'
 import { GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler'
+import { PolaroidCard } from '@lustre/ui'
+import { getPolaroidDimensions } from '@lustre/tokens'
 import { useDiscovery } from '../hooks/useDiscovery'
 import { useSwipeGesture } from '../hooks/useSwipeGesture'
-import { SwipeCard } from '../components/SwipeCard'
 import { SwipeStamp } from '../components/SwipeStamp'
 import { MatchAnimation } from '../components/MatchAnimation'
 import { EmptyState } from '../components/EmptyState'
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window')
-
-const CARD_HEIGHT = screenHeight * 0.85
-
-const STACKED_CARD_SCALE_1 = 0.95
-const STACKED_CARD_SCALE_2 = 0.90
-const STACKED_CARD_TRANSLATE_Y_1 = 10
-const STACKED_CARD_TRANSLATE_Y_2 = 20
-
-// Lustre design tokens — stitch palette
-const COPPER = '#894d0d'
-const COPPER_LIGHT = '#a76526'
-const GOLD = '#D4A843'
-const WARM_WHITE = '#fef8f3'
-const CHARCOAL = '#2C2421'
-const WARM_GRAY = '#8B7E74'
-const GOLD_BRIGHT = '#E8B84B'
-const EMBER = '#E05A33'
-const ON_SURFACE_VARIANT = '#524439'
-const OUTLINE = '#857467'
-const SURFACE_CONTAINER = '#f2ede8'
-const GHOST_BORDER = 'rgba(216, 195, 180, 0.20)'
-
-// Seeking labels in Swedish
-const SEEKING_LABELS: Record<string, string> = {
-  CASUAL: 'Casual',
-  RELATIONSHIP: 'Relation',
-  FRIENDSHIP: 'Vanskap',
-  EXPLORATION: 'Utforska',
-  EVENT: 'Event',
-  OTHER: 'Ovrigt',
+// Transparent 1×1 PNG as a safe fallback when no profile photo is available
+const PHOTO_PLACEHOLDER: ImageSourcePropType = {
+  uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
 }
 
-const DISCOVERY_TABS = ['Intentioner', 'Bladdra', 'Matchningar', 'Sok'] as const
+const { width: screenWidth } = Dimensions.get('window')
+
+const CARD_WIDTH = screenWidth - 48
+
+// Behind-card stack constants
+const STACKED_CARD_SCALE_1 = 0.95
+const STACKED_CARD_SCALE_2 = 0.90
+const STACKED_CARD_TRANSLATE_Y_1 = -10
+const STACKED_CARD_TRANSLATE_Y_2 = -20
+const STACKED_CARD_ROTATION_1 = 2
+const STACKED_CARD_ROTATION_2 = -2
+
+// Lustre design tokens
+const COPPER = '#894d0d'
+const GOLD = '#D4A843'
+const CHARCOAL = '#2C2421'
+const WARM_WHITE = '#fef8f3'
+const EMBER = '#E05A33'
+const SURFACE_CONTAINER = '#f2ede8'
 
 function PassIcon() {
   return <Text style={styles.passIconText}>✕</Text>
@@ -65,7 +56,6 @@ export function DiscoverScreen() {
   const [matchedProfile, setMatchedProfile] = useState<any>(null)
   const [likePressed, setLikePressed] = useState(false)
   const [passPressed, setPassPressed] = useState(false)
-  const [activeTab, setActiveTab] = useState<(typeof DISCOVERY_TABS)[number]>('Bladdra')
 
   const currentProfile = discovery.profiles[currentIndex]
 
@@ -122,6 +112,7 @@ export function DiscoverScreen() {
     transform: [
       { scale: STACKED_CARD_SCALE_1 },
       { translateY: STACKED_CARD_TRANSLATE_Y_1 },
+      { rotate: `${STACKED_CARD_ROTATION_1}deg` },
     ],
   }))
 
@@ -129,6 +120,7 @@ export function DiscoverScreen() {
     transform: [
       { scale: STACKED_CARD_SCALE_2 },
       { translateY: STACKED_CARD_TRANSLATE_Y_2 },
+      { rotate: `${STACKED_CARD_ROTATION_2}deg` },
     ],
   }))
 
@@ -165,146 +157,132 @@ export function DiscoverScreen() {
   const nextProfile = discovery.profiles[currentIndex + 1]
   const nextNextProfile = discovery.profiles[currentIndex + 2]
 
-  // Build interest chips from seeking values
-  const seekingChips: string[] = []
-  if (currentProfile.seeking) {
-    const seekingValues = Array.isArray(currentProfile.seeking)
-      ? currentProfile.seeking
-      : [currentProfile.seeking]
-    seekingValues.forEach((s: string) => {
-      if (SEEKING_LABELS[s]) seekingChips.push(SEEKING_LABELS[s])
-    })
-  }
+  const cardDims = getPolaroidDimensions(CARD_WIDTH)
+
+  const getPhotoUrl = (profile: typeof currentProfile) =>
+    profile?.photos?.[0]?.thumbnailLarge || profile?.photos?.[0]?.url
+
+  const currentPhotoUrl = getPhotoUrl(currentProfile)
+  const nextPhotoUrl = getPhotoUrl(nextProfile)
+  const nextNextPhotoUrl = getPhotoUrl(nextNextProfile)
+
+  const currentCaption = [
+    currentProfile.displayName,
+    currentProfile.age ? `${currentProfile.age}` : null,
+  ]
+    .filter(Boolean)
+    .join(', ')
 
   return (
     <GestureHandlerRootView style={styles.flex}>
       <View style={styles.container}>
         {/* Top Navigation Bar */}
         <View style={styles.topNav}>
-          <XStack alignItems="center" gap={8}>
-            <Text style={styles.logoText}>Lustre</Text>
-          </XStack>
+          <Text style={styles.logoText}>Lustre</Text>
           <Pressable style={styles.filterButton}>
             <Text style={styles.filterIcon}>☰</Text>
           </Pressable>
         </View>
 
-        {/* Card Stack Area */}
-        <View style={styles.cardStack}>
+        {/* Card Stack — sized to the front card dimensions so it participates in the layout */}
+        <View style={[styles.cardStack, { width: CARD_WIDTH, height: cardDims.cardHeight }]}>
+          {/* Card at back of stack */}
           {nextNextProfile && (
             <Animated.View style={[styles.cardWrapper, styles.cardBehind2, behindCard2Style]}>
-              <SwipeCard profile={nextNextProfile} />
+              <PolaroidCard
+                cardWidth={CARD_WIDTH}
+                imageSource={
+                  nextNextPhotoUrl
+                    ? { uri: nextNextPhotoUrl }
+                    : PHOTO_PLACEHOLDER
+                }
+                shadow="md"
+              />
             </Animated.View>
           )}
 
+          {/* Middle card */}
           {nextProfile && (
             <Animated.View style={[styles.cardWrapper, styles.cardBehind1, behindCard1Style]}>
-              <SwipeCard profile={nextProfile} />
+              <PolaroidCard
+                cardWidth={CARD_WIDTH}
+                imageSource={
+                  nextPhotoUrl
+                    ? { uri: nextPhotoUrl }
+                    : PHOTO_PLACEHOLDER
+                }
+                shadow="md"
+              />
             </Animated.View>
           )}
 
+          {/* Front (active) card — wrapped in GestureDetector for swipe */}
           <GestureDetector gesture={gesture}>
             <Animated.View style={[styles.cardWrapper, styles.cardTop, cardAnimatedStyle]}>
-              <SwipeCard profile={currentProfile}>
+              <PolaroidCard
+                cardWidth={CARD_WIDTH}
+                imageSource={
+                  currentPhotoUrl
+                    ? { uri: currentPhotoUrl }
+                    : PHOTO_PLACEHOLDER
+                }
+                caption={currentCaption}
+                shadow="lg"
+              >
                 <SwipeStamp type="like" animatedStyle={likeOpacity} />
                 <SwipeStamp type="nope" animatedStyle={nopeOpacity} />
-
-                {/* Discovery Tabs — overlaid on card top */}
-                <View style={styles.tabBar}>
-                  <View style={styles.tabBarInner}>
-                    {DISCOVERY_TABS.map((tab) => (
-                      <Pressable
-                        key={tab}
-                        onPress={() => setActiveTab(tab)}
-                        style={styles.tabItem}
-                      >
-                        <Text
-                          style={[
-                            styles.tabText,
-                            activeTab === tab && styles.tabTextActive,
-                          ]}
-                        >
-                          {tab}
-                        </Text>
-                        {activeTab === tab && <View style={styles.tabIndicator} />}
-                      </Pressable>
-                    ))}
-                  </View>
-                </View>
-
-                {/* Profile Info — overlaid on card bottom */}
-                <View style={styles.cardOverlay}>
-                  {/* Interest Chips */}
-                  {seekingChips.length > 0 && (
-                    <View style={styles.chipsRow}>
-                      {seekingChips.map((chip, i) => (
-                        <View key={i} style={styles.chip}>
-                          <Text style={styles.chipText}>{chip}</Text>
-                        </View>
-                      ))}
-                    </View>
-                  )}
-
-                  {/* Name + Age */}
-                  <Text style={styles.profileName}>
-                    {currentProfile.displayName}
-                    {currentProfile.age ? `, ${currentProfile.age}` : ''}
-                  </Text>
-
-                  {/* Location */}
-                  <XStack alignItems="center" gap={4} marginTop={2}>
-                    <Text style={styles.locationIcon}>📍</Text>
-                    <Text style={styles.locationText}>Stockholm</Text>
-                  </XStack>
-                </View>
-
-                {/* Action Buttons — floating at card bottom */}
-                <View style={styles.actionRow}>
-                  {/* Pass */}
-                  <Pressable
-                    style={[
-                      styles.actionButton,
-                      styles.passButton,
-                      passPressed && styles.passButtonActive,
-                      discovery.isSwiping && styles.buttonDisabled,
-                    ]}
-                    onPress={handlePassButton}
-                    disabled={discovery.isSwiping}
-                  >
-                    <PassIcon />
-                  </Pressable>
-
-                  {/* Super Like */}
-                  <Pressable
-                    style={[
-                      styles.actionButton,
-                      styles.superLikeButton,
-                      discovery.isSwiping && styles.buttonDisabled,
-                    ]}
-                    disabled={discovery.isSwiping}
-                  >
-                    <SuperLikeIcon />
-                  </Pressable>
-
-                  {/* Like */}
-                  <Pressable
-                    style={[styles.actionButton, likePressed && styles.likeButtonActive, discovery.isSwiping && styles.buttonDisabled]}
-                    onPress={handleLikeButton}
-                    disabled={discovery.isSwiping}
-                  >
-                    <LinearGradient
-                      colors={['#894d0d', '#a76526']}
-                      start={{ x: 0, y: 0 }}
-                      end={{ x: 1, y: 1 }}
-                      style={styles.likeGradient}
-                    >
-                      <LikeIcon />
-                    </LinearGradient>
-                  </Pressable>
-                </View>
-              </SwipeCard>
+              </PolaroidCard>
             </Animated.View>
           </GestureDetector>
+        </View>
+
+        {/* Action Buttons — below card stack */}
+        <View style={[styles.actionRow, { marginTop: cardDims.cardHeight * 0.05 }]}>
+          {/* Pass */}
+          <Pressable
+            style={[
+              styles.actionButton,
+              styles.passButton,
+              passPressed && styles.passButtonActive,
+              discovery.isSwiping && styles.buttonDisabled,
+            ]}
+            onPress={handlePassButton}
+            disabled={discovery.isSwiping}
+          >
+            <PassIcon />
+          </Pressable>
+
+          {/* Super Like */}
+          <Pressable
+            style={[
+              styles.actionButton,
+              styles.superLikeButton,
+              discovery.isSwiping && styles.buttonDisabled,
+            ]}
+            disabled={discovery.isSwiping}
+          >
+            <SuperLikeIcon />
+          </Pressable>
+
+          {/* Like */}
+          <Pressable
+            style={[
+              styles.actionButton,
+              likePressed && styles.likeButtonActive,
+              discovery.isSwiping && styles.buttonDisabled,
+            ]}
+            onPress={handleLikeButton}
+            disabled={discovery.isSwiping}
+          >
+            <LinearGradient
+              colors={['#894d0d', '#a76526']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.likeGradient}
+            >
+              <LikeIcon />
+            </LinearGradient>
+          </Pressable>
         </View>
       </View>
 
@@ -324,6 +302,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: SURFACE_CONTAINER,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 
   // Top Navigation
@@ -345,7 +325,7 @@ const styles = StyleSheet.create({
     fontFamily: 'NotoSerif_700Bold',
     color: COPPER,
     letterSpacing: -0.5,
-  },
+  } as any,
   filterButton: {
     width: 40,
     height: 40,
@@ -355,18 +335,15 @@ const styles = StyleSheet.create({
   filterIcon: {
     fontSize: 20,
     color: COPPER,
-  },
+  } as any,
 
-  // Card Stack
+  // Card Stack — dimensions set inline from cardDims in JSX
   cardStack: {
-    flex: 1,
     alignItems: 'center',
-    justifyContent: 'flex-start',
-    paddingTop: 0,
+    justifyContent: 'center',
   },
   cardWrapper: {
     position: 'absolute',
-    top: 0,
   },
   cardTop: {
     zIndex: 3,
@@ -378,90 +355,10 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
 
-  // Tab Bar (overlaid on card)
-  tabBar: {
-    position: 'absolute',
-    top: 72,
-    left: 0,
-    right: 0,
-    paddingHorizontal: 24,
-    zIndex: 10,
-  },
-  tabBarInner: {
-    flexDirection: 'row',
-    gap: 24,
-    alignItems: 'center',
-  },
-  tabItem: {
-    alignItems: 'center',
-  },
-  tabText: {
-    fontSize: 13,
-    fontWeight: '500',
-    fontFamily: 'Manrope_500Medium',
-    color: 'rgba(255,255,255,0.6)',
-    letterSpacing: 0.5,
-  },
-  tabTextActive: {
-    color: '#FFFFFF',
-    fontWeight: '700',
-    fontFamily: 'Manrope_700Bold',
-  },
-  tabIndicator: {
-    height: 2,
-    width: 16,
-    backgroundColor: COPPER,
-    borderRadius: 1,
-    marginTop: 4,
-  },
-
-  // Card Overlay — profile info
-  cardOverlay: {
-    position: 'absolute',
-    bottom: 100,
-    left: 0,
-    right: 0,
-    paddingHorizontal: 28,
-    zIndex: 10,
-  },
-  chipsRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-    marginBottom: 12,
-  },
-  chip: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 9999,
-    backgroundColor: 'rgba(255,255,255,0.08)',
-    borderWidth: 1,
-    borderColor: GHOST_BORDER,
-  },
-  chipText: {
-    fontSize: 12,
-    color: '#FFFFFF',
-    fontWeight: '500',
-  },
-  profileName: {
-    fontSize: 34,
-    fontFamily: 'NotoSerif_700Bold',
-    color: '#FFFFFF',
-    letterSpacing: -0.5,
-  },
-  locationIcon: {
-    fontSize: 13,
-  },
-  locationText: {
-    fontSize: 14,
-    color: 'rgba(255,255,255,0.85)',
-    fontWeight: '500',
-  },
-
   // Action Buttons Row
   actionRow: {
     position: 'absolute',
-    bottom: 24,
+    bottom: 36,
     left: 0,
     right: 0,
     flexDirection: 'row',
@@ -473,7 +370,7 @@ const styles = StyleSheet.create({
   actionButton: {
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#2C2421',
+    shadowColor: CHARCOAL,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.06,
     shadowRadius: 16,
@@ -490,38 +387,35 @@ const styles = StyleSheet.create({
   },
   passIconText: {
     fontSize: 26,
-    color: '#FFFFFF',
+    color: WARM_WHITE,
     fontWeight: '300',
-  },
+  } as any,
   superLikeButton: {
     width: 48,
     height: 48,
     borderRadius: 9999,
     backgroundColor: GOLD,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   superLikeIconText: {
     fontSize: 28,
     color: CHARCOAL,
-  },
-  likeButton: {
-    width: 64,
-    height: 64,
-    borderRadius: 9999,
-  },
+  } as any,
   likeButtonActive: {
     opacity: 0.85,
   },
   likeIconText: {
     fontSize: 26,
-    color: '#FFFFFF',
-  },
+    color: WARM_WHITE,
+  } as any,
   likeGradient: {
     width: 64,
     height: 64,
     borderRadius: 9999,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#2C2421',
+    shadowColor: CHARCOAL,
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.06,
     shadowRadius: 24,
@@ -529,20 +423,5 @@ const styles = StyleSheet.create({
   },
   buttonDisabled: {
     opacity: 0.5,
-  },
-
-  // Empty state
-  refreshButton: {
-    paddingHorizontal: 32,
-    paddingVertical: 14,
-    borderRadius: 9999,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  refreshButtonText: {
-    color: WARM_WHITE,
-    fontSize: 15,
-    fontWeight: '600',
-    fontFamily: 'Manrope_600SemiBold',
   },
 })

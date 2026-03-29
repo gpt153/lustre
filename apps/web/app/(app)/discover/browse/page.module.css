@@ -42,17 +42,60 @@
   color: var(--color-text-muted);
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 32px;
+.polaroidActions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  padding: 8px 0 12px;
 }
 
-@media (max-width: 900px) {
-  .grid {
-    grid-template-columns: 1fr;
-    gap: var(--space-lg);
-  }
+.actionBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  transition:
+    transform 200ms ease,
+    background 200ms ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.actionBtn:active {
+  transform: scale(0.9);
+}
+
+.actionBtn:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.passBtn {
+  background: var(--color-charcoal);
+  color: #ffffff;
+}
+
+.passBtn:hover {
+  background: #000;
+  transform: scale(1.1);
+}
+
+.likeBtn {
+  background: var(--color-copper);
+  color: white;
+}
+
+.likeBtn:hover {
+  background: var(--color-copper-light);
+  transform: scale(1.1);
+}
+
+.cardFocused {
+  outline: 2px solid var(--color-copper);
+  outline-offset: 4px;
 }
 
 @media (max-width: 600px) {
@@ -67,10 +110,5 @@
 
   .hint {
     display: none;
-  }
-
-  .grid {
-    grid-template-columns: 1fr;
-    gap: var(--space-md);
   }
 }
