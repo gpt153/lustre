@@ -1,35 +1,86 @@
+/* ChatRoom — Stitch Polaroid Chat Design */
+
 .container {
   display: flex;
   flex-direction: column;
   height: 100%;
   overflow: hidden;
-  background-color: var(--color-bg-primary);
+  background-color: white;
   position: relative;
 }
 
 /* Header */
 .header {
+  height: 64px;
   display: flex;
   align-items: center;
-  gap: var(--space-md);
-  padding: var(--space-md) var(--space-lg);
-  background-color: rgba(253, 248, 243, 0.9);
+  justify-content: space-between;
+  padding: 0 32px;
+  border-bottom: 1px solid var(--stitch-surface-container-low);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(184, 115, 51, 0.1);
+  background-color: rgba(255, 255, 255, 0.8);
+  position: sticky;
+  top: 0;
+  z-index: 20;
   flex-shrink: 0;
-  z-index: 1;
 }
 
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.headerName {
+  font-family: var(--font-epilogue, 'Epilogue', sans-serif);
+  font-weight: 800;
+  font-size: 1.125rem;
+  color: var(--stitch-on-surface);
+  letter-spacing: -0.02em;
+}
+
+.onlineDot {
+  width: 8px;
+  height: 8px;
+  background-color: #10b981;
+  border-radius: 9999px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.headerActionBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #a8a29e;
+  font-size: 24px;
+  padding: 4px;
+  transition: color 200ms ease;
+  display: flex;
+  align-items: center;
+}
+
+.headerActionBtn:hover {
+  color: var(--stitch-primary);
+}
+
+/* Header avatar (for non-layout usage) */
 .headerAvatar {
   width: 40px;
   height: 40px;
-  border-radius: var(--radius-full);
-  background: linear-gradient(
-    135deg,
-    var(--color-copper),
-    var(--color-gold)
-  );
+  border-radius: 9999px;
+  background: linear-gradient(135deg, var(--stitch-primary), var(--stitch-primary-container));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -46,53 +97,21 @@
   flex: 1;
 }
 
-.headerName {
-  font-family: 'Noto Serif', 'Georgia', serif;
-  font-size: 1.125rem;
-  font-weight: 700;
-  color: var(--color-text-primary);
-  line-height: 1.2;
-}
-
 .headerStatus {
   font-size: 10px;
-  color: var(--color-text-muted);
+  color: #a8a29e;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-}
-
-.headerActions {
-  display: flex;
-  gap: 4px;
-}
-
-.headerActionBtn {
-  width: 40px;
-  height: 40px;
-  border: none;
-  background: transparent;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  color: var(--color-copper);
-  transition: background 200ms ease;
-}
-
-.headerActionBtn:hover {
-  background: rgba(184, 115, 51, 0.08);
 }
 
 /* Photo strip */
 .photoStrip {
   display: flex;
   gap: 6px;
-  padding: 10px var(--space-lg);
+  padding: 10px 32px;
   overflow-x: auto;
   flex-shrink: 0;
-  border-bottom: 1px solid rgba(184, 115, 51, 0.06);
+  border-bottom: 1px solid rgba(137, 77, 13, 0.06);
 }
 
 .photoStrip::-webkit-scrollbar {
@@ -104,7 +123,7 @@
   height: 72px;
   border-radius: 12px;
   overflow: hidden;
-  border: 1.5px solid var(--color-copper);
+  border: 1.5px solid var(--stitch-primary);
   flex-shrink: 0;
   position: relative;
 }
@@ -115,25 +134,14 @@
   object-fit: cover;
 }
 
-.onlineDot {
-  position: absolute;
-  bottom: 4px;
-  right: 4px;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #7A9E7E;
-  border: 1.5px solid white;
-}
-
 /* Message list */
 .messageList {
   flex: 1;
   overflow-y: auto;
-  padding: var(--space-lg);
+  padding: 32px;
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs);
+  gap: 24px;
   scroll-behavior: smooth;
 }
 
@@ -146,59 +154,135 @@
 }
 
 .messageList::-webkit-scrollbar-thumb {
-  background-color: var(--color-border);
-  border-radius: var(--radius-full);
+  background-color: var(--stitch-outline-variant);
+  border-radius: 9999px;
 }
 
 /* Date group */
 .dateGroup {
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm);
-  margin-bottom: var(--space-sm);
+  gap: 24px;
 }
 
 .dateDivider {
   display: flex;
   align-items: center;
-  gap: var(--space-md);
-  margin: var(--space-sm) 0;
-}
-
-.dateDivider::before,
-.dateDivider::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background-color: var(--color-border-subtle);
+  justify-content: center;
+  margin: 8px 0;
 }
 
 .dateDividerText {
-  font-size: 0.6875rem;
-  color: var(--color-text-muted);
-  text-transform: capitalize;
-  white-space: nowrap;
-  font-weight: 500;
-  letter-spacing: 0.02em;
+  font-size: 10px;
+  color: #a8a29e;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-weight: 600;
+  background: var(--stitch-surface-container-low);
+  padding: 4px 12px;
+  border-radius: 9999px;
+}
+
+/* Input area (Stitch style) */
+.inputArea {
+  padding: 24px;
+  background: white;
+  border-top: 1px solid var(--stitch-surface-container-low);
+  flex-shrink: 0;
+}
+
+.inputRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--stitch-surface-container-high);
+  border-radius: 16px;
+  padding: 8px 8px 8px 16px;
+}
+
+.addButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #a8a29e;
+  font-size: 24px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  transition: color 200ms ease;
+  flex-shrink: 0;
+}
+
+.addButton:hover {
+  color: var(--stitch-primary);
+}
+
+.inputField {
+  flex: 1;
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  font-family: var(--font-be-vietnam-pro, 'Be Vietnam Pro', sans-serif);
+  color: var(--stitch-on-surface);
+  padding: 8px 0;
+  outline: none;
+}
+
+.inputField::placeholder {
+  color: #a8a29e;
+}
+
+.sendButton {
+  background-color: var(--stitch-primary);
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(137, 77, 13, 0.25);
+  transition: background-color 200ms ease, transform 100ms ease;
+}
+
+.sendButton:hover {
+  background-color: var(--stitch-primary-container);
+}
+
+.sendButton:active {
+  transform: scale(0.95);
+}
+
+.sendButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.sendButton svg {
+  width: 18px;
+  height: 18px;
 }
 
 /* Loading states */
 .loadingState {
   flex: 1;
-  padding: var(--space-lg);
+  padding: 32px;
   display: flex;
   flex-direction: column;
-  gap: var(--space-md);
+  gap: 16px;
 }
 
 .skeletonBubble {
   height: 44px;
-  border-radius: var(--radius-lg);
+  border-radius: 16px;
   background: linear-gradient(
     90deg,
-    var(--color-bg-elevated) 0%,
-    color-mix(in srgb, var(--color-bg-elevated) 50%, var(--color-border)) 50%,
-    var(--color-bg-elevated) 100%
+    var(--stitch-surface-container-low) 0%,
+    var(--stitch-surface-container) 50%,
+    var(--stitch-surface-container-low) 100%
   );
   background-size: 200% 100%;
   animation: shimmer 1.6s ease-in-out infinite;
@@ -207,12 +291,12 @@
 
 .skeletonLeft {
   align-self: flex-start;
-  border-bottom-left-radius: var(--radius-xs, 4px);
+  border-bottom-left-radius: 0;
 }
 
 .skeletonRight {
   align-self: flex-end;
-  border-bottom-right-radius: var(--radius-xs, 4px);
+  border-bottom-right-radius: 0;
 }
 
 .loadingMore {
@@ -220,14 +304,14 @@
   align-items: center;
   justify-content: center;
   gap: 5px;
-  padding: var(--space-md) 0;
+  padding: 16px 0;
 }
 
 .loadingMoreDot {
   width: 6px;
   height: 6px;
-  border-radius: var(--radius-full);
-  background-color: var(--color-copper);
+  border-radius: 9999px;
+  background-color: var(--stitch-primary);
   animation: bounceDot 0.8s ease-in-out infinite;
 }
 

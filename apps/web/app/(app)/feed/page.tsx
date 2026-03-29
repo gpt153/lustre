@@ -12,6 +12,7 @@ import PostCard from '@/components/feed/PostCard'
 import FeedAdCard from '@/components/feed/FeedAdCard'
 import FeedSkeleton from '@/components/feed/FeedSkeleton'
 import EmptyState from '@/components/common/EmptyState'
+import PolaroidMasonryGrid from '@/components/common/PolaroidMasonryGrid'
 
 const PostComposer = dynamic(() => import('@/components/feed/PostComposer'), { ssr: false })
 import styles from './page.module.css'
@@ -46,70 +47,92 @@ const MOCK_POSTS: FeedItem[] = [
     type: 'post' as const,
     id: 'p1',
     author: { id: 'u1', displayName: 'Emma', photoUrl: '' },
-    content: 'Underbar promenad längs Strandvägen idag. Hösten är verkligen Stockholms bästa årstid 🍂',
-    media: [],
+    content: 'Coffee and quiet thoughts.',
+    media: [{ url: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&h=600&fit=crop', alt: 'Coffee cup on wooden table' }],
     likeCount: 12,
-    commentCount: 3,
-    isLiked: false,
-    createdAt: '2026-03-27T08:30:00Z',
+    commentCount: 4,
+    isLiked: true,
+    createdAt: new Date(Date.now() - 2 * 60 * 60_000).toISOString(),
   },
   {
     type: 'post' as const,
     id: 'p2',
     author: { id: 'u2', displayName: 'Sofia', photoUrl: '' },
-    content: 'Ny målning klar! Inspirerad av kvällsljuset över hamnen i Göteborg.',
-    media: [],
-    likeCount: 24,
+    content: 'Chasing the golden hour...',
+    media: [{ url: 'https://images.unsplash.com/photo-1507400492013-162706c8c05e?w=600&h=750&fit=crop', alt: 'Golden hour sunset over field' }],
+    likeCount: 28,
     commentCount: 7,
-    isLiked: true,
-    createdAt: '2026-03-27T06:15:00Z',
+    isLiked: false,
+    createdAt: new Date(Date.now() - 5 * 60 * 60_000).toISOString(),
   },
   {
     type: 'post' as const,
     id: 'p3',
     author: { id: 'u3', displayName: 'Lina', photoUrl: '' },
-    content: 'Dagens yogapass var magiskt. Påminner mig om varför jag älskar mitt jobb ✨',
-    media: [],
-    likeCount: 18,
-    commentCount: 2,
-    isLiked: false,
-    createdAt: '2026-03-26T20:00:00Z',
+    content: 'Getting my hands dirty today.',
+    media: [{ url: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600&h=600&fit=crop', alt: 'Hands working with clay on pottery wheel' }],
+    likeCount: 45,
+    commentCount: 12,
+    isLiked: true,
+    createdAt: new Date(Date.now() - 24 * 60 * 60_000).toISOString(),
   },
   {
     type: 'post' as const,
     id: 'p4',
-    author: { id: 'u4', displayName: 'Alex', photoUrl: '' },
-    content: 'Testade ett nytt recept ikväll — thai curry med lokala grönsaker. Rekommenderas varmt!',
+    author: { id: 'u4', displayName: 'Alex' },
+    content: 'Underbar promenad langs Strandvagen idag. Hosten ar verkligen Stockholms basta arstid.',
     media: [],
-    likeCount: 31,
-    commentCount: 9,
+    likeCount: 12,
+    commentCount: 3,
     isLiked: false,
-    createdAt: '2026-03-26T18:45:00Z',
+    createdAt: new Date(Date.now() - 3 * 60 * 60_000).toISOString(),
+  },
+  {
+    type: 'post' as const,
+    id: 'p5',
+    author: { id: 'u5', displayName: 'Maja', photoUrl: '' },
+    content: 'The ocean breathes salty air.',
+    media: [{ url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&h=800&fit=crop', alt: 'Calm ocean at dawn' }],
+    likeCount: 34,
+    commentCount: 3,
+    isLiked: false,
+    createdAt: new Date(Date.now() - 48 * 60 * 60_000).toISOString(),
+  },
+  {
+    type: 'post' as const,
+    id: 'p6',
+    author: { id: 'u6', displayName: 'Viktor', photoUrl: '' },
+    content: 'Rainy Sunday essentials.',
+    media: [{ url: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=600&h=600&fit=crop', alt: 'Books by the fireplace' }],
+    likeCount: 56,
+    commentCount: 15,
+    isLiked: true,
+    createdAt: new Date(Date.now() - 72 * 60 * 60_000).toISOString(),
   },
   {
     type: 'ad' as const,
     campaignId: 'camp-1',
     creativeId: 'cre-1',
     sponsor: 'Lustre Events',
-    headline: 'Mingel & Mys — Stockholms nya dejtingevent',
-    body: 'Träffa likasinnade i en avslappnad miljö. Nästa event: 5 april.',
+    headline: 'Mingel & Mys -- Stockholms nya dejtingevent',
+    body: 'Traffa likasinnade i en avslappnad miljo. Nasta event: 5 april.',
     imageUrl: '',
     ctaUrl: '/events',
   },
   {
     type: 'post' as const,
-    id: 'p5',
-    author: { id: 'u5', displayName: 'Maja', photoUrl: '' },
-    content: 'Min katt har bestämt sig för att sova på tangentbordet. Produktiviteten är... begränsad 😅',
-    media: [],
-    likeCount: 45,
-    commentCount: 14,
+    id: 'p7',
+    author: { id: 'u7', displayName: 'Elsa', photoUrl: '' },
+    content: 'Lost in the peaks.',
+    media: [{ url: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&h=400&fit=crop', alt: 'Misty mountain peaks at sunrise' }],
+    likeCount: 21,
+    commentCount: 2,
     isLiked: false,
-    createdAt: '2026-03-26T16:00:00Z',
+    createdAt: new Date(Date.now() - 96 * 60 * 60_000).toISOString(),
   },
 ]
 
-const FEED_TABS = ['Alla', 'Följer', 'Populärt'] as const
+const FEED_TABS = ['Alla', 'Foljer', 'Populart'] as const
 type FeedTab = (typeof FEED_TABS)[number]
 
 export default function FeedPage() {
@@ -191,11 +214,34 @@ export default function FeedPage() {
     initialLoad()
   }, [initialLoad])
 
+  // Split items: photo posts go to masonry, text posts and ads stay in a list
+  const photoItems: PostItem[] = []
+  const textAndAdItems: FeedItem[] = []
+
+  for (const item of items) {
+    if (item.type === 'post' && item.media.length > 0) {
+      photoItems.push(item)
+    } else {
+      textAndAdItems.push(item)
+    }
+  }
+
   return (
     <div className={styles.page}>
       <header className={styles.header}>
-        <h1 className={styles.heading}>Flöde</h1>
-        <nav className={styles.tabs} aria-label="Flödesfilter">
+        <div className={styles.headerRow}>
+          <h1 className={styles.heading}>Flode</h1>
+          <div className={styles.headerActions}>
+            <button
+              type="button"
+              className={styles.shareBtn}
+              onClick={() => setComposerOpen(true)}
+            >
+              Share a moment
+            </button>
+          </div>
+        </div>
+        <nav className={styles.tabs} aria-label="Flodesfilter">
           {FEED_TABS.map((tab) => (
             <button
               key={tab}
@@ -213,7 +259,7 @@ export default function FeedPage() {
       <main
         className={styles.feed}
         role="feed"
-        aria-label="Socialt flöde"
+        aria-label="Socialt flode"
         aria-busy={isLoading}
       >
         <AnimatePresence mode="wait">
@@ -236,48 +282,71 @@ export default function FeedPage() {
               transition={springs.soft}
             >
               <EmptyState
-                title="Inga inlägg ännu"
-                description="Var den första att dela något med gemenskapen."
-                action={{ label: 'Skapa inlägg', onClick: () => setComposerOpen(true) }}
+                title="Inga inlagg annu"
+                description="Var den forsta att dela nagot med gemenskapen."
+                action={{ label: 'Skapa inlagg', onClick: () => setComposerOpen(true) }}
               />
             </m.div>
           ) : (
             <m.div
               key="feed"
-              className={styles.list}
               variants={staggerContainer}
               initial="initial"
               animate="animate"
             >
-              {items.map((item, index) => {
-                if (item.type === 'ad') {
-                  return (
-                    <FeedAdCard
-                      key={`ad-${item.campaignId}-${item.creativeId}-${index}`}
-                      campaignId={item.campaignId}
-                      creativeId={item.creativeId}
-                      sponsor={item.sponsor}
-                      headline={item.headline}
-                      body={item.body}
-                      imageUrl={item.imageUrl}
-                      ctaUrl={item.ctaUrl}
+              {/* Photo posts in Polaroid masonry grid */}
+              {photoItems.length > 0 && (
+                <PolaroidMasonryGrid columns={3} gap="2rem" className={styles.masonry}>
+                  {photoItems.map((item) => (
+                    <PostCard
+                      key={item.id}
+                      id={item.id}
+                      author={item.author}
+                      content={item.content}
+                      media={item.media}
+                      likeCount={item.likeCount}
+                      commentCount={item.commentCount}
+                      isLiked={item.isLiked}
+                      createdAt={item.createdAt}
                     />
-                  )
-                }
-                return (
-                  <PostCard
-                    key={item.id}
-                    id={item.id}
-                    author={item.author}
-                    content={item.content}
-                    media={item.media}
-                    likeCount={item.likeCount}
-                    commentCount={item.commentCount}
-                    isLiked={item.isLiked}
-                    createdAt={item.createdAt}
-                  />
-                )
-              })}
+                  ))}
+                </PolaroidMasonryGrid>
+              )}
+
+              {/* Text-only posts and ads below the masonry grid */}
+              {textAndAdItems.length > 0 && (
+                <div className={styles.list}>
+                  {textAndAdItems.map((item, index) => {
+                    if (item.type === 'ad') {
+                      return (
+                        <FeedAdCard
+                          key={`ad-${item.campaignId}-${item.creativeId}-${index}`}
+                          campaignId={item.campaignId}
+                          creativeId={item.creativeId}
+                          sponsor={item.sponsor}
+                          headline={item.headline}
+                          body={item.body}
+                          imageUrl={item.imageUrl}
+                          ctaUrl={item.ctaUrl}
+                        />
+                      )
+                    }
+                    return (
+                      <PostCard
+                        key={item.id}
+                        id={item.id}
+                        author={item.author}
+                        content={item.content}
+                        media={item.media}
+                        likeCount={item.likeCount}
+                        commentCount={item.commentCount}
+                        isLiked={item.isLiked}
+                        createdAt={item.createdAt}
+                      />
+                    )
+                  })}
+                </div>
+              )}
             </m.div>
           )}
         </AnimatePresence>
@@ -289,7 +358,7 @@ export default function FeedPage() {
             initial="initial"
             animate="animate"
           >
-            <div className={styles.loadingDots} aria-label="Laddar fler inlägg">
+            <div className={styles.loadingDots} aria-label="Laddar fler inlagg">
               <span />
               <span />
               <span />
@@ -304,7 +373,7 @@ export default function FeedPage() {
             initial="initial"
             animate="animate"
           >
-            Du har sett allt för nu ✦
+            Du har sett allt for nu
           </m.p>
         )}
 
@@ -315,7 +384,7 @@ export default function FeedPage() {
         type="button"
         className={styles.fab}
         onClick={() => setComposerOpen(true)}
-        aria-label="Skapa nytt inlägg"
+        aria-label="Skapa nytt inlagg"
       >
         <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
           <path d="M11 4v14M4 11h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />

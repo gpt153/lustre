@@ -1,8 +1,10 @@
+/* Message Bubble — Stitch Polaroid Chat Design */
+
 .wrapper {
   display: flex;
   flex-direction: column;
-  max-width: 72%;
-  gap: var(--space-xs);
+  max-width: 85%;
+  gap: 4px;
 }
 
 .own {
@@ -15,38 +17,73 @@
   align-items: flex-start;
 }
 
+/* Received message row with mini avatar */
+.receivedRow {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  max-width: 85%;
+}
+
+.miniAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 1px solid white;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.miniAvatarRotatePos {
+  transform: rotate(3deg);
+}
+
+.miniAvatarRotateNeg {
+  transform: rotate(-2deg);
+}
+
+.miniAvatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Bubble */
 .bubble {
-  padding: var(--space-sm) var(--space-md);
-  border-radius: var(--radius-lg);
-  line-height: 1.5;
+  padding: 16px;
+  line-height: 1.6;
   position: relative;
   word-break: break-word;
+  font-family: var(--font-be-vietnam-pro, 'Be Vietnam Pro', sans-serif);
 }
 
 .bubbleOwn {
-  background: linear-gradient(135deg, #B87333, #894D0D);
-  border-bottom-right-radius: 4px;
-  border-top-right-radius: 4px;
-  color: #ffffff;
+  background: linear-gradient(to bottom right, var(--stitch-primary), var(--stitch-primary-container));
+  color: white;
+  border-radius: 16px;
+  border-bottom-right-radius: 0;
+  box-shadow: 0 4px 12px rgba(137, 77, 13, 0.2);
 }
 
 .bubbleOther {
-  background-color: #F5EFE6;
-  border-bottom-left-radius: 4px;
-  color: var(--color-text-primary);
+  background-color: var(--stitch-surface-container-low);
+  color: var(--stitch-on-surface);
+  border-radius: 16px;
+  border-bottom-left-radius: 0;
 }
 
 .body {
   margin: 0;
-  font-size: 0.9375rem;
-  line-height: 1.55;
+  font-size: 0.875rem;
+  line-height: 1.6;
 }
 
 .timestamp {
-  font-size: 0.6875rem;
-  color: var(--color-text-muted);
+  font-size: 10px;
+  color: #a8a29e;
   letter-spacing: 0.01em;
-  padding: 0 var(--space-xs);
+  padding: 0 8px;
 }
 
 .timestampOwn {
@@ -57,6 +94,7 @@
   text-align: left;
 }
 
+/* Polaroid image messages */
 .polaroidWrap {
   max-width: 240px;
 }

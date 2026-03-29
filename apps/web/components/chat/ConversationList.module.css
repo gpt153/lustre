@@ -1,59 +1,68 @@
+/* Conversation List — Stitch Polaroid Chat Design */
+
 .sidebar {
-  width: 360px;
-  flex-shrink: 0;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  border-right: 1px solid var(--color-border-subtle);
-  background-color: var(--color-bg-elevated);
+  background-color: var(--stitch-surface-container-low);
   overflow: hidden;
 }
 
 /* Header */
 .header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--space-lg) var(--space-lg) var(--space-md);
+  padding: 24px 24px 0;
   flex-shrink: 0;
-  border-bottom: 1px solid var(--color-border-subtle);
 }
 
 .heading {
-  font-family: 'Noto Serif', 'Georgia', serif;
+  font-family: var(--font-epilogue, 'Epilogue', sans-serif);
   font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--color-text-primary);
-  margin: 0;
-  letter-spacing: -0.01em;
+  font-weight: 800;
+  color: var(--stitch-on-surface);
+  margin: 0 0 16px;
+  letter-spacing: -0.02em;
 }
 
 /* Search */
 .searchWrap {
-  padding: 0 var(--space-lg) var(--space-md);
-  flex-shrink: 0;
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #a8a29e;
+  font-size: 18px;
+  pointer-events: none;
 }
 
 .searchInput {
   width: 100%;
-  padding: 10px 16px 10px 40px;
+  background: var(--stitch-surface-container-high);
   border: none;
-  border-radius: 9999px;
-  background: rgba(44, 36, 33, 0.04);
+  border-radius: 12px;
+  padding: 12px 16px 12px 40px;
   font-size: 14px;
-  color: var(--color-text-primary);
+  font-family: var(--font-be-vietnam-pro, 'Be Vietnam Pro', sans-serif);
+  color: var(--stitch-on-surface);
   outline: none;
-  transition: box-shadow 200ms ease;
+  transition: box-shadow 200ms ease, background-color 200ms ease;
 }
 
 .searchInput:focus {
-  box-shadow: 0 0 0 1px rgba(184, 115, 51, 0.3);
+  box-shadow: 0 0 0 1px var(--stitch-primary);
+  background: var(--stitch-surface-container-lowest);
 }
 
 .searchInput::placeholder {
-  color: var(--color-text-muted);
+  color: #a8a29e;
 }
 
+/* Unread count badge */
 .unreadCount {
   display: inline-flex;
   align-items: center;
@@ -61,8 +70,8 @@
   min-width: 22px;
   height: 22px;
   padding: 0 6px;
-  border-radius: var(--radius-full);
-  background-color: var(--color-copper);
+  border-radius: 9999px;
+  background-color: var(--stitch-primary);
   color: white;
   font-size: 0.6875rem;
   font-weight: 700;
@@ -73,7 +82,10 @@
 .list {
   flex: 1;
   overflow-y: auto;
-  padding: var(--space-sm) 0;
+  padding: 16px 16px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .list::-webkit-scrollbar {
@@ -85,83 +97,115 @@
 }
 
 .list::-webkit-scrollbar-thumb {
-  background-color: var(--color-border);
-  border-radius: var(--radius-full);
+  background-color: var(--stitch-outline-variant);
+  border-radius: 9999px;
 }
 
 /* Conversation item */
 .item {
   display: flex;
   align-items: center;
-  gap: var(--space-md);
-  padding: var(--space-md) var(--space-lg);
+  gap: 16px;
+  padding: 16px;
   cursor: pointer;
-  transition: background-color 0.15s var(--spring);
+  border-radius: 12px;
+  transition: background-color 200ms ease, box-shadow 200ms ease;
   position: relative;
   outline: none;
-  border-radius: 0;
   user-select: none;
 }
 
 .item:hover {
-  background-color: color-mix(in srgb, var(--color-copper) 5%, var(--color-bg-elevated));
+  background-color: var(--stitch-surface-container-high);
 }
 
 .item:focus-visible {
-  background-color: color-mix(in srgb, var(--color-copper) 8%, var(--color-bg-elevated));
-  box-shadow: inset 3px 0 0 var(--color-copper);
+  background-color: var(--stitch-surface-container-high);
+  box-shadow: 0 0 0 2px var(--stitch-primary);
 }
 
 .itemActive {
-  background-color: color-mix(in srgb, var(--color-copper) 10%, var(--color-bg-elevated));
-  box-shadow: inset 3px 0 0 var(--color-copper);
+  background-color: var(--stitch-surface-container-lowest);
+  box-shadow: 0 8px 24px -2px rgba(46, 21, 0, 0.08);
 }
 
 .itemActive:hover {
-  background-color: color-mix(in srgb, var(--color-copper) 12%, var(--color-bg-elevated));
+  background-color: var(--stitch-surface-container-lowest);
 }
 
-/* Avatar */
+/* Polaroid Avatar */
 .avatarWrap {
   position: relative;
   flex-shrink: 0;
 }
 
-.avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: var(--radius-full);
-  object-fit: cover;
+.polaroidAvatar {
+  width: 64px;
+  aspect-ratio: 88 / 107;
+  background: white;
+  padding: 4px;
+  padding-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: transform 200ms ease;
 }
 
+.polaroidAvatar img {
+  width: 100%;
+  height: 72%;
+  object-fit: cover;
+  display: block;
+}
+
+.avatarRotateNeg3 {
+  transform: rotate(-3deg);
+}
+
+.avatarRotate2 {
+  transform: rotate(2deg);
+}
+
+.avatarRotateNeg2 {
+  transform: rotate(-2deg);
+}
+
+.avatarRotate3 {
+  transform: rotate(3deg);
+}
+
+.item:hover .polaroidAvatar {
+  transform: rotate(0deg);
+}
+
+/* Fallback avatar (no photo) */
 .avatarPlaceholder {
-  width: 48px;
-  height: 48px;
-  border-radius: var(--radius-full);
-  background: linear-gradient(
-    135deg,
-    var(--color-copper),
-    var(--color-gold)
-  );
+  width: 64px;
+  aspect-ratio: 88 / 107;
+  background: white;
+  padding: 4px;
+  padding-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-size: 1.125rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  flex-shrink: 0;
+  transform: rotate(-3deg);
+}
+
+.avatarPlaceholder span {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--stitch-primary);
+  font-family: var(--font-epilogue, 'Epilogue', sans-serif);
 }
 
 .unreadDot {
   position: absolute;
-  top: 1px;
-  right: 1px;
-  width: 11px;
-  height: 11px;
-  border-radius: var(--radius-full);
-  background-color: var(--color-copper);
-  border: 2px solid var(--color-bg-elevated);
+  top: -2px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background-color: var(--stitch-primary);
+  z-index: 1;
 }
 
 /* Content */
@@ -172,16 +216,17 @@
 
 .topRow {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
-  gap: var(--space-sm);
-  margin-bottom: 3px;
+  gap: 8px;
+  margin-bottom: 4px;
 }
 
 .name {
   font-size: 0.9375rem;
-  font-weight: 500;
-  color: var(--color-text-primary);
+  font-weight: 700;
+  font-family: var(--font-epilogue, 'Epilogue', sans-serif);
+  color: var(--stitch-on-surface);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -189,44 +234,48 @@
 }
 
 .nameUnread {
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .time {
-  font-size: 0.6875rem;
-  color: var(--color-text-muted);
+  font-size: 10px;
+  color: #a8a29e;
   white-space: nowrap;
   flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
 }
 
 .preview {
-  font-size: 0.8125rem;
-  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  font-family: var(--font-be-vietnam-pro, 'Be Vietnam Pro', sans-serif);
+  color: #78716c;
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   line-height: 1.4;
+  font-weight: 500;
 }
 
 .previewUnread {
-  color: var(--color-text-primary);
-  font-weight: 500;
+  color: var(--stitch-on-surface);
+  font-weight: 600;
 }
 
 /* Skeleton */
 .skeletonItem {
   display: flex;
   align-items: center;
-  gap: var(--space-md);
-  padding: var(--space-md) var(--space-lg);
+  gap: 16px;
+  padding: 16px;
 }
 
 .skeletonContent {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm);
+  gap: 8px;
 }
 
 /* Empty state */
@@ -235,8 +284,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--space-xl) var(--space-lg);
-  gap: var(--space-md);
+  padding: 48px 24px;
+  gap: 16px;
   text-align: center;
 }
 
@@ -247,13 +296,13 @@
 .emptyText {
   font-size: 0.9375rem;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--stitch-on-surface);
   margin: 0;
 }
 
 .emptySubtext {
   font-size: 0.8125rem;
-  color: var(--color-text-muted);
+  color: var(--stitch-on-surface-variant);
   margin: 0;
   line-height: 1.5;
 }

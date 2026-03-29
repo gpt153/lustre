@@ -1,3 +1,4 @@
+/* ---- Text-only post card ---- */
 .card {
   background: var(--color-bg-elevated);
   border-radius: 16px;
@@ -121,31 +122,7 @@
   border-radius: 2px;
 }
 
-/* ---- Media ---- */
-.media {
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  margin: 0 calc(var(--space-xs) * -1);
-}
-
-.mediaPolaroid {
-  max-width: 360px;
-  margin: 0 auto;
-}
-
-.mediaRow {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.mediaPolaroidSmall {
-  width: calc(50% - 6px);
-  max-width: 200px;
-}
-
-/* ---- Actions ---- */
+/* ---- Text-only actions ---- */
 .actions {
   display: flex;
   align-items: center;
@@ -193,4 +170,71 @@
   font-variant-numeric: tabular-nums;
   min-width: 16px;
   line-height: 1;
+}
+
+/* ===========================================================
+   Polaroid photo post styles
+   =========================================================== */
+
+.polaroidFeedCard {
+  width: 100%;
+}
+
+/* Actions row inside PolaroidCard captionArea (via children) */
+.polaroidActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 2px 4px 0;
+}
+
+.polaroidActionsLeft {
+  display: flex;
+  gap: 12px;
+}
+
+.polaroidActionBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--stitch-on-surface-variant, #524439);
+  transition: color 200ms ease;
+}
+
+.polaroidActionBtn:hover {
+  color: var(--stitch-primary, #894d0d);
+}
+
+.polaroidActionBtn:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.polaroidActionBtnLiked {
+  color: var(--stitch-tertiary, #9f3c1e);
+}
+
+.polaroidActionBtnLiked:hover {
+  color: var(--stitch-tertiary, #9f3c1e);
+}
+
+.polaroidCount {
+  font-size: 10px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.polaroidTimestamp {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--stitch-outline, #857467);
+  opacity: 0.7;
 }

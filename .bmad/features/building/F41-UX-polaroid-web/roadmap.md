@@ -168,7 +168,13 @@
 
 ## Wave 2: Discovery — Polaroid Profile Grid
 
-**Status:** IN_PROGRESS — 2026-03-29
+**Status:** DONE — 2026-03-29
+
+**Visual Verification:**
+- Screenshots: screenshots/wave2/run1/
+- Comparison: screenshots/wave2/run1/COMPARISON.md
+- Gate result: PASS (verify-wave-screenshots.sh exit 0)
+- Runs needed: 1 (run1 = first attempt, run1 = final pass)
 
 **Goal:** Convert the Discovery browse page to a Polaroid masonry grid of profile cards.
 
@@ -281,6 +287,8 @@
 ---
 
 ## Wave 3: Feed + Chat — Polaroid Posts and Messages
+
+**Status:** IN_PROGRESS — 2026-03-29
 
 **Goal:** Convert Feed and Chat pages to use Polaroid cards for photo content.
 

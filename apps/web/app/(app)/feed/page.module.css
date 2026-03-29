@@ -1,26 +1,71 @@
 .page {
   position: relative;
-  max-width: 640px;
+  max-width: 960px;
   margin: 0 auto;
   padding: var(--space-xl) var(--space-lg) 100px;
   min-height: 100vh;
+  background: var(--stitch-gradient, linear-gradient(135deg, #fff8f6 0%, #faebe6 50%, #f4e5e0 100%));
 }
 
 /* ---- Header ---- */
 .header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(255, 248, 246, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: var(--space-md) var(--space-lg);
+  margin: calc(var(--space-xl) * -1) calc(var(--space-lg) * -1) 0;
+  margin-bottom: var(--space-xl);
   display: flex;
   flex-direction: column;
   gap: 16px;
-  margin-bottom: 40px;
+  box-shadow: 0 1px 3px rgba(33, 26, 23, 0.05);
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .heading {
-  font-family: 'Noto Serif', 'Georgia', serif;
-  font-size: 32px;
-  font-weight: 700;
-  color: var(--color-text-primary);
+  font-family: var(--font-epilogue, 'Epilogue', sans-serif);
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--stitch-primary, #894d0d);
   margin: 0;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.shareBtn {
+  background: linear-gradient(135deg, var(--stitch-primary, #894d0d), var(--stitch-primary-container, #a76526));
+  color: #ffffff;
+  border: none;
+  padding: 8px 24px;
+  border-radius: 8px;
+  font-family: var(--font-epilogue, 'Epilogue', sans-serif);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(137, 77, 13, 0.3);
+  transition: all 200ms ease;
+}
+
+.shareBtn:hover {
+  box-shadow: 0 4px 16px rgba(137, 77, 13, 0.4);
+  transform: translateY(-1px);
+}
+
+.shareBtn:active {
+  transform: scale(0.95);
 }
 
 /* ---- Tab pills ---- */
@@ -64,10 +109,17 @@
   gap: 0;
 }
 
+/* ---- Masonry grid ---- */
+.masonry {
+  margin-bottom: var(--space-xl);
+}
+
 .list {
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
+  max-width: 640px;
+  margin: 0 auto;
 }
 
 /* ---- Sentinel ---- */
@@ -135,7 +187,7 @@
 .fab {
   position: fixed;
   bottom: calc(var(--space-3xl) + 16px);
-  right: max(var(--space-xl), calc((100vw - 640px) / 2 - 72px));
+  right: max(var(--space-xl), calc((100vw - 960px) / 2 - 72px));
   width: 52px;
   height: 52px;
   border-radius: 50%;

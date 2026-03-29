@@ -18,7 +18,7 @@ const MOCK_CONVERSATIONS: Conversation[] = [
   { id: '4', participantName: 'Alex', participantPhoto: '', lastMessage: 'Jag skickade bilden', lastMessageAt: '2026-03-26T18:30:00Z', unread: true },
 ]
 
-interface Conversation {
+export interface Conversation {
   id: string
   participantName: string
   participantPhoto: string
@@ -27,6 +27,13 @@ interface Conversation {
   unread: boolean
 }
 
+const AVATAR_ROTATIONS = [
+  styles.avatarRotateNeg3,
+  styles.avatarRotate2,
+  styles.avatarRotateNeg2,
+  styles.avatarRotate3,
+]
+
 function relativeTime(iso: string): string {
   const now = Date.now()
   const then = new Date(iso).getTime()
@@ -34,19 +41,21 @@ function relativeTime(iso: string): string {
 
   if (diff < 60) return 'Nu'
   if (diff < 3600) return `${Math.floor(diff / 60)} min`
-  if (diff < 86400) return `${Math.floor(diff / 3600)} h`
-  if (diff < 604800) return `${Math.floor(diff / 86400)} d`
-  return new Date(iso).toLocaleDateString('sv-SE', { month: 'short', day: 'numeric' })
+  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`
+  if (diff < 604800) return `${Math.floor(diff / 86400)}d ago`
+  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
 }
 
 interface ConversationItemProps {
   conversation: Conversation
   isActive: boolean
   onSelect: (id: string) => void
+  index: number
 }
 
-function ConversationItem({ conversation, isActive, onSelect }: ConversationItemProps) {
+function ConversationItem({ conversation, isActive, onSelect, index }: ConversationItemProps) {
   const initial = conversation.participantName.charAt(0).toUpperCase()
+  const rotationClass = AVATAR_ROTATIONS[index % AVATAR_ROTATIONS.length]
 
   return (
     <m.div
@@ -70,20 +79,21 @@ function ConversationItem({ conversation, isActive, onSelect }: ConversationItem
     >
       <div className={styles.avatarWrap}>
         {conversation.participantPhoto ? (
-          <img
-            src={conversation.participantPhoto}
-            alt={`${conversation.participantName} profilbild`}
-            className={styles.avatar}
-            width={48}
-            height={48}
-          />
+          <div className={`${styles.polaroidAvatar} ${rotationClass}`}>
+            <img
+              src={conversation.participantPhoto}
+              alt={`${conversation.participantName} profile`}
+              width={56}
+              height={40}
+            />
+          </div>
         ) : (
-          <div className={styles.avatarPlaceholder} aria-hidden="true">
-            {initial}
+          <div className={styles.avatarPlaceholder}>
+            <span aria-hidden="true">{initial}</span>
           </div>
         )}
         {conversation.unread && (
-          <span className={styles.unreadDot} aria-label="Oläst meddelande" />
+          <span className={styles.unreadDot} aria-label="Unread message" />
         )}
       </div>
 
@@ -92,12 +102,16 @@ function ConversationItem({ conversation, isActive, onSelect }: ConversationItem
           <span className={`${styles.name} ${conversation.unread ? styles.nameUnread : ''}`}>
             {conversation.participantName}
           </span>
-          <time
-            className={styles.time}
-            dateTime={conversation.lastMessageAt}
-          >
-            {relativeTime(conversation.lastMessageAt)}
-          </time>
+          {conversation.unread ? (
+            <div className={styles.unreadDot} style={{ position: 'static', width: 8, height: 8 }} />
+          ) : (
+            <time
+              className={styles.time}
+              dateTime={conversation.lastMessageAt}
+            >
+              {relativeTime(conversation.lastMessageAt)}
+            </time>
+          )}
         </div>
         <p className={`${styles.preview} ${conversation.unread ? styles.previewUnread : ''}`}>
           {conversation.lastMessage}
@@ -109,17 +123,27 @@ function ConversationItem({ conversation, isActive, onSelect }: ConversationItem
 
 interface ConversationListProps {
   activeConversationId?: string
+  conversations?: Conversation[]
+  onSelectConversation?: (id: string) => void
 }
 
 export default function ConversationList({
   activeConversationId,
+  conversations: propConversations,
+  onSelectConversation,
 }: ConversationListProps) {
-  const [conversations, setConversations] = useState<Conversation[]>([])
-  const [loading, setLoading] = useState(true)
+  const [conversations, setConversations] = useState<Conversation[]>(propConversations ?? [])
+  const [loading, setLoading] = useState(!propConversations)
   const router = useRouter()
   const pathname = usePathname()
 
   useEffect(() => {
+    if (propConversations) {
+      setConversations(propConversations)
+      setLoading(false)
+      return
+    }
+
     let cancelled = false
 
     async function loadConversations() {
@@ -145,13 +169,17 @@ export default function ConversationList({
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [propConversations])
 
   const handleSelect = useCallback(
     (id: string) => {
-      router.push(`/chat/${id}`)
+      if (onSelectConversation) {
+        onSelectConversation(id)
+      } else {
+        router.push(`/chat/${id}`)
+      }
     },
-    [router]
+    [router, onSelectConversation]
   )
 
   const currentId =
@@ -160,11 +188,11 @@ export default function ConversationList({
 
   if (loading) {
     return (
-      <aside className={styles.sidebar} aria-label="Konversationer">
+      <aside className={styles.sidebar} aria-label="Conversations">
         <div className={styles.header}>
-          <h2 className={styles.heading}>Meddelanden</h2>
+          <h2 className={styles.heading}>Conversations</h2>
         </div>
-        <div className={styles.list} role="listbox" aria-label="Laddar konversationer">
+        <div className={styles.list} role="listbox" aria-label="Loading conversations">
           {Array.from({ length: 5 }, (_, i) => (
             <div key={i} className={styles.skeletonItem}>
               <Skeleton shape="circle" width={48} height={48} />
@@ -181,20 +209,23 @@ export default function ConversationList({
 
   return (
     <LazyMotion features={loadMotionFeatures} strict>
-      <aside className={styles.sidebar} aria-label="Konversationer">
+      <aside className={styles.sidebar} aria-label="Conversations">
         <div className={styles.header}>
-          <h2 className={styles.heading}>Meddelanden</h2>
-          {conversations.some((c) => c.unread) && (
-            <span className={styles.unreadCount} aria-label={`${conversations.filter((c) => c.unread).length} olästa`}>
-              {conversations.filter((c) => c.unread).length}
-            </span>
-          )}
+          <h2 className={styles.heading}>Conversations</h2>
+          <div className={styles.searchWrap}>
+            <span className={styles.searchIcon} aria-hidden="true">&#128269;</span>
+            <input
+              className={styles.searchInput}
+              type="text"
+              placeholder="Search keepsakes..."
+            />
+          </div>
         </div>
 
         <div
           className={styles.list}
           role="listbox"
-          aria-label="Konversationslista"
+          aria-label="Conversation list"
           aria-activedescendant={currentId ? `conv-${currentId}` : undefined}
         >
           <AnimatePresence initial={false}>
@@ -206,20 +237,21 @@ export default function ConversationList({
               >
                 <div className={styles.emptyIcon} aria-hidden="true">
                   <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-                    <circle cx="20" cy="20" r="18" stroke="var(--color-copper)" strokeWidth="1.5" strokeDasharray="3 2" opacity="0.5" />
-                    <path d="M13 16h14M13 22h9" stroke="var(--color-copper)" strokeWidth="1.5" strokeLinecap="round" opacity="0.7" />
+                    <circle cx="20" cy="20" r="18" stroke="var(--stitch-primary)" strokeWidth="1.5" strokeDasharray="3 2" opacity="0.5" />
+                    <path d="M13 16h14M13 22h9" stroke="var(--stitch-primary)" strokeWidth="1.5" strokeLinecap="round" opacity="0.7" />
                   </svg>
                 </div>
-                <p className={styles.emptyText}>Inga konversationer än</p>
-                <p className={styles.emptySubtext}>Matcha med någon för att starta ett samtal</p>
+                <p className={styles.emptyText}>No conversations yet</p>
+                <p className={styles.emptySubtext}>Match with someone to start a conversation</p>
               </m.div>
             ) : (
-              conversations.map((conv) => (
+              conversations.map((conv, i) => (
                 <ConversationItem
                   key={conv.id}
                   conversation={conv}
                   isActive={conv.id === currentId}
                   onSelect={handleSelect}
+                  index={i}
                 />
               ))
             )}
