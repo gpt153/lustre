@@ -680,6 +680,167 @@ async function main() {
   }
 
   console.log(`\n✅ Seeded ${celebrities.length} dev users`)
+
+  // ─── Social graph: swipes, matches, conversations, messages ───────────────
+
+  console.log('\nSeeding social graph...')
+
+  // Gather all user IDs by display name
+  const allUsers = await prisma.user.findMany({
+    where: { personnummer_hash: { startsWith: 'dev-' } },
+    select: { id: true, displayName: true },
+  })
+  const userIdMap = new Map(allUsers.map((u) => [u.displayName, u.id]))
+
+  // 10 mutual LIKE pairs that result in matches
+  const matchPairs: Array<[string, string]> = [
+    ['Scarlett J', 'Ryan G'],
+    ['Margot R', 'Leonardo D'],
+    ['Angelina J', 'Brad P'],
+    ['Charlize T', 'Idris E'],
+    ['Jennifer L', 'Chris H'],
+    ['Zoe S', 'Jason M'],
+    ['Priyanka C', 'Henry C'],
+    ['Halle B', 'Tom H'],
+    ['Eva M', 'George C'],
+    ['Lupita N', 'Ryan R'],
+  ]
+
+  for (const [nameA, nameB] of matchPairs) {
+    const userAId = userIdMap.get(nameA)
+    const userBId = userIdMap.get(nameB)
+    if (!userAId || !userBId) {
+      console.warn(`⚠️  Could not find users for pair: ${nameA} / ${nameB}`)
+      continue
+    }
+
+    // Mutual LIKE swipes
+    await prisma.swipe.upsert({
+      where: { userId_targetId: { userId: userAId, targetId: userBId } },
+      update: {},
+      create: { userId: userAId, targetId: userBId, action: 'LIKE' },
+    })
+    await prisma.swipe.upsert({
+      where: { userId_targetId: { userId: userBId, targetId: userAId } },
+      update: {},
+      create: { userId: userBId, targetId: userAId, action: 'LIKE' },
+    })
+
+    // Match — ensure user1Id < user2Id alphabetically
+    const [user1Id, user2Id] = [userAId, userBId].sort()
+    const match = await prisma.match.upsert({
+      where: { user1Id_user2Id: { user1Id, user2Id } },
+      update: {},
+      create: { user1Id, user2Id },
+    })
+
+    console.log(`✓ Match: ${nameA} ↔ ${nameB}`)
+
+    // Conversation for the first 5 pairs
+    const conversationPairs = matchPairs.slice(0, 5)
+    if (!conversationPairs.some(([a, b]) => a === nameA && b === nameB)) continue
+
+    const conversation = await prisma.conversation.upsert({
+      where: { matchId: match.id },
+      update: {},
+      create: { matchId: match.id },
+    })
+
+    // Participants
+    await prisma.conversationParticipant.upsert({
+      where: { conversationId_userId: { conversationId: conversation.id, userId: userAId } },
+      update: {},
+      create: { conversationId: conversation.id, userId: userAId },
+    })
+    await prisma.conversationParticipant.upsert({
+      where: { conversationId_userId: { conversationId: conversation.id, userId: userBId } },
+      update: {},
+      create: { conversationId: conversation.id, userId: userBId },
+    })
+
+    // Skip messages if already present
+    const existingMessages = await prisma.message.count({
+      where: { conversationId: conversation.id },
+    })
+    if (existingMessages > 0) {
+      console.log(`  ✓ Conversation already has messages, skipping (${nameA} ↔ ${nameB})`)
+      continue
+    }
+
+    // Realistic Swedish messages per pair
+    const chatScripts: Record<string, Array<{ sender: string; content: string }>> = {
+      'Scarlett J|Ryan G': [
+        { sender: 'Scarlett J', content: 'Hej! Såg att du spelar piano — det är rätt ovanligt.' },
+        { sender: 'Ryan G', content: 'Haha, ja jag vet. Inte det coolaste konversationsämnet kanske?' },
+        { sender: 'Scarlett J', content: 'Tvärtom. Jag är svag för händer som vet vad de gör 😄' },
+        { sender: 'Ryan G', content: 'Nu måste jag fråga om du menar det bokstavligt eller bildligt?' },
+        { sender: 'Scarlett J', content: 'Varför inte båda? Vad gör du på fredag?' },
+      ],
+      'Margot R|Leonardo D': [
+        { sender: 'Margot R', content: 'Såg att du seglat från Monaco — hur var det?' },
+        { sender: 'Leonardo D', content: 'Tre dagar, sol och inga telefoner. Bästa beslutet på länge.' },
+        { sender: 'Margot R', content: 'Tre dagar utan telefon?! Du är antingen zen eller galen 😂' },
+        { sender: 'Leonardo D', content: 'Antagligen lite av båda. Har du seglaterfaerenheter?' },
+        { sender: 'Margot R', content: 'Jag surfar om det räknas? Havet är havet.' },
+        { sender: 'Leonardo D', content: 'Det räknas definitivt. Vi kanske ska kombinera något.' },
+      ],
+      'Angelina J|Brad P': [
+        { sender: 'Angelina J', content: 'Du gör keramik OCH motorcyklar. Det är en intressant kombination.' },
+        { sender: 'Brad P', content: 'En för kontroll, en för att tappa den. Balansen är viktig 😄' },
+        { sender: 'Angelina J', content: 'Det förstår jag faktiskt bättre än du tror.' },
+        { sender: 'Brad P', content: 'Berätta mer om det. Jag är genuint nyfiken.' },
+        { sender: 'Angelina J', content: 'Det kräver mer tid än en app. Träffas vi för kaffe?' },
+        { sender: 'Brad P', content: 'Absolut. Jag vet ett ställe vid havet. Tisdag?' },
+        { sender: 'Angelina J', content: 'Tisdag funkar. Jag ser fram emot det.' },
+      ],
+      'Charlize T|Idris E': [
+        { sender: 'Idris E', content: 'Hej Charlize! Såg att du är från Sydafrika — var är du från?' },
+        { sender: 'Charlize T', content: 'Benoni, nära Johannesburg. Och du är från London?' },
+        { sender: 'Idris E', content: 'Hackney, östra London. Inte exakt glamoröst men det formade mig.' },
+        { sender: 'Charlize T', content: 'Äkta bakgrunder är alltid mer intressanta än glamour 😊' },
+        { sender: 'Idris E', content: 'Exakt min filosofi. Vad gör du här i LA?' },
+        { sender: 'Charlize T', content: 'Jobbet. Och nu kanske lite äventyr. Du?' },
+        { sender: 'Idris E', content: 'Samma. Ska vi ta en drink och se vart det leder?' },
+        { sender: 'Charlize T', content: 'Det låter faktiskt riktigt bra. Fredag?' },
+      ],
+      'Jennifer L|Chris H': [
+        { sender: 'Chris H', content: 'Hej! Dansen på din profil — vilken stil dansar du?' },
+        { sender: 'Jennifer L', content: 'Allt egentligen. Salsa, hip-hop, ballroom. Dans är dans.' },
+        { sender: 'Chris H', content: 'Imponerande! Jag kan surfa men dansa är ett annat kapitel 😅' },
+        { sender: 'Jennifer L', content: 'Surfbalansen hjälper faktiskt. Du lär dig snabbt, jag lovar.' },
+        { sender: 'Chris H', content: 'Är det ett erbjudande om danslektioner?' },
+        { sender: 'Jennifer L', content: 'Kan vara det. Beroende på hur bra elev du är 😉' },
+      ],
+    }
+
+    const pairKey = `${nameA}|${nameB}`
+    const script = chatScripts[pairKey]
+    if (!script) {
+      console.warn(`  ⚠️  No chat script for pair: ${pairKey}`)
+      continue
+    }
+
+    const baseTime = Date.now() - 2 * 24 * 60 * 60 * 1000 // 2 days ago
+    for (let i = 0; i < script.length; i++) {
+      const { sender, content } = script[i]
+      const senderId = userIdMap.get(sender)
+      if (!senderId) continue
+      await prisma.message.create({
+        data: {
+          conversationId: conversation.id,
+          senderId,
+          content,
+          type: 'TEXT',
+          status: i < script.length - 1 ? 'READ' : 'DELIVERED',
+          createdAt: new Date(baseTime + i * 5 * 60 * 1000), // 5 min apart
+        },
+      })
+    }
+
+    console.log(`  ✓ Conversation seeded: ${nameA} ↔ ${nameB} (${script.length} messages)`)
+  }
+
+  console.log('\n✅ Social graph seeded')
 }
 
 main()
