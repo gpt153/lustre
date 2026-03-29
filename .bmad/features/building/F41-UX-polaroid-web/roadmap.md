@@ -4,7 +4,7 @@
 **Stitch Project v1:** 1086044651106222720
 **Stitch Project v2:** 3228541579636523619
 **Depends on:** F40 Wave 1 (`packages/tokens/polaroid.ts`) — already exists
-**Status:** BUILDING — Wave 1 IN_PROGRESS — 2026-03-29
+**Status:** DONE — all waves implemented, tested, and visually verified — 2026-03-29
 
 ---
 
@@ -541,7 +541,13 @@
 
 ## Wave 5: Left Nav + Polish + Responsive
 
-**Status:** IN_PROGRESS — 2026-03-29
+**Status:** DONE — 2026-03-29
+
+**Visual Verification:**
+- Screenshots: screenshots/wave5/run1/
+- Comparison: screenshots/wave5/run1/COMPARISON.md
+- Gate result: PASS (verify-wave-screenshots.sh exit 0)
+- Runs needed: 1 (run1 = first attempt, run1 = final pass)
 
 **Goal:** Convert the left sidebar navigation from Stitch, apply final polish, ensure responsive behavior at all breakpoints.
 
