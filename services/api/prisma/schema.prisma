@@ -164,6 +164,7 @@ model ProfilePhoto {
   thumbnailLarge  String?  @map("thumbnail_large")
   position        Int      @default(0)
   isPublic        Boolean  @default(true) @map("is_public")
+  needsReview     Boolean  @default(false) @map("needs_review")
   createdAt       DateTime @default(now()) @map("created_at")
   profile         Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
@@ -264,6 +265,7 @@ model PostMedia {
   thumbnailMedium String?      @map("thumbnail_medium")
   thumbnailLarge  String?      @map("thumbnail_large")
   position        Int          @default(0)
+  needsReview     Boolean      @default(false) @map("needs_review")
   createdAt       DateTime     @default(now()) @map("created_at")
   tags            ContentTag[]
   post            Post         @relation(fields: [postId], references: [id], onDelete: Cascade)

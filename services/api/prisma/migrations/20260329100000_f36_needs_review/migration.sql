@@ -1,0 +1,2 @@
+ALTER TABLE "profile_photos" ADD COLUMN IF NOT EXISTS "needs_review" BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE "post_media" ADD COLUMN IF NOT EXISTS "needs_review" BOOLEAN NOT NULL DEFAULT false;

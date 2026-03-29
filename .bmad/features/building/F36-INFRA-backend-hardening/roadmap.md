@@ -100,10 +100,18 @@ Migrate web authentication from localStorage JWT to HttpOnly cookies. Add rate l
 
 Replace fire-and-forget async calls with NATS JetStream durable consumers. Add dead-letter queue and conservative fallback for classification failures.
 
-**Status:** NOT STARTED
+**Status:** DONE (2026-03-29)
 
 ### Epics:
-- wave-4-durable-consumers (sonnet) — Create JetStream streams and durable consumers for media classification and search indexing. Exponential backoff (5 retries). Dead-letter subject. Conservative fallback: `needs_review` flag on classification failure.
+- wave-4-durable-consumers (sonnet) — VERIFIED — JetStream streams (LUSTRE_MEDIA, LUSTRE_SEARCH), durable media-classifier consumer with 5-retry exponential backoff, DLQ, needsReview fallback. NATS reconnect with jitter.
+
+### Verification:
+- `nats.ts` ✅ — Reconnect delay handler with exponential backoff + jitter, unlimited retries
+- `jetstream-setup.ts` ✅ — Idempotent stream creation (7d retention, 1GB max)
+- `media-classify-consumer.ts` ✅ — Durable consumer, backoff [1s,5s,30s,120s,600s], DLQ, needsReview flag
+- `server.ts` ✅ — Fire-and-forget replaced with publishClassifyJob, ensureStreams at startup
+- `schema.prisma` ✅ — needsReview on ProfilePhoto + PostMedia
+- TypeScript ✅ — No new errors
 
 ### Testgate Wave 4:
 - [ ] `classifyAndTagMedia` publishes to NATS instead of direct call

@@ -11,11 +11,11 @@ import { handleSwishCallback, type SwishCallbackBody } from './auth/swish.js'
 import { handleTicketPaymentCallback, type SwishCallbackBody as TicketSwishCallbackBody } from './lib/event-tickets.js'
 import { meili } from './lib/meilisearch.js'
 import { getNatsConnection } from './lib/nats.js'
+import { ensureStreams } from './lib/jetstream-setup.js'
+import { startMediaClassifyConsumer, publishClassifyJob } from './lib/media-classify-consumer.js'
 import { processImage } from './lib/image.js'
 import { uploadToR2, getPhotoKey, getPostMediaKey } from './lib/r2.js'
 import { verifyToken } from './auth/jwt.js'
-import { classifyAndTagMedia } from './lib/sightengine.js'
-import { classifyChatMedia } from './lib/chat-classifier.js'
 import { startChatConsumer } from './lib/chat-consumer.js'
 import { startPostEventConsumer } from './lib/post-event-consumer.js'
 import { startEventCompletedConsumer } from './lib/event-completed-consumer.js'
@@ -445,8 +445,10 @@ async function start() {
       },
     })
 
-    // Classify image asynchronously (don't block the response)
-    classifyAndTagMedia(media.id, originalUrl).catch(() => {})
+    // Publish classification job to durable JetStream consumer
+    publishClassifyJob({ mediaId: media.id, url: originalUrl, type: 'post' }).catch((err) => {
+      server.log.error({ err, mediaId: media.id }, 'Failed to publish classify job')
+    })
 
     return reply.status(201).send(updated)
   })
@@ -554,9 +556,17 @@ async function start() {
       },
     })
 
-    // Trigger classification asynchronously (fire-and-forget) for images only
+    // Publish classification job to durable JetStream consumer for images only
     if (mediaType === 'IMAGE') {
-      classifyChatMedia(message.id, mediaUrl, conversationId).catch(() => {})
+      publishClassifyJob({
+        mediaId: message.id,
+        url: mediaUrl,
+        type: 'chat',
+        messageId: message.id,
+        conversationId,
+      }).catch((err) => {
+        server.log.error({ err, messageId: message.id }, 'Failed to publish classify job')
+      })
     }
 
     return reply.status(201).send({
@@ -564,6 +574,14 @@ async function start() {
       mediaUrl: message.mediaUrl,
       type: message.type,
     })
+  })
+
+  // Ensure JetStream streams exist
+  await ensureStreams()
+
+  // Start durable media classification consumer
+  startMediaClassifyConsumer().catch((err) => {
+    server.log.error('Failed to start media classify consumer:', err)
   })
 
   // Start NATS consumers in background
