@@ -393,7 +393,13 @@
 
 ## Wave 4: Profile + Match + Edit — Gallery, Modal, Form
 
-**Status:** IN_PROGRESS — 2026-03-29
+**Status:** DONE — 2026-03-29
+
+**Visual Verification:**
+- Screenshots: screenshots/wave4/run1/
+- Comparison: screenshots/wave4/run1/COMPARISON.md
+- Gate result: PASS (verify-wave-screenshots.sh exit 0)
+- Runs needed: 1 (run1 = first attempt, run1 = final pass)
 
 **Goal:** Convert Profile view (scattered gallery), Match modal (overlapping Polaroids), and Edit Profile (gallery + form).
 
@@ -534,6 +540,8 @@
 ---
 
 ## Wave 5: Left Nav + Polish + Responsive
+
+**Status:** IN_PROGRESS — 2026-03-29
 
 **Goal:** Convert the left sidebar navigation from Stitch, apply final polish, ensure responsive behavior at all breakpoints.
 

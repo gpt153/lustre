@@ -1,0 +1,224 @@
+/* ============================================================
+   StitchContextPanel — Right sidebar (Context Panel)
+   Fixed 320px, matches Stitch HTML reference
+   ============================================================ */
+
+.panel {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 320px;
+  height: 100vh;
+  overflow-y: auto;
+  background: var(--stitch-surface-container-low, #fff1ec);
+  padding: 32px;
+  z-index: 30;
+}
+
+/* — Sections — */
+
+.section {
+  margin-bottom: 40px;
+}
+
+.sectionHeading {
+  font-family: var(--font-epilogue, 'Epilogue', sans-serif);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--stitch-primary, #894d0d);
+  margin: 0 0 24px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.headingIcon {
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* — Trending Moments — */
+
+.trendingList {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.trendingItem {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+}
+
+.miniPolaroid {
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  background: white;
+  padding: 4px;
+  padding-bottom: 12px;
+  box-shadow: var(--polaroid-shadow, 0 10px 30px -10px rgba(33, 26, 23, 0.15));
+  transition: transform 0.3s ease;
+}
+
+.miniPolaroid.rotate2 {
+  transform: rotate(2deg);
+}
+
+.miniPolaroid.rotateNeg3 {
+  transform: rotate(-3deg);
+}
+
+.trendingItem:hover .miniPolaroid {
+  transform: rotate(0deg) scale(1.05);
+}
+
+.miniPolaroidImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 1px;
+}
+
+.trendingText {
+  min-width: 0;
+}
+
+.trendingName {
+  font-family: var(--font-epilogue, 'Epilogue', sans-serif);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--stitch-on-surface, #211a17);
+  margin: 0;
+}
+
+.trendingAuthor {
+  font-size: 12px;
+  color: var(--stitch-outline, #857467);
+  margin: 4px 0 0 0;
+  font-style: italic;
+}
+
+/* — Suggested Profiles — */
+
+.suggestedCard {
+  background: var(--stitch-surface-container-lowest, #ffffff);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.suggestedList {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.suggestedItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.suggestedInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.suggestedName {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--stitch-on-surface, #211a17);
+  margin: 0;
+}
+
+.suggestedLabel {
+  font-size: 10px;
+  color: var(--stitch-outline, #857467);
+  margin: 2px 0 0 0;
+}
+
+.addButton {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--stitch-primary, #894d0d);
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.addButton:hover {
+  background: rgba(137, 77, 13, 0.08);
+}
+
+.viewAllLink {
+  display: block;
+  width: 100%;
+  margin-top: 24px;
+  padding: 8px 0;
+  border: none;
+  background: transparent;
+  font-family: var(--font-epilogue, 'Epilogue', sans-serif);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--stitch-primary, #894d0d);
+  cursor: pointer;
+  text-align: center;
+  transition: text-decoration 0.2s ease;
+}
+
+.viewAllLink:hover {
+  text-decoration: underline;
+}
+
+/* — Footer — */
+
+.footer {
+  margin-top: 48px;
+  text-align: center;
+}
+
+.footerCopyright {
+  font-size: 10px;
+  color: var(--stitch-outline, #857467);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin: 0;
+}
+
+.footerTagline {
+  font-family: var(--font-caveat, 'Caveat', cursive);
+  font-size: 18px;
+  color: rgba(133, 116, 103, 0.6);
+  font-style: italic;
+  margin: 8px 0 0 0;
+}
+
+/* — Responsive: hide below 1200px — */
+
+@media (max-width: 1199px) {
+  .panel {
+    display: none;
+  }
+}

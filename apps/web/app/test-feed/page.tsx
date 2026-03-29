@@ -3,6 +3,7 @@
 import { useState, useCallback, MouseEvent } from 'react'
 import PolaroidCard from '@/components/common/PolaroidCard'
 import PolaroidMasonryGrid from '@/components/common/PolaroidMasonryGrid'
+import StitchNavRail from '@/components/layout/StitchNavRail'
 import styles from './page.module.css'
 
 interface MockPost {
@@ -210,6 +211,8 @@ function FeedPostCard({ post }: { post: MockPost }) {
 export default function TestFeedPage() {
   return (
     <div className={styles.page}>
+      <StitchNavRail activeItem="feed" />
+      <div className={styles.mainContent}>
       <header className={styles.header}>
         <div className={styles.headerRow}>
           <h1 className={styles.heading}>Flode</h1>
@@ -228,6 +231,7 @@ export default function TestFeedPage() {
           ))}
         </PolaroidMasonryGrid>
       </main>
+      </div>
     </div>
   )
 }
