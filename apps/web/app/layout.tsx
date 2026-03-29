@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter, JetBrains_Mono } from 'next/font/google'
+import { Inter, JetBrains_Mono, Caveat } from 'next/font/google'
 import { Providers } from './providers'
 import '@/styles/globals.css'
 
@@ -24,6 +24,18 @@ const jetbrainsMono = JetBrains_Mono({
   display: 'swap',
   preload: false, // Not critical — defer to save bandwidth
   weight: ['400', '500'],
+})
+
+/*
+ * Caveat — Polaroid captions (handwritten feel)
+ * Loaded from Google Fonts via next/font
+ */
+const caveat = Caveat({
+  subsets: ['latin'],
+  variable: '--font-caveat',
+  display: 'swap',
+  preload: false,
+  weight: ['400', '700'],
 })
 
 /*
@@ -104,7 +116,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
       lang="sv"
       data-theme="dark"
       data-mode="vanilla"
-      className={`${inter.variable} ${jetbrainsMono.variable}`}
+      className={`${inter.variable} ${jetbrainsMono.variable} ${caveat.variable}`}
       suppressHydrationWarning
     >
       <head>

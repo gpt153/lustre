@@ -302,6 +302,23 @@
 }
 
 /* ============================================================
+   11. POLAROID DESIGN SYSTEM
+   Exact proportions from a Polaroid 600 instant photo card.
+   ============================================================ */
+:root {
+  --polaroid-card-aspect: 88 / 107;
+  --polaroid-image-aspect: 79 / 77;
+  --polaroid-border-side: 5.11%;
+  --polaroid-border-top: 7.39%;
+  --polaroid-border-bottom: 26.70%;
+  --polaroid-bg: #FFFFFF;
+  --polaroid-caption-color: #2C2421;
+  --polaroid-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+  --polaroid-shadow-hover: 0 8px 32px rgba(0, 0, 0, 0.25);
+  --polaroid-rotation: 0deg;
+}
+
+/* ============================================================
    10. REDUCED MOTION
    Respect the user's OS-level motion preference by collapsing
    all spring durations to instant transitions.

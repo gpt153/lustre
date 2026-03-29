@@ -1,0 +1,102 @@
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  aspect-ratio: var(--polaroid-card-aspect);
+  background: var(--polaroid-bg);
+  box-shadow: var(--polaroid-shadow);
+  padding: var(--polaroid-border-top) var(--polaroid-border-side) var(--polaroid-border-bottom);
+  transform: rotate(var(--polaroid-rotation));
+  transition:
+    transform var(--transition-spring),
+    box-shadow var(--transition-spring);
+  cursor: default;
+  will-change: transform;
+}
+
+.hoverable {
+  cursor: pointer;
+}
+
+.hoverable:hover {
+  --polaroid-rotation: 0deg;
+  transform: rotate(0deg) translateY(-8px);
+  box-shadow: var(--polaroid-shadow-hover);
+}
+
+.hoverable:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.image {
+  width: 100%;
+  aspect-ratio: var(--polaroid-image-aspect);
+  object-fit: cover;
+  display: block;
+  border-radius: 0;
+  flex-shrink: 0;
+}
+
+.caption {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-caveat, 'Caveat', cursive);
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--polaroid-caption-color);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 4px;
+  min-height: 0;
+}
+
+.children {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+}
+
+/* Stack variant: peeking cards behind */
+.stack {
+  position: relative;
+}
+
+.stack::before,
+.stack::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--polaroid-bg);
+  box-shadow: var(--polaroid-shadow);
+  z-index: -1;
+  border-radius: 0;
+}
+
+.stack::before {
+  transform: rotate(-4deg);
+}
+
+.stack::after {
+  transform: rotate(3deg);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+
+  .hoverable:hover {
+    transform: rotate(0deg) translateY(-8px);
+  }
+}
