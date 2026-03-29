@@ -10,6 +10,14 @@
 
 ## Wave 1: Foundation — Design Tokens + PolaroidCard Component
 
+**Status:** DONE — 2026-03-29
+
+**Visual Verification:**
+- Screenshots: screenshots/wave1/run1/
+- Comparison: screenshots/wave1/run1/COMPARISON.md
+- Gate result: PASS (verify-wave-screenshots.sh exit 0)
+- Runs needed: 1 (run1 = first attempt, run1 = final pass)
+
 **Goal:** CSS custom properties for all Polaroid tokens + the core `PolaroidCard` component with exact Polaroid 600 proportions.
 
 **Stitch source:** `html/desktop-feed-revised.html`, `html/desktop-match.html`, `html/desktop-edit-profile.html`
@@ -159,6 +167,8 @@
 ---
 
 ## Wave 2: Discovery — Polaroid Profile Grid
+
+**Status:** IN_PROGRESS — 2026-03-29
 
 **Goal:** Convert the Discovery browse page to a Polaroid masonry grid of profile cards.
 

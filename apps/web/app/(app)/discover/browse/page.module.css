@@ -1,3 +1,9 @@
+.page {
+  background: var(--stitch-gradient, linear-gradient(135deg, #fff8f6 0%, #faebe6 50%, #f4e5e0 100%));
+  min-height: 100vh;
+  padding: 48px;
+}
+
 .header {
   display: flex;
   align-items: baseline;
@@ -8,17 +14,17 @@
 }
 
 .heading {
-  font-family: 'Noto Serif', 'Georgia', serif;
-  font-size: 32px;
-  font-weight: 700;
-  color: var(--color-text-primary);
+  font-family: var(--font-epilogue, 'Epilogue', sans-serif);
+  font-size: 48px;
+  font-weight: 800;
+  color: var(--stitch-on-surface, #211a17);
   margin: 0;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.05em;
 }
 
 .subtitle {
   font-size: 13px;
-  color: var(--color-text-muted);
+  color: var(--stitch-on-surface-variant, #524439);
   font-style: italic;
   margin: 0;
 }
@@ -104,8 +110,12 @@
     align-items: flex-start;
   }
 
+  .page {
+    padding: 24px;
+  }
+
   .heading {
-    font-size: 24px;
+    font-size: 28px;
   }
 
   .hint {

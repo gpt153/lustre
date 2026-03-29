@@ -1,0 +1,49 @@
+.fab {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, var(--stitch-primary, #894d0d), var(--stitch-tertiary, #9f3c1e));
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 32px rgba(137, 77, 13, 0.3);
+  transition: transform 300ms var(--spring, ease), box-shadow 300ms ease;
+  z-index: 50;
+}
+
+.fab:hover {
+  transform: scale(1.1);
+  box-shadow: 0 12px 40px rgba(137, 77, 13, 0.4);
+}
+
+.icon {
+  transition: transform 300ms var(--spring, ease);
+}
+
+.fab:hover .icon {
+  transform: rotate(12deg);
+}
+
+.fab:active {
+  transform: scale(0.95);
+}
+
+.fab:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+@media (max-width: 599px) {
+  .fab {
+    bottom: 80px;
+    right: 20px;
+    width: 56px;
+    height: 56px;
+  }
+}

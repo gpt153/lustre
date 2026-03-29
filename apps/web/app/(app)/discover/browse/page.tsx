@@ -6,6 +6,8 @@ import PolaroidCard from '@/components/common/PolaroidCard'
 import PolaroidMasonryGrid from '@/components/common/PolaroidMasonryGrid'
 import SparkButton from '@/components/discover/SparkButton'
 import DiscoverSkeleton from '@/components/discover/DiscoverSkeleton'
+import FilterBar from '@/components/discover/FilterBar'
+import DiscoverFAB from '@/components/discover/DiscoverFAB'
 import { useDiscoverKeyboard } from '@/hooks/useDiscoverKeyboard'
 import { api } from '@/lib/trpc'
 import styles from './page.module.css'
@@ -26,7 +28,7 @@ const MOCK_PROFILES: DiscoverProfile[] = [
     id: '1',
     displayName: 'Emma',
     age: 28,
-    photos: [],
+    photos: ['https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=600&h=600&fit=crop'],
     location: 'Stockholm',
     bio: 'Nyfiken på livet och på vad det kan erbjuda. Tycker om långa promenader, bra samtal och att utforska nya saker.',
   },
@@ -34,7 +36,7 @@ const MOCK_PROFILES: DiscoverProfile[] = [
     id: '2',
     displayName: 'Sofia',
     age: 31,
-    photos: [],
+    photos: ['https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&h=600&fit=crop'],
     location: 'Göteborg',
     bio: 'Konstnär och äventyrare. Letar efter någon att dela spontana utflykter och kreativa projekt med.',
   },
@@ -42,7 +44,7 @@ const MOCK_PROFILES: DiscoverProfile[] = [
     id: '3',
     displayName: 'Lina',
     age: 25,
-    photos: [],
+    photos: ['https://images.unsplash.com/photo-1517841905240-472988babdf9?w=600&h=600&fit=crop'],
     location: 'Malmö',
     bio: 'Yogainstruktör på dagen, bookworm på kvällen. Uppskattar ärlighet och närvaro.',
   },
@@ -50,7 +52,7 @@ const MOCK_PROFILES: DiscoverProfile[] = [
     id: '4',
     displayName: 'Alex',
     age: 33,
-    photos: [],
+    photos: ['https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=600&fit=crop'],
     location: 'Uppsala',
     bio: 'Jobbar med hållbarhet och älskar att laga mat. Söker genuina kopplingar — inte performativa.',
   },
@@ -58,7 +60,7 @@ const MOCK_PROFILES: DiscoverProfile[] = [
     id: '5',
     displayName: 'Maja',
     age: 27,
-    photos: [],
+    photos: ['https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600&h=600&fit=crop'],
     location: 'Stockholm',
     bio: 'Musiker och filmfantast. Skrattar för mycket och bor med en katt som dömer mig konstant.',
   },
@@ -66,7 +68,7 @@ const MOCK_PROFILES: DiscoverProfile[] = [
     id: '6',
     displayName: 'Julia',
     age: 30,
-    photos: [],
+    photos: ['https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=600&h=600&fit=crop'],
     location: 'Linköping',
     bio: 'Arkitekt med passion för design och urbana rum. Söker djupa samtal och delade äventyr.',
   },
@@ -74,7 +76,7 @@ const MOCK_PROFILES: DiscoverProfile[] = [
     id: '7',
     displayName: 'Klara',
     age: 26,
-    photos: [],
+    photos: ['https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?w=600&h=600&fit=crop'],
     location: 'Stockholm',
     bio: 'Reser gärna, helst till okända platser. Just hemma igen efter ett år i Sydamerika.',
   },
@@ -82,9 +84,41 @@ const MOCK_PROFILES: DiscoverProfile[] = [
     id: '8',
     displayName: 'Ida',
     age: 29,
-    photos: [],
+    photos: ['https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=600&h=600&fit=crop'],
     location: 'Västerås',
     bio: 'Sjuksköterska med stort hjärta. På fritiden löper jag, pysslar med trädgård och ser dåliga filmer.',
+  },
+  {
+    id: '9',
+    displayName: 'Daniel',
+    age: 30,
+    photos: ['https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=600&h=600&fit=crop'],
+    location: 'Lund',
+    bio: 'Filmfotograf och kaffeälskare. Letar efter någon att utforska vintagemarknader med.',
+  },
+  {
+    id: '10',
+    displayName: 'Chloe',
+    age: 24,
+    photos: ['https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=600&h=600&fit=crop'],
+    location: 'Umeå',
+    bio: 'Golden hour-entusiast. Studerar fotografi och drömmer om att resa till Japan.',
+  },
+  {
+    id: '11',
+    displayName: 'Liam',
+    age: 29,
+    photos: ['https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=600&h=600&fit=crop'],
+    location: 'Örebro',
+    bio: 'Amatörkock, professionell matälskare. Gör den bästa pastan du någonsin ätit.',
+  },
+  {
+    id: '12',
+    displayName: 'Maya',
+    age: 26,
+    photos: ['https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=600&h=600&fit=crop'],
+    location: 'Helsingborg',
+    bio: 'Söker en konsertbuddy. Spelar gitarr och sjunger i ett indieband på helgerna.',
   },
 ]
 
@@ -105,14 +139,19 @@ export default function BrowsePage() {
 
         if (Array.isArray(result) && result.length > 0) {
           // API returns photo objects { id, url, ... } — map to string[]
-          const mapped = result.map((p: Record<string, unknown>) => ({
-            ...p,
-            photos: Array.isArray(p.photos)
-              ? p.photos.map((ph: unknown) =>
-                  typeof ph === 'string' ? ph : (ph as { url: string }).url
-                )
-              : [],
-          }))
+          const mapped = result
+            .map((p: Record<string, unknown>) => ({
+              ...p,
+              photos: Array.isArray(p.photos)
+                ? p.photos
+                    .map((ph: unknown) =>
+                      typeof ph === 'string' ? ph : (ph as { url: string }).url
+                    )
+                    .filter(Boolean)
+                : [],
+            }))
+            // Only show profiles that have at least one photo
+            .filter((p) => p.photos.length > 0)
           setProfiles(mapped as DiscoverProfile[])
         } else {
           // Empty result — show mock data in development
@@ -187,10 +226,11 @@ export default function BrowsePage() {
   }
 
   return (
-    <div>
+    <div className={styles.page}>
+      <FilterBar profileCount={profiles.length} />
       <div className={styles.header}>
         <div>
-          <h1 className={styles.heading}>Kurerat för dig</h1>
+          <h1 className={styles.heading}>Daily Discoveries</h1>
           <p className={styles.subtitle}>
             Hittade {profiles.length} matchningar idag
           </p>
@@ -239,6 +279,7 @@ export default function BrowsePage() {
           </PolaroidCard>
         ))}
       </PolaroidMasonryGrid>
+      <DiscoverFAB />
     </div>
   )
 }

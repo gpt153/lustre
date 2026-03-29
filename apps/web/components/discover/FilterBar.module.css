@@ -1,0 +1,127 @@
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 48px;
+  height: 80px;
+  background: rgba(255, 248, 246, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--stitch-outline-variant, #d8c3b4);
+}
+
+.search {
+  width: 320px;
+  padding: 10px 20px;
+  border-radius: 9999px;
+  border: none;
+  background: var(--stitch-surface-container-highest, #eedfda);
+  color: var(--stitch-on-surface, #211a17);
+  font-size: 14px;
+  outline: none;
+}
+
+.search::placeholder {
+  color: var(--stitch-outline, #857467);
+}
+
+.chips {
+  display: flex;
+  gap: 8px;
+  flex: 1;
+}
+
+.chip {
+  padding: 6px 16px;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  background: transparent;
+  color: var(--stitch-on-surface-variant, #524439);
+  transition: background 200ms ease, color 200ms ease;
+}
+
+.chip:hover {
+  background: var(--stitch-surface-container, #faebe6);
+}
+
+.chipActive {
+  background: var(--stitch-surface-container-high, #f4e5e0);
+  color: var(--stitch-primary, #894d0d);
+  font-weight: 600;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.iconBtn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--stitch-on-surface-variant, #524439);
+  transition: background 200ms ease;
+}
+
+.iconBtn:hover {
+  background: var(--stitch-surface-container, #faebe6);
+}
+
+.notificationDot {
+  position: relative;
+}
+
+.notificationDot::after {
+  content: '';
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 8px;
+  height: 8px;
+  background: var(--stitch-tertiary, #9f3c1e);
+  border-radius: 50%;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--stitch-surface-container-high, #f4e5e0);
+  overflow: hidden;
+}
+
+/* Responsive: hide search below 900px */
+@media (max-width: 899px) {
+  .search {
+    display: none;
+  }
+
+  .bar {
+    padding: 0 24px;
+  }
+}
+
+/* Responsive: hide chips below 599px, show only search icon + avatar */
+@media (max-width: 599px) {
+  .chips {
+    display: none;
+  }
+
+  .bar {
+    padding: 0 16px;
+    gap: 8px;
+  }
+}
