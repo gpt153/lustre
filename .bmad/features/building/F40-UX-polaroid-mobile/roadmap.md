@@ -457,6 +457,14 @@ Convert `mobile-edit-profile.html` to the Edit Profile screen with Polaroid phot
 
 ## Wave 5: Welcome + Bottom Nav + Polish
 
+**Status:** DONE — 2026-03-29
+
+**Visual Verification:**
+- Screenshots: screenshots/wave5/run1/
+- Comparison: screenshots/wave5/run1/COMPARISON.md
+- Gate result: PASS (verify-wave-screenshots.sh exit 0)
+- Runs needed: 1 (run1 = first attempt, passed)
+
 **Stitch source:** html/mobile-welcome.html, all screens (bottom nav)
 
 ### Epic 5.1: Convert mobile-welcome.html to Welcome/Onboarding Screen
