@@ -83,38 +83,28 @@
   gap: var(--space-lg);
 }
 
-/* ---- Single photo frame ---- */
+/* ---- Polaroid frames ---- */
 
-.photoFrame {
-  width: 120px;
-  height: 120px;
-  border-radius: var(--radius-full);
+.polaroidFrame {
+  width: 140px;
   flex-shrink: 0;
   position: relative;
-
-  /* Copper border ring */
-  padding: 3px;
-  background: linear-gradient(
-    135deg,
-    var(--color-copper) 0%,
-    var(--color-gold) 50%,
-    var(--color-copper-light) 100%
-  );
-
-  /* Warm glow */
-  box-shadow:
-    0 0 0 1px rgba(184, 115, 51, 0.30),
-    0 8px 32px rgba(184, 115, 51, 0.35),
-    0 0 60px rgba(212, 168, 67, 0.20);
+  z-index: 2;
 }
 
-.photo {
-  width: 100%;
-  height: 100%;
-  border-radius: var(--radius-full);
-  object-fit: cover;
-  display: block;
-  background: var(--color-bg-elevated);
+/* Overlap the cards at center */
+.polaroidFrame:first-child {
+  margin-right: -24px;
+}
+
+.polaroidFrame:last-child {
+  margin-left: -24px;
+}
+
+.matchPolaroid {
+  box-shadow:
+    0 8px 32px rgba(184, 115, 51, 0.25),
+    0 0 48px rgba(212, 168, 67, 0.15);
 }
 
 /* ---- Heart icon between photos ---- */
@@ -223,9 +213,8 @@
     gap: var(--space-lg);
   }
 
-  .photoFrame {
-    width: 100px;
-    height: 100px;
+  .polaroidFrame {
+    width: 110px;
   }
 
   .heartIcon {

@@ -2,7 +2,10 @@
 
 import { useState, useCallback, useEffect } from 'react'
 import Modal from '@/components/common/Modal'
+import PolaroidCard from '@/components/common/PolaroidCard'
 import styles from './PhotoGallery.module.css'
+
+const ROTATIONS = [-3, 0, 2, -1.5, 4, -2.5]
 
 interface Photo {
   id: string
@@ -116,28 +119,30 @@ export default function PhotoGallery({ photos, editable = false, onUpload }: Omi
             return (
               <li
                 key={`slot-${index}`}
-                className={`${styles.cell} ${isFirst ? styles.cellFirst : ''} ${styles.uploadSlot} ${dragOver && isFirst ? styles.dragOver : ''}`}
+                className={`${styles.cell} ${styles.uploadSlot} ${dragOver && isFirst ? styles.dragOver : ''}`}
                 role="listitem"
               >
-                <label
-                  className={styles.uploadLabel}
-                  onDragOver={handleDragOver}
-                  onDragLeave={handleDragLeave}
-                  onDrop={handleDrop}
-                  aria-label="Lägg till foto"
-                >
-                  <input
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    className={styles.fileInput}
-                    onChange={handleFileInput}
-                  />
-                  <span className={styles.uploadIcon}>
-                    <CameraIcon />
-                  </span>
-                  <span className={styles.uploadText}>Lägg till foto</span>
-                </label>
+                <div className={styles.emptyPolaroid}>
+                  <label
+                    className={styles.uploadLabel}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                    aria-label="Lägg till foto"
+                  >
+                    <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      className={styles.fileInput}
+                      onChange={handleFileInput}
+                    />
+                    <span className={styles.uploadIcon}>
+                      <CameraIcon />
+                    </span>
+                    <span className={styles.uploadText}>Lägg till foto</span>
+                  </label>
+                </div>
               </li>
             )
           }
@@ -146,37 +151,29 @@ export default function PhotoGallery({ photos, editable = false, onUpload }: Omi
             return (
               <li
                 key={`empty-${index}`}
-                className={`${styles.cell} ${isFirst ? styles.cellFirst : ''} ${styles.emptyCell}`}
+                className={`${styles.cell} ${styles.emptyCell}`}
                 role="listitem"
                 aria-label="Tomt fotoslot"
               >
-                <span className={styles.emptyIcon}>
-                  <CameraIcon />
-                </span>
+                <div className={styles.emptyPolaroid}>
+                  <span className={styles.emptyIcon}>
+                    <CameraIcon />
+                  </span>
+                </div>
               </li>
             )
           }
 
           return (
-            <li
-              key={photo.id}
-              className={`${styles.cell} ${isFirst ? styles.cellFirst : ''}`}
-              role="listitem"
-            >
-              <button
-                type="button"
-                className={styles.photoButton}
+            <li key={photo.id} className={`${styles.cell} ${isFirst ? styles.cellFirst : ''}`} role="listitem">
+              <PolaroidCard
+                imageUrl={photo.url}
+                imageAlt={photo.alt ?? `Foto ${index + 1}`}
+                rotation={ROTATIONS[index] ?? 0}
+                stack={isFirst}
+                hoverable
                 onClick={() => openLightbox(index)}
-                aria-label={`Visa foto ${index + 1} i fullskärm`}
-              >
-                <img
-                  src={photo.url}
-                  alt={photo.alt ?? `Foto ${index + 1}`}
-                  className={styles.photo}
-                  loading={index === 0 ? 'eager' : 'lazy'}
-                  draggable={false}
-                />
-              </button>
+              />
             </li>
           )
         })}

@@ -1,13 +1,13 @@
 /* ============================================================
-   PhotoGallery — 3-column grid, first photo hero spans 2×2
-   Ken Burns hover on images, lightbox overlay
+   PhotoGallery — scattered Polaroid layout
+   PolaroidCard handles individual photo rendering
    ============================================================ */
 
 .grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: auto;
-  gap: var(--space-sm);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-lg);
+  justify-content: center;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -17,50 +17,24 @@
 
 .cell {
   position: relative;
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  aspect-ratio: 1 / 1;
-  background: var(--color-bg-elevated);
+  width: calc(33.33% - var(--space-lg));
 }
 
 .cellFirst {
-  grid-column: span 2;
-  grid-row: span 2;
-  aspect-ratio: unset;
+  width: calc(50% - var(--space-lg));
 }
 
-/* ---- Photo button (expands to fill cell) ---- */
+/* ---- Empty Polaroid frame ---- */
 
-.photoButton {
-  display: block;
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  border: none;
-  background: none;
-  cursor: pointer;
-  overflow: hidden;
-  border-radius: inherit;
-}
-
-.photoButton:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-}
-
-/* ---- Photo with Ken Burns hover ---- */
-
-.photo {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 8s ease;
-  will-change: transform;
-}
-
-.photoButton:hover .photo {
-  transform: scale(1.05);
+.emptyPolaroid {
+  aspect-ratio: var(--polaroid-card-aspect);
+  background: var(--polaroid-bg);
+  box-shadow: var(--polaroid-shadow);
+  padding: var(--polaroid-border-top) var(--polaroid-border-side) var(--polaroid-border-bottom);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed var(--color-border);
 }
 
 /* ---- Empty cell placeholder ---- */
@@ -69,12 +43,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(
-    135deg,
-    hsl(var(--color-copper-h), var(--color-copper-s), 20%) 0%,
-    hsl(var(--color-copper-h), var(--color-copper-s), 14%) 100%
-  );
-  border: 1px dashed var(--color-border);
 }
 
 .emptyIcon {
@@ -85,13 +53,11 @@
 /* ---- Upload slot ---- */
 
 .uploadSlot {
-  background: var(--color-bg-elevated);
-  border: 2px dashed var(--color-border);
   transition: border-color 200ms ease, background-color 200ms ease;
 }
 
-.uploadSlot:hover,
-.dragOver {
+.uploadSlot:hover .emptyPolaroid,
+.dragOver .emptyPolaroid {
   border-color: var(--color-copper);
   background: hsl(var(--color-copper-h), var(--color-copper-s), 15%);
 }

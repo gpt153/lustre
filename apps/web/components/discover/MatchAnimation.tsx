@@ -4,6 +4,7 @@ import { useEffect, useCallback, useRef } from 'react'
 import { m, AnimatePresence } from 'motion/react'
 import { springs, fadeIn, scaleIn } from '@/lib/motion'
 import Button from '@/components/common/Button'
+import PolaroidCard from '@/components/common/PolaroidCard'
 import ParticleBurst from './ParticleBurst'
 import styles from './MatchAnimation.module.css'
 
@@ -119,20 +120,20 @@ export default function MatchAnimation({
 
             {/* Profile photos row */}
             <div className={styles.photosRow}>
-              {/* Current user photo — slides in from left */}
+              {/* Current user — tilts left */}
               <m.div
-                className={styles.photoFrame}
-                initial={{ opacity: 0, x: -60 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -60 }}
+                className={styles.polaroidFrame}
+                initial={{ opacity: 0, x: -80, rotate: -15 }}
+                animate={{ opacity: 1, x: 0, rotate: -10 }}
+                exit={{ opacity: 0, x: -80, rotate: -15 }}
                 transition={{ ...springs.bouncy, delay: 0.1 }}
               >
-                <img
-                  src={currentUserPhotoUrl ?? PHOTO_PLACEHOLDER}
-                  alt="Ditt foto"
-                  className={styles.photo}
-                  width={120}
-                  height={120}
+                <PolaroidCard
+                  imageUrl={currentUserPhotoUrl ?? PHOTO_PLACEHOLDER}
+                  imageAlt="Ditt foto"
+                  caption=""
+                  hoverable={false}
+                  className={styles.matchPolaroid}
                 />
               </m.div>
 
@@ -172,20 +173,20 @@ export default function MatchAnimation({
                 </svg>
               </m.div>
 
-              {/* Matched profile photo — slides in from right */}
+              {/* Matched profile — tilts right */}
               <m.div
-                className={styles.photoFrame}
-                initial={{ opacity: 0, x: 60 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 60 }}
+                className={styles.polaroidFrame}
+                initial={{ opacity: 0, x: 80, rotate: 15 }}
+                animate={{ opacity: 1, x: 0, rotate: 10 }}
+                exit={{ opacity: 0, x: 80, rotate: 15 }}
                 transition={{ ...springs.bouncy, delay: 0.1 }}
               >
-                <img
-                  src={matchedProfile.photoUrl ?? PHOTO_PLACEHOLDER}
-                  alt={`${matchedProfile.displayName}s foto`}
-                  className={styles.photo}
-                  width={120}
-                  height={120}
+                <PolaroidCard
+                  imageUrl={matchedProfile.photoUrl ?? PHOTO_PLACEHOLDER}
+                  imageAlt={`${matchedProfile.displayName}s foto`}
+                  caption={matchedProfile.displayName}
+                  hoverable={false}
+                  className={styles.matchPolaroid}
                 />
               </m.div>
             </div>
