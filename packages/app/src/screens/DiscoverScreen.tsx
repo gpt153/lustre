@@ -11,8 +11,9 @@ import { useSwipeGesture } from '../hooks/useSwipeGesture'
 import { SwipeStamp } from '../components/SwipeStamp'
 import { MatchAnimation } from '../components/MatchAnimation'
 import { EmptyState } from '../components/EmptyState'
+import { DiscoveryActionButtons } from '../components/DiscoveryActionButtons'
 
-// Transparent 1×1 PNG as a safe fallback when no profile photo is available
+// Transparent 1x1 PNG as a safe fallback when no profile photo is available
 const PHOTO_PLACEHOLDER: ImageSourcePropType = {
   uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
 }
@@ -21,33 +22,31 @@ const { width: screenWidth } = Dimensions.get('window')
 
 const CARD_WIDTH = screenWidth - 48
 
-// Behind-card stack constants
-const STACKED_CARD_SCALE_1 = 0.95
-const STACKED_CARD_SCALE_2 = 0.90
-const STACKED_CARD_TRANSLATE_Y_1 = -10
-const STACKED_CARD_TRANSLATE_Y_2 = -20
-const STACKED_CARD_ROTATION_1 = 2
-const STACKED_CARD_ROTATION_2 = -2
+// Behind-card stack constants — matching Stitch: 3 cards behind + main
+// Back Card 3: rotate 4deg, scale 0.98, translateY 8, opacity 0.60
+const STACKED_CARD_SCALE_3 = 0.94
+const STACKED_CARD_TRANSLATE_Y_3 = -24
+const STACKED_CARD_ROTATION_3 = 4
 
-// Lustre design tokens
+// Back Card 2: rotate -3deg, scale 0.99, translateY 4, opacity 0.80
+const STACKED_CARD_SCALE_2 = 0.97
+const STACKED_CARD_TRANSLATE_Y_2 = -16
+const STACKED_CARD_ROTATION_2 = -3
+
+// Back Card 1: rotate 1deg, translateY 2, opacity 0.90
+const STACKED_CARD_SCALE_1 = 0.99
+const STACKED_CARD_TRANSLATE_Y_1 = -8
+const STACKED_CARD_ROTATION_1 = 1
+
+// Lustre design tokens — Stitch palette
 const COPPER = '#894d0d'
-const GOLD = '#D4A843'
 const CHARCOAL = '#2C2421'
-const WARM_WHITE = '#fef8f3'
-const EMBER = '#E05A33'
-const SURFACE_CONTAINER = '#f2ede8'
+const SURFACE = '#fff8f6'
+const ON_SURFACE = '#211a17'
 
-function PassIcon() {
-  return <Text style={styles.passIconText}>✕</Text>
-}
-
-function SuperLikeIcon() {
-  return <Text style={styles.superLikeIconText}>★</Text>
-}
-
-function LikeIcon() {
-  return <Text style={styles.likeIconText}>♥</Text>
-}
+// Tonal gradient background colors (Stitch: rgba(184,115,51,0.08) → rgba(253,248,243,1))
+const GRADIENT_TOP = 'rgba(184,115,51,0.08)'
+const GRADIENT_BOTTOM = 'rgba(253,248,243,1)'
 
 export function DiscoverScreen() {
   const discovery = useDiscovery()
@@ -108,28 +107,47 @@ export function DiscoverScreen() {
     setPassPressed(false)
   }
 
+  // Back Card 1 (closest behind main) — 1deg, scale 0.99
   const behindCard1Style = useAnimatedStyle(() => ({
     transform: [
       { scale: STACKED_CARD_SCALE_1 },
       { translateY: STACKED_CARD_TRANSLATE_Y_1 },
       { rotate: `${STACKED_CARD_ROTATION_1}deg` },
     ],
+    opacity: 0.9,
   }))
 
+  // Back Card 2 — -3deg, scale 0.97
   const behindCard2Style = useAnimatedStyle(() => ({
     transform: [
       { scale: STACKED_CARD_SCALE_2 },
       { translateY: STACKED_CARD_TRANSLATE_Y_2 },
       { rotate: `${STACKED_CARD_ROTATION_2}deg` },
     ],
+    opacity: 0.8,
+  }))
+
+  // Back Card 3 (furthest back) — 4deg, scale 0.94
+  const behindCard3Style = useAnimatedStyle(() => ({
+    transform: [
+      { scale: STACKED_CARD_SCALE_3 },
+      { translateY: STACKED_CARD_TRANSLATE_Y_3 },
+      { rotate: `${STACKED_CARD_ROTATION_3}deg` },
+    ],
+    opacity: 0.6,
   }))
 
   if (discovery.isLoading) {
     return (
       <GestureHandlerRootView style={styles.flex}>
-        <YStack flex={1} alignItems="center" justifyContent="center" backgroundColor={SURFACE_CONTAINER}>
-          <Spinner color={COPPER} size="large" />
-        </YStack>
+        <LinearGradient
+          colors={[GRADIENT_TOP, GRADIENT_BOTTOM]}
+          style={styles.flex}
+        >
+          <YStack flex={1} alignItems="center" justifyContent="center">
+            <Spinner color={COPPER} size="large" />
+          </YStack>
+        </LinearGradient>
       </GestureHandlerRootView>
     )
   }
@@ -137,25 +155,31 @@ export function DiscoverScreen() {
   if (!currentProfile || currentIndex >= discovery.profiles.length) {
     return (
       <GestureHandlerRootView style={styles.flex}>
-        <YStack flex={1} backgroundColor={SURFACE_CONTAINER} paddingHorizontal={24}>
-          <EmptyState
-            title="Inga fler profiler just nu"
-            description="Vi jobbar på att hitta fler matchningar åt dig. Kom tillbaka snart."
-            action={{
-              label: 'Uppdatera',
-              onPress: () => {
-                setCurrentIndex(0)
-                discovery.refetch()
-              },
-            }}
-          />
-        </YStack>
+        <LinearGradient
+          colors={[GRADIENT_TOP, GRADIENT_BOTTOM]}
+          style={styles.flex}
+        >
+          <YStack flex={1} paddingHorizontal={24}>
+            <EmptyState
+              title="Inga fler profiler just nu"
+              description="Vi jobbar pa att hitta fler matchningar at dig. Kom tillbaka snart."
+              action={{
+                label: 'Uppdatera',
+                onPress: () => {
+                  setCurrentIndex(0)
+                  discovery.refetch()
+                },
+              }}
+            />
+          </YStack>
+        </LinearGradient>
       </GestureHandlerRootView>
     )
   }
 
   const nextProfile = discovery.profiles[currentIndex + 1]
   const nextNextProfile = discovery.profiles[currentIndex + 2]
+  const thirdNextProfile = discovery.profiles[currentIndex + 3]
 
   const cardDims = getPolaroidDimensions(CARD_WIDTH)
 
@@ -165,7 +189,9 @@ export function DiscoverScreen() {
   const currentPhotoUrl = getPhotoUrl(currentProfile)
   const nextPhotoUrl = getPhotoUrl(nextProfile)
   const nextNextPhotoUrl = getPhotoUrl(nextNextProfile)
+  const thirdNextPhotoUrl = getPhotoUrl(thirdNextProfile)
 
+  // Caption: "Name, Age" on first line
   const currentCaption = [
     currentProfile.displayName,
     currentProfile.age ? `${currentProfile.age}` : null,
@@ -173,20 +199,53 @@ export function DiscoverScreen() {
     .filter(Boolean)
     .join(', ')
 
+  // Tagline from bio — first sentence or first 60 chars
+  const currentTagline = currentProfile.bio
+    ? currentProfile.bio.split(/[.!?\n]/)[0]?.trim().slice(0, 60) || ''
+    : ''
+
   return (
     <GestureHandlerRootView style={styles.flex}>
-      <View style={styles.container}>
-        {/* Top Navigation Bar */}
+      <LinearGradient
+        colors={[GRADIENT_TOP, GRADIENT_BOTTOM]}
+        style={styles.container}
+      >
+        {/* Top Navigation Bar — glassmorphic */}
         <View style={styles.topNav}>
+          <Pressable
+            style={styles.navButton}
+            accessibilityLabel="Meny"
+            accessibilityRole="button"
+          >
+            <Text style={styles.menuIcon}>☰</Text>
+          </Pressable>
           <Text style={styles.logoText}>Lustre</Text>
-          <Pressable style={styles.filterButton}>
-            <Text style={styles.filterIcon}>☰</Text>
+          <Pressable
+            style={styles.navButton}
+            accessibilityLabel="Filter"
+            accessibilityRole="button"
+          >
+            <Text style={styles.filterIcon}>⚙</Text>
           </Pressable>
         </View>
 
         {/* Card Stack — sized to the front card dimensions so it participates in the layout */}
         <View style={[styles.cardStack, { width: CARD_WIDTH, height: cardDims.cardHeight }]}>
-          {/* Card at back of stack */}
+          {/* Card 3 — furthest back */}
+          {thirdNextProfile && (
+            <Animated.View style={[styles.cardWrapper, styles.cardBehind3, behindCard3Style]}>
+              <PolaroidCard
+                cardWidth={CARD_WIDTH}
+                imageSource={
+                  thirdNextPhotoUrl
+                    ? { uri: thirdNextPhotoUrl }
+                    : PHOTO_PLACEHOLDER
+                }
+              />
+            </Animated.View>
+          )}
+
+          {/* Card 2 — middle back */}
           {nextNextProfile && (
             <Animated.View style={[styles.cardWrapper, styles.cardBehind2, behindCard2Style]}>
               <PolaroidCard
@@ -196,12 +255,11 @@ export function DiscoverScreen() {
                     ? { uri: nextNextPhotoUrl }
                     : PHOTO_PLACEHOLDER
                 }
-                shadow="md"
               />
             </Animated.View>
           )}
 
-          {/* Middle card */}
+          {/* Card 1 — closest behind */}
           {nextProfile && (
             <Animated.View style={[styles.cardWrapper, styles.cardBehind1, behindCard1Style]}>
               <PolaroidCard
@@ -211,7 +269,6 @@ export function DiscoverScreen() {
                     ? { uri: nextPhotoUrl }
                     : PHOTO_PLACEHOLDER
                 }
-                shadow="md"
               />
             </Animated.View>
           )}
@@ -226,65 +283,55 @@ export function DiscoverScreen() {
                     ? { uri: currentPhotoUrl }
                     : PHOTO_PLACEHOLDER
                 }
-                caption={currentCaption}
-                shadow="lg"
+                rotation={-2}
+                accessibilityLabel={`Profil: ${currentCaption}`}
               >
+                {/* Gradient overlay on photo — from-black/20 to transparent */}
+                <LinearGradient
+                  colors={['rgba(0,0,0,0.20)', 'transparent']}
+                  start={{ x: 0.5, y: 1 }}
+                  end={{ x: 0.5, y: 0.4 }}
+                  style={styles.photoGradientOverlay}
+                />
                 <SwipeStamp type="like" animatedStyle={likeOpacity} />
                 <SwipeStamp type="nope" animatedStyle={nopeOpacity} />
               </PolaroidCard>
+
+              {/* Custom caption in the white bottom strip */}
+              <View
+                style={[
+                  styles.captionOverlay,
+                  {
+                    bottom: 0,
+                    left: cardDims.borderSide,
+                    right: cardDims.borderSide,
+                    height: cardDims.cardHeight * 0.2670,
+                  },
+                ]}
+                pointerEvents="none"
+              >
+                <Text style={styles.captionName}>{currentCaption}</Text>
+                {currentTagline ? (
+                  <Text style={styles.captionTagline} numberOfLines={1}>
+                    {currentTagline}
+                  </Text>
+                ) : null}
+              </View>
             </Animated.View>
           </GestureDetector>
         </View>
 
         {/* Action Buttons — below card stack */}
-        <View style={[styles.actionRow, { marginTop: cardDims.cardHeight * 0.05 }]}>
-          {/* Pass */}
-          <Pressable
-            style={[
-              styles.actionButton,
-              styles.passButton,
-              passPressed && styles.passButtonActive,
-              discovery.isSwiping && styles.buttonDisabled,
-            ]}
-            onPress={handlePassButton}
+        <View style={styles.actionButtonsContainer}>
+          <DiscoveryActionButtons
+            onPass={handlePassButton}
+            onLike={handleLikeButton}
             disabled={discovery.isSwiping}
-          >
-            <PassIcon />
-          </Pressable>
-
-          {/* Super Like */}
-          <Pressable
-            style={[
-              styles.actionButton,
-              styles.superLikeButton,
-              discovery.isSwiping && styles.buttonDisabled,
-            ]}
-            disabled={discovery.isSwiping}
-          >
-            <SuperLikeIcon />
-          </Pressable>
-
-          {/* Like */}
-          <Pressable
-            style={[
-              styles.actionButton,
-              likePressed && styles.likeButtonActive,
-              discovery.isSwiping && styles.buttonDisabled,
-            ]}
-            onPress={handleLikeButton}
-            disabled={discovery.isSwiping}
-          >
-            <LinearGradient
-              colors={['#894d0d', '#a76526']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.likeGradient}
-            >
-              <LikeIcon />
-            </LinearGradient>
-          </Pressable>
+            passPressed={passPressed}
+            likePressed={likePressed}
+          />
         </View>
-      </View>
+      </LinearGradient>
 
       <MatchAnimation
         visible={matchVisible}
@@ -301,12 +348,11 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: SURFACE_CONTAINER,
     alignItems: 'center',
     justifyContent: 'center',
   },
 
-  // Top Navigation
+  // Top Navigation — glassmorphic bar
   topNav: {
     position: 'absolute',
     top: 0,
@@ -319,25 +365,30 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     height: 64,
     paddingTop: 8,
+    backgroundColor: 'rgba(255,248,246,0.60)',
   },
-  logoText: {
-    fontSize: 24,
-    fontFamily: 'NotoSerif_700Bold',
-    color: COPPER,
-    letterSpacing: -0.5,
-  } as any,
-  filterButton: {
+  navButton: {
     width: 40,
     height: 40,
     alignItems: 'center',
     justifyContent: 'center',
   },
+  menuIcon: {
+    fontSize: 20,
+    color: COPPER,
+  } as any,
+  logoText: {
+    fontSize: 24,
+    fontFamily: 'NotoSerif_700Bold',
+    color: COPPER,
+    letterSpacing: -1,
+  } as any,
   filterIcon: {
     fontSize: 20,
     color: COPPER,
   } as any,
 
-  // Card Stack — dimensions set inline from cardDims in JSX
+  // Card Stack
   cardStack: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -346,82 +397,53 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   cardTop: {
-    zIndex: 3,
+    zIndex: 4,
   },
   cardBehind1: {
-    zIndex: 2,
+    zIndex: 3,
   },
   cardBehind2: {
+    zIndex: 2,
+  },
+  cardBehind3: {
     zIndex: 1,
   },
 
-  // Action Buttons Row
-  actionRow: {
+  // Photo gradient overlay
+  photoGradientOverlay: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: '40%',
+  },
+
+  // Custom caption overlay in the polaroid white strip
+  captionOverlay: {
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  captionName: {
+    fontFamily: 'Caveat_700Bold',
+    fontSize: 24,
+    color: ON_SURFACE,
+    textAlign: 'center',
+  } as any,
+  captionTagline: {
+    fontFamily: 'Caveat_400Regular',
+    fontSize: 18,
+    color: 'rgba(137,77,13,0.80)',
+    textAlign: 'center',
+    marginTop: 2,
+  } as any,
+
+  // Action Buttons Container
+  actionButtonsContainer: {
     position: 'absolute',
     bottom: 36,
     left: 0,
     right: 0,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 24,
     zIndex: 10,
-  },
-  actionButton: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: CHARCOAL,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.06,
-    shadowRadius: 16,
-    elevation: 4,
-  },
-  passButton: {
-    width: 56,
-    height: 56,
-    borderRadius: 9999,
-    backgroundColor: '#1d1b19',
-  },
-  passButtonActive: {
-    backgroundColor: EMBER,
-  },
-  passIconText: {
-    fontSize: 26,
-    color: WARM_WHITE,
-    fontWeight: '300',
-  } as any,
-  superLikeButton: {
-    width: 48,
-    height: 48,
-    borderRadius: 9999,
-    backgroundColor: GOLD,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  superLikeIconText: {
-    fontSize: 28,
-    color: CHARCOAL,
-  } as any,
-  likeButtonActive: {
-    opacity: 0.85,
-  },
-  likeIconText: {
-    fontSize: 26,
-    color: WARM_WHITE,
-  } as any,
-  likeGradient: {
-    width: 64,
-    height: 64,
-    borderRadius: 9999,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: CHARCOAL,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.06,
-    shadowRadius: 24,
-    elevation: 4,
-  },
-  buttonDisabled: {
-    opacity: 0.5,
   },
 })

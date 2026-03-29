@@ -1,6 +1,15 @@
 import { useSharedValue, useAnimatedStyle, withSpring, withTiming, interpolate, runOnJS } from 'react-native-reanimated'
 import { Gesture } from 'react-native-gesture-handler'
-import { Dimensions } from 'react-native'
+import { Dimensions, AccessibilityInfo, Platform } from 'react-native'
+
+let Haptics: any = null
+if (Platform.OS !== 'web') {
+  try {
+    Haptics = require('expo-haptics')
+  } catch (e) {
+    Haptics = null
+  }
+}
 
 const { width: screenWidth } = Dimensions.get('window')
 
@@ -11,6 +20,19 @@ const FLY_OFF_DURATION = 200
 interface UseSwipeGestureOptions {
   onSwipedLeft: () => void
   onSwipedRight: () => void
+}
+
+function triggerHapticAndAnnounce(action: 'like' | 'pass') {
+  // Haptic feedback on swipe completion
+  if (Haptics) {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+  }
+
+  // VoiceOver announcement for accessibility
+  if (Platform.OS !== 'web') {
+    const message = action === 'like' ? 'Gillad' : 'Passad'
+    AccessibilityInfo.announceForAccessibility(message)
+  }
 }
 
 export function useSwipeGesture({ onSwipedLeft, onSwipedRight }: UseSwipeGestureOptions) {
@@ -33,6 +55,16 @@ export function useSwipeGesture({ onSwipedLeft, onSwipedRight }: UseSwipeGesture
     })
   }
 
+  const onSwipeRightWithHaptic = () => {
+    triggerHapticAndAnnounce('like')
+    onSwipedRight()
+  }
+
+  const onSwipeLeftWithHaptic = () => {
+    triggerHapticAndAnnounce('pass')
+    onSwipedLeft()
+  }
+
   const gesture = Gesture.Pan()
     .onUpdate((event) => {
       'worklet'
@@ -52,9 +84,9 @@ export function useSwipeGesture({ onSwipedLeft, onSwipedRight }: UseSwipeGesture
         event.translationX < -SWIPE_THRESHOLD_OFFSET || event.velocityX < -SWIPE_THRESHOLD_VELOCITY
 
       if (swipedRight) {
-        flyOff('right', onSwipedRight)
+        flyOff('right', onSwipeRightWithHaptic)
       } else if (swipedLeft) {
-        flyOff('left', onSwipedLeft)
+        flyOff('left', onSwipeLeftWithHaptic)
       } else {
         resetCard()
       }

@@ -13,7 +13,13 @@
 
 ## Wave 1: Foundation — Polaroid Tokens + Core Components
 
-**Status:** IN_PROGRESS — 2026-03-29T17:15:00Z
+**Status:** DONE — 2026-03-29
+
+**Visual Verification:**
+- Screenshots: screenshots/wave1/run1/
+- Comparison: screenshots/wave1/run1/COMPARISON.md
+- Gate result: PASS (verify-wave-screenshots.sh exit 0)
+- Runs needed: 1 (run1 = first attempt, passed)
 
 **Stitch source:** html/mobile-match.html, html/mobile-welcome.html, html/mobile-profile-enhanced.html
 
@@ -131,6 +137,14 @@ Convert `mobile-chat-inbox.html` avatar structure to Tamagui component.
 ---
 
 ## Wave 2: Discovery Screen — Convert Stitch to Tamagui
+
+**Status:** DONE — 2026-03-29
+
+**Visual Verification:**
+- Screenshots: screenshots/wave2/run1/
+- Comparison: screenshots/wave2/run1/COMPARISON.md
+- Gate result: PASS (verify-wave-screenshots.sh exit 0)
+- Runs needed: 1 (run1 = first attempt, passed)
 
 **Stitch source:** html/mobile-discovery.html, html/mobile-discovery-stack.html
 
