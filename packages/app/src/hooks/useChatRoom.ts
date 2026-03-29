@@ -41,8 +41,8 @@ export function useChatRoom(conversationId: string, onScreenshotTaken?: (event: 
 
   // Initialize messages from query
   useEffect(() => {
-    if (messagesQuery.data) {
-      setMessages(messagesQuery.data)
+    if (messagesQuery.data?.messages) {
+      setMessages(messagesQuery.data.messages)
     }
   }, [messagesQuery.data])
 

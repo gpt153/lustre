@@ -187,7 +187,7 @@ export default function TabLayout() {
       screenOptions={{
         headerShown: false,
         // Ensure content is not hidden behind the floating dock
-        sceneStyle: { paddingBottom: 96 },
+        sceneStyle: { paddingBottom: 96, backgroundColor: '#FDF8F3' },
       }}
     >
       {/* ── Visible tabs ───────────────────────────── */}

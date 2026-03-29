@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { View } from 'react-native'
 import { useLocalSearchParams } from 'expo-router'
 import * as ScreenCapture from 'expo-screen-capture'
 import { ChatRoomScreen } from '@lustre/app/src/screens/ChatRoomScreen'
@@ -21,9 +22,11 @@ export default function ChatRoomTab() {
   }
 
   return (
-    <ChatRoomScreen
-      conversationId={conversationId}
-      displayName={displayName || 'User'}
-    />
+    <View style={{ flex: 1, backgroundColor: '#FDF8F3' }}>
+      <ChatRoomScreen
+        conversationId={conversationId}
+        displayName={displayName || 'User'}
+      />
+    </View>
   )
 }

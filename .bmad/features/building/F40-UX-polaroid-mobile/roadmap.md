@@ -237,6 +237,8 @@ Wire up Reanimated + Gesture Handler for card swiping.
 
 ## Wave 3: Feed + Chat — Convert Stitch to Tamagui
 
+**Status:** IN_PROGRESS — 2026-03-29
+
 **Stitch source:** html/mobile-feed-revised.html, html/mobile-chat-inbox.html, html/mobile-chat-room.html
 
 ### Epic 3.1: Convert mobile-feed-revised.html to Feed Screen

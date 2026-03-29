@@ -2,12 +2,25 @@ import * as React from 'react'
 import { Slot, useRouter, useSegments } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { TamaguiProvider } from 'tamagui'
+import { ThemeProvider, DefaultTheme } from '@react-navigation/native'
 import { tamaguiConfig } from '@lustre/ui'
 import { loadLustreFonts, useFonts } from '@lustre/ui/src/fonts/expo-loader'
 import { TRPCProvider } from '@lustre/api'
 import { StatusBar } from 'expo-status-bar'
 import Constants from 'expo-constants'
-import { useAuth } from '@lustre/app'
+import { useAuth, useAuthStore } from '@lustre/app'
+
+const LustreNavTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: '#FDF8F3',
+    card: '#FDF8F3',
+    text: '#2C2421',
+    border: 'rgba(216,195,180,0.20)',
+    primary: '#894d0d',
+  },
+}
 
 const API_URL = Constants.expoConfig?.extra?.apiUrl ?? 'https://api.lovelustre.com'
 
@@ -49,11 +62,13 @@ export default function RootLayout() {
   }, [])
 
   return (
-    <TamaguiProvider config={tamaguiConfig}>
-      <TRPCProvider apiUrl={API_URL}>
-        <StatusBar style="auto" />
-        {fontsLoaded ? <AuthGate /> : <Slot />}
-      </TRPCProvider>
+    <TamaguiProvider config={tamaguiConfig} defaultTheme="light">
+      <ThemeProvider value={LustreNavTheme}>
+        <TRPCProvider apiUrl={API_URL} getToken={() => useAuthStore.getState().accessToken}>
+          <StatusBar style="dark" />
+          {fontsLoaded ? <AuthGate /> : <Slot />}
+        </TRPCProvider>
+      </ThemeProvider>
     </TamaguiProvider>
   )
 }
