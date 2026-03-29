@@ -14,6 +14,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { useChatRoom } from '../hooks/useChatRoom'
 import { useAuthStore } from '../stores/authStore'
 import { trpc } from '@lustre/api'
+import { PolaroidCard } from '@lustre/ui'
 
 const COPPER = '#894d0d'
 const COPPER_DARK = '#a76526'
@@ -303,10 +304,12 @@ export function ChatRoomScreen({
                               Meddelandet har raderats
                             </Text>
                           ) : isImageType && item.mediaUrl ? (
-                            <Image
-                              source={{ uri: item.mediaUrl }}
-                              style={{ width: 200, height: 200, borderRadius: 12 }}
-                              resizeMode="cover"
+                            <PolaroidCard
+                              cardWidth={200}
+                              imageSource={{ uri: item.mediaUrl }}
+                              caption={item.content || item.sender.displayName || ''}
+                              rotation={1}
+                              shadow="sm"
                             />
                           ) : (
                             <Text color="white" fontSize={15} lineHeight={22}>
@@ -349,10 +352,12 @@ export function ChatRoomScreen({
                             Meddelandet har raderats
                           </Text>
                         ) : isImageType && item.mediaUrl ? (
-                          <Image
-                            source={{ uri: item.mediaUrl }}
-                            style={{ width: 200, height: 200, borderRadius: 12 }}
-                            resizeMode="cover"
+                          <PolaroidCard
+                            cardWidth={200}
+                            imageSource={{ uri: item.mediaUrl }}
+                            caption={item.content || item.sender.displayName || ''}
+                            rotation={-1}
+                            shadow="sm"
                           />
                         ) : (
                           <Text color={CHARCOAL} fontSize={15} lineHeight={22}>

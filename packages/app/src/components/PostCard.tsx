@@ -53,7 +53,7 @@ export function PostCard({ post, onLike, onUnlike, onShowLess }: PostCardProps) 
       )}
 
       {post.media.length > 0 && (
-        <PostImageGallery media={post.media} />
+        <PostImageGallery media={post.media} postId={post.id} postText={post.text ?? undefined} />
       )}
 
       <XStack alignItems="center" gap="$sm">

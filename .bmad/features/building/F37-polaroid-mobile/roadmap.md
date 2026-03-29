@@ -156,7 +156,19 @@ Replace SwipeCard/ProfileCardStory with Polaroid-based discovery cards. Highest-
 
 Wrap feed post photos and chat shared photos in PolaroidCards.
 
-**Status:** NOT STARTED
+**Status:** DONE — 2026-03-29
+
+### Epics: ALL VERIFIED
+- 3a Feed Polaroid — VERIFIED (PolaroidCard at 280px, deterministic rotation from FNV-1a hash, caption with post text or counter)
+- 3b Chat Polaroid — VERIFIED (IMAGE messages render as PolaroidCard at 200px, sent +1° received -1°)
+
+### Testgate: CODE REVIEW PASS
+- [x] Feed single photo renders in PolaroidCard at 280px
+- [x] Feed multi-photo horizontal scroll with varied rotation
+- [x] Chat sent IMAGE → PolaroidCard with rotation 1°
+- [x] Chat received IMAGE → PolaroidCard with rotation -1°
+- [x] Caption shows post text (feed) or sender name (chat)
+- [ ] Visual verification — deferred to APK build
 
 ### Tasks:
 
