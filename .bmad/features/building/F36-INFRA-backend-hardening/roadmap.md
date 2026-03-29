@@ -48,10 +48,16 @@ Validate payment webhook signatures and add idempotency keys to prevent forged a
 
 Add ordered shutdown handling and runtime validation on all REST endpoints. Prevents data corruption during deploys and invalid payload processing.
 
-**Status:** NOT STARTED
+**Status:** DONE (2026-03-29)
 
 ### Epics:
-- wave-2-shutdown-validation (haiku) — SIGTERM handler with ordered drain (Fastify → NATS → Redis → Prisma) and Zod schemas on all REST endpoints with 400 error responses.
+- wave-2-shutdown-validation (haiku) — VERIFIED — SIGTERM/SIGINT handler with ordered drain (Fastify → NATS → Redis → Prisma), 30s force-exit safety net, Zod schemas on all REST callback + upload endpoints.
+
+### Verification:
+- Graceful shutdown ✅ — `isShuttingDown` guard, ordered drain, 30s force-exit with `.unref()`, registered after `server.listen()`
+- Zod validation ✅ — All 4 callback endpoints + 2 upload endpoints validated, structured 400 errors
+- `rest-schemas.ts` ✅ — Clean schemas with `.passthrough()` on webhooks, UUID on queries
+- TypeScript ✅ — No new errors
 
 ### Testgate Wave 2:
 - [ ] SIGTERM triggers ordered shutdown (Fastify close → NATS drain → Redis quit → Prisma disconnect)

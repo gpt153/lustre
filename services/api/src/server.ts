@@ -28,6 +28,13 @@ import { marketplaceCallbackHandler, payoutCallbackHandler } from './routes/mark
 import { handleRecurringCallback, type RecurringCallbackPayload } from './lib/swish-recurring.js'
 import { handleSegpayCallback } from './lib/segpay.js'
 import { verifySwishWebhook, verifySegpayWebhook } from './lib/webhook-verify.js'
+import {
+  SwishCallbackSchema,
+  SwishRecurringCallbackSchema,
+  SegpayCallbackSchema,
+  PostUploadQuerySchema,
+  ChatUploadQuerySchema,
+} from './lib/rest-schemas.js'
 
 // Extended request type that carries the raw body string for webhook verification.
 interface FastifyRequestWithRawBody extends FastifyRequest {
@@ -42,6 +49,59 @@ const server = Fastify({
     },
   },
 })
+
+let isShuttingDown = false
+
+async function shutdown(signal: string): Promise<void> {
+  if (isShuttingDown) return
+  isShuttingDown = true
+
+  server.log.info(`Received ${signal} — starting graceful shutdown`)
+
+  // Force-exit safety net: kill after 30 seconds no matter what
+  const forceExit = setTimeout(() => {
+    server.log.error('Graceful shutdown timed out after 30s — forcing exit')
+    process.exit(1)
+  }, 30_000)
+  forceExit.unref()
+
+  // 1. Stop accepting new connections; drain in-flight requests
+  try {
+    await server.close()
+    server.log.info('HTTP server closed')
+  } catch (err) {
+    server.log.error({ err }, 'Error closing HTTP server')
+  }
+
+  // 2. Drain NATS (finishes pending messages before disconnecting)
+  try {
+    const nc = await getNatsConnection()
+    await nc.drain()
+    server.log.info('NATS connection drained')
+  } catch (err) {
+    server.log.error({ err }, 'Error draining NATS connection')
+  }
+
+  // 3. Quit Redis
+  try {
+    await redis.quit()
+    server.log.info('Redis connection closed')
+  } catch (err) {
+    server.log.error({ err }, 'Error closing Redis connection')
+  }
+
+  // 4. Disconnect Prisma
+  try {
+    await prisma.$disconnect()
+    server.log.info('Prisma disconnected')
+  } catch (err) {
+    server.log.error({ err }, 'Error disconnecting Prisma')
+  }
+
+  clearTimeout(forceExit)
+  server.log.info('Graceful shutdown complete')
+  process.exit(0)
+}
 
 async function start() {
   const allowedOrigins = process.env.CORS_ORIGINS
@@ -127,11 +187,15 @@ async function start() {
       return reply.status(401).send({ error: 'Invalid signature' })
     }
 
-    const body = request.body as SwishCallbackBody
-
-    if (!body || !body.id || !body.status) {
-      return reply.status(400).send({ error: 'Invalid callback body' })
+    const parsed = SwishCallbackSchema.safeParse(request.body)
+    if (!parsed.success) {
+      return reply.status(400).send({
+        statusCode: 400,
+        error: 'Bad Request',
+        message: parsed.error.issues.map(i => `${i.path.join('.')}: ${i.message}`).join('; '),
+      })
     }
+    const body = parsed.data as unknown as SwishCallbackBody
 
     const handled = await handleSwishCallback(prisma, body)
     if (!handled) {
@@ -163,11 +227,15 @@ async function start() {
       return reply.status(401).send({ error: 'Invalid signature' })
     }
 
-    const body = request.body as RecurringCallbackPayload
-
-    if (!body || !body.status || !body.payeePaymentReference) {
-      return reply.status(400).send({ error: 'Invalid callback body' })
+    const parsed = SwishRecurringCallbackSchema.safeParse(request.body)
+    if (!parsed.success) {
+      return reply.status(400).send({
+        statusCode: 400,
+        error: 'Bad Request',
+        message: parsed.error.issues.map(i => `${i.path.join('.')}: ${i.message}`).join('; '),
+      })
     }
+    const body = parsed.data as unknown as RecurringCallbackPayload
 
     await handleRecurringCallback(prisma, body)
 
@@ -183,13 +251,17 @@ async function start() {
       return reply.status(401).send({ error: 'Invalid signature' })
     }
 
-    const body = request.body as Record<string, unknown>
-
-    if (!body || typeof body.status !== 'string') {
-      return reply.status(400).send({ error: 'Invalid callback body' })
+    const parsed = SegpayCallbackSchema.safeParse(request.body)
+    if (!parsed.success) {
+      return reply.status(400).send({
+        statusCode: 400,
+        error: 'Bad Request',
+        message: parsed.error.issues.map(i => `${i.path.join('.')}: ${i.message}`).join('; '),
+      })
     }
+    const body = parsed.data as unknown as { status: string; [key: string]: unknown }
 
-    await handleSegpayCallback(prisma, body as { status: string; [key: string]: unknown })
+    await handleSegpayCallback(prisma, body)
 
     return reply.status(200).send()
   })
@@ -202,11 +274,15 @@ async function start() {
       return reply.status(401).send({ error: 'Invalid signature' })
     }
 
-    const body = request.body as TicketSwishCallbackBody
-
-    if (!body || !body.id || !body.status) {
-      return reply.status(400).send({ error: 'Invalid callback body' })
+    const parsed = SwishCallbackSchema.safeParse(request.body)
+    if (!parsed.success) {
+      return reply.status(400).send({
+        statusCode: 400,
+        error: 'Bad Request',
+        message: parsed.error.issues.map(i => `${i.path.join('.')}: ${i.message}`).join('; '),
+      })
     }
+    const body = parsed.data as unknown as TicketSwishCallbackBody
 
     const handled = await handleTicketPaymentCallback(prisma, body)
     if (!handled) {
@@ -304,10 +380,15 @@ async function start() {
       return reply.status(401).send({ error: 'Invalid token' })
     }
 
-    const postId = (request.query as Record<string, string>).postId
-    if (!postId) {
-      return reply.status(400).send({ error: 'postId query parameter required' })
+    const queryParsed = PostUploadQuerySchema.safeParse(request.query)
+    if (!queryParsed.success) {
+      return reply.status(400).send({
+        statusCode: 400,
+        error: 'Bad Request',
+        message: queryParsed.error.issues.map(i => `${i.path.join('.')}: ${i.message}`).join('; '),
+      })
     }
+    const { postId } = queryParsed.data
 
     const post = await prisma.post.findUnique({
       where: { id: postId },
@@ -377,10 +458,15 @@ async function start() {
     }
 
     // Get conversationId from query params
-    const conversationId = (request.query as Record<string, string>).conversationId
-    if (!conversationId) {
-      return reply.status(400).send({ error: 'conversationId query parameter required' })
+    const queryParsed = ChatUploadQuerySchema.safeParse(request.query)
+    if (!queryParsed.success) {
+      return reply.status(400).send({
+        statusCode: 400,
+        error: 'Bad Request',
+        message: queryParsed.error.issues.map(i => `${i.path.join('.')}: ${i.message}`).join('; '),
+      })
     }
+    const { conversationId } = queryParsed.data
 
     // Verify user is participant in conversation
     const participant = await prisma.conversationParticipant.findUnique({
@@ -551,6 +637,10 @@ async function start() {
 
   await server.listen({ port, host })
   server.log.info(`Server listening on ${host}:${port}`)
+
+  // Register shutdown handlers only after the server is up and running
+  process.on('SIGTERM', () => void shutdown('SIGTERM'))
+  process.on('SIGINT', () => void shutdown('SIGINT'))
 }
 
 start().catch((err) => {
