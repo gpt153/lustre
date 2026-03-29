@@ -31,6 +31,7 @@ import { marketplaceCallbackHandler, payoutCallbackHandler } from './routes/mark
 import { handleRecurringCallback, type RecurringCallbackPayload } from './lib/swish-recurring.js'
 import { handleSegpayCallback } from './lib/segpay.js'
 import { verifySwishWebhook, verifySegpayWebhook } from './lib/webhook-verify.js'
+import { versionCheckHook } from './lib/version-check.js'
 import {
   SwishCallbackSchema,
   SwishRecurringCallbackSchema,
@@ -130,6 +131,9 @@ async function start() {
   await server.register(helmet, { contentSecurityPolicy: false })
 
   await server.register(multipart, { limits: { fileSize: 20 * 1024 * 1024 } })
+
+  // Version enforcement: reject clients below minimum supported version
+  server.addHook('onRequest', versionCheckHook)
 
   // Capture raw body for webhook signature verification on payment callback routes.
   // Fastify parses JSON before handlers run, so we intercept the raw bytes here.

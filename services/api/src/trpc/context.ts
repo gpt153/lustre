@@ -2,6 +2,7 @@ import type { CreateFastifyContextOptions } from '@trpc/server/adapters/fastify'
 import { PrismaClient } from '@prisma/client'
 import { verifyToken, hashToken } from '../auth/jwt.js'
 import { redis } from '../lib/redis.js'
+import type { ClientVersion } from '../lib/version-check.js'
 
 let prisma: PrismaClient
 
@@ -52,7 +53,9 @@ export async function createContext({ req, res }: CreateFastifyContextOptions) {
     }
   }
 
-  return { req, res, prisma, redis, userId, sessionId }
+  const clientVersion = (req as any).clientVersion as ClientVersion | null
+
+  return { req, res, prisma, redis, userId, sessionId, clientVersion }
 }
 
 export type Context = Awaited<ReturnType<typeof createContext>>

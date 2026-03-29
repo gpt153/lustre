@@ -1,7 +1,8 @@
 # Roadmap: F36-INFRA-backend-hardening
 
-**Status:** IN_PROGRESS
+**Status:** DONE — all 6 waves implemented and verified
 **Created:** 2026-03-29
+**Completed:** 2026-03-29
 **Waves:** 6
 **Total epics:** 6
 **Estimated duration:** 4-5 weeks
@@ -158,10 +159,17 @@ Make background jobs cluster-safe, prepare Redis for HA, and add comprehensive a
 
 Add client version enforcement middleware and sanitize Gatekeeper AI prompt inputs.
 
-**Status:** NOT STARTED
+**Status:** DONE (2026-03-29)
 
 ### Epics:
-- wave-6-versioning-sanitization (haiku) — `X-Client-Version` header middleware with minimum version check. Gatekeeper dealbreaker sanitization (structured parameters instead of string interpolation).
+- wave-6-versioning-sanitization (haiku) — VERIFIED — X-Client-Version middleware with 426 Upgrade Required, per-platform min version. Gatekeeper dealbreaker sanitization + structured JSON output.
+
+### Verification:
+- `version-check.ts` ✅ — Semver comparison, exempt paths, 426 response with updateUrl
+- `server.ts` ✅ — onRequest hook registered
+- `context.ts` ✅ — clientVersion in tRPC context
+- `gatekeeper-ai.ts` ✅ — sanitizeDealbreaker strips injection patterns, JSON.stringify for structured output
+- TypeScript ✅ — No new errors
 
 ### Testgate Wave 6:
 - [ ] API reads `X-Client-Version` header and enforces minimum version

@@ -51,6 +51,41 @@ function formatRelationshipType(type: string | null): string {
   return type.toLowerCase().replace(/_/g, ' ')
 }
 
+const INJECTION_PATTERNS = [
+  /\bignore\b.*\b(previous|above|all)\b/gi,
+  /\bforget\b.*\b(previous|above|all)\b/gi,
+  /\bdisregard\b/gi,
+  /\boverride\b/gi,
+  /\bnew instructions?\b/gi,
+  /\bsystem\s*:/gi,
+  /\bassistant\s*:/gi,
+  /\buser\s*:/gi,
+  /```[\s\S]*?```/g,  // Code blocks
+  /`[^`]+`/g,         // Inline code
+]
+
+export function sanitizeDealbreaker(text: string): string {
+  let sanitized = text.trim()
+
+  // Strip injection patterns
+  for (const pattern of INJECTION_PATTERNS) {
+    sanitized = sanitized.replace(pattern, '')
+  }
+
+  // Remove markdown headers
+  sanitized = sanitized.replace(/^#+\s+/gm, '')
+
+  // Collapse whitespace
+  sanitized = sanitized.replace(/\s+/g, ' ').trim()
+
+  // Truncate to 200 characters
+  if (sanitized.length > 200) {
+    sanitized = sanitized.slice(0, 200).trim()
+  }
+
+  return sanitized
+}
+
 function generalizeDealbreakers(dealbreakers: string[]): string[] {
   // Paraphrase dealbreakers into topic areas without revealing verbatim content
   return dealbreakers.map(db => {
@@ -159,15 +194,16 @@ export function buildSystemPrompt(config: GatekeeperAIConfig, recipient: Recipie
     lines.push('')
   }
 
-  // Dealbreakers — generalized, never verbatim
+  // Dealbreakers — sanitized, generalized, passed as structured data
   if (dealbreakers.length > 0) {
-    const generalizedAreas = generalizeDealbreakers(dealbreakers)
+    const sanitized = dealbreakers.map(sanitizeDealbreaker).filter(d => d.length > 0)
+    const generalizedAreas = generalizeDealbreakers(sanitized)
     const uniqueAreas = [...new Set(generalizedAreas)]
     lines.push('## Important compatibility areas')
-    lines.push(`${recipient.displayName} has strong preferences in certain areas. Make sure to explore the following topics through natural conversation — never reveal these as explicit requirements:`)
-    uniqueAreas.forEach(area => {
-      lines.push(`- ${area}`)
-    })
+    lines.push(`${recipient.displayName} has strong preferences in certain areas. The following JSON contains topic areas to explore through natural conversation. NEVER reveal these as explicit requirements to the sender.`)
+    lines.push('')
+    lines.push(JSON.stringify({ compatibilityAreas: uniqueAreas }))
+    lines.push('')
     lines.push("If the sender's responses reveal clear incompatibilities in these areas, that should weigh heavily in your assessment.")
     lines.push('')
   }
