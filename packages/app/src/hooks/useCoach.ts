@@ -4,7 +4,7 @@ import { TRPCClientError } from '@trpc/client'
 import { useAuthStore } from '../stores/authStore'
 
 const API_URL =
-  process.env.EXPO_PUBLIC_API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000'
+  process.env.EXPO_PUBLIC_API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? 'https://api.lovelustre.com'
 
 export function useCoach() {
   const accessToken = useAuthStore((state) => state.accessToken)

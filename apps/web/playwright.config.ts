@@ -7,7 +7,7 @@ export default defineConfig({
   reporter: [['list'], ['html']],
   outputDir: 'test-results/',
   use: {
-    baseURL: 'http://localhost:3111',
+    baseURL: process.env.PLAYWRIGHT_BASE_URL ?? 'https://app.lovelustre.com',
     screenshot: 'only-on-failure',
     trace: 'retain-on-failure',
   },
@@ -17,11 +17,13 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
   ],
-  webServer: {
-    command: 'pnpm dev',
-    url: 'http://localhost:3111',
-    reuseExistingServer: !process.env.CI,
-    cwd: __dirname,
-    timeout: 120_000,
-  },
+  webServer: process.env.CI
+    ? undefined
+    : {
+        command: 'pnpm dev',
+        url: 'https://app.lovelustre.com',
+        reuseExistingServer: true,
+        cwd: __dirname,
+        timeout: 120_000,
+      },
 })

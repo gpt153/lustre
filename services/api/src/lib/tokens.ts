@@ -57,8 +57,25 @@ export async function creditTokens(
   amount: number,
   type: 'GATEKEEPER' | 'TOPUP' | 'REFUND' | 'REFERRAL',
   referenceId?: string,
+  externalReference?: string,
 ): Promise<void> {
   await prisma.$transaction(async (tx) => {
+    // Idempotency: if we have an externalReference, check whether this event
+    // has already been processed. If so, skip the balance increment and return.
+    if (externalReference) {
+      const existing = await tx.tokenTransaction.findUnique({
+        where: {
+          type_externalReference: {
+            type,
+            externalReference,
+          },
+        },
+      })
+      if (existing) {
+        return
+      }
+    }
+
     await tx.userBalance.upsert({
       where: { userId },
       create: { userId, balance: amount },
@@ -71,6 +88,7 @@ export async function creditTokens(
         amount,
         type,
         referenceId: referenceId ?? null,
+        externalReference: externalReference ?? null,
       },
     })
   })

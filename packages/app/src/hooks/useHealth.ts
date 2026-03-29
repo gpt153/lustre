@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-export function useHealth(apiUrl = 'http://localhost:4000') {
+export function useHealth(apiUrl = 'https://api.lovelustre.com') {
   const [status, setStatus] = useState<'loading' | 'ok' | 'error'>('loading')
   const [timestamp, setTimestamp] = useState<string | null>(null)
 

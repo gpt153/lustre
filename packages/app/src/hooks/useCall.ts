@@ -3,7 +3,7 @@ import { trpc } from '@lustre/api'
 import { useAuthStore } from '../stores/authStore'
 
 const API_URL =
-  process.env.EXPO_PUBLIC_API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000'
+  process.env.EXPO_PUBLIC_API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? 'https://api.lovelustre.com'
 
 type CallStatus = 'idle' | 'ringing' | 'connecting' | 'connected' | 'ended' | 'rejected'
 

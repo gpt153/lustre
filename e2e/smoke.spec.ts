@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 
-const BASE = process.env.BASE_URL ?? 'http://localhost:3333'
+const BASE = process.env.BASE_URL ?? 'https://app.lovelustre.com'
 
 const routes = [
   { path: '/auth', name: 'Auth / Login' },

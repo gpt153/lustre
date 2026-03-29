@@ -122,7 +122,9 @@ export async function handleSegpayCallback(
     return
   }
 
-  const transaction = await prisma.segpayTransaction.findFirst({
+  // Use findUnique via the unique constraint on segpayTxId to guard against
+  // duplicate callbacks delivering multiple times.
+  const transaction = await prisma.segpayTransaction.findUnique({
     where: { segpayTxId },
   })
 
@@ -137,6 +139,6 @@ export async function handleSegpayCallback(
     data: { status: 'COMPLETED' },
   })
 
-  // 1 SEK = 1 token
-  await creditTokens(prisma, transaction.userId, amountSek, 'TOPUP', transaction.id)
+  // 1 SEK = 1 token; use segpayTxId as externalReference for token idempotency
+  await creditTokens(prisma, transaction.userId, amountSek, 'TOPUP', transaction.id, segpayTxId)
 }

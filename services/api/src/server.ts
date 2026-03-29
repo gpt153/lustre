@@ -1,4 +1,4 @@
-import Fastify from 'fastify'
+import Fastify, { type FastifyRequest } from 'fastify'
 import cors from '@fastify/cors'
 import helmet from '@fastify/helmet'
 import multipart from '@fastify/multipart'
@@ -27,6 +27,12 @@ import { consentRoutes } from './routes/consent.js'
 import { marketplaceCallbackHandler, payoutCallbackHandler } from './routes/marketplace-callback.js'
 import { handleRecurringCallback, type RecurringCallbackPayload } from './lib/swish-recurring.js'
 import { handleSegpayCallback } from './lib/segpay.js'
+import { verifySwishWebhook, verifySegpayWebhook } from './lib/webhook-verify.js'
+
+// Extended request type that carries the raw body string for webhook verification.
+interface FastifyRequestWithRawBody extends FastifyRequest {
+  rawBody?: string
+}
 
 const server = Fastify({
   logger: {
@@ -38,19 +44,37 @@ const server = Fastify({
 })
 
 async function start() {
+  const allowedOrigins = process.env.CORS_ORIGINS
+    ? process.env.CORS_ORIGINS.split(',').map((o) => o.trim())
+    : [
+        'https://app.lovelustre.com',
+        'https://pay.lovelustre.com',
+        'https://admin.lovelustre.com',
+      ]
+
   await server.register(cors, {
-    origin: [
-      'http://localhost:3000',
-      'http://localhost:3111',
-      'http://localhost:8081',
-      'http://localhost:19006',
-      'http://10.0.2.2:4000',
-    ],
+    origin: allowedOrigins,
   })
 
   await server.register(helmet, { contentSecurityPolicy: false })
 
   await server.register(multipart, { limits: { fileSize: 20 * 1024 * 1024 } })
+
+  // Capture raw body for webhook signature verification on payment callback routes.
+  // Fastify parses JSON before handlers run, so we intercept the raw bytes here.
+  server.addContentTypeParser(
+    'application/json',
+    { parseAs: 'string' },
+    (req, body, done) => {
+      // Attach raw body for signature verification
+      ;(req as FastifyRequestWithRawBody).rawBody = body as string
+      try {
+        done(null, JSON.parse(body as string))
+      } catch (err) {
+        done(err as Error)
+      }
+    },
+  )
 
   server.get('/health', async () => {
     const checks: Record<string, string> = {
@@ -97,6 +121,12 @@ async function start() {
   // Swish payment callback — called by Swish servers when a payment completes.
   // Must be a plain REST endpoint (not tRPC) because Swish sends a fixed POST format.
   server.post('/swish/callback', async (request, reply) => {
+    const rawBody = (request as FastifyRequestWithRawBody).rawBody ?? ''
+    if (!verifySwishWebhook(rawBody, request.headers['x-swish-signature'] as string | undefined)) {
+      server.log.warn('Swish callback signature verification failed')
+      return reply.status(401).send({ error: 'Invalid signature' })
+    }
+
     const body = request.body as SwishCallbackBody
 
     if (!body || !body.id || !body.status) {
@@ -113,13 +143,26 @@ async function start() {
   })
 
   // Swish marketplace payment callback — called by Swish servers when a marketplace order payment completes.
-  server.post('/api/marketplace/swish-callback', marketplaceCallbackHandler)
+  server.post('/api/marketplace/swish-callback', async (request, reply) => {
+    const rawBody = (request as FastifyRequestWithRawBody).rawBody ?? ''
+    if (!verifySwishWebhook(rawBody, request.headers['x-swish-signature'] as string | undefined)) {
+      server.log.warn('Marketplace Swish callback signature verification failed')
+      return reply.status(401).send({ error: 'Invalid signature' })
+    }
+    return marketplaceCallbackHandler(request, reply)
+  })
 
   // Swish payout callback — called by Swish servers when a seller payout completes or fails.
   server.post('/api/marketplace/payout-callback', payoutCallbackHandler)
 
   // Swish recurring payment callback — called by Swish servers when a recurring auto-topup payment completes.
   server.post('/api/payments/swish-recurring-callback', async (request, reply) => {
+    const rawBody = (request as FastifyRequestWithRawBody).rawBody ?? ''
+    if (!verifySwishWebhook(rawBody, request.headers['x-swish-signature'] as string | undefined)) {
+      server.log.warn('Swish recurring callback signature verification failed')
+      return reply.status(401).send({ error: 'Invalid signature' })
+    }
+
     const body = request.body as RecurringCallbackPayload
 
     if (!body || !body.status || !body.payeePaymentReference) {
@@ -134,6 +177,12 @@ async function start() {
 
   // Segpay payment callback — called by Segpay servers when a card payment completes.
   server.post('/api/payments/segpay-callback', async (request, reply) => {
+    const rawBody = (request as FastifyRequestWithRawBody).rawBody ?? ''
+    if (!verifySegpayWebhook(rawBody, request.headers['x-segpay-signature'] as string | undefined)) {
+      server.log.warn('Segpay callback signature verification failed')
+      return reply.status(401).send({ error: 'Invalid signature' })
+    }
+
     const body = request.body as Record<string, unknown>
 
     if (!body || typeof body.status !== 'string') {
@@ -147,6 +196,12 @@ async function start() {
 
   // Swish ticket payment callback — called by Swish servers when a ticket payment completes.
   server.post('/api/events/ticket-callback', async (request, reply) => {
+    const rawBody = (request as FastifyRequestWithRawBody).rawBody ?? ''
+    if (!verifySwishWebhook(rawBody, request.headers['x-swish-signature'] as string | undefined)) {
+      server.log.warn('Swish ticket callback signature verification failed')
+      return reply.status(401).send({ error: 'Invalid signature' })
+    }
+
     const body = request.body as TicketSwishCallbackBody
 
     if (!body || !body.id || !body.status) {

@@ -414,16 +414,18 @@ model UserBalance {
 }
 
 model TokenTransaction {
-  id          String               @id @default(uuid()) @db.Uuid
-  userId      String               @map("user_id") @db.Uuid
-  amount      Decimal              @db.Decimal(20, 5)
-  type        TokenTransactionType
-  referenceId String?              @map("reference_id") @db.Uuid
-  description String?              @map("description")
-  serviceRef  String?              @map("service_ref")
-  createdAt   DateTime             @default(now()) @map("created_at")
-  user        User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                String               @id @default(uuid()) @db.Uuid
+  userId            String               @map("user_id") @db.Uuid
+  amount            Decimal              @db.Decimal(20, 5)
+  type              TokenTransactionType
+  referenceId       String?              @map("reference_id") @db.Uuid
+  description       String?              @map("description")
+  serviceRef        String?              @map("service_ref")
+  externalReference String?              @map("external_reference")
+  createdAt         DateTime             @default(now()) @map("created_at")
+  user              User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@unique([type, externalReference])
   @@index([userId])
   @@map("token_transactions")
 }
@@ -1512,7 +1514,7 @@ model SegpayCard {
 model SegpayTransaction {
   id           String   @id @default(uuid()) @db.Uuid
   userId       String   @map("user_id") @db.Uuid
-  segpayTxId   String?  @map("segpay_tx_id") @db.VarChar(200)
+  segpayTxId   String?  @unique @map("segpay_tx_id") @db.VarChar(200)
   amountSek    Decimal  @map("amount_sek") @db.Decimal(10, 2)
   tokensCredit Decimal  @map("tokens_credit") @db.Decimal(20, 5)
   status       String   @default("PENDING")

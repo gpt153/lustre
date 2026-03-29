@@ -204,6 +204,7 @@ export async function handleRecurringCallback(
       userId,
       tokenAmount,
       'TOPUP',
+      undefined,
       payload.callbackIdentifier,
     )
 
