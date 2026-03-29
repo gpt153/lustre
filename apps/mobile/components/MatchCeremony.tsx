@@ -2,12 +2,13 @@
  * MatchCeremony
  *
  * Fullscreen modal overlay shown when two users mutually match.
- * Two PolaroidCards spring in from opposite sides and overlap at ±8°.
+ * Two PolaroidCards spring in from opposite sides and overlap at +/-8 degrees.
+ * Design follows the Stitch mobile-match.html reference.
  *
  * Animation sequence:
  *   1. Backdrop fades in (200ms)
  *   2. Both cards spring in simultaneously from off-screen (SPRING.bouncy)
- *   3. Title fades in (300ms delay)
+ *   3. Title + subtitle fade in (300ms delay)
  *   4. Buttons fade in (400ms delay)
  *   5. Haptic fires after cards land (~500ms)
  */
@@ -40,6 +41,7 @@ import { SPRING, TIMING } from '@/constants/animations'
 
 interface MatchCeremonyProps {
   visible: boolean
+  currentUserName?: string
   currentUserPhotoUrl: string
   matchedUserPhotoUrl: string
   matchedUserName?: string
@@ -49,20 +51,21 @@ interface MatchCeremonyProps {
 }
 
 // ---------------------------------------------------------------------------
-// Design tokens (local)
+// Design tokens (matching Stitch mobile-match.html)
 // ---------------------------------------------------------------------------
 
-const GOLD = '#D4A843'
+const TERTIARY = '#9f3c1e'
 const COPPER = '#894d0d'
-const COPPER_LIGHT = '#a76526'
+const COPPER_CONTAINER = '#a76526'
 const CHARCOAL = '#2C2421'
-const WARM_WHITE = '#fef8f3'
+const WARM_WHITE = '#FDF8F3'
+const SURFACE_LOWEST = '#ffffff'
+const ON_SURFACE_VARIANT = '#524439'
 
-const CARD_WIDTH = 160
+const CARD_WIDTH = 150
 const CARD_ROTATION_LEFT = -8
 const CARD_ROTATION_RIGHT = 8
-// Horizontal offset so cards overlap at center
-const CARD_OFFSET_X = 48
+const CARD_TRANSLATE_X = 32
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -80,6 +83,7 @@ function fireHaptic() {
 
 export function MatchCeremony({
   visible,
+  currentUserName = 'Du',
   currentUserPhotoUrl,
   matchedUserPhotoUrl,
   matchedUserName = 'Match',
@@ -116,13 +120,13 @@ export function MatchCeremony({
     // 3. Title fades in
     titleOpacity.value = withDelay(
       TIMING.medium,
-      withTiming(1, { duration: TIMING.medium })
+      withTiming(1, { duration: TIMING.medium }),
     )
 
     // 4. Buttons fade in
     buttonsOpacity.value = withDelay(
       TIMING.medium + 100,
-      withTiming(1, { duration: TIMING.medium })
+      withTiming(1, { duration: TIMING.medium }),
     )
   }, [backdropOpacity, leftCardX, rightCardX, titleOpacity, buttonsOpacity])
 
@@ -162,11 +166,11 @@ export function MatchCeremony({
   }))
 
   const leftCardStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: leftCardX.value - CARD_OFFSET_X }],
+    transform: [{ translateX: leftCardX.value - CARD_TRANSLATE_X }],
   }))
 
   const rightCardStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: rightCardX.value + CARD_OFFSET_X }],
+    transform: [{ translateX: rightCardX.value + CARD_TRANSLATE_X }],
   }))
 
   const titleStyle = useAnimatedStyle(() => ({
@@ -210,35 +214,39 @@ export function MatchCeremony({
 
       {/* Content — non-intercepting outer, inner blocks propagation */}
       <View style={styles.content} pointerEvents="box-none">
-        {/* Cards row */}
-        <View style={styles.cardsRow} pointerEvents="none">
+        {/* Headline section */}
+        <Animated.View style={[styles.headlineSection, titleStyle]}>
+          <Text style={styles.headline}>It's a connection!</Text>
+          <Text style={styles.subtitle}>The start of something beautiful.</Text>
+        </Animated.View>
+
+        {/* Cards stack — overlapping polaroids */}
+        <View style={styles.cardsContainer}>
+          {/* Copper glow aura behind cards */}
+          <View style={styles.copperGlow} />
+
           {/* Left card — current user */}
-          <Animated.View style={leftCardStyle}>
+          <Animated.View style={[styles.cardLeft, leftCardStyle]}>
             <PolaroidCard
               cardWidth={CARD_WIDTH}
               imageSource={{ uri: currentUserPhotoUrl }}
-              caption="Du"
+              caption={currentUserName}
               rotation={CARD_ROTATION_LEFT}
-              shadow="lg"
+              style={styles.polaroidShadowLeft}
             />
           </Animated.View>
 
           {/* Right card — matched user */}
-          <Animated.View style={rightCardStyle}>
+          <Animated.View style={[styles.cardRight, rightCardStyle]}>
             <PolaroidCard
               cardWidth={CARD_WIDTH}
               imageSource={{ uri: matchedUserPhotoUrl }}
               caption={matchedUserName}
               rotation={CARD_ROTATION_RIGHT}
-              shadow="lg"
+              style={styles.polaroidShadowRight}
             />
           </Animated.View>
         </View>
-
-        {/* Title */}
-        <Animated.Text style={[styles.title, titleStyle]}>
-          It's a Match!
-        </Animated.Text>
 
         {/* Buttons */}
         <Animated.View style={[styles.buttons, buttonsStyle]}>
@@ -247,9 +255,10 @@ export function MatchCeremony({
             onPress={handleSendMessage}
             accessibilityRole="button"
             accessibilityLabel="Skicka meddelande"
+            style={({ pressed }) => pressed && styles.buttonPressed}
           >
             <LinearGradient
-              colors={[COPPER_LIGHT, COPPER]}
+              colors={[COPPER, COPPER_CONTAINER]}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={styles.primaryButton}
@@ -261,11 +270,14 @@ export function MatchCeremony({
           {/* Secondary — continue discovering */}
           <Pressable
             onPress={handleContinueDiscovering}
-            style={styles.ghostButton}
+            style={({ pressed }) => [
+              styles.outlinedButton,
+              pressed && styles.buttonPressed,
+            ]}
             accessibilityRole="button"
-            accessibilityLabel="Fortsätt upptäcka"
+            accessibilityLabel="Fortsätt utforska"
           >
-            <Text style={styles.ghostButtonText}>Fortsätt upptäcka</Text>
+            <Text style={styles.outlinedButtonText}>Fortsätt utforska</Text>
           </Pressable>
         </Animated.View>
       </View>
@@ -280,7 +292,7 @@ export function MatchCeremony({
 const styles = StyleSheet.create({
   backdrop: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: `rgba(44, 36, 33, 0.85)`, // Charcoal 0.85
+    backgroundColor: 'rgba(44, 36, 33, 0.85)',
   },
 
   content: {
@@ -290,57 +302,131 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
 
-  cardsRow: {
-    flexDirection: 'row',
+  // -- Headline section --
+
+  headlineSection: {
     alignItems: 'center',
-    justifyContent: 'center',
-    // Enough height to contain rotated cards comfortably
-    height: 240,
-    marginBottom: 32,
+    marginBottom: 48,
+    gap: 8,
   },
 
-  title: {
-    fontFamily: 'Caveat_700Bold',
-    fontSize: 42,
-    color: GOLD,
+  headline: {
+    fontFamily: 'Manrope_700Bold',
+    fontSize: 36,
+    color: TERTIARY,
     textAlign: 'center',
-    marginBottom: 32,
-    letterSpacing: 0.5,
+    letterSpacing: -0.5,
   },
+
+  subtitle: {
+    fontFamily: 'Manrope_400Regular',
+    fontSize: 14,
+    color: ON_SURFACE_VARIANT,
+    textAlign: 'center',
+    opacity: 0.8,
+  },
+
+  // -- Cards container --
+
+  cardsContainer: {
+    width: 320,
+    height: 260,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 48,
+  },
+
+  copperGlow: {
+    position: 'absolute',
+    width: 256,
+    height: 256,
+    borderRadius: 128,
+    backgroundColor: 'rgba(137, 77, 13, 0.10)',
+    // Blur is approximated by a large spread — RN doesn't support filter: blur
+    // We use shadow to simulate the glow effect
+    shadowColor: COPPER,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.15,
+    shadowRadius: 80,
+    elevation: 0,
+  },
+
+  cardLeft: {
+    position: 'absolute',
+    zIndex: 1,
+  },
+
+  cardRight: {
+    position: 'absolute',
+    zIndex: 2,
+  },
+
+  polaroidShadowLeft: {
+    shadowColor: '#2E1500',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.12,
+    shadowRadius: 24,
+    elevation: 4,
+  },
+
+  polaroidShadowRight: {
+    shadowColor: '#2E1500',
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.15,
+    shadowRadius: 32,
+    elevation: 6,
+  },
+
+  // -- Buttons --
 
   buttons: {
     width: '100%',
+    maxWidth: 380,
     gap: 12,
     alignItems: 'stretch',
+    paddingHorizontal: 8,
   },
 
   primaryButton: {
-    borderRadius: 9999,
+    borderRadius: 16,
     paddingVertical: 16,
     paddingHorizontal: 32,
     alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    gap: 8,
+    shadowColor: 'rgba(137, 77, 13, 0.2)',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 1,
+    shadowRadius: 12,
+    elevation: 4,
   },
 
   primaryButtonText: {
     fontFamily: 'Manrope_600SemiBold',
     fontSize: 16,
-    color: WARM_WHITE,
+    color: SURFACE_LOWEST,
     letterSpacing: 0.3,
   },
 
-  ghostButton: {
-    borderRadius: 9999,
+  outlinedButton: {
+    borderRadius: 16,
     paddingVertical: 15,
     paddingHorizontal: 32,
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'rgba(216, 195, 180, 0.35)',
+    borderWidth: 2,
+    borderColor: 'rgba(137, 77, 13, 0.20)',
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
   },
 
-  ghostButtonText: {
-    fontFamily: 'Manrope_400Regular',
+  outlinedButtonText: {
+    fontFamily: 'Manrope_600SemiBold',
     fontSize: 16,
-    color: WARM_WHITE,
+    color: COPPER,
     letterSpacing: 0.3,
+  },
+
+  buttonPressed: {
+    transform: [{ scale: 0.95 }],
   },
 })

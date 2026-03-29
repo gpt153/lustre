@@ -1,9 +1,11 @@
-import { YStack, XStack, Text, ScrollView, Image } from 'tamagui'
+import { useState, useCallback } from 'react'
+import { YStack, XStack, Text, ScrollView } from 'tamagui'
 import { LinearGradient } from '@tamagui/linear-gradient'
-import { CardBase, LustreButton } from '@lustre/ui'
+import { CardBase, LustreButton, PolaroidStack } from '@lustre/ui'
 import { PROMPT_OPTIONS } from '@lustre/api'
 import { ProfileKudosSection } from '../components/ProfileKudosSection'
-import { Dimensions } from 'react-native'
+import { Dimensions, type ImageSourcePropType } from 'react-native'
+// Design tokens from @lustre/tokens used via inline values
 
 interface ProfileViewProps {
   profile: {
@@ -22,242 +24,264 @@ interface ProfileViewProps {
   isOwnProfile?: boolean
   onEdit?: () => void
   onLogout?: () => void
+  onMessage?: () => void
+  onLike?: () => void
 }
 
 const SCREEN_WIDTH = Dimensions.get('window').width
-const HERO_HEIGHT = Dimensions.get('window').height * 0.45
 
-// Lustre design tokens
+// Design tokens from Stitch
 const tokens = {
   copper: '#894d0d',
-  copperLight: '#D4A574',
-  copperMuted: '#C4956A',
-  gold: '#D4A843',
-  goldBright: '#E8B84B',
-  warmWhite: '#fef8f3',
-  warmCream: '#F5EDE4',
+  copperContainer: '#a76526',
+  warmWhite: '#FDF8F3',
   charcoal: '#2C2421',
   warmGray: '#8B7E74',
-  ember: '#E05A33',
-  surface: '#fef8f3',
-  surfaceContainer: '#f2ede8',
-  surfaceContainerLow: '#f8f3ee',
+  surface: '#fff8f6',
+  surfaceContainer: '#faebe6',
+  surfaceContainerHigh: '#f4e5e0',
+  surfaceContainerLow: '#fff1ec',
   outlineVariant: '#d8c3b4',
+  onSurface: '#211a17',
+  onSurfaceVariant: '#524439',
+  onSecondaryContainer: '#755700',
+  secondaryContainer30: 'rgba(254, 206, 101, 0.30)',
   ghostBorder: 'rgba(216, 195, 180, 0.20)',
+  primaryAlpha20: 'rgba(137, 77, 13, 0.20)',
+  tertiary: '#9f3c1e',
+  outlineVariantAlpha30: 'rgba(216, 195, 180, 0.30)',
 }
 
-export function ProfileViewScreen({ profile, isOwnProfile = false, onEdit, onLogout }: ProfileViewProps) {
+// Front card w-80 = 320px, but constrain to screen
+const FRONT_CARD_WIDTH = Math.min(320, SCREEN_WIDTH - 48)
+const STACK_HEIGHT = 480
+
+export function ProfileViewScreen({
+  profile,
+  isOwnProfile = false,
+  onEdit,
+  onLogout,
+  onMessage,
+  onLike,
+}: ProfileViewProps) {
   const sortedPrompts = (profile.prompts || []).sort((a, b) => a.order - b.order)
+  const [activePhotoIndex, setActivePhotoIndex] = useState(0)
 
-  const renderContent = () => {
-    const items: Array<{ type: 'photo' | 'prompt'; data: any; key: string }> = []
+  // Build photo sources for PolaroidStack
+  const photoSources: ImageSourcePropType[] = profile.photos.map((photo: any) => ({
+    uri: photo.thumbnailMedium || photo.url,
+  }))
 
-    if (profile.photos.length > 0) {
-      items.push({
-        type: 'photo',
-        data: profile.photos[0],
-        key: `photo-0`,
-      })
-    }
-
-    sortedPrompts.forEach((prompt, index) => {
-      items.push({
-        type: 'prompt',
-        data: prompt,
-        key: `prompt-${index}`,
-      })
-
-      if (index + 1 < profile.photos.length) {
-        items.push({
-          type: 'photo',
-          data: profile.photos[index + 1],
-          key: `photo-${index + 1}`,
-        })
+  // Build captions array (first photo gets a caption, rest empty)
+  const captions: string[] = profile.photos.map((_: any, index: number) => {
+    if (index === 0 && sortedPrompts.length > 0) {
+      // Use first prompt as caption for front card if short enough
+      const firstPrompt = sortedPrompts[0]
+      if (firstPrompt && firstPrompt.response.length <= 60) {
+        return firstPrompt.response
       }
-    })
-
-    for (let i = sortedPrompts.length + 1; i < profile.photos.length; i++) {
-      items.push({
-        type: 'photo',
-        data: profile.photos[i],
-        key: `photo-${i}`,
-      })
     }
+    return ''
+  })
 
-    return items
-  }
+  const handleSwipe = useCallback((newIndex: number) => {
+    setActivePhotoIndex(newIndex)
+  }, [])
 
-  const contentItems = renderContent()
-
-  // Separate hero photo from remaining content items
-  const heroPhoto = profile.photos.length > 0 ? profile.photos[0] : null
-  const remainingPhotos = profile.photos.slice(1)
-  const promptItems = contentItems.filter((item) => item.type === 'prompt')
-  const nonHeroPhotoItems = contentItems.filter(
-    (item) => item.type === 'photo' && item.key !== 'photo-0'
+  // Bio from prompts
+  const bioPrompt = sortedPrompts.find(
+    (p) => p.promptKey === 'about_me' || p.promptKey === 'bio'
   )
-
-  // Bio from first prompt or fallback
-  const bioPrompt = promptItems.find(
-    (item) => item.data.promptKey === 'about_me' || item.data.promptKey === 'bio'
+  const bioText = bioPrompt?.response || (sortedPrompts.length > 0 ? sortedPrompts[0].response : null)
+  const otherPrompts = sortedPrompts.filter(
+    (p) => p !== bioPrompt && p !== sortedPrompts[0]
   )
-  const otherPrompts = promptItems.filter((item) => item !== bioPrompt)
 
   return (
-    <ScrollView backgroundColor={tokens.surface} showsVerticalScrollIndicator={false}>
-      {/* Hero Section */}
-      <YStack position="relative" height={HERO_HEIGHT} width="100%">
-        {heroPhoto && (
-          <Image
-            source={{ uri: heroPhoto.thumbnailMedium || heroPhoto.url }}
-            width="100%"
-            height="100%"
-            objectFit="cover"
-          />
-        )}
-
-        {/* Dark gradient overlay */}
-        <YStack position="absolute" bottom={0} left={0} right={0} height="60%">
-          <LinearGradient
-            colors={['transparent', 'rgba(137, 77, 13, 0.15)', 'rgba(254, 248, 243, 1)']}
-            start={[0, 0]}
-            end={[0, 1]}
-            width="100%"
-            height="100%"
-          />
-        </YStack>
-
-        {/* Name, age, badge overlaid on hero */}
-        <YStack
-          position="absolute"
-          bottom={48}
-          left={24}
-          right={24}
-          zIndex={10}
-          gap={4}
+    <ScrollView backgroundColor={tokens.warmWhite} showsVerticalScrollIndicator={false}>
+      {/* Top App Bar */}
+      <XStack
+        paddingHorizontal={24}
+        paddingVertical={16}
+        alignItems="center"
+        justifyContent="space-between"
+        backgroundColor={tokens.warmWhite}
+      >
+        <XStack width={32} />
+        <Text
+          fontFamily="$heading"
+          fontWeight="700"
+          fontSize={18}
+          letterSpacing={-0.3}
+          color={tokens.copper}
         >
-          <XStack alignItems="center" gap={8}>
-            <Text
-              fontFamily="$heading"
-              fontSize={32}
-              fontWeight="700"
-              color="white"
-            >
-              {profile.displayName}, {profile.age}
+          {profile.displayName}, {profile.age}
+        </Text>
+        <XStack width={32} alignItems="center" justifyContent="center">
+          {profile.verified && (
+            <Text fontSize={20} color={tokens.copper}>
+              {''}
             </Text>
-            {profile.verified && (
-              <Text fontSize={22} color={tokens.copperLight}>
-                ✓
-              </Text>
-            )}
-          </XStack>
-          <XStack alignItems="center" gap={6}>
-            <Text fontSize={14} color="rgba(255,255,255,0.9)">
-              📍
+          )}
+        </XStack>
+      </XStack>
+
+      {/* Polaroid Stack Section */}
+      <YStack
+        alignItems="center"
+        justifyContent="center"
+        height={STACK_HEIGHT}
+        marginTop={24}
+        paddingHorizontal={24}
+      >
+        {photoSources.length > 0 ? (
+          <PolaroidStack
+            images={photoSources}
+            cardWidth={FRONT_CARD_WIDTH}
+            captions={captions}
+            activeIndex={activePhotoIndex}
+            onSwipe={handleSwipe}
+          />
+        ) : (
+          <YStack
+            width={FRONT_CARD_WIDTH}
+            height={FRONT_CARD_WIDTH}
+            backgroundColor="white"
+            borderRadius={4}
+            alignItems="center"
+            justifyContent="center"
+            shadowColor="#2E1500"
+            shadowOffset={{ width: 0, height: 8 }}
+            shadowOpacity={0.12}
+            shadowRadius={24}
+            elevation={4}
+          >
+            <Text color={tokens.warmGray} fontSize={16}>
+              Inga foton
             </Text>
-            <Text
-              fontSize={14}
-              color="rgba(255,255,255,0.9)"
-              letterSpacing={0.5}
-            >
-              Stockholm
-            </Text>
-          </XStack>
-        </YStack>
+          </YStack>
+        )}
       </YStack>
 
-      {/* Main Content Canvas — rounded top overlapping hero */}
-      <YStack
-        backgroundColor={tokens.surface}
-        borderTopLeftRadius={40}
-        borderTopRightRadius={40}
-        marginTop={-24}
-        position="relative"
-        zIndex={20}
-        paddingTop={40}
-        paddingHorizontal={24}
-        paddingBottom={48}
-      >
-        {/* Stats Row */}
-        <XStack alignItems="center" gap={24} marginBottom={40} paddingHorizontal={8}>
-          <XStack alignItems="center" gap={8}>
-            <Text fontSize={18} color={tokens.copper}>🏅</Text>
-            <Text fontWeight="600" fontSize={14} color={tokens.charcoal}>
-              4 kudos
-            </Text>
-          </XStack>
-          <XStack alignItems="center" gap={8}>
-            <Text fontSize={18} color={tokens.copper}>🎖️</Text>
-            <Text fontWeight="600" fontSize={14} color={tokens.charcoal}>
-              2 badges
-            </Text>
-          </XStack>
-        </XStack>
+      {/* Swipe counter text below dots */}
+      {profile.photos.length > 1 && (
+        <YStack alignItems="center" marginTop={4}>
+          <Text
+            fontSize={10}
+            fontWeight="500"
+            color={tokens.warmGray}
+            letterSpacing={2}
+            textTransform="uppercase"
+          >
+            {activePhotoIndex + 1}/{profile.photos.length}
+          </Text>
+        </YStack>
+      )}
 
-        {/* Om mig (Bio) Section */}
-        {(bioPrompt || sortedPrompts.length > 0) && (
-          <YStack marginBottom={48}>
+      {/* Bio Section */}
+      <YStack paddingHorizontal={24} marginTop={48} gap={32}>
+        {/* About heading + bio card */}
+        {bioText && (
+          <YStack gap={16}>
             <Text
               fontFamily="$heading"
-              fontSize={22}
               fontWeight="700"
-              color={tokens.charcoal}
-              marginBottom={16}
+              fontSize={24}
+              letterSpacing={-0.5}
+              color={tokens.copper}
             >
-              Om mig
+              Om {profile.displayName}
             </Text>
-            {bioPrompt ? (
+            <YStack
+              backgroundColor={tokens.surfaceContainer}
+              padding={24}
+              borderRadius={16}
+              borderLeftWidth={4}
+              borderLeftColor={tokens.primaryAlpha20}
+            >
               <Text
-                fontFamily="$body"
                 fontSize={15}
-                color={tokens.warmGray}
+                color={tokens.onSurfaceVariant}
                 lineHeight={26}
-                opacity={0.9}
               >
-                {bioPrompt.data.response}
+                {bioText}
               </Text>
-            ) : sortedPrompts.length > 0 ? (
-              <Text
-                fontFamily="$body"
-                fontSize={15}
-                color={tokens.warmGray}
-                lineHeight={26}
-                opacity={0.9}
-              >
-                {sortedPrompts[0].response}
-              </Text>
-            ) : null}
+            </YStack>
           </YStack>
         )}
 
-        {/* Prompts — remaining prompts as cards */}
-        {(bioPrompt ? otherPrompts : promptItems.slice(1)).map((item) => (
-          <YStack key={item.key} marginBottom={24}>
-            <CardBase elevation={1} gap="$sm">
-              <Text
-                color={tokens.warmGray}
-                fontFamily="$heading"
-                fontSize={14}
-                fontWeight="600"
-              >
-                {PROMPT_OPTIONS[item.data.promptKey] || item.data.promptKey}
-              </Text>
-              <Text
-                fontFamily="$body"
-                color={tokens.charcoal}
-                fontSize={16}
-                fontWeight="500"
-                lineHeight={24}
-              >
-                {item.data.response}
-              </Text>
-            </CardBase>
+        {/* Remaining Prompts as cards */}
+        {otherPrompts.length > 0 && (
+          <YStack gap={16}>
+            {otherPrompts.map((prompt, index) => (
+              <YStack key={`prompt-${index}`}>
+                <CardBase elevation={1} gap="$sm">
+                  <Text
+                    color={tokens.warmGray}
+                    fontFamily="$heading"
+                    fontSize={14}
+                    fontWeight="600"
+                  >
+                    {PROMPT_OPTIONS[prompt.promptKey] || prompt.promptKey}
+                  </Text>
+                  <Text
+                    fontSize={16}
+                    fontWeight="500"
+                    color={tokens.charcoal}
+                    lineHeight={24}
+                  >
+                    {prompt.response}
+                  </Text>
+                </CardBase>
+              </YStack>
+            ))}
           </YStack>
-        ))}
+        )}
 
-        {/* Interest Tags — copper-outlined rounded pills */}
+        {/* Interest Tags — rounded-full pills, secondary-container/30 */}
+        {profile.kinkTags.length > 0 && (
+          <YStack gap={16}>
+            <Text
+              fontFamily="$heading"
+              fontWeight="600"
+              fontSize={18}
+              color={tokens.onSurface}
+            >
+              Intressen
+            </Text>
+            <XStack flexWrap="wrap" gap={12}>
+              {profile.kinkTags.map((kt: any) => (
+                <YStack
+                  key={kt.kinkTag.name}
+                  paddingHorizontal={20}
+                  paddingVertical={10}
+                  borderRadius={9999}
+                  backgroundColor={tokens.secondaryContainer30}
+                >
+                  <Text
+                    fontSize={14}
+                    fontWeight="500"
+                    color={tokens.onSecondaryContainer}
+                  >
+                    {kt.kinkTag.name}
+                  </Text>
+                </YStack>
+              ))}
+            </XStack>
+          </YStack>
+        )}
+
+        {/* Seeking tags */}
         {profile.seeking.length > 0 && (
-          <YStack marginBottom={48}>
+          <YStack gap={16}>
+            <Text
+              fontFamily="$heading"
+              fontWeight="600"
+              fontSize={18}
+              color={tokens.onSurface}
+            >
+              Soker
+            </Text>
             <XStack flexWrap="wrap" gap={12}>
               {profile.seeking.map((s: string) => (
                 <YStack
@@ -265,14 +289,12 @@ export function ProfileViewScreen({ profile, isOwnProfile = false, onEdit, onLog
                   paddingHorizontal={20}
                   paddingVertical={10}
                   borderRadius={9999}
-                  borderWidth={1}
-                  borderColor={tokens.ghostBorder}
-                  backgroundColor={tokens.surfaceContainerLow}
+                  backgroundColor={tokens.secondaryContainer30}
                 >
                   <Text
                     fontSize={14}
                     fontWeight="500"
-                    color={tokens.copper}
+                    color={tokens.onSecondaryContainer}
                   >
                     {s.replace(/_/g, ' ').toLowerCase()}
                   </Text>
@@ -282,9 +304,9 @@ export function ProfileViewScreen({ profile, isOwnProfile = false, onEdit, onLog
           </YStack>
         )}
 
-        {/* Relation */}
+        {/* Relation type */}
         {profile.relationshipType && (
-          <YStack marginBottom={24}>
+          <YStack>
             <CardBase elevation={1} gap="$xs">
               <Text
                 color={tokens.warmGray}
@@ -305,88 +327,79 @@ export function ProfileViewScreen({ profile, isOwnProfile = false, onEdit, onLog
           </YStack>
         )}
 
-        {/* Kink Tags — copper-outlined rounded pills */}
-        {profile.kinkTags.length > 0 && (
-          <YStack marginBottom={48}>
-            <Text
-              fontFamily="$heading"
-              fontSize={22}
-              fontWeight="700"
-              color={tokens.charcoal}
-              marginBottom={16}
-            >
-              Intressen
-            </Text>
-            <XStack flexWrap="wrap" gap={12}>
-              {profile.kinkTags.map((kt: any) => (
-                <XStack
-                  key={kt.kinkTag.name}
-                  paddingHorizontal={20}
-                  paddingVertical={10}
-                  borderRadius={9999}
-                  borderWidth={1}
-                  borderColor={tokens.ghostBorder}
-                  backgroundColor={tokens.surfaceContainerLow}
-                  alignItems="center"
-                  gap={6}
-                >
-                  <Text
-                    fontSize={14}
-                    fontWeight="500"
-                    color={tokens.copper}
-                  >
-                    {kt.kinkTag.name}
-                  </Text>
-                  <Text fontSize={12}>
-                    {kt.interestLevel === 'LOVE' ? '❤️' : kt.interestLevel === 'LIKE' ? '👍' : '🤔'}
-                  </Text>
-                </XStack>
-              ))}
-            </XStack>
-          </YStack>
-        )}
-
-        {/* Photo Grid — 2-column layout with rounded corners and copper border */}
-        {remainingPhotos.length > 0 && (
-          <YStack marginBottom={48}>
-            <XStack flexWrap="wrap" gap={12}>
-              {remainingPhotos.map((photo: any, index: number) => {
-                const isLarge = index === 0 && remainingPhotos.length >= 3
-                const photoSize = isLarge
-                  ? (SCREEN_WIDTH - 48 - 12) * (2 / 3)
-                  : (SCREEN_WIDTH - 48 - 12) / 2
-
-                return (
-                  <YStack
-                    key={`grid-photo-${index}`}
-                    width={isLarge ? '100%' : photoSize}
-                    height={photoSize}
-                    borderRadius={16}
-                    overflow="hidden"
-                    borderWidth={1}
-                    borderColor={tokens.ghostBorder}
-                    backgroundColor={tokens.surfaceContainer}
-                  >
-                    <Image
-                      source={{ uri: photo.thumbnailMedium || photo.url }}
-                      width="100%"
-                      height="100%"
-                      objectFit="cover"
-                    />
-                  </YStack>
-                )
-              })}
-            </XStack>
-          </YStack>
-        )}
-
         {/* Kudos Section */}
         <ProfileKudosSection userId={profile.userId} />
 
-        {/* Redigera profil — full-width copper gradient button */}
+        {/* Action Buttons — Message (gradient) + Heart (outlined) */}
+        {!isOwnProfile && (
+          <XStack gap={16} paddingTop={16}>
+            {/* Message button — gradient copper */}
+            <YStack
+              flex={1}
+              height={56}
+              borderRadius={16}
+              overflow="hidden"
+              pressStyle={{ scale: 0.95 }}
+              onPress={onMessage}
+              shadowColor={tokens.charcoal}
+              shadowOffset={{ width: 0, height: 4 }}
+              shadowOpacity={0.15}
+              shadowRadius={16}
+              elevation={4}
+            >
+              <LinearGradient
+                colors={[tokens.copper, tokens.copperContainer]}
+                start={[0, 0]}
+                end={[1, 1]}
+                width="100%"
+                height="100%"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <XStack alignItems="center" gap={8}>
+                  <Text color="white" fontSize={18}>
+                    {''}
+                  </Text>
+                  <Text
+                    color="white"
+                    fontWeight="700"
+                    fontSize={16}
+                  >
+                    Meddelande
+                  </Text>
+                </XStack>
+              </LinearGradient>
+            </YStack>
+
+            {/* Heart button — outlined */}
+            <YStack
+              width={56}
+              height={56}
+              borderRadius={16}
+              borderWidth={1}
+              borderColor={tokens.outlineVariantAlpha30}
+              backgroundColor="white"
+              alignItems="center"
+              justifyContent="center"
+              pressStyle={{ scale: 0.95 }}
+              onPress={onLike}
+              shadowColor={tokens.charcoal}
+              shadowOffset={{ width: 0, height: 2 }}
+              shadowOpacity={0.08}
+              shadowRadius={12}
+              elevation={3}
+            >
+              <Text fontSize={24} color={tokens.tertiary}>
+                {''}
+              </Text>
+            </YStack>
+          </XStack>
+        )}
+
+        {/* Own profile: Edit button */}
         {isOwnProfile && onEdit && (
           <YStack
-            marginTop={32}
+            marginTop={16}
             width="100%"
             height={56}
             borderRadius={9999}
@@ -400,7 +413,7 @@ export function ProfileViewScreen({ profile, isOwnProfile = false, onEdit, onLog
             elevation={4}
           >
             <LinearGradient
-              colors={['#894d0d', '#a76526']}
+              colors={[tokens.copper, tokens.copperContainer]}
               start={[0, 0]}
               end={[1, 1]}
               width="100%"
@@ -421,7 +434,7 @@ export function ProfileViewScreen({ profile, isOwnProfile = false, onEdit, onLog
           </YStack>
         )}
 
-        {/* Logga ut */}
+        {/* Logout */}
         {isOwnProfile && onLogout && (
           <LustreButton
             onPress={onLogout}
@@ -432,6 +445,9 @@ export function ProfileViewScreen({ profile, isOwnProfile = false, onEdit, onLog
             Logga ut
           </LustreButton>
         )}
+
+        {/* Bottom spacing */}
+        <YStack height={120} />
       </YStack>
     </ScrollView>
   )

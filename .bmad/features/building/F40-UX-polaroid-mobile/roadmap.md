@@ -237,7 +237,13 @@ Wire up Reanimated + Gesture Handler for card swiping.
 
 ## Wave 3: Feed + Chat — Convert Stitch to Tamagui
 
-**Status:** IN_PROGRESS — 2026-03-29
+**Status:** DONE — 2026-03-29
+
+**Visual Verification:**
+- Screenshots: screenshots/wave3/run3/
+- Comparison: screenshots/wave3/run3/COMPARISON.md
+- Gate result: PASS (verify-wave-screenshots.sh exit 0)
+- Runs needed: 3 (run1 = first attempt, run3 = final pass)
 
 **Stitch source:** html/mobile-feed-revised.html, html/mobile-chat-inbox.html, html/mobile-chat-room.html
 
@@ -337,6 +343,14 @@ Convert `mobile-chat-room.html` to the chat conversation screen with inline Pola
 ---
 
 ## Wave 4: Profile + Match + Edit — Convert Stitch to Tamagui
+
+**Status:** DONE — 2026-03-29
+
+**Visual Verification:**
+- Screenshots: screenshots/wave4/run1/
+- Comparison: screenshots/wave4/run1/COMPARISON.md
+- Gate result: PASS (verify-wave-screenshots.sh exit 0)
+- Runs needed: 1 (run1 = first attempt, passed)
 
 **Stitch source:** html/mobile-profile-enhanced.html, html/mobile-match.html, html/mobile-edit-profile.html
 
