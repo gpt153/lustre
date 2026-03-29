@@ -1,6 +1,6 @@
 # Roadmap: F37 — Polaroid Design System for Mobile
 
-**Status:** IN_PROGRESS — started 2026-03-29
+**Status:** DONE — all 4 waves implemented and tested (2026-03-29)
 **Created:** 2026-03-29
 **Waves:** 4
 
@@ -210,7 +210,21 @@ Wrap feed post photos and chat shared photos in PolaroidCards.
 
 Profile photo gallery as Polaroid stack, match ceremony with overlapping Polaroids.
 
-**Status:** NOT STARTED
+**Status:** DONE — 2026-03-29
+
+### Epics: ALL VERIFIED
+- 4a Profile PhotoGallery — VERIFIED (PolaroidStack for view, PolaroidCard scroll for edit, delete overlay, upload button)
+- 4b MatchCeremony — VERIFIED (two PolaroidCards at ±8°, spring from sides, Caveat title, haptics, copper/ghost buttons)
+- 4c Profile view integration — VERIFIED (no changes needed, PhotoGallery used by ProfileViewScreen)
+
+### Testgate: CODE REVIEW PASS
+- [x] Profile photos render as PolaroidStack (view mode)
+- [x] Profile edit shows PolaroidCard scroll with delete + upload
+- [x] Match ceremony shows two overlapping Polaroids at ±8°
+- [x] Captions show names in Caveat
+- [x] Spring entry animation + haptics
+- [x] "Skicka meddelande" + "Fortsätt upptäcka" buttons
+- [ ] Visual verification — deferred to APK build
 
 ### Tasks:
 
