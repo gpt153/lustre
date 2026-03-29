@@ -3,6 +3,7 @@
 import { m } from 'motion/react'
 import { springs, slideUp } from '@/lib/motion'
 import styles from './MessageBubble.module.css'
+import PolaroidCard from '@/components/common/PolaroidCard'
 
 export interface Message {
   id: string
@@ -37,11 +38,23 @@ export default function MessageBubble({
       transition={springs.soft}
       aria-label={`${isOwn ? 'Du' : 'Dem'}: ${message.body}`}
     >
-      <div
-        className={`${styles.bubble} ${isOwn ? styles.bubbleOwn : styles.bubbleOther}`}
-      >
-        <p className={styles.body}>{message.body}</p>
-      </div>
+      {message.type === 'IMAGE' ? (
+        <div className={styles.polaroidWrap}>
+          <PolaroidCard
+            imageUrl={message.body}
+            imageAlt="Delat foto"
+            rotation={isOwn ? 2 : -2}
+            hoverable={false}
+            className={styles.chatPolaroid}
+          />
+        </div>
+      ) : (
+        <div
+          className={`${styles.bubble} ${isOwn ? styles.bubbleOwn : styles.bubbleOther}`}
+        >
+          <p className={styles.body}>{message.body}</p>
+        </div>
+      )}
       {showTimestamp && (
         <time
           className={`${styles.timestamp} ${isOwn ? styles.timestampOwn : styles.timestampOther}`}

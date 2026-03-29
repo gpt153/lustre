@@ -56,3 +56,11 @@
 .timestampOther {
   text-align: left;
 }
+
+.polaroidWrap {
+  max-width: 240px;
+}
+
+.chatPolaroid {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}

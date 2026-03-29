@@ -8,7 +8,7 @@ import { api as _api } from '@/lib/trpc'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const api = _api as any
-import MediaGallery from './MediaGallery'
+import PolaroidCard from '@/components/common/PolaroidCard'
 import LikeBurst from './LikeBurst'
 import styles from './PostCard.module.css'
 
@@ -169,7 +169,28 @@ export default function PostCard({
 
         {media.length > 0 && (
           <div className={styles.media}>
-            <MediaGallery items={media} postId={id} />
+            {media.length === 1 ? (
+              <PolaroidCard
+                imageUrl={media[0].url}
+                imageAlt={media[0].alt ?? 'Foto'}
+                rotation={1.5}
+                hoverable={false}
+                className={styles.mediaPolaroid}
+              />
+            ) : (
+              <div className={styles.mediaRow}>
+                {media.map((item, i) => (
+                  <PolaroidCard
+                    key={i}
+                    imageUrl={item.url}
+                    imageAlt={item.alt ?? `Foto ${i + 1}`}
+                    rotation={i % 2 === 0 ? -2 : 2}
+                    hoverable={false}
+                    className={styles.mediaPolaroidSmall}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         )}
 
