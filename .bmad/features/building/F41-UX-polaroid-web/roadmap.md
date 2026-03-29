@@ -288,7 +288,13 @@
 
 ## Wave 3: Feed + Chat — Polaroid Posts and Messages
 
-**Status:** IN_PROGRESS — 2026-03-29
+**Status:** DONE — 2026-03-29
+
+**Visual Verification:**
+- Screenshots: screenshots/wave3/run1/
+- Comparison: screenshots/wave3/run1/COMPARISON.md
+- Gate result: PASS (verify-wave-screenshots.sh exit 0)
+- Runs needed: 1 (run1 = first attempt, run1 = final pass)
 
 **Goal:** Convert Feed and Chat pages to use Polaroid cards for photo content.
 
@@ -386,6 +392,8 @@
 ---
 
 ## Wave 4: Profile + Match + Edit — Gallery, Modal, Form
+
+**Status:** IN_PROGRESS — 2026-03-29
 
 **Goal:** Convert Profile view (scattered gallery), Match modal (overlapping Polaroids), and Edit Profile (gallery + form).
 

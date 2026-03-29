@@ -1,0 +1,317 @@
+/* ============================================================
+   MatchModal — "It's a connection!" notification
+   Stitch HTML reference: overlapping Polaroid 600 cards
+   ============================================================ */
+
+/* ---- Overlay ---- */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-modal, 300) + 20);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xl, 32px);
+  background: rgba(33, 26, 23, 0.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+
+  /* Entrance animation */
+  opacity: 0;
+  transition: opacity 0.3s ease-out;
+}
+
+.overlayVisible {
+  opacity: 1;
+}
+
+/* ---- Modal card ---- */
+
+.modal {
+  position: relative;
+  width: 100%;
+  max-width: 672px;
+  background: #FDF8F3;
+  padding: 48px;
+  border-radius: 12px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(216, 195, 180, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  /* Entrance animation */
+  transform: scale(0.9);
+  opacity: 0;
+  transition:
+    transform 0.35s var(--spring, cubic-bezier(0.22, 1, 0.36, 1)),
+    opacity 0.3s ease-out;
+}
+
+.overlayVisible .modal {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* ---- Close button ---- */
+
+.closeButton {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--stitch-on-surface-variant, #524439);
+  transition: color 0.2s ease;
+  padding: 0;
+  border-radius: 4px;
+}
+
+.closeButton:hover {
+  color: var(--stitch-on-surface, #211a17);
+}
+
+.closeButton:focus-visible {
+  outline: var(--focus-ring, 2px solid #894d0d);
+  outline-offset: 2px;
+}
+
+.closeButton svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* ---- Title ---- */
+
+.title {
+  font-family: var(--font-epilogue, 'Epilogue', sans-serif);
+  font-size: 48px;
+  font-weight: 800;
+  color: #894d0d;
+  letter-spacing: -0.02em;
+  margin: 0 0 64px 0;
+  line-height: 1.1;
+}
+
+/* ---- Polaroid container ---- */
+
+.polaroidContainer {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 320px;
+  width: 100%;
+  margin-bottom: 48px;
+}
+
+/* ---- Polaroid frames ---- */
+
+.polaroidLeft {
+  position: absolute;
+  width: 224px;
+  transform: rotate(-10deg) translateX(-64px);
+  z-index: 1;
+  transition: transform 0.3s ease;
+}
+
+.polaroidLeft:hover {
+  transform: rotate(-10deg) translateX(-64px) scale(1.05);
+}
+
+.polaroidRight {
+  position: absolute;
+  width: 224px;
+  transform: rotate(10deg) translateX(64px);
+  z-index: 2;
+  transition: transform 0.3s ease;
+}
+
+.polaroidRight:hover {
+  transform: rotate(10deg) translateX(64px) scale(1.05);
+}
+
+/* Override PolaroidCard caption font size for match modal */
+.polaroidLeft :global(.caption),
+.polaroidRight :global(.caption) {
+  font-size: 30px;
+}
+
+/* Make PolaroidCard fill its container width */
+.polaroidLeft > div,
+.polaroidRight > div {
+  width: 100%;
+}
+
+/* ---- Subtitle ---- */
+
+.subtitle {
+  max-width: 320px;
+  margin: 0 0 40px 0;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.6;
+  color: #2C2421;
+}
+
+/* ---- Actions ---- */
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 384px;
+}
+
+.primaryButton {
+  width: 100%;
+  padding: 16px;
+  background: #B87333;
+  color: white;
+  font-weight: 700;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(137, 77, 13, 0.2);
+}
+
+.primaryButton:hover {
+  background: #a76526;
+}
+
+.primaryButton:active {
+  transform: scale(0.98);
+}
+
+.primaryButton:focus-visible {
+  outline: var(--focus-ring, 2px solid #894d0d);
+  outline-offset: 2px;
+}
+
+.secondaryButton {
+  width: 100%;
+  padding: 16px;
+  background: transparent;
+  color: #B87333;
+  font-weight: 700;
+  font-size: 16px;
+  border: 2px solid rgba(184, 115, 51, 0.3);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.secondaryButton:hover {
+  border-color: #B87333;
+}
+
+.secondaryButton:focus-visible {
+  outline: var(--focus-ring, 2px solid #894d0d);
+  outline-offset: 2px;
+}
+
+/* ---- Decorative dots ---- */
+
+.dots {
+  margin-top: 48px;
+  display: flex;
+  gap: 8px;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.dotPrimary {
+  background: rgba(200, 90, 58, 0.4);
+}
+
+.dotSecondary {
+  background: rgba(212, 168, 67, 0.4);
+}
+
+.dotTertiary {
+  background: rgba(200, 90, 58, 0.4);
+}
+
+/* ---- Reduced motion ---- */
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay {
+    transition: none;
+  }
+
+  .modal {
+    transition: none;
+  }
+
+  .polaroidLeft,
+  .polaroidRight {
+    transition: none;
+  }
+
+  .polaroidLeft:hover {
+    transform: rotate(-10deg) translateX(-64px);
+  }
+
+  .polaroidRight:hover {
+    transform: rotate(10deg) translateX(64px);
+  }
+}
+
+/* ---- Mobile adjustments ---- */
+
+@media (max-width: 600px) {
+  .modal {
+    padding: 32px 24px;
+  }
+
+  .title {
+    font-size: 32px;
+    margin-bottom: 40px;
+  }
+
+  .polaroidContainer {
+    height: 240px;
+    margin-bottom: 32px;
+  }
+
+  .polaroidLeft {
+    width: 160px;
+    transform: rotate(-10deg) translateX(-40px);
+  }
+
+  .polaroidLeft:hover {
+    transform: rotate(-10deg) translateX(-40px) scale(1.05);
+  }
+
+  .polaroidRight {
+    width: 160px;
+    transform: rotate(10deg) translateX(40px);
+  }
+
+  .polaroidRight:hover {
+    transform: rotate(10deg) translateX(40px) scale(1.05);
+  }
+
+  .subtitle {
+    margin-bottom: 32px;
+  }
+
+  .dots {
+    margin-top: 32px;
+  }
+}
