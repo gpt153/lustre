@@ -76,7 +76,7 @@ E01 Infrastructure & Seed Data ──┬── E02 Feed & Discover Fix
   - BLOCKING: Inga generiska empty states godkänns
 
 ### Wave 6: E06 — Final Regression & APK Delivery
-- **Status:** NOT_STARTED
+- **Status:** IN_PROGRESS (2026-03-29T07:15)
 - **Mål:** Full regression alla skärmar, release APK, Snotra delivery
 - **Beroenden:** E02, E03, E04, E05
 - **Testgate:**

@@ -13,14 +13,14 @@
 :root {
   --bg-deep: #08080D;
   --bg-surface: #0F0F16;
-  --bg-card: rgba(255, 255, 255, 0.03);
-  --bg-card-hover: rgba(255, 255, 255, 0.06);
-  --border-subtle: rgba(255, 255, 255, 0.06);
-  --border-glow: rgba(212, 165, 116, 0.2);
+  --bg-card: rgba(255, 255, 255, 0.06);
+  --bg-card-hover: rgba(255, 255, 255, 0.10);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-glow: rgba(212, 165, 116, 0.3);
 
   --text-primary: #F2F0ED;
-  --text-secondary: rgba(242, 240, 237, 0.6);
-  --text-muted: rgba(242, 240, 237, 0.35);
+  --text-secondary: rgba(242, 240, 237, 0.72);
+  --text-muted: rgba(242, 240, 237, 0.45);
 
   --accent-warm: #D4A574;
   --accent-warm-dim: rgba(212, 165, 116, 0.15);
@@ -89,7 +89,7 @@
 .ambient-orb--center {
   width: 900px;
   height: 900px;
-  background: rgba(200, 155, 90, 0.04);
+  background: rgba(200, 155, 90, 0.06);
   top: 30%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -467,9 +467,10 @@
   border: 1px solid var(--border-subtle);
   border-radius: 20px;
   padding: 40px 32px;
-  transition: background 0.3s ease, border-color 0.3s ease, transform 0.4s var(--ease-out-expo);
+  transition: background 0.3s ease, border-color 0.3s ease, transform 0.4s var(--ease-out-expo), box-shadow 0.3s ease;
   opacity: 0;
   transform: translateY(30px);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
 }
 
 .solution-card.visible {
@@ -480,7 +481,8 @@
 .solution-card:hover {
   background: var(--bg-card-hover);
   border-color: var(--border-glow);
-  transform: translateY(-2px);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px var(--border-glow);
 }
 
 .solution-card__icon {
@@ -595,10 +597,14 @@
   display: flex;
   gap: 32px;
   padding: 40px 0;
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   opacity: 0;
   transform: translateY(24px);
   transition: opacity 0.7s var(--ease-out-expo), transform 0.7s var(--ease-out-expo);
+}
+
+.pillar:hover {
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .pillar.visible {
@@ -719,7 +725,8 @@
   padding: 32px 28px;
   opacity: 0;
   transform: translateY(24px);
-  transition: opacity 0.6s var(--ease-out-expo), transform 0.6s var(--ease-out-expo), background 0.3s ease, border-color 0.3s ease;
+  transition: opacity 0.6s var(--ease-out-expo), transform 0.6s var(--ease-out-expo), background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.15);
 }
 
 .audience__card.visible {
@@ -730,6 +737,8 @@
 .audience__card:hover {
   background: var(--bg-card-hover);
   border-color: var(--border-glow);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
 }
 
 .audience__card:nth-child(1) { transition-delay: 0s; }
@@ -1054,6 +1063,13 @@
   z-index: 100;
   opacity: 0;
   animation: fadeIn 0.6s ease 1.2s forwards;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.sticky-toggle--hidden {
+  opacity: 0 !important;
+  transform: translateX(-50%) translateY(-20px);
+  pointer-events: none;
 }
 
 .sticky-toggle .mode-toggle {

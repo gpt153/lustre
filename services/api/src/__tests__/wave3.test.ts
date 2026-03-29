@@ -81,6 +81,7 @@ describe('Wave 3 - Pair Linking Backend', () => {
     mockContext = {
       userId: userId1,
       sessionId: 'session-1',
+      clientVersion: null,
       req: {} as any,
       res: {} as any,
       prisma: {
@@ -113,6 +114,7 @@ describe('Wave 3 - Pair Linking Backend', () => {
     mockContextRecipient = {
       userId: userId2,
       sessionId: 'session-2',
+      clientVersion: null,
       req: {} as any,
       res: {} as any,
       prisma: {

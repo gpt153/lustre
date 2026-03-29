@@ -24,6 +24,18 @@ export const metadata: Metadata = {
     title: 'Lustre — Dejting designat för dig som förtjänar bättre',
     description: 'Sveriges första moderna plattform för vuxna som vill mer.',
   },
+  icons: {
+    icon: [
+      { url: '/favicon-16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon.png', type: 'image/png' },
+    ],
+    apple: '/apple-touch-icon.png',
+    other: [
+      { rel: 'icon', url: '/icon-192.png', sizes: '192x192' },
+      { rel: 'icon', url: '/icon-512.png', sizes: '512x512' },
+    ],
+  },
 }
 
 export const viewport: Viewport = {

@@ -72,6 +72,7 @@ describe('Wave 2 - Photo Upload', () => {
     mockContext = {
       userId: 'user-123',
       sessionId: 'session-123',
+      clientVersion: null,
       req: {} as any,
       res: {} as any,
       prisma: {
@@ -179,6 +180,7 @@ describe('Wave 2 - Photo Router (delete, reorder, list)', () => {
     mockContext = {
       userId: 'user-123',
       sessionId: 'session-123',
+      clientVersion: null,
       req: {} as any,
       res: {} as any,
       prisma: {
@@ -265,6 +267,7 @@ describe('Wave 2 - Search with Filters', () => {
     mockContext = {
       userId: null, // Search is public
       sessionId: null,
+      clientVersion: null,
       req: {} as any,
       res: {} as any,
       prisma: {} as any,
@@ -348,6 +351,7 @@ describe('Wave 2 - Kink Tags', () => {
     mockContext = {
       userId: 'user-123',
       sessionId: 'session-123',
+      clientVersion: null,
       req: {} as any,
       res: {} as any,
       prisma: {
@@ -481,6 +485,7 @@ describe('Wave 2 - Kink Tag Visibility', () => {
     mockContext = {
       userId: 'user-123',
       sessionId: 'session-123',
+      clientVersion: null,
       req: {} as any,
       res: {} as any,
       prisma: {
@@ -528,6 +533,7 @@ describe('Wave 2 - Kink Tag Visibility', () => {
     publicContext = {
       userId: 'user-456', // Different user viewing the profile
       sessionId: 'session-456',
+      clientVersion: null,
       req: {} as any,
       res: {} as any,
       prisma: {
@@ -609,6 +615,7 @@ describe('Wave 2 - Search Pagination', () => {
     mockContext = {
       userId: null,
       sessionId: null,
+      clientVersion: null,
       req: {} as any,
       res: {} as any,
       prisma: {} as any,
@@ -706,6 +713,7 @@ describe('Wave 2 - Integration Tests', () => {
     mockContext = {
       userId: 'user-123',
       sessionId: 'session-123',
+      clientVersion: null,
       req: {} as any,
       res: {} as any,
       prisma: {

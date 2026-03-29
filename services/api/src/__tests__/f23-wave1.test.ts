@@ -74,6 +74,7 @@ function buildContext(prismaOverrides: Record<string, any> = {}): Context {
   return {
     userId,
     sessionId: 'session-uuid',
+      clientVersion: null,
     req: {} as any,
     res: {} as any,
     prisma: {

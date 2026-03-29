@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import './landing.css'
 import { WaitlistForm } from './waitlist-form'
 import { ScrollReveal } from './scroll-reveal'
@@ -256,6 +256,7 @@ const iconColors = ['filter', 'verify', 'safe', 'learn'] as const
 
 export default function LandingPage() {
   const [mode, setMode] = useState<Mode>('vanilla')
+  const [hideSticky, setHideSticky] = useState(false)
   const isSpicy = mode === 'spicy'
 
   const c = content[mode]
@@ -265,6 +266,15 @@ export default function LandingPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [])
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPercent = window.scrollY / (document.body.scrollHeight - window.innerHeight)
+      setHideSticky(scrollPercent > 0.55)
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
   return (
     <div className={`landing-page ${isSpicy ? 'landing-page--spicy' : ''}`}>
       {/* Ambient background orbs */}
@@ -272,13 +282,14 @@ export default function LandingPage() {
         <div className="ambient-orb ambient-orb--warm" />
         <div className="ambient-orb ambient-orb--rose" />
         <div className="ambient-orb ambient-orb--center" />
+        <div className="ambient-orb ambient-orb--gold" />
       </div>
 
       {/* Grain overlay */}
       <div className="grain-overlay" />
 
       {/* Sticky mode toggle */}
-      <div className="sticky-toggle">
+      <div className={`sticky-toggle ${hideSticky ? 'sticky-toggle--hidden' : ''}`}>
         <ModeToggle mode={mode} onToggle={handleToggle} />
       </div>
 
@@ -289,7 +300,8 @@ export default function LandingPage() {
             <div className="hero__logo-glow" />
             <img src="/logo.png" alt="Lustre" className="hero__logo-img" />
           </div>
-          <div className="hero__brand">Lustre</div>
+
+          <div className="hero__brand">LUSTRE</div>
 
           <div className="hero__tagline">{c.tagline}</div>
 
@@ -413,7 +425,7 @@ export default function LandingPage() {
 
         {/* ═══ FOOTER ═══ */}
         <footer className="footer">
-          <div className="footer__logo">LUSTRE</div>
+          <img src="/logo.png" alt="Lustre" className="footer__logo-img" />
           <div className="footer__location">Stockholm, Sverige</div>
           <div className="footer__links">
             <a href="/privacy" className="footer__link">Integritetspolicy</a>

@@ -444,7 +444,7 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
 - **Spring animations:** `--spring` and `--spring-soft` CSS `linear()` functions for physical spring easing
 - **Layout:** Three-zone CSS Grid (72px nav rail + flexible main 720px max + 320px context panel), responsive breakpoints at 1440/1200/900/600px
 - **Typography:** `apps/web/styles/typography.css` — 5 type classes: text-hero (48px), text-section (28px), text-card-title (18px), text-body (15px), text-muted (13px)
-- **Components:** `apps/web/components/common/` — Card, Button, Input, Modal, Toast, Skeleton, EmptyState, CommandPalette, ShortcutOverlay, ModeSwitch, ThemeSwitch, AppOnlyPrompt
+- **Components:** `apps/web/components/common/` — Card, Button, Input, Modal, Toast, Skeleton, EmptyState, CommandPalette, ShortcutOverlay, ModeSwitch, ThemeSwitch, AppOnlyPrompt, PolaroidCard, PolaroidMasonryGrid
 - **Layout components:** `apps/web/components/layout/` — AppShell, Header (glassmorphism), NavRail, ContextPanel, BottomNav, KeyboardShortcutsProvider, PageTransition
 - **Page components:** `apps/web/components/` — discover/ (DiscoverGrid, ProfileCard, FilterSidebar), chat/ (ChatLayout, ConversationList, ChatRoom, MessageBubble, MessageInput), profile/ (ProfileView, ProfileEdit, PhotoGrid, PromptCard), feed/ (FeedList, PostCard, PostComposer, CommentSection), events/ (EventCard), groups/ (GroupCard), learn/ (ModuleCard), achievements/ (AchievementBadge, StreakCounter), marketplace/ (ProductCard, ProductDetail, ListingForm), settings/ (SettingsSidebar, Toggle, sections/*)
 - **Hooks:** `apps/web/hooks/` — useKeyboardShortcuts, useCommandPalette, useBreakpoint, useDiscoverKeyboard, useTheme, useSound, useCallGate
@@ -455,6 +455,18 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
 - **tsconfig paths:** `@/*` → `./app/*`, `@/components/*` → `./components/*`, `@/hooks/*` → `./hooks/*`, `@/styles/*` → `./styles/*`, `@/lib/*` → `./lib/*`
 - **Import pattern:** Always use EXPLICIT file imports (e.g. `from '@/components/common/Button'`), never barrel imports
 - **First-load JS:** 102KB shared (budget <200KB)
+
+## Polaroid Design System — Web (F38-UX-polaroid-web)
+- **Depends on:** F37 Wave 1 (`packages/tokens/polaroid.ts`)
+- **PolaroidCard:** `apps/web/components/common/PolaroidCard.tsx` — Server component, CSS Module only. Props: imageUrl, imageAlt, caption?, rotation?, stack?, hoverable?, className?, children?, onClick?. Exact Polaroid 600 proportions (88:107 card, 79:77 image). Stack variant with ::before/::after pseudo-elements. Hover: straighten to 0°, lift -8px, shadow increase. `prefers-reduced-motion`: instant transitions.
+- **PolaroidMasonryGrid:** `apps/web/components/common/PolaroidMasonryGrid.tsx` — Server component. CSS columns: 4 at ≥1200px, 3 at ≥900px, 2 at ≥600px, 1 at <600px. 8 nth-child rotation variations (-5° to +4°).
+- **CSS tokens:** Section 11 in `apps/web/styles/tokens.css` — `--polaroid-card-aspect`, `--polaroid-image-aspect`, `--polaroid-border-*`, `--polaroid-bg`, `--polaroid-caption-color`, `--polaroid-shadow`, `--polaroid-shadow-hover`, `--polaroid-rotation`
+- **Caveat font:** Loaded via `next/font/google` in `apps/web/app/layout.tsx`, variable `--font-caveat`, weights 400+700
+- **Discovery:** `/discover/browse` uses PolaroidMasonryGrid + PolaroidCard. First 3 cards use stack variant. Action buttons (pass/spark/like) as PolaroidCard children. Keyboard nav preserved.
+- **Feed:** `PostCard.tsx` — single media image as centered PolaroidCard (1.5° rotation), multi-image as row of small PolaroidCards (±2°). Text-only posts unchanged.
+- **Chat:** `MessageBubble.tsx` — IMAGE type messages as PolaroidCard (max 240px). Own: 2°, other: -2°. Reduced shadow.
+- **Profile:** `PhotoGallery.tsx` — scattered PolaroidCards with varied rotations. First photo uses stack variant. Empty editable slots: Polaroid-framed upload area. Lightbox preserved.
+- **Match:** `MatchAnimation.tsx` — two overlapping PolaroidCards at ±10° (was circles). Negative margin overlap, copper glow shadow, spring entrance via motion/react.
 
 ## Profile Priority & Earned Rewards (F35-CONNECT-profile-priority)
 - **Philosophy:** No premium tiers, no purchasable visibility. Profile priority is earned through positive behavior.
@@ -471,89 +483,64 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
 - **Admin:** TrustScore breakdown panel on `apps/admin/app/users/[userId]/page.tsx` — 6 sub-signal progress bars, sparks balance, spotlight credits (read-only)
 - **Design rule:** TrustScore is NEVER displayed to users in the UI — only visible in admin dashboard
 
+## Visual Testing — Screenshots & Stitch Comparison
+
+### Screenshot Storage
+All UI test screenshots MUST be saved persistently in the feature folder:
+```
+.bmad/features/{status}/F{XX}-{name}/screenshots/
+  stitch-reference/    # Stitch design images (downloaded once)
+  wave{N}/run{M}/      # Test run screenshots (run1, run2, etc.)
+```
+
+### Image Size Limits (CRITICAL)
+Large images cause Claude to hang. ALL screenshots MUST be resized before saving:
+- **Max width: 800px** — use `~/bin/resize-screenshot.sh <file_or_dir>`
+- **Max file size: 200KB per image** — if larger after resize, increase compression
+- Stitch reference images: resize on download
+- Device/browser screenshots: resize immediately after capture
+- NEVER pass a raw device screenshot (2K+) to Claude without resizing first
+
+### Stitch Comparison
+- Every wave with visual changes MUST compare screenshots against `stitch-reference/`
+- Per-screen checklist: `Design rule -> What is visible -> PASS/FAIL`
+- A wave CANNOT be marked complete until visual likeness is achieved
+- If a pre-existing issue blocks correct rendering, fix it in this wave — do not skip
+
+### Resize Script
+```bash
+~/bin/resize-screenshot.sh <file>           # Single file
+~/bin/resize-screenshot.sh <directory>      # All PNGs in dir
+~/bin/resize-screenshot.sh <file> 600       # Custom max width
+```
+
 ## Rules
 - All users verified via Swish 10 SEK + SPAR (Sweden); international expansion TBD
 - Real names NEVER shown in app — stored encrypted, released only via court order
 - Pay-as-you-go token model — no subscriptions, no visible prices in app
 - Safety features (SafeDate, Gatekeeper for recipients) are always FREE
 - Stripe cannot be used (bans adult) — use Segpay/CCBill + Swish
+## Snotra — OBLIGATORISK notifiering vid APK och builds
 
-## Snotra Webhook Integration — APK-leverans & Build-notifikationer
-
-Snotra HQ (https://snotra.153.se) är Samuels kommandocentral. **ALLA build-notifikationer och APK-leveranser går via Snotra.**
-
-### APK-leverans (VIKTIGAST)
-När en APK byggts, skicka den till Snotra som SCP:ar filen och gör den nedladdningsbar på Samuels telefon:
-
+### Efter VARJE APK-build — KÖR DETTA KOMMANDO (inte bara nämn det):
 ```bash
-~/bin/notify-snotra.sh apk_ready <feature> --apk /home/samuel/lustre/apps/mobile/android/app/build/outputs/apk/release/app-release.apk --message "Lustre APK v0.1.0 — <beskrivning>"
+~/bin/notify-snotra.sh apk_ready lustre-build --apk /home/samuel/lustre/apps/mobile/android/app/build/outputs/apk/release/app-release.apk --message "BESKRIVNING HÄR"
+```
+Du MÅSTE köra detta kommando i terminalen. Inte bara skriva om det. EXEKVERA DET.
+Samuel laddar ner APK:n via länken som Snotra genererar — du ska ALDRIG föreslå USB, ADB, eller egna servrar.
+
+### Efter varje wave i /bygg — KÖR:
+```bash
+~/bin/notify-snotra.sh wave_complete FEATURE-NAMN --wave N --total M --message "BESKRIVNING"
 ```
 
-**Vad händer:** Snotra kopierar APK:n (SCP), genererar en publik nedladdningslänk (https://snotra.153.se/api/artifacts/...) och postar den som klickbar länk i Lustre-rummet på Snotra HQ. Samuel öppnar länken på mobilen → Android installerar.
-
-**DU BEHÖVER INTE:**
-- Sätta upp egna nedladdningslänkar
-- Föreslå USB/ADB/Cloudflare tunnel
-- Fråga hur Samuel vill ha APK:n
-
-**BARA KÖR:** `~/bin/notify-snotra.sh apk_ready ...` med rätt `--apk` sökväg. Snotra sköter resten.
-
-### Build-notifikationer
+### Vid fel — KÖR:
 ```bash
-# Efter varje wave i /bygg:
-~/bin/notify-snotra.sh wave_complete <feature> --wave 3 --total 5 --message "Alla tester OK"
-
-# När hela bygget är klart:
-~/bin/notify-snotra.sh build_complete <feature> --message "Feature X klar"
-
-# Vid deploy:
-~/bin/notify-snotra.sh deploy_complete <feature> --message "Deployed"
-
-# Vid fel:
-~/bin/notify-snotra.sh error <feature> --status failed --message "Build failed: ..."
+~/bin/notify-snotra.sh error FEATURE-NAMN --status failed --message "FELBESKRIVNING"
 ```
 
-### Regler
-- **ALLTID** kör notify-snotra.sh efter varje wave, deploy, APK-build eller fel
-- **ALLTID** inkludera `--apk <sökväg>` vid apk_ready — utan den finns ingen nedladdningslänk
-- APK-sökvägen för detta projekt: `/home/samuel/lustre/apps/mobile/android/app/build/outputs/apk/release/app-release.apk`
-- Allt hamnar i Lustre-rummet på Snotra HQ automatiskt
-
-## Google Stitch — AI Design Workflow
-
-### Vad ar Stitch?
-Google Stitch (stitch.withgoogle.com) ar ett gratis AI-designverktyg som genererar high-fidelity UI fran text, bilder eller rost. Det ar kopplat till detta projekt via MCP-server och SDK.
-
-### Setup
-- **MCP-server:** `stitch-mcp` — konfigurerad i `~/.claude/settings.json`, startar automatiskt
-- **SDK:** `@google/stitch-sdk` installerat i `/home/samuel/stitch-workspace/`
-- **API-nyckel:** Env var `STITCH_API_KEY` (satt i `.bashrc`)
-- **Kommando:** `/stitch` — fullstandig guide for Stitch-arbetsflode
-
-### Workflow: Design med Stitch
-
-**Ny skarm:**
-1. Anvandaren beskriver vad de vill ha (t.ex. "profil-skarmen med match-procent")
-2. Generera i Stitch via MCP (`build_site` eller `get_screen_code`)
-3. Konvertera Stitch HTML -> Tamagui-komponenter (ALDRIG anvand ratt HTML i mobilappen)
-4. Mappa Stitch-farger -> Lustre-tokens (Copper, Gold, Warmwhite, etc.)
-5. Placera: shared screens i `packages/app/src/`, UI i `packages/ui/`
-
-**Forbattra befintlig skarm:**
-1. Ta screenshot av nuvarande skarm
-2. Skicka till Stitch som bild -> fa forbattrad design
-3. Valj variant: REFINE (smajustering) / EXPLORE (nya riktningar) / REIMAGINE (helt nytt)
-4. Konvertera vald design till Tamagui-kod
-
-**DESIGN.md-export:**
-1. Exportera DESIGN.md fran Stitch (designsystem som markdown)
-2. Jamfor med Lustres designsystem
-3. Mappa tokens: Stitch -> Tamagui theme tokens
-4. Implementera konsistent over alla skarmar
-
-### Regler
-- **Mobile-first:** Generera ALLTID for `MOBILE` device type forst
-- **Tamagui-konvertering:** Stitch ger HTML/CSS — konvertera till Tamagui-komponenter for mobilappen
-- **Fargmappning:** Behall Lustres fargpalett, mappa Stitch-output till befintliga tokens
-- **Accessibility:** Kolla WCAG-kontrast efter konvertering (Stitch missar ofta detta)
-- **Guida anvandaren:** Nar anvandaren vill designa, foreslA att anvanda Stitch-workflowen. Forklara stegen, fraga vad de vill designa, och kor flodet. Anvandaren ska inte behova komma ihag hur Stitch funkar — du guider.
+### REGLER:
+1. EXEKVERA kommandot — skriv det inte bara i chatten
+2. Inkludera ALLTID --apk med rätt sökväg vid apk_ready
+3. Inkludera ALLTID --message med en kort beskrivning
+4. Gör detta VARJE gång, utan att fråga Samuel
