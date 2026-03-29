@@ -1,5 +1,7 @@
 import Fastify, { type FastifyRequest } from 'fastify'
 import cors from '@fastify/cors'
+import cookie from '@fastify/cookie'
+import rateLimit from '@fastify/rate-limit'
 import helmet from '@fastify/helmet'
 import multipart from '@fastify/multipart'
 import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify'
@@ -114,6 +116,14 @@ async function start() {
 
   await server.register(cors, {
     origin: allowedOrigins,
+    credentials: true,
+  })
+
+  await server.register(cookie)
+
+  await server.register(rateLimit, {
+    global: false, // Rate limit only explicitly configured routes
+    redis,
   })
 
   await server.register(helmet, { contentSecurityPolicy: false })
@@ -180,7 +190,7 @@ async function start() {
 
   // Swish payment callback — called by Swish servers when a payment completes.
   // Must be a plain REST endpoint (not tRPC) because Swish sends a fixed POST format.
-  server.post('/swish/callback', async (request, reply) => {
+  server.post('/swish/callback', { config: { rateLimit: { max: 30, timeWindow: '1 minute' } } }, async (request, reply) => {
     const rawBody = (request as FastifyRequestWithRawBody).rawBody ?? ''
     if (!verifySwishWebhook(rawBody, request.headers['x-swish-signature'] as string | undefined)) {
       server.log.warn('Swish callback signature verification failed')
@@ -207,7 +217,7 @@ async function start() {
   })
 
   // Swish marketplace payment callback — called by Swish servers when a marketplace order payment completes.
-  server.post('/api/marketplace/swish-callback', async (request, reply) => {
+  server.post('/api/marketplace/swish-callback', { config: { rateLimit: { max: 30, timeWindow: '1 minute' } } }, async (request, reply) => {
     const rawBody = (request as FastifyRequestWithRawBody).rawBody ?? ''
     if (!verifySwishWebhook(rawBody, request.headers['x-swish-signature'] as string | undefined)) {
       server.log.warn('Marketplace Swish callback signature verification failed')
@@ -217,10 +227,10 @@ async function start() {
   })
 
   // Swish payout callback — called by Swish servers when a seller payout completes or fails.
-  server.post('/api/marketplace/payout-callback', payoutCallbackHandler)
+  server.post('/api/marketplace/payout-callback', { config: { rateLimit: { max: 30, timeWindow: '1 minute' } } }, payoutCallbackHandler)
 
   // Swish recurring payment callback — called by Swish servers when a recurring auto-topup payment completes.
-  server.post('/api/payments/swish-recurring-callback', async (request, reply) => {
+  server.post('/api/payments/swish-recurring-callback', { config: { rateLimit: { max: 30, timeWindow: '1 minute' } } }, async (request, reply) => {
     const rawBody = (request as FastifyRequestWithRawBody).rawBody ?? ''
     if (!verifySwishWebhook(rawBody, request.headers['x-swish-signature'] as string | undefined)) {
       server.log.warn('Swish recurring callback signature verification failed')
@@ -244,7 +254,7 @@ async function start() {
   })
 
   // Segpay payment callback — called by Segpay servers when a card payment completes.
-  server.post('/api/payments/segpay-callback', async (request, reply) => {
+  server.post('/api/payments/segpay-callback', { config: { rateLimit: { max: 30, timeWindow: '1 minute' } } }, async (request, reply) => {
     const rawBody = (request as FastifyRequestWithRawBody).rawBody ?? ''
     if (!verifySegpayWebhook(rawBody, request.headers['x-segpay-signature'] as string | undefined)) {
       server.log.warn('Segpay callback signature verification failed')
@@ -267,7 +277,7 @@ async function start() {
   })
 
   // Swish ticket payment callback — called by Swish servers when a ticket payment completes.
-  server.post('/api/events/ticket-callback', async (request, reply) => {
+  server.post('/api/events/ticket-callback', { config: { rateLimit: { max: 30, timeWindow: '1 minute' } } }, async (request, reply) => {
     const rawBody = (request as FastifyRequestWithRawBody).rawBody ?? ''
     if (!verifySwishWebhook(rawBody, request.headers['x-swish-signature'] as string | undefined)) {
       server.log.warn('Swish ticket callback signature verification failed')
@@ -293,7 +303,7 @@ async function start() {
     return reply.status(200).send()
   })
 
-  server.post('/api/photos/upload', async (request, reply) => {
+  server.post('/api/photos/upload', { config: { rateLimit: { max: 10, timeWindow: '1 minute' } } }, async (request, reply) => {
     // Auth check
     const authHeader = request.headers.authorization
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -365,7 +375,7 @@ async function start() {
     return reply.status(201).send(updated)
   })
 
-  server.post('/api/posts/upload', async (request, reply) => {
+  server.post('/api/posts/upload', { config: { rateLimit: { max: 10, timeWindow: '1 minute' } } }, async (request, reply) => {
     const authHeader = request.headers.authorization
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return reply.status(401).send({ error: 'Unauthorized' })
@@ -441,7 +451,7 @@ async function start() {
     return reply.status(201).send(updated)
   })
 
-  server.post('/api/chat/upload', async (request, reply) => {
+  server.post('/api/chat/upload', { config: { rateLimit: { max: 10, timeWindow: '1 minute' } } }, async (request, reply) => {
     // Auth check
     const authHeader = request.headers.authorization
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -591,6 +601,33 @@ async function start() {
   await server.register(callRoutes)
   await server.register(coachRoutes)
   await server.register(consentRoutes)
+
+  // Session migration: exchange a Bearer token for an HttpOnly cookie (web clients)
+  server.post('/api/auth/migrate-session', async (request, reply) => {
+    const authHeader = request.headers.authorization
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return reply.status(401).send({ error: 'Unauthorized' })
+    }
+    const token = authHeader.slice(7)
+    try {
+      const decoded = await verifyToken(token)
+      if (decoded.type !== 'access') throw new Error('Invalid token type')
+    } catch {
+      return reply.status(401).send({ error: 'Invalid token' })
+    }
+
+    const isProduction = process.env.NODE_ENV === 'production'
+    reply.setCookie('lustre-auth', token, {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: 'lax',
+      domain: isProduction ? '.lovelustre.com' : undefined,
+      path: '/',
+      maxAge: 30 * 24 * 60 * 60, // 30 days
+    })
+
+    return reply.send({ migrated: true })
+  })
 
   // Dev-only: quick login for local testing
   if (process.env.NODE_ENV !== 'production') {

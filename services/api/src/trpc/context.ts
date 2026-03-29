@@ -20,9 +20,19 @@ export async function createContext({ req, res }: CreateFastifyContextOptions) {
   let userId: string | null = null
   let sessionId: string | null = null
 
-  const authHeader = req.headers.authorization
-  if (authHeader && authHeader.startsWith('Bearer ')) {
-    const token = authHeader.slice(7)
+  // Try cookie first (web clients), then Bearer header (mobile clients)
+  let token: string | null = null
+  const cookieToken = (req as any).cookies?.['lustre-auth']
+  if (cookieToken) {
+    token = cookieToken
+  } else {
+    const authHeader = req.headers.authorization
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      token = authHeader.slice(7)
+    }
+  }
+
+  if (token) {
     try {
       const decoded = await verifyToken(token)
       if (decoded.type === 'access') {

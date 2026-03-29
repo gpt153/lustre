@@ -73,10 +73,17 @@ Add ordered shutdown handling and runtime validation on all REST endpoints. Prev
 
 Migrate web authentication from localStorage JWT to HttpOnly cookies. Add rate limiting on upload and callback endpoints.
 
-**Status:** NOT STARTED
+**Status:** DONE (2026-03-29)
 
 ### Epics:
-- wave-3-web-auth-rate-limit (sonnet) — HttpOnly cookie auth for web clients, migration path from localStorage, `@fastify/rate-limit` on REST endpoints with Redis backing.
+- wave-3-web-auth-rate-limit (sonnet) — VERIFIED — HttpOnly cookie auth for web clients, migration endpoint, `@fastify/rate-limit` on 9 REST endpoints with Redis backing.
+
+### Verification:
+- `context.ts` ✅ — Cookie-first auth (lustre-auth), Bearer header fallback for mobile
+- `server.ts` ✅ — @fastify/cookie + @fastify/rate-limit, CORS credentials:true, migrate-session endpoint
+- Rate limits ✅ — 10/min on uploads, 30/min on callbacks
+- `trpc.tsx` ✅ — credentials:'include', localStorage auth removed
+- TypeScript ✅ — No new errors
 
 ### Testgate Wave 3:
 - [ ] Web login sets HttpOnly Secure SameSite=Lax cookie

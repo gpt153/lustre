@@ -5,21 +5,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { createTRPCProxyClient, httpBatchLink } from '@trpc/client'
 import superjson from 'superjson'
 
-function getAuthToken(): string | null {
-  if (typeof window === 'undefined') return null
-  try {
-    const stored = localStorage.getItem('lustre-auth')
-    if (!stored) return null
-    const parsed = JSON.parse(stored)
-    return parsed?.state?.token ?? null
-  } catch {
-    return null
-  }
-}
-
 /**
  * Vanilla tRPC client — use this for direct API calls.
- * Type-safe integration will be added when we connect to the actual API router types.
+ * Auth is handled via HttpOnly cookie (lustre-auth) set by /api/auth/migrate-session.
+ * credentials: 'include' ensures the cookie is sent with every request.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const api = createTRPCProxyClient<any>({
@@ -27,9 +16,11 @@ export const api = createTRPCProxyClient<any>({
     httpBatchLink({
       transformer: superjson,
       url: '/trpc',
-      headers() {
-        const token = getAuthToken()
-        return token ? { Authorization: `Bearer ${token}` } : {}
+      fetch(url, options) {
+        return fetch(url, {
+          ...options,
+          credentials: 'include',
+        })
       },
     }),
   ],

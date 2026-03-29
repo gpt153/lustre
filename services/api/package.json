@@ -15,27 +15,29 @@
     "db:generate": "prisma generate"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.37.0",
     "@aws-sdk/client-s3": "^3",
+    "@fastify/cookie": "^11.0.2",
     "@fastify/cors": "^10",
     "@fastify/helmet": "^13",
     "@fastify/multipart": "^9",
+    "@fastify/rate-limit": "^10.3.0",
     "@prisma/client": "^6",
     "@trpc/server": "^11",
     "bcryptjs": "^3.0.3",
+    "cheerio": "^1.0.0",
     "fastify": "^5",
     "ioredis": "^5.10.1",
     "jose": "^6.2.2",
     "livekit-server-sdk": "^2.15.0",
     "meilisearch": "^0.48",
+    "nanoid": "^5.0.0",
     "nats": "^2",
     "openai": "^4",
     "sharp": "^0.33",
     "superjson": "^2",
     "twilio": "^5.13.1",
-    "zod": "^3.23",
-    "@anthropic-ai/sdk": "^0.37.0",
-    "cheerio": "^1.0.0",
-    "nanoid": "^5.0.0"
+    "zod": "^3.23"
   },
   "devDependencies": {
     "@types/bcryptjs": "^3.0.0",
