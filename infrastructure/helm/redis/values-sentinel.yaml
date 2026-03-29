@@ -1,0 +1,12 @@
+# Redis Sentinel — HA configuration for production
+# Activate by merging with: helm upgrade -f values.yaml -f values-sentinel.yaml
+sentinel:
+  enabled: false  # Set to true when ready to activate
+  replicas: 3
+  quorum: 2
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      memory: 256Mi

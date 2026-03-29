@@ -132,6 +132,16 @@ export const adminRouter = router({
         ctx.prisma.$executeRaw`INSERT INTO moderation_actions (id, user_id, admin_id, action_type, reason, expires_at, created_at) VALUES (gen_random_uuid(), ${input.userId}::uuid, ${ctx.userId}::uuid, 'TEMP_BAN', ${input.reason ?? null}, ${bannedUntil}, NOW())`,
       ])
 
+      await ctx.prisma.auditLog.create({
+        data: {
+          adminId: ctx.userId!,
+          action: 'SUSPEND_USER',
+          targetType: 'USER',
+          targetId: input.userId,
+          metadata: { durationDays: input.durationDays, reason: input.reason ?? null, bannedUntil: bannedUntil.toISOString() },
+        },
+      })
+
       return { success: true }
     }),
 
@@ -145,6 +155,16 @@ export const adminRouter = router({
         ctx.prisma.$executeRaw`UPDATE users SET is_banned = true, banned_until = NULL WHERE id = ${input.userId}::uuid`,
         ctx.prisma.$executeRaw`INSERT INTO moderation_actions (id, user_id, admin_id, action_type, reason, created_at) VALUES (gen_random_uuid(), ${input.userId}::uuid, ${ctx.userId}::uuid, 'PERMANENT_BAN', ${input.reason ?? null}, NOW())`,
       ])
+
+      await ctx.prisma.auditLog.create({
+        data: {
+          adminId: ctx.userId!,
+          action: 'BAN_USER',
+          targetType: 'USER',
+          targetId: input.userId,
+          metadata: { reason: input.reason ?? null },
+        },
+      })
 
       return { success: true }
     }),
@@ -204,6 +224,17 @@ export const adminRouter = router({
             updated_at = NOW()
         WHERE id = ${input.reportId}::uuid
       `
+
+      await ctx.prisma.auditLog.create({
+        data: {
+          adminId: ctx.userId!,
+          action: 'RESOLVE_REPORT',
+          targetType: 'REPORT',
+          targetId: input.reportId,
+          metadata: { newStatus: input.status },
+        },
+      })
+
       return { success: true }
     }),
 
@@ -367,5 +398,34 @@ export const adminRouter = router({
           tokens: Number(row.tokens),
         })),
       }
+    }),
+
+  getAuditLog: adminProcedure
+    .input(z.object({
+      action: z.string().optional(),
+      targetId: z.string().uuid().optional(),
+      cursor: z.string().uuid().optional(),
+      limit: z.number().min(1).max(100).default(50),
+    }))
+    .query(async ({ ctx, input }) => {
+      const where: any = {}
+      if (input.action) where.action = input.action
+      if (input.targetId) where.targetId = input.targetId
+
+      const entries = await ctx.prisma.auditLog.findMany({
+        where: {
+          ...where,
+          ...(input.cursor ? { id: { lt: input.cursor } } : {}),
+        },
+        orderBy: { createdAt: 'desc' },
+        take: input.limit + 1,
+      })
+
+      let nextCursor: string | undefined
+      if (entries.length > input.limit) {
+        nextCursor = entries[input.limit]!.id
+      }
+
+      return { entries: entries.slice(0, input.limit), nextCursor }
     }),
 })

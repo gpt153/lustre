@@ -1568,3 +1568,25 @@ model Spotlight {
 
   @@map("spotlights")
 }
+
+enum AuditTargetType {
+  USER
+  REPORT
+  ORGANIZATION
+}
+
+model AuditLog {
+  id         String          @id @default(uuid()) @db.Uuid
+  adminId    String          @map("admin_id") @db.Uuid
+  action     String
+  targetType AuditTargetType @map("target_type")
+  targetId   String          @map("target_id") @db.Uuid
+  metadata   Json?
+  createdAt  DateTime        @default(now()) @map("created_at")
+
+  @@index([adminId])
+  @@index([targetId])
+  @@index([action])
+  @@index([createdAt])
+  @@map("audit_logs")
+}

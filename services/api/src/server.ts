@@ -23,6 +23,7 @@ import { startEscalationService } from './lib/safedate-escalation.js'
 import { autoConfirmOrders } from './lib/marketplace.js'
 import { startTrustScoreConsumer } from './lib/trust-score-consumer.js'
 import { refreshAllTrustScores } from './lib/trust-score.js'
+import { withLeaderLock } from './lib/leader-lock.js'
 import { callRoutes } from './routes/call.js'
 import { coachRoutes } from './routes/coach.js'
 import { consentRoutes } from './routes/consent.js'
@@ -605,14 +606,14 @@ async function start() {
   })
 
   setInterval(() => {
-    autoConfirmOrders(prisma).catch((err) => {
-      server.log.error('Failed to auto-confirm orders:', err)
+    withLeaderLock('job:autoConfirm:lock', 3600, () => autoConfirmOrders(prisma)).catch((err) => {
+      server.log.error('Failed to run autoConfirmOrders:', err)
     })
   }, 60 * 60 * 1000)
 
   setInterval(() => {
-    refreshAllTrustScores(prisma).catch((err) => {
-      server.log.error('Failed to refresh trust scores:', err)
+    withLeaderLock('job:trustScores:lock', 3600, () => refreshAllTrustScores(prisma)).catch((err) => {
+      server.log.error('Failed to run refreshAllTrustScores:', err)
     })
   }, 60 * 60 * 1000)
 
