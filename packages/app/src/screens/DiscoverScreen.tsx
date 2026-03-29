@@ -9,6 +9,7 @@ import { useSwipeGesture } from '../hooks/useSwipeGesture'
 import { SwipeCard } from '../components/SwipeCard'
 import { SwipeStamp } from '../components/SwipeStamp'
 import { MatchAnimation } from '../components/MatchAnimation'
+import { EmptyState } from '../components/EmptyState'
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window')
 
@@ -21,14 +22,16 @@ const STACKED_CARD_TRANSLATE_Y_2 = 20
 
 // Lustre design tokens — stitch palette
 const COPPER = '#894d0d'
+const COPPER_LIGHT = '#a76526'
 const GOLD = '#D4A843'
 const WARM_WHITE = '#fef8f3'
 const CHARCOAL = '#2C2421'
-const COPPER_LIGHT = '#D4A574'
+const WARM_GRAY = '#8B7E74'
 const GOLD_BRIGHT = '#E8B84B'
 const EMBER = '#E05A33'
 const ON_SURFACE_VARIANT = '#524439'
 const OUTLINE = '#857467'
+const SURFACE_CONTAINER = '#f2ede8'
 const GHOST_BORDER = 'rgba(216, 195, 180, 0.20)'
 
 // Seeking labels in Swedish
@@ -132,7 +135,7 @@ export function DiscoverScreen() {
   if (discovery.isLoading) {
     return (
       <GestureHandlerRootView style={styles.flex}>
-        <YStack flex={1} alignItems="center" justifyContent="center" backgroundColor={WARM_WHITE}>
+        <YStack flex={1} alignItems="center" justifyContent="center" backgroundColor={SURFACE_CONTAINER}>
           <Spinner color={COPPER} size="large" />
         </YStack>
       </GestureHandlerRootView>
@@ -142,28 +145,18 @@ export function DiscoverScreen() {
   if (!currentProfile || currentIndex >= discovery.profiles.length) {
     return (
       <GestureHandlerRootView style={styles.flex}>
-        <YStack
-          flex={1}
-          alignItems="center"
-          justifyContent="center"
-          backgroundColor={WARM_WHITE}
-          gap="$md"
-        >
-          <Text fontSize={24} fontFamily="$heading" fontWeight="700" color={CHARCOAL}>
-            Inga fler profiler
-          </Text>
-          <Text color={COPPER_LIGHT} fontSize={15}>
-            Kom tillbaka senare for fler matchningar!
-          </Text>
-          <Pressable
-            style={styles.refreshButton}
-            onPress={() => {
-              setCurrentIndex(0)
-              discovery.refetch()
+        <YStack flex={1} backgroundColor={SURFACE_CONTAINER} paddingHorizontal={24}>
+          <EmptyState
+            title="Inga fler profiler just nu"
+            description="Vi jobbar på att hitta fler matchningar åt dig. Kom tillbaka snart."
+            action={{
+              label: 'Uppdatera',
+              onPress: () => {
+                setCurrentIndex(0)
+                discovery.refetch()
+              },
             }}
-          >
-            <Text style={styles.refreshButtonText}>Uppdatera</Text>
-          </Pressable>
+          />
         </YStack>
       </GestureHandlerRootView>
     )
@@ -330,7 +323,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: WARM_WHITE,
+    backgroundColor: SURFACE_CONTAINER,
   },
 
   // Top Navigation
@@ -540,15 +533,16 @@ const styles = StyleSheet.create({
 
   // Empty state
   refreshButton: {
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    backgroundColor: COPPER,
+    paddingHorizontal: 32,
+    paddingVertical: 14,
     borderRadius: 9999,
-    marginTop: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   refreshButtonText: {
     color: WARM_WHITE,
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '600',
+    fontFamily: 'Manrope_600SemiBold',
   },
 })

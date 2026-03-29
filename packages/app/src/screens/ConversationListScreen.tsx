@@ -3,6 +3,7 @@ import { FlatList, RefreshControl, TouchableOpacity, TextInput, StyleSheet } fro
 import { YStack, XStack, Text, Spinner, Image, Circle, ScrollView } from 'tamagui'
 import { useRouter } from 'expo-router'
 import { useChat } from '../hooks/useChat'
+import { EmptyState } from '../components/EmptyState'
 
 function getInitials(displayName: string | null | undefined): string {
   if (!displayName) return '?'
@@ -172,7 +173,7 @@ export function ConversationListScreen() {
                   <YStack
                     padding={2}
                     borderRadius={999}
-                    borderWidth={2}
+                    borderWidth={1}
                     borderColor="rgba(216,195,180,0.20)"
                   >
                     {match.otherParticipant?.photoUrl ? (
@@ -188,12 +189,14 @@ export function ConversationListScreen() {
                           position="absolute"
                           bottom={0}
                           right={0}
-                          width={16}
-                          height={16}
+                          width={14}
+                          height={14}
                           backgroundColor={SAGE}
                           borderRadius={999}
-                          borderWidth={2}
-                          borderColor={WARM_WHITE}
+                          shadowColor={CHARCOAL}
+                          shadowOffset={{ width: 0, height: 1 }}
+                          shadowOpacity={0.06}
+                          shadowRadius={2}
                         />
                       </YStack>
                     ) : (
@@ -214,12 +217,14 @@ export function ConversationListScreen() {
                           position="absolute"
                           bottom={0}
                           right={0}
-                          width={16}
-                          height={16}
+                          width={14}
+                          height={14}
                           backgroundColor={SAGE}
                           borderRadius={999}
-                          borderWidth={2}
-                          borderColor={WARM_WHITE}
+                          shadowColor={CHARCOAL}
+                          shadowOffset={{ width: 0, height: 1 }}
+                          shadowOpacity={0.06}
+                          shadowRadius={2}
                         />
                       </YStack>
                     )}
@@ -301,12 +306,14 @@ export function ConversationListScreen() {
                       position="absolute"
                       bottom={0}
                       right={0}
-                      width={16}
-                      height={16}
+                      width={14}
+                      height={14}
                       backgroundColor={SAGE}
                       borderRadius={999}
-                      borderWidth={2}
-                      borderColor={isUnread ? 'white' : WARM_WHITE}
+                      shadowColor={CHARCOAL}
+                      shadowOffset={{ width: 0, height: 1 }}
+                      shadowOpacity={0.06}
+                      shadowRadius={2}
                     />
                   )}
                 </YStack>
@@ -373,14 +380,11 @@ export function ConversationListScreen() {
           />
         }
         ListEmptyComponent={
-          <YStack flex={1} alignItems="center" justifyContent="center" padding={48}>
-            <Text color={WARM_GRAY} fontSize={18} fontWeight="600" marginBottom={8}>
-              Inga konversationer ännu
-            </Text>
-            <Text color={WARM_GRAY} fontSize={14} textAlign="center">
-              Börja matcha för att starta en chatt
-            </Text>
-          </YStack>
+          <EmptyState
+            title="Inga konversationer ännu"
+            description="Matcha med någon för att starta en konversation. Ditt första meddelande väntar."
+            action={{ label: 'Hitta matchningar', onPress: () => router.push('/discover') }}
+          />
         }
         contentContainerStyle={{ gap: 12, paddingHorizontal: 16, paddingBottom: 100 }}
       />

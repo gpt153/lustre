@@ -451,8 +451,6 @@ const styles = StyleSheet.create({
     height: 72,
     borderRadius: 12,
     overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: 'rgba(216, 195, 180, 0.20)',
   },
   photoImage: {
     width: '100%',
@@ -466,8 +464,10 @@ const styles = StyleSheet.create({
     height: 8,
     borderRadius: 4,
     backgroundColor: '#7A9E7E',
-    borderWidth: 1.5,
-    borderColor: 'white',
+    shadowColor: '#2C2421',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.06,
+    shadowRadius: 2,
   },
   messageList: {
     paddingHorizontal: 20,

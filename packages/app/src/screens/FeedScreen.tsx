@@ -1,10 +1,12 @@
 import { useCallback, useState } from 'react'
 import { FlatList, RefreshControl, TouchableOpacity, StyleSheet } from 'react-native'
 import { YStack, XStack, Text, Spinner } from 'tamagui'
+import { useRouter } from 'expo-router'
 import { trpc } from '@lustre/api'
 import { PostCard } from '../components/PostCard'
 import { FeedAdCard } from '../components/FeedAdCard'
 import { useFeed } from '../hooks/useFeed'
+import { EmptyState } from '../components/EmptyState'
 
 const COPPER = '#894d0d'
 const COPPER_DARK = '#a76526'
@@ -42,6 +44,7 @@ const TABS = ['Alla', 'Följer', 'Populärt'] as const
 type FeedTab = (typeof TABS)[number]
 
 export function FeedScreen({ onCreatePost }: { onCreatePost?: () => void }) {
+  const router = useRouter()
   const feed = useFeed()
   const recordImpression = trpc.ad.recordImpression.useMutation()
   const recordClick = trpc.ad.recordClick.useMutation()
@@ -166,27 +169,11 @@ export function FeedScreen({ onCreatePost }: { onCreatePost?: () => void }) {
           ) : null
         }
         ListEmptyComponent={
-          <YStack flex={1} alignItems="center" justifyContent="center" padding={48}>
-            <Text fontSize={48} marginBottom={16}>✨</Text>
-            <Text
-              fontSize={20}
-              fontWeight="600"
-              color={CHARCOAL}
-              textAlign="center"
-              marginBottom={8}
-              fontFamily="$heading"
-            >
-              Inga inlägg ännu
-            </Text>
-            <Text
-              fontSize={15}
-              color={WARM_GRAY}
-              textAlign="center"
-              lineHeight={22}
-            >
-              Var den första att dela något med communityt!
-            </Text>
-          </YStack>
+          <EmptyState
+            title="Inget i flödet ännu"
+            description="Följ profiler och grupper för att se innehåll här. Ditt flöde fylls på med tiden."
+            action={{ label: 'Utforska', onPress: () => router.push('/discover') }}
+          />
         }
       />
 

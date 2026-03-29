@@ -1,4 +1,4 @@
-import { ScrollView, YStack, XStack, Text, Spinner, Separator } from 'tamagui'
+import { ScrollView, YStack, XStack, Text, Spinner } from 'tamagui'
 import { TouchableOpacity } from 'react-native'
 import { useLearn } from '../hooks/useLearn'
 import { useProfile } from '../hooks/useProfile'
@@ -29,10 +29,8 @@ export function LearnModuleListScreen({ onModulePress, onSpicySettings, onAchiev
         paddingVertical="$sm"
         alignItems="center"
         justifyContent="space-between"
-        borderBottomWidth={1}
-        borderBottomColor="$borderColor"
       >
-        <Text fontSize={20} fontWeight="700" color="$color">
+        <Text fontSize={20} fontWeight="700" color="$color" fontFamily="$heading">
           Lär dig
         </Text>
         {onAchievementsPress && (
@@ -47,7 +45,7 @@ export function LearnModuleListScreen({ onModulePress, onSpicySettings, onAchiev
           {/* Vanilla Modules Section */}
           {vanillaModules.length > 0 && (
             <YStack gap="$sm">
-              <Text fontSize={17} fontWeight="700" color="$color">
+              <Text fontSize={17} fontWeight="700" color="$color" fontFamily="$heading">
                 Moduler
               </Text>
               <YStack gap="$xs">
@@ -69,7 +67,7 @@ export function LearnModuleListScreen({ onModulePress, onSpicySettings, onAchiev
                         width={44}
                         height={44}
                         borderRadius={22}
-                        backgroundColor={module.isUnlocked ? '$pink8' : '$gray6'}
+                        backgroundColor={module.isUnlocked ? '#894d0d' : '$gray6'}
                         alignItems="center"
                         justifyContent="center"
                         flexShrink={0}
@@ -105,12 +103,12 @@ export function LearnModuleListScreen({ onModulePress, onSpicySettings, onAchiev
 
                           {module.progress?.badgeAwardedAt && (
                             <XStack
-                              backgroundColor="$yellow3"
+                              backgroundColor="rgba(212, 168, 67, 0.15)"
                               borderRadius="$2"
                               paddingHorizontal="$xs"
                               paddingVertical={2}
                             >
-                              <Text fontSize={11} color="$yellow11">
+                              <Text fontSize={11} color="#a76526" fontWeight="600">
                                 🏅 {module.badgeName}
                               </Text>
                             </XStack>
@@ -132,7 +130,7 @@ export function LearnModuleListScreen({ onModulePress, onSpicySettings, onAchiev
 
           {/* Spicy Modules Section */}
           <YStack gap="$sm">
-            <Text fontSize={17} fontWeight="700" color="$color">
+            <Text fontSize={17} fontWeight="700" color="$color" fontFamily="$heading">
               Spicy Modules 🌶️
             </Text>
 
@@ -158,7 +156,7 @@ export function LearnModuleListScreen({ onModulePress, onSpicySettings, onAchiev
                         width={44}
                         height={44}
                         borderRadius={22}
-                        backgroundColor={module.isUnlocked ? '$pink8' : '$gray6'}
+                        backgroundColor={module.isUnlocked ? '#894d0d' : '$gray6'}
                         alignItems="center"
                         justifyContent="center"
                         flexShrink={0}
@@ -205,12 +203,12 @@ export function LearnModuleListScreen({ onModulePress, onSpicySettings, onAchiev
 
                           {module.progress?.badgeAwardedAt && (
                             <XStack
-                              backgroundColor="$yellow3"
+                              backgroundColor="rgba(212, 168, 67, 0.15)"
                               borderRadius="$2"
                               paddingHorizontal="$xs"
                               paddingVertical={2}
                             >
-                              <Text fontSize={11} color="$yellow11">
+                              <Text fontSize={11} color="#a76526" fontWeight="600">
                                 🏅 {module.badgeName}
                               </Text>
                             </XStack>

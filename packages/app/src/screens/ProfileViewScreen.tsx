@@ -208,6 +208,7 @@ export function ProfileViewScreen({ profile, isOwnProfile = false, onEdit, onLog
             </Text>
             {bioPrompt ? (
               <Text
+                fontFamily="$body"
                 fontSize={15}
                 color={tokens.warmGray}
                 lineHeight={26}
@@ -217,6 +218,7 @@ export function ProfileViewScreen({ profile, isOwnProfile = false, onEdit, onLog
               </Text>
             ) : sortedPrompts.length > 0 ? (
               <Text
+                fontFamily="$body"
                 fontSize={15}
                 color={tokens.warmGray}
                 lineHeight={26}
@@ -241,6 +243,7 @@ export function ProfileViewScreen({ profile, isOwnProfile = false, onEdit, onLog
                 {PROMPT_OPTIONS[item.data.promptKey] || item.data.promptKey}
               </Text>
               <Text
+                fontFamily="$body"
                 color={tokens.charcoal}
                 fontSize={16}
                 fontWeight="500"
