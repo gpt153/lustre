@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;700;800&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Be+Vietnam+Pro:ital,wght@0,400;0,500;1,400&amp;family=Caveat:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "tertiary-fixed-dim": "#ffb5a0",
+                        "inverse-surface": "#372f2b",
+                        "on-primary-fixed-variant": "#6d3a00",
+                        "inverse-on-surface": "#fdeee8",
+                        "surface-bright": "#fff8f6",
+                        "primary-fixed": "#ffdcc2",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed-dim": "#eec058",
+                        "on-tertiary-fixed-variant": "#82270b",
+                        "surface-variant": "#eedfda",
+                        "primary-fixed-dim": "#ffb77b",
+                        "on-tertiary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "on-error": "#ffffff",
+                        "surface-dim": "#e6d7d2",
+                        "surface-container-high": "#f4e5e0",
+                        "primary-container": "#a76526",
+                        "on-primary": "#ffffff",
+                        "on-secondary-fixed-variant": "#5b4300",
+                        "on-surface-variant": "#524439",
+                        "surface-container-highest": "#eedfda",
+                        "tertiary-fixed": "#ffdbd1",
+                        "inverse-primary": "#ffb77b",
+                        "outline": "#857467",
+                        "surface-container": "#faebe6",
+                        "secondary-container": "#fece65",
+                        "on-secondary": "#ffffff",
+                        "on-surface": "#211a17",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed": "#3b0900",
+                        "secondary-fixed": "#ffdf9f",
+                        "on-primary-fixed": "#2e1500",
+                        "secondary": "#795900",
+                        "surface": "#fff8f6",
+                        "on-background": "#211a17",
+                        "tertiary": "#9f3c1e",
+                        "surface-container-low": "#fff1ec",
+                        "surface-tint": "#8c4f10",
+                        "on-secondary-container": "#755700",
+                        "primary": "#894d0d",
+                        "on-tertiary-container": "#fffbff",
+                        "on-secondary-fixed": "#261a00",
+                        "on-primary-container": "#fffbff",
+                        "tertiary-container": "#bf5334",
+                        "outline-variant": "#d8c3b4",
+                        "background": "#fff8f6",
+                        "error-container": "#ffdad6"
+                    },
+                    fontFamily: {
+                        "headline": ["Epilogue"],
+                        "body": ["Plus Jakarta Sans"],
+                        "label": ["Be Vietnam Pro"],
+                        "handwritten": ["Caveat"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .polaroid-stack {
+            perspective: 1200px;
+        }
+        .polaroid-shadow {
+            box-shadow: 0 4px 20px rgba(33, 26, 23, 0.12);
+        }
+        body {
+            min-height: max(884px, 100dvh);
+            background-color: #FDF8F3;
+        }
+    </style>
+</head>
+<body class="font-body text-on-surface selection:bg-primary-fixed">
+<!-- TopAppBar -->
+<header class="w-full top-0 z-50 bg-[#FDF8F3] flex items-center justify-between px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#B87333] hover:opacity-80 transition-opacity active:scale-95 cursor-pointer">arrow_back</span>
+</div>
+<h1 class="font-['Epilogue'] font-bold text-lg tracking-tight text-[#B87333]">Samuel, 29</h1>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#B87333] hover:opacity-80 transition-opacity active:scale-95 cursor-pointer" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</header>
+<main class="pb-32 px-6 overflow-x-hidden">
+<!-- Enhanced Polaroid Stack -->
+<section class="relative h-[480px] w-full mt-6 flex items-center justify-center polaroid-stack">
+<!-- Background Polaroid 4 (+6°) -->
+<div class="absolute w-72 aspect-[4/5] bg-white p-2 pb-6 rotate-[6deg] polaroid-shadow translate-y-4 translate-x-2 border border-black/5">
+<img alt="" class="w-full h-full object-cover rounded-sm grayscale-[0.1]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD88fMwK1OgKw77CnpcWqeLhEiwBLt73cJmIuX7UDay_XRl6iZRA7oC8-PM4FBbMJCn8rUCw_1F8W-u9akd9VUDPnEzY25Jqr-toeqJSmfDlvEcg4g2eaUszeMejZuWjAGEQUjFws7jPS8JpWIuHS8GnADelul42jBxzUqCyhrK2Zs4U7qO9AP8hTx9f5EeVTlo9jFo8Kvqcf8H4-WyHgeuR9NID5QXJNoa_Sy7H7gRabMz-1AjJ2MLP7DYzsvQEa4i4ayTKTiPz0U"/>
+</div>
+<!-- Background Polaroid 3 (+3°) -->
+<div class="absolute w-72 aspect-[4/5] bg-white p-2 pb-6 rotate-[3deg] polaroid-shadow -translate-y-2 translate-x-4 border border-black/5">
+<img alt="" class="w-full h-full object-cover rounded-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxM6MxzbOkGeAV-vjKbl2IdCtHKOqW_Cdh_1n1ztaTY12TgDAgaLm41_j-sKjVuPpz0vJLQwdZ1jHIOPBGToTcTC8Oh94-EGyYQ0_cMpP1fqkWRKTcs03fZxbj1jFW1L0cLS4pIDTtE7YTmSoetArrDbz6BCenA8ZtIKUV4Y-Gk4F-NdbYx9MM0rG9Ud1QJSIoqyI-rPQHCH4OZfQjQ4V3p4zMQz8j6r3FVsqFRgb1mmpb61PG8VHvkjvK6eDqyRYOWnsFGwDUNHM"/>
+</div>
+<!-- Background Polaroid 2 (-2°) -->
+<div class="absolute w-72 aspect-[4/5] bg-white p-2 pb-6 -rotate-[2deg] polaroid-shadow -translate-x-2 -translate-y-1 border border-black/5">
+<img alt="" class="w-full h-full object-cover rounded-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwlkC8YKyvMdsPZy43xJuThoemQe-jf7d2-W6ah7na4zyFuWnIBiLcbxCrmMJOvvptAq3Rv5LBNohSJxnSaaF3M_LpvW36FBdEZjJ7HXDaZTQNoKA70etA-kWcD2gSV6le0VZiDUxFz7SAGRtJYcmdxyfenjjJeayUa50LtS4eIiIb4fo2VyWmNOtFZzX6Ai-8NP6egmkXcFCq6Jt9ix1cy07Rtg8YXi0A01I6iGiBOEtgv2WkKNUadJQV6npMHRPk7gaDiNk_PqU"/>
+</div>
+<!-- Background Polaroid 1 (-5°) -->
+<div class="absolute w-72 aspect-[4/5] bg-white p-2 pb-6 -rotate-[5deg] polaroid-shadow -translate-x-4 translate-y-1 border border-black/5">
+<img alt="" class="w-full h-full object-cover rounded-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDNJb55ao4iRX9ZYqVGUf1NnmIki00X__zPF-tyK-DShqmBtSJss0Ud6hBs20Leu4p18iiA_ORU2AOolXUUzFk3Hjqn2pIn3U8BDQQQBlLRgK9MyPLMKfLa5UJ_ZDa8NhoqmhSlNPcu1uxTinIayFQ7MzJUdeMJnufqHDtrvPn5ok9TGvjQzDY5672TEYcYF8audWVlJruoCPwC3w1vwQaZ_43aYYeTyonRE0u3EBtxwCVttlUBNBkxtsRvhJPhpaa1qo4rOzPZ5Io"/>
+</div>
+<!-- Main Front Polaroid -->
+<div class="relative w-80 bg-white p-[8px] pb-[25px] polaroid-shadow transition-transform hover:rotate-1 duration-300 border border-black/5">
+<div class="aspect-square w-full overflow-hidden">
+<img alt="Portrait of Samuel" class="w-full h-full object-cover rounded-[1px]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMUlZkn79haQdXOR64JVlHCNrmk_shErD1hO62w8410xfELES8enHzlZwiL6Jarlo1DNgV2oX_gDBB1ve_coHxy-eOiuh1vkPEAnnAKsK-4MWJQuhkPPO2KDfl0lFzDbtZ2JrdNxA1pFT9dLMrBnYGSTyfxZypuzN51kj7eic4_f_qQeXRIbLAvtsv2w6qzURFi1_7YBcMv7C55ROeVI8evs0YpwAb74o0ySrHalneFEejplxlyCGH8j9dZdtwHzIfv3oxuKruPy0"/>
+</div>
+<div class="h-[25px] mt-1 flex items-center justify-center">
+<p class="font-handwritten text-lg text-on-surface-variant leading-none">Exploring the world, one frame at a time</p>
+</div>
+</div>
+<!-- Swipe Indicator -->
+<div class="absolute -bottom-8 flex flex-col items-center gap-1">
+<div class="flex gap-1.5">
+<div class="w-1.5 h-1.5 rounded-full bg-primary"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-outline-variant/40"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-outline-variant/40"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-outline-variant/40"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-outline-variant/40"></div>
+</div>
+<span class="text-[10px] font-medium text-outline uppercase tracking-widest">1/5 • Swipe</span>
+</div>
+</section>
+<!-- Bio Section -->
+<section class="mt-20 space-y-8">
+<div class="space-y-4">
+<h2 class="font-headline font-bold text-2xl text-primary tracking-tight">About Samuel</h2>
+<div class="bg-surface-container p-6 rounded-xl border-l-4 border-primary/20">
+<p class="text-on-surface-variant leading-relaxed">
+                        Architect by day, storyteller by night. I believe the best stories are found between the pages of a passport and the lens of a Leica. Looking for someone to share a bottle of Malbec and a long conversation with.
+                    </p>
+</div>
+</div>
+<!-- Interests -->
+<div class="space-y-4">
+<h3 class="font-headline font-semibold text-lg text-on-surface">Interests</h3>
+<div class="flex flex-wrap gap-3">
+<span class="px-5 py-2 bg-secondary-container/30 text-on-secondary-container rounded-full text-sm font-medium">Photography</span>
+<span class="px-5 py-2 bg-secondary-container/30 text-on-secondary-container rounded-full text-sm font-medium">Wine tasting</span>
+<span class="px-5 py-2 bg-secondary-container/30 text-on-secondary-container rounded-full text-sm font-medium">Hiking</span>
+<span class="px-5 py-2 bg-secondary-container/30 text-on-secondary-container rounded-full text-sm font-medium">Late night talks</span>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex gap-4 pt-4">
+<button class="flex-1 h-14 bg-gradient-to-br from-primary to-primary-container text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-transform">
+<span class="material-symbols-outlined">chat_bubble</span>
+                    Message
+                </button>
+<button class="w-14 h-14 bg-surface-container-lowest text-tertiary border border-outline-variant/30 rounded-xl flex items-center justify-center shadow-md active:scale-95 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 pb-safe bg-[#FDF8F3]/80 backdrop-blur-xl border-t border-[#d8c3b4]/15 shadow-[0_-12px_40px_rgba(33,26,23,0.05)]">
+<div class="flex justify-around items-center px-8 py-3 w-full">
+<div class="flex flex-col items-center justify-center text-[#211a17] p-3 hover:text-[#894d0d] transition-colors cursor-pointer">
+<span class="material-symbols-outlined">style</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#211a17] p-3 hover:text-[#894d0d] transition-colors cursor-pointer">
+<span class="material-symbols-outlined">favorite</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#211a17] p-3 hover:text-[#894d0d] transition-colors cursor-pointer">
+<span class="material-symbols-outlined">chat_bubble</span>
+</div>
+<!-- Active State for Profile -->
+<div class="flex flex-col items-center justify-center bg-[#a76526] text-white rounded-full p-3 scale-110 duration-300 ease-in-out cursor-pointer shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+</div>
+</div>
+</nav>
+</body></html>

@@ -457,7 +457,7 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
 - **First-load JS:** 102KB shared (budget <200KB)
 
 ## Polaroid Design System — Web (F38-UX-polaroid-web)
-- **Depends on:** F37 Wave 1 (`packages/tokens/polaroid.ts`)
+- **Depends on:** F40 Wave 1 (`packages/tokens/polaroid.ts`)
 - **PolaroidCard:** `apps/web/components/common/PolaroidCard.tsx` — Server component, CSS Module only. Props: imageUrl, imageAlt, caption?, rotation?, stack?, hoverable?, className?, children?, onClick?. Exact Polaroid 600 proportions (88:107 card, 79:77 image). Stack variant with ::before/::after pseudo-elements. Hover: straighten to 0°, lift -8px, shadow increase. `prefers-reduced-motion`: instant transitions.
 - **PolaroidMasonryGrid:** `apps/web/components/common/PolaroidMasonryGrid.tsx` — Server component. CSS columns: 4 at ≥1200px, 3 at ≥900px, 2 at ≥600px, 1 at <600px. 8 nth-child rotation variations (-5° to +4°).
 - **CSS tokens:** Section 11 in `apps/web/styles/tokens.css` — `--polaroid-card-aspect`, `--polaroid-image-aspect`, `--polaroid-border-*`, `--polaroid-bg`, `--polaroid-caption-color`, `--polaroid-shadow`, `--polaroid-shadow-hover`, `--polaroid-rotation`
@@ -467,6 +467,25 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
 - **Chat:** `MessageBubble.tsx` — IMAGE type messages as PolaroidCard (max 240px). Own: 2°, other: -2°. Reduced shadow.
 - **Profile:** `PhotoGallery.tsx` — scattered PolaroidCards with varied rotations. First photo uses stack variant. Empty editable slots: Polaroid-framed upload area. Lightbox preserved.
 - **Match:** `MatchAnimation.tsx` — two overlapping PolaroidCards at ±10° (was circles). Negative margin overlap, copper glow shadow, spring entrance via motion/react.
+
+## Polaroid Design System — Mobile (F40-UX-polaroid-mobile)
+- **Replaces:** F37-polaroid-mobile (complete rewrite from Stitch HTML)
+- **Platform:** Expo / React Native / Tamagui
+- **Design tokens:** `packages/tokens/polaroid.ts` — Material 3 copper theme (primary `#894d0d`, tertiary `#9f3c1e`, warm white `#FDF8F3`), Polaroid 600 proportions (88:107 card, 79:77 image), shadow definitions, typography config
+- **Caveat font:** Loaded via `expo-font` (`@expo-google-fonts/caveat`), available as `$handwritten` in Tamagui
+- **Core components:** `packages/ui/src/` — PolaroidCard (exact 600 proportions, rotation, caption), PolaroidStack (4+1 swipeable gallery), PolaroidAvatar (mini square Polaroid replacing circular avatars)
+- **Discovery:** `apps/mobile/app/(tabs)/discover.tsx` — full-bleed PolaroidStack swipe cards with Reanimated 3 spring physics, copper action buttons (Pass/Spark/Like)
+- **Feed:** `packages/app/src/screens/FeedScreen.tsx` — PolaroidFeedCard for photo posts with scattered rotations, Caveat captions, actions on card bottom strip
+- **Chat inbox:** Polaroid-framed mini avatars, copper unread dot with glow, handwritten section labels
+- **Chat room:** Received bubbles `#F5F1EE`, sent bubbles copper gradient, inline PolaroidCard for shared photos (256px wide, -1deg)
+- **Profile view:** `packages/app/src/screens/ProfileViewScreen.tsx` — PolaroidStack photo gallery (front w-80, bg cards ±6/3/2/5 degrees), bio with border-left accent, interest tag pills
+- **Match ceremony:** `apps/mobile/components/MatchCeremony.tsx` — two overlapping PolaroidCards at ±8 degrees, "It's a connection!" headline in tertiary, copper glow aura, spring animation entry, haptic feedback
+- **Edit profile:** `packages/app/src/screens/ProfileEditScreen.tsx` — 3-column Polaroid photo grid with tap-to-straighten animation, dashed empty slots at 88:107 aspect
+- **Welcome:** `apps/mobile/app/(auth)/welcome.tsx` — 5 scattered PolaroidCards at varied rotations (-12 to +6 degrees), LUSTRE branding, copper gradient CTA
+- **Bottom nav:** `apps/mobile/app/(tabs)/_layout.tsx` — PolaroidTabBar with glassmorphism (BlurView iOS / solid fallback Android), rounded top corners 32px, ghost border, copper active state with dot indicator, 5 tabs (Discover, Connect, Explore, Learn, Profile)
+- **Top app bar:** `apps/mobile/components/PolaroidHeader.tsx` — glassmorphic blur (60% opacity), NotoSerif_700Bold copper title, Reanimated spring press feedback on icon buttons
+- **Visual polish:** `apps/mobile/components/PaperTextureBackground.tsx` — warm white #FDF8F3 with Skia fractal noise at 0.04 opacity; button press scale animations across all screens
+- **Key deps:** react-native-reanimated 3, react-native-gesture-handler 2, @shopify/react-native-skia, phosphor-react-native, expo-blur, expo-haptics, expo-linear-gradient
 
 ## Profile Priority & Earned Rewards (F35-CONNECT-profile-priority)
 - **Philosophy:** No premium tiers, no purchasable visibility. Profile priority is earned through positive behavior.

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Caveat&amp;family=Reenie+Beanie&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary": "#9f3c1e",
+              "primary": "#894d0d",
+              "on-secondary": "#ffffff",
+              "error": "#ba1a1a",
+              "on-primary-fixed-variant": "#6d3a00",
+              "on-tertiary": "#ffffff",
+              "on-primary": "#ffffff",
+              "on-background": "#211a17",
+              "secondary-fixed": "#ffdf9f",
+              "on-primary-fixed": "#2e1500",
+              "on-tertiary-fixed": "#3b0900",
+              "inverse-surface": "#372f2b",
+              "surface-dim": "#e6d7d2",
+              "surface-container-lowest": "#ffffff",
+              "secondary-container": "#fece65",
+              "background": "#fff8f6",
+              "inverse-on-surface": "#fdeee8",
+              "on-surface-variant": "#524439",
+              "primary-fixed": "#ffdcc2",
+              "inverse-primary": "#ffb77b",
+              "tertiary-container": "#bf5334",
+              "tertiary-fixed-dim": "#ffb5a0",
+              "surface-variant": "#eedfda",
+              "on-secondary-fixed": "#261a00",
+              "surface-container": "#faebe6",
+              "tertiary-fixed": "#ffdbd1",
+              "surface-container-highest": "#eedfda",
+              "on-secondary-container": "#755700",
+              "surface-tint": "#8c4f10",
+              "primary-container": "#a76526",
+              "on-error-container": "#93000a",
+              "surface-bright": "#fff8f6",
+              "error-container": "#ffdad6",
+              "on-surface": "#211a17",
+              "on-error": "#ffffff",
+              "surface-container-low": "#fff1ec",
+              "secondary-fixed-dim": "#eec058",
+              "surface": "#fff8f6",
+              "on-tertiary-container": "#fffbff",
+              "outline-variant": "#d8c3b4",
+              "on-primary-container": "#fffbff",
+              "on-tertiary-fixed-variant": "#82270b",
+              "on-secondary-fixed-variant": "#5b4300",
+              "surface-container-high": "#f4e5e0",
+              "primary-fixed-dim": "#ffb77b",
+              "secondary": "#795900",
+              "outline": "#857467"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"],
+              "handwriting": ["Caveat"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .polaroid-ratio {
+        aspect-ratio: 88 / 107;
+      }
+      .warm-mesh-gradient {
+        background-color: #FDF8F3;
+        background-image:
+          radial-gradient(at 0% 0%, rgba(255, 241, 236, 0.5) 0px, transparent 50%),
+          radial-gradient(at 100% 100%, rgba(254, 206, 101, 0.1) 0px, transparent 50%);
+      }
+      .copper-gradient {
+        background: linear-gradient(135deg, #894D0D 0%, #A76526 100%);
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body text-on-surface antialiased">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-stone-900/80 backdrop-blur-xl shadow-[0_8px_24px_-2px_rgba(46,21,0,0.08)]">
+<div class="flex justify-between items-center px-4 py-3 w-full">
+<div class="flex items-center gap-3">
+<button class="text-stone-500 hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<div class="relative">
+<div class="w-9 h-9 bg-surface-container-highest p-0.5 shadow-sm rotate-3 overflow-hidden">
+<img alt="Emma's Portrait" class="w-full h-full object-cover" data-alt="Close-up Polaroid style portrait of a smiling woman with warm lighting and a soft film grain texture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAaYl3LqgHs70LSIxm3Td9WURkRBnqibspftPdJmITOLJNNheK4lixH0ZQh_hVdwdXRw357kAstVkfYY1QOfGxS4xu2Jsi_JQOAAaDyP1zINl4hZH-IDOevv4gFF-e0jd_WZdA7QEwyr8wTv0BdH8i4rsqNtBm2qIFuJKohQvEOzmTmSOVlSZt8qLfIvngkip_GBE-MR7yN-_T85jj9chXUfg2xMBfu7nBEE9anfiNqUl4tA7iyoMZpindDjqdZnErwn4r_3nVbsEo"/>
+</div>
+<div class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full"></div>
+</div>
+<div class="flex flex-col">
+<span class="font-headline font-bold text-lg tracking-tight text-orange-900">Emma, 28</span>
+<span class="font-medium text-[10px] uppercase tracking-widest text-stone-400">Online</span>
+</div>
+</div>
+<button class="text-stone-500 hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<div class="bg-stone-100 dark:bg-stone-800 h-px w-full"></div>
+</header>
+<!-- Chat Canvas -->
+<main class="min-h-screen pt-20 pb-24 warm-mesh-gradient px-4 flex flex-col gap-6">
+<!-- Date Marker -->
+<div class="flex justify-center my-2">
+<span class="text-[11px] font-semibold text-stone-400 uppercase tracking-[0.2em]">Today</span>
+</div>
+<!-- Emma's Message -->
+<div class="flex flex-col items-start max-w-[85%] group">
+<div class="bg-[#F5F1EE] text-[#2C2421] px-4 py-3 rounded-2xl rounded-bl-none shadow-sm">
+<p class="text-sm leading-relaxed">I finally made it to that little hidden cafe we talked about. The atmosphere is exactly your vibe.</p>
+</div>
+<span class="text-[10px] text-stone-400 mt-1 ml-1">10:24 AM</span>
+</div>
+<!-- Emma's Shared Photo (Polaroid Card) -->
+<div class="flex flex-col items-start max-w-[85%]">
+<div class="bg-surface-container-lowest p-2 pb-8 shadow-[0_8px_24px_-2px_rgba(46,21,0,0.08)] polaroid-ratio w-64 flex flex-col -rotate-1 border border-stone-100/50">
+<div class="w-full h-[72%] overflow-hidden bg-stone-100">
+<img alt="Coffee Morning" class="w-full h-full object-cover grayscale-[0.1] contrast-[1.05]" data-alt="Top-down view of a steaming latte on a rustic wooden table with a vintage book and soft morning sunlight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUPPyCovpDDTD3IBEoy4LAk5pWTEV6ohqcIq_XbUGSF2gnv8y1LjMsb2RFi11RbGaV48AqrjCmWUoIzWzEj59gDrKQGt-V6wAjltcuQeadiXu1WqmgLL99pHTdV-HPpVvT2u_bd65FbJ1gWr4HebQANT_1qkd4zuwPD6QKf4g1fsOVdQv60GH4jEwgnIjfh6JdXT5cZD7DjX8WmUOw2ZkmGenl0bYuRfZQ0c5J2w0_Wa1hzXOg8OFkqJyMF0yCvPYWMikp4n_1s_s"/>
+</div>
+<div class="mt-auto pt-2 text-center">
+<span class="font-handwriting text-2xl text-stone-600">A coffee morning</span>
+</div>
+</div>
+<span class="text-[10px] text-stone-400 mt-2 ml-1">10:25 AM</span>
+</div>
+<!-- User's Message -->
+<div class="flex flex-col items-end self-end max-w-[85%]">
+<div class="copper-gradient text-white px-4 py-3 rounded-2xl rounded-br-none shadow-md">
+<p class="text-sm leading-relaxed">Oh wow, it looks stunning! Is that the place with the velvet armchairs in the back?</p>
+</div>
+<span class="text-[10px] text-stone-400 mt-1 mr-1">10:27 AM</span>
+</div>
+<!-- Emma's Message -->
+<div class="flex flex-col items-start max-w-[85%]">
+<div class="bg-[#F5F1EE] text-[#2C2421] px-4 py-3 rounded-2xl rounded-bl-none shadow-sm">
+<p class="text-sm leading-relaxed">Yes! I'm sitting in one right now. You should be here.</p>
+</div>
+<span class="text-[10px] text-stone-400 mt-1 ml-1">10:28 AM</span>
+</div>
+<!-- User's Message -->
+<div class="flex flex-col items-end self-end max-w-[85%]">
+<div class="copper-gradient text-white px-4 py-3 rounded-2xl rounded-br-none shadow-md">
+<p class="text-sm leading-relaxed">Save a seat for me? I can be there in twenty.</p>
+</div>
+<div class="flex items-center gap-1 mt-1 mr-1">
+<span class="text-[10px] text-stone-400">10:30 AM</span>
+<span class="material-symbols-outlined text-primary text-[12px]" style="font-variation-settings: 'FILL' 1;">done_all</span>
+</div>
+</div>
+</main>
+<!-- Message Input Bar -->
+<footer class="fixed bottom-0 left-0 right-0 p-4 bg-white/60 backdrop-blur-xl">
+<div class="max-w-4xl mx-auto flex items-center gap-3">
+<div class="flex gap-2">
+<button class="w-10 h-10 flex items-center justify-center text-primary hover:bg-surface-container-high rounded-full transition-colors">
+<span class="material-symbols-outlined">photo_camera</span>
+</button>
+</div>
+<div class="flex-1 relative flex items-center">
+<input class="w-full bg-surface-container-low border-none focus:ring-1 focus:ring-primary/20 rounded-full py-3 px-5 text-sm placeholder:text-stone-400 text-on-surface" placeholder="Write a message..." type="text"/>
+<button class="absolute right-3 text-stone-400 hover:text-tertiary transition-colors">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</button>
+</div>
+<button class="w-12 h-12 copper-gradient rounded-full flex items-center justify-center text-white shadow-lg active:scale-95 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">send</span>
+</button>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Flöde - Community Feed</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,700;0,900;1,900&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Be+Vietnam+Pro:wght@400;500&amp;family=Handlee&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary-fixed-dim": "#ffb77b",
+              "tertiary-container": "#bf5334",
+              "on-secondary": "#ffffff",
+              "inverse-primary": "#ffb77b",
+              "surface-container": "#faebe6",
+              "on-surface": "#211a17",
+              "on-tertiary-fixed-variant": "#82270b",
+              "on-tertiary-container": "#fffbff",
+              "on-primary-fixed": "#2e1500",
+              "surface-bright": "#fff8f6",
+              "tertiary-fixed-dim": "#ffb5a0",
+              "surface": "#fff8f6",
+              "primary-fixed": "#ffdcc2",
+              "secondary-container": "#fece65",
+              "primary": "#894d0d",
+              "on-secondary-fixed-variant": "#5b4300",
+              "on-primary-fixed-variant": "#6d3a00",
+              "outline-variant": "#d8c3b4",
+              "on-surface-variant": "#524439",
+              "secondary": "#795900",
+              "tertiary-fixed": "#ffdbd1",
+              "surface-container-highest": "#eedfda",
+              "inverse-surface": "#372f2b",
+              "on-secondary-fixed": "#261a00",
+              "on-primary": "#ffffff",
+              "primary-container": "#a76526",
+              "error-container": "#ffdad6",
+              "error": "#ba1a1a",
+              "surface-dim": "#e6d7d2",
+              "on-tertiary-fixed": "#3b0900",
+              "on-background": "#211a17",
+              "surface-container-low": "#fff1ec",
+              "on-error": "#ffffff",
+              "surface-container-lowest": "#ffffff",
+              "secondary-fixed": "#ffdf9f",
+              "on-tertiary": "#ffffff",
+              "on-error-container": "#93000a",
+              "surface-variant": "#eedfda",
+              "surface-tint": "#8c4f10",
+              "outline": "#857467",
+              "background": "#fff8f6",
+              "inverse-on-surface": "#fdeee8",
+              "on-primary-container": "#fffbff",
+              "secondary-fixed-dim": "#eec058",
+              "surface-container-high": "#f4e5e0",
+              "on-secondary-container": "#755700",
+              "tertiary": "#9f3c1e"
+            },
+            fontFamily: {
+              "headline": ["Epilogue"],
+              "body": ["Plus Jakarta Sans"],
+              "label": ["Be Vietnam Pro"],
+              "handwritten": ["Handlee", "cursive"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>.paper-texture {
+    background-color: #fff8f6;
+    background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuCq-RQ3xY1k0CMMFwFPCOI6OVVLDNOaJNIxcsY7Ji-uKT7_15mNC38-ZDxhLlV8BEZTbLMCJ2Ups1tqxsL0RgBNxyYV8qPtTBtNR6Gj2RmCqXPYsRuFrXsI2PRs315NqoGwKvxG4gpzi7gskAspZI6zXcc3BLS-6nSctyGjI48aUxV6gOZFxASaQE_pYQOinT011h_x_vwz0p873sfIk3a1JFcFOo6Xt2tgjOfQnAzBWIw-A9Kt4vKLndkRq72aM65WtrKiqrAMiL8)
+    }
+.material-symbols-outlined {
+    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24
+    }
+.polaroid-shadow {
+    box-shadow: 0 10px 25px -5px rgba(33, 26, 23, 0.1), 0 8px 10px -6px rgba(33, 26, 23, 0.1)
+    }</style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="paper-texture font-body text-on-surface min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-[#fff8f6]/60 dark:bg-[#211a17]/60 backdrop-blur-md shadow-[0_12px_40px_rgba(33,26,23,0.05)]">
+<div class="flex items-center justify-between px-6 py-4 w-full">
+<div class="flex items-center">
+<span class="material-symbols-outlined text-[#894d0d] dark:text-[#b87333] hover:opacity-80 transition-opacity active:scale-95 duration-200 cursor-pointer" data-icon="menu">menu</span>
+</div>
+<h1 class="font-['Epilogue'] font-black italic text-2xl tracking-tight text-[#894d0d] dark:text-[#b87333]">Flöde</h1>
+<div class="flex items-center">
+<span class="material-symbols-outlined text-[#894d0d] dark:text-[#b87333] hover:opacity-80 transition-opacity active:scale-95 duration-200 cursor-pointer" data-icon="notifications">notifications</span>
+</div>
+</div>
+</header>
+<!-- Main Feed Content -->
+<main class="pt-24 px-6 max-w-md mx-auto space-y-12">
+<!-- Welcome Sticky Note -->
+<section class="relative -rotate-1 translate-x-2 z-10">
+<div class="bg-secondary-container p-6 rounded-lg shadow-sm">
+<p class="font-handwritten text-lg text-on-secondary-container leading-relaxed">
+                    Captured moments from the community. Pin your favorites to your board.
+                </p>
+<div class="absolute -top-3 left-1/2 -translate-x-1/2 w-8 h-8 bg-tertiary/20 rounded-full blur-sm"></div>
+<div class="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-tertiary rounded-full shadow-inner"></div>
+</div>
+</section>
+<!-- Polaroid Feed -->
+<div class="space-y-16 relative">
+<!-- Post 1: Portrait Orientation -->
+<article class="relative rotate-[-3deg] hover:rotate-0 transition-transform duration-500 ease-in-out">
+<div class="bg-surface-container-lowest p-3 pb-12 polaroid-shadow">
+<img alt="Community moment" class="w-full aspect-[3/4] object-cover rounded-sm grayscale-[0.1] contrast-[1.1]" data-alt="vintage aesthetic photo of a golden retriever sitting in a sun-drenched meadow with soft warm backlight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAszUt0fBb-Bm__0AHWgoj6SE9zuvnz7IVWgvFZAST1vaymd1V8a2IQOC6xsyfmets4MOoo3LcdXhsoP8wUu7GJUnJPab_Z3G7hudW32tLR_3ICQ1c8P9HYwars2rUfowweErt0FdxSs020RbAv5d1OoPETkalcITg1FtN9OwRL6v4SDvXrfwO30xfbkRYqNh4zm7wU9PYmxNufqGYqn4VVS4r6tQ1fEGtjgmFzLS4XzHEgFw2ZAczFyZgUtWqRNJ5R-LtnITTpanE"/>
+<div class="mt-6 px-2">
+<p class="font-handwritten text-xl text-on-surface leading-tight">Golden hour with Charlie at the park...</p>
+</div>
+</div>
+<div class="flex items-center gap-6 mt-4 ml-4">
+<button class="flex items-center gap-2 group">
+<span class="material-symbols-outlined text-primary group-active:scale-125 transition-transform" data-icon="favorite" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="text-xs font-semibold uppercase tracking-widest text-on-surface-variant">248</span>
+</button>
+<button class="flex items-center gap-2 group">
+<span class="material-symbols-outlined text-on-surface-variant group-active:scale-110 transition-transform" data-icon="chat_bubble">chat_bubble</span>
+<span class="text-xs font-semibold uppercase tracking-widest text-on-surface-variant">12</span>
+</button>
+</div>
+</article>
+<!-- Post 2: Square Orientation, Slight Overlap -->
+<article class="relative rotate-[2deg] -mt-8 z-20 hover:rotate-0 transition-transform duration-500 ease-in-out">
+<div class="bg-surface-container-lowest p-3 pb-14 polaroid-shadow">
+<img alt="Morning aesthetic" class="w-full aspect-square object-cover rounded-sm" data-alt="artisanal morning coffee with latte art on a rustic wooden table with scattered flower petals and soft morning light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHi-xHzm4NzjTWk0tRxyRxV0ijCreoUp1Vz6IT8PzCdL5JbBKYnr5T6JEy_2-3pkLiyHpZgzhCGa_sB5d4v6pEnql-xmbv8PD1Bob4E9yFiHFNu-Ecr1hofiRGbMHeK2WKwo4yqXljHl0jlMUM0JN4LWUxAJ4mVayydjoUWJE5F6xdE6-R5QGlzBVSQYQ896ojqzMpvJit-sU0MOK3uvc7OHkxHlG02jhqIfd3nTGwecUfdvX0OaC6cbti7J3Lci8KDuN99LCKGwg"/>
+<div class="mt-8 px-2">
+<p class="font-handwritten text-xl text-on-surface">Slow mornings &amp; warm brews.</p>
+</div>
+</div>
+<div class="flex items-center gap-6 mt-4 ml-4">
+<button class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="favorite">favorite</span>
+<span class="text-xs font-semibold uppercase tracking-widest text-on-surface-variant">1.2k</span>
+</button>
+<button class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="chat_bubble">chat_bubble</span>
+<span class="text-xs font-semibold uppercase tracking-widest text-on-surface-variant">45</span>
+</button>
+</div>
+</article>
+<!-- Post 3: Portrait, Negative Rotation -->
+<article class="relative rotate-[-1deg] hover:rotate-0 transition-transform duration-500 ease-in-out">
+<div class="bg-surface-container-lowest p-3 pb-12 polaroid-shadow">
+<img alt="Coastline memories" class="w-full aspect-[4/5] object-cover rounded-sm contrast-90" data-alt="scenic view of a small red lighthouse on a rocky coastline during a misty sunrise with muted ocean colors" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgs6O45TILS-SSOSYJhFmTCJ6eQsOKX3KhRmK4rSU0nXB_sX-citTWJSKSIvGynTEn0V6_A5sVzL_ZXAiqhH0Af27USnK0cITvf6JEw2eao8hFSduV3FI6ZYwKjmF1vs0QLajEqGpcjJWyKRbGSXW7rItiZ-NJvsjECLxDFpJd8qADVJHuSgpcVCGFKTpXgfSapqWyVQaNAsxkq115l8N71HYCBchwXdCY58UCd4uvVA1mMCydnaMt7wNRT7zoqBWzIfJx_l06mEY"/>
+<div class="mt-6 px-2">
+<p class="font-handwritten text-xl text-on-surface">Finding peace by the shore.</p>
+</div>
+</div>
+<div class="flex items-center gap-6 mt-4 ml-4">
+<button class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="favorite" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="text-xs font-semibold uppercase tracking-widest text-on-surface-variant">892</span>
+</button>
+<button class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="chat_bubble">chat_bubble</span>
+<span class="text-xs font-semibold uppercase tracking-widest text-on-surface-variant">31</span>
+</button>
+</div>
+</article>
+<!-- Post 4: Small Accent Square -->
+<article class="relative rotate-[4deg] translate-x-4 z-10 hover:rotate-0 transition-transform duration-500 ease-in-out">
+<div class="bg-surface-container-lowest p-2 pb-10 polaroid-shadow w-4/5 mx-auto">
+<img alt="Floral detail" class="w-full aspect-square object-cover rounded-sm" data-alt="close-up of a vibrant yellow daisy with water droplets in focus, bright warm natural light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqvlTRM24vN3xJy7bw3NxfdlP441pebYogFpK_KmTd3UVv4qjTFVnhm7c51E4OJjEk0TrQ1kvgJ4EcECDTB7QZR-NuKVi4l73NRaraPUsfQQw8hjnSB5Hj7B6HFfw8so0_fYAOylT9XNgggqAf5GlZUtl0naYKy-Odv_K5Q840TtdM8cb4CMe2Va7HgSm9a1pVlwbdNjbjNQt1grXq3iFbBGtreWsB7vdrQL6B8K3kMTI-YNdrOBqt1Wn1168v82P6fpXfsUJAGAo"/>
+<div class="mt-4 px-2">
+<p class="font-handwritten text-lg text-on-surface text-center">Bloom where you are planted.</p>
+</div>
+</div>
+<div class="flex justify-center gap-6 mt-4">
+<button class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="favorite">favorite</span>
+<span class="text-xs font-semibold uppercase tracking-widest text-on-surface-variant">56</span>
+</button>
+<button class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="chat_bubble">chat_bubble</span>
+<span class="text-xs font-semibold uppercase tracking-widest text-on-surface-variant">4</span>
+</button>
+</div>
+</article>
+</div>
+</main>
+<!-- FAB: Floating "New Post" Button -->
+<button class="fixed right-6 bottom-28 w-14 h-14 rounded-xl bg-gradient-to-br from-primary to-primary-container text-on-primary shadow-xl flex items-center justify-center active:scale-90 transition-transform z-40">
+<span class="material-symbols-outlined" data-icon="add_a_photo">add_a_photo</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-8 pt-4 bg-[#fff8f6]/80 dark:bg-[#211a17]/80 backdrop-blur-xl rounded-t-[2rem] border-t border-[#d8c3b4]/15 shadow-[0_-8px_30px_rgba(33,26,23,0.03)]">
+<!-- Discover -->
+<a class="flex flex-col items-center justify-center text-[#211a17]/40 dark:text-[#fff8f6]/40 hover:text-[#a76526] transition-colors active:rotate-1 duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="explore">explore</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold uppercase tracking-widest mt-1">Discover</span>
+</a>
+<!-- Messages -->
+<a class="flex flex-col items-center justify-center text-[#211a17]/40 dark:text-[#fff8f6]/40 hover:text-[#a76526] transition-colors active:rotate-1 duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="chat_bubble">chat_bubble</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold uppercase tracking-widest mt-1">Messages</span>
+</a>
+<!-- Feed (ACTIVE) -->
+<a class="flex flex-col items-center justify-center text-[#894d0d] dark:text-[#fece65] scale-110 transition-transform active:rotate-1 duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="amp_stories" style="font-variation-settings: 'FILL' 1;">amp_stories</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold uppercase tracking-widest mt-1">Feed</span>
+</a>
+<!-- Profile -->
+<a class="flex flex-col items-center justify-center text-[#211a17]/40 dark:text-[#fff8f6]/40 hover:text-[#a76526] transition-colors active:rotate-1 duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold uppercase tracking-widest mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

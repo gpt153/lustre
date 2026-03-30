@@ -39,6 +39,7 @@
 | F29 | CONNECT | Intentions Discovery | 3 | 8 | **DONE** (2026-03-27) |
 | F30 | CORE | Auth Fix (Swish+SPAR, Email/OAuth) | 3 | 8 | **DONE** (2026-03-26) |
 | F31 | UX | Design System | 2 | 4 | **DONE** (2026-03-27) |
+| F40 | UX | Polaroid Mobile | 5 | 18 | **DONE** (2026-03-29) |
 
 ## Build Order (Suggested Phases)
 

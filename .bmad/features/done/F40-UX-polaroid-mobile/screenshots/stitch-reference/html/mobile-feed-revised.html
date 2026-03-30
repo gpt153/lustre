@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Flöde - Community Feed</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,700;0,900;1,900&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Be+Vietnam+Pro:wght@400;500&amp;family=Handlee&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "copper": "#B87333",
+              "gold": "#D4A843",
+              "warm-cream": "#FDF8F3",
+              "charcoal": "#2C2421",
+              "primary": "#B87333",
+              "secondary": "#D4A843",
+              "background": "#FDF8F3",
+              "on-surface": "#2C2421",
+              "surface": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Epilogue"],
+              "body": ["Plus Jakarta Sans"],
+              "label": ["Be Vietnam Pro"],
+              "handwritten": ["Handlee", "cursive"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .paper-texture {
+            background-color: #FDF8F3;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+        }
+        .material-symbols-outlined {
+            font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24
+        }
+        .polaroid-shadow {
+            box-shadow: 0 10px 25px -5px rgba(44, 36, 33, 0.1), 0 8px 10px -6px rgba(44, 36, 33, 0.1)
+        }
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="paper-texture font-body text-charcoal min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-[#FDF8F3]/60 backdrop-blur-md border-b border-copper/10">
+<div class="flex items-center justify-between px-6 py-4 w-full">
+<div class="flex items-center">
+<span class="material-symbols-outlined text-copper hover:opacity-80 transition-opacity active:scale-95 duration-200 cursor-pointer" data-icon="menu">menu</span>
+</div>
+<h1 class="font-['Epilogue'] font-black italic text-2xl tracking-tight text-copper">Flöde</h1>
+<div class="flex items-center">
+<span class="material-symbols-outlined text-copper hover:opacity-80 transition-opacity active:scale-95 duration-200 cursor-pointer" data-icon="notifications">notifications</span>
+</div>
+</div>
+</header>
+<!-- Main Feed Content -->
+<main class="pt-24 px-6 max-w-md mx-auto space-y-12">
+<!-- Welcome Sticky Note -->
+<section class="relative -rotate-1 translate-x-2 z-10">
+<div class="bg-gold/20 p-6 rounded-lg shadow-sm border border-gold/10">
+<p class="font-handwritten text-lg text-charcoal leading-relaxed">
+                Captured moments from the community. Pin your favorites to your board.
+            </p>
+<div class="absolute -top-3 left-1/2 -translate-x-1/2 w-8 h-8 bg-copper/10 rounded-full blur-sm"></div>
+<div class="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-copper rounded-full shadow-inner"></div>
+</div>
+</section>
+<!-- Polaroid Feed -->
+<div class="space-y-16 relative">
+<!-- Post 1 -->
+<article class="relative rotate-[-3deg] hover:rotate-0 transition-transform duration-500 ease-in-out">
+<div class="bg-white p-2 pb-6 polaroid-shadow">
+<img alt="Community moment" class="w-full aspect-[3/4] object-cover rounded-sm" data-alt="vintage aesthetic photo of a golden retriever sitting in a sun-drenched meadow with soft warm backlight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAszUt0fBb-Bm__0AHWgoj6SE9zuvnz7IVWgvFZAST1vaymd1V8a2IQOC6xsyfmets4MOoo3LcdXhsoP8wUu7GJUnJPab_Z3G7hudW32tLR_3ICQ1c8P9HYwars2rUfowweErt0FdxSs020RbAv5d1OoPETkalcITg1FtN9OwRL6v4SDvXrfwO30xfbkRYqNh4zm7wU9PYmxNufqGYqn4VVS4r6tQ1fEGtjgmFzLS4XzHEgFw2ZAczFyZgUtWqRNJ5R-LtnITTpanE"/>
+<div class="mt-3 px-1 flex items-center justify-between">
+<p class="font-handwritten text-base text-charcoal leading-tight truncate mr-2">Golden hour with Charlie...</p>
+<div class="flex items-center gap-3 shrink-0">
+<button class="flex items-center gap-1 group">
+<span class="material-symbols-outlined text-copper text-sm group-active:scale-125 transition-transform" data-icon="favorite" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="text-[10px] font-bold text-copper/80">248</span>
+</button>
+<button class="flex items-center gap-1 group">
+<span class="material-symbols-outlined text-copper text-sm" data-icon="chat_bubble">chat_bubble</span>
+<span class="text-[10px] font-bold text-copper/80">12</span>
+</button>
+</div>
+</div>
+</div>
+</article>
+<!-- Post 2 -->
+<article class="relative rotate-[2deg] -mt-8 z-20 hover:rotate-0 transition-transform duration-500 ease-in-out">
+<div class="bg-white p-2 pb-6 polaroid-shadow">
+<img alt="Morning aesthetic" class="w-full aspect-square object-cover rounded-sm" data-alt="artisanal morning coffee with latte art on a rustic wooden table with scattered flower petals and soft morning light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHi-xHzm4NzjTWk0tRxyRxV0ijCreoUp1Vz6IT8PzCdL5JbBKYnr5T6JEy_2-3pkLiyHpZgzhCGa_sB5d4v6pEnql-xmbv8PD1Bob4E9yFiHFNu-Ecr1hofiRGbMHeK2WKwo4yqXljHl0jlMUM0JN4LWUxAJ4mVayydjoUWJE5F6xdE6-R5QGlzBVSQYQ896ojqzMpvJit-sU0MOK3uvc7OHkxHlG02jhqIfd3nTGwecUfdvX0OaC6cbti7J3Lci8KDuN99LCKGwg"/>
+<div class="mt-3 px-1 flex items-center justify-between">
+<p class="font-handwritten text-base text-charcoal truncate mr-2">Slow mornings &amp; warm brews.</p>
+<div class="flex items-center gap-3 shrink-0">
+<button class="flex items-center gap-1">
+<span class="material-symbols-outlined text-copper text-sm" data-icon="favorite">favorite</span>
+<span class="text-[10px] font-bold text-copper/80">1.2k</span>
+</button>
+<button class="flex items-center gap-1">
+<span class="material-symbols-outlined text-copper text-sm" data-icon="chat_bubble">chat_bubble</span>
+<span class="text-[10px] font-bold text-copper/80">45</span>
+</button>
+</div>
+</div>
+</div>
+</article>
+<!-- Post 3 -->
+<article class="relative rotate-[-1deg] hover:rotate-0 transition-transform duration-500 ease-in-out">
+<div class="bg-white p-2 pb-6 polaroid-shadow">
+<img alt="Coastline memories" class="w-full aspect-[4/5] object-cover rounded-sm" data-alt="scenic view of a small red lighthouse on a rocky coastline during a misty sunrise with muted ocean colors" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgs6O45TILS-SSOSYJhFmTCJ6eQsOKX3KhRmK4rSU0nXB_sX-citTWJSKSIvGynTEn0V6_A5sVzL_ZXAiqhH0Af27USnK0cITvf6JEw2eao8hFSduV3FI6ZYwKjmF1vs0QLajEqGpcjJWyKRbGSXW7rItiZ-NJvsjECLxDFpJd8qADVJHuSgpcVCGFKTpXgfSapqWyVQaNAsxkq115l8N71HYCBchwXdCY58UCd4uvVA1mMCydnaMt7wNRT7zoqBWzIfJx_l06mEY"/>
+<div class="mt-3 px-1 flex items-center justify-between">
+<p class="font-handwritten text-base text-charcoal truncate mr-2">Finding peace by the shore.</p>
+<div class="flex items-center gap-3 shrink-0">
+<button class="flex items-center gap-1">
+<span class="material-symbols-outlined text-copper text-sm" data-icon="favorite" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="text-[10px] font-bold text-copper/80">892</span>
+</button>
+<button class="flex items-center gap-1">
+<span class="material-symbols-outlined text-copper text-sm" data-icon="chat_bubble">chat_bubble</span>
+<span class="text-[10px] font-bold text-copper/80">31</span>
+</button>
+</div>
+</div>
+</div>
+</article>
+<!-- Post 4 -->
+<article class="relative rotate-[4deg] translate-x-4 z-10 hover:rotate-0 transition-transform duration-500 ease-in-out">
+<div class="bg-white p-2 pb-6 polaroid-shadow w-4/5 mx-auto">
+<img alt="Floral detail" class="w-full aspect-square object-cover rounded-sm" data-alt="close-up of a vibrant yellow daisy with water droplets in focus, bright warm natural light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqvlTRM24vN3xJy7bw3NxfdlP441pebYogFpK_KmTd3UVv4qjTFVnhm7c51E4OJjEk0TrQ1kvgJ4EcECDTB7QZR-NuKVi4l73NRaraPUsfQQw8hjnSB5Hj7B6HFfw8so0_fYAOylT9XNgggqAf5GlZUtl0naYKy-Odv_K5Q840TtdM8cb4CMe2Va7HgSm9a1pVlwbdNjbjNQt1grXq3iFbBGtreWsB7vdrQL6B8K3kMTI-YNdrOBqt1Wn1168v82P6fpXfsUJAGAo"/>
+<div class="mt-3 px-1 flex items-center justify-between">
+<p class="font-handwritten text-sm text-charcoal truncate mr-2">Bloom where you are...</p>
+<div class="flex items-center gap-2 shrink-0">
+<button class="flex items-center gap-1">
+<span class="material-symbols-outlined text-copper text-xs" data-icon="favorite">favorite</span>
+<span class="text-[9px] font-bold text-copper/80">56</span>
+</button>
+<button class="flex items-center gap-1">
+<span class="material-symbols-outlined text-copper text-xs" data-icon="chat_bubble">chat_bubble</span>
+<span class="text-[9px] font-bold text-copper/80">4</span>
+</button>
+</div>
+</div>
+</div>
+</article>
+</div>
+</main>
+<!-- FAB -->
+<button class="fixed right-6 bottom-28 w-14 h-14 rounded-full bg-gradient-to-br from-copper to-gold text-white shadow-xl flex items-center justify-center active:scale-90 transition-transform z-40">
+<span class="material-symbols-outlined" data-icon="add_a_photo">add_a_photo</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-8 pt-4 bg-[#FDF8F3]/90 backdrop-blur-xl rounded-t-[2rem] border-t border-copper/10 shadow-[0_-8px_30px_rgba(44,36,33,0.05)]">
+<a class="flex flex-col items-center justify-center text-charcoal/40 hover:text-copper transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="explore">explore</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold uppercase tracking-widest mt-1">Discover</span>
+</a>
+<a class="flex flex-col items-center justify-center text-charcoal/40 hover:text-copper transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="chat_bubble">chat_bubble</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold uppercase tracking-widest mt-1">Messages</span>
+</a>
+<a class="flex flex-col items-center justify-center text-copper scale-110" href="#">
+<span class="material-symbols-outlined" data-icon="amp_stories" style="font-variation-settings: 'FILL' 1;">amp_stories</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold uppercase tracking-widest mt-1">Feed</span>
+</a>
+<a class="flex flex-col items-center justify-center text-charcoal/40 hover:text-copper transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold uppercase tracking-widest mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lustre | Messages</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Caveat&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-primary": "#ffb77b",
+              "tertiary-container": "#bf5334",
+              "surface-dim": "#e6d7d2",
+              "surface": "#fff8f6",
+              "on-secondary": "#ffffff",
+              "tertiary-fixed": "#ffdbd1",
+              "surface-tint": "#8c4f10",
+              "on-error": "#ffffff",
+              "primary-fixed": "#ffdcc2",
+              "primary": "#894d0d",
+              "surface-bright": "#fff8f6",
+              "on-tertiary-fixed": "#3b0900",
+              "error-container": "#ffdad6",
+              "on-tertiary-container": "#fffbff",
+              "on-primary": "#ffffff",
+              "background": "#fff8f6",
+              "primary-fixed-dim": "#ffb77b",
+              "error": "#ba1a1a",
+              "surface-container": "#faebe6",
+              "on-error-container": "#93000a",
+              "on-secondary-fixed-variant": "#5b4300",
+              "outline": "#857467",
+              "on-tertiary-fixed-variant": "#82270b",
+              "on-primary-container": "#fffbff",
+              "on-tertiary": "#ffffff",
+              "surface-container-highest": "#eedfda",
+              "secondary-fixed-dim": "#eec058",
+              "on-secondary-fixed": "#261a00",
+              "on-primary-fixed-variant": "#6d3a00",
+              "inverse-on-surface": "#fdeee8",
+              "secondary-fixed": "#ffdf9f",
+              "on-background": "#211a17",
+              "primary-container": "#a76526",
+              "surface-container-lowest": "#ffffff",
+              "surface-container-high": "#f4e5e0",
+              "secondary-container": "#fece65",
+              "on-primary-fixed": "#2e1500",
+              "tertiary-fixed-dim": "#ffb5a0",
+              "surface-variant": "#eedfda",
+              "surface-container-low": "#fff1ec",
+              "inverse-surface": "#372f2b",
+              "secondary": "#795900",
+              "on-secondary-container": "#755700",
+              "on-surface": "#211a17",
+              "tertiary": "#9f3c1e",
+              "outline-variant": "#d8c3b4",
+              "on-surface-variant": "#524439"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"],
+              "handwriting": ["Caveat"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .polaroid-avatar-container {
+        width: 54px;
+        height: 66px;
+        background: #FFFFFF;
+        padding: 4px 3px 14px 3px;
+        box-shadow: 0 4px 12px -2px rgba(46, 21, 0, 0.12);
+        position: relative;
+        flex-shrink: 0;
+      }
+      .polaroid-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .stack-layer-1 {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        background: #FDF8F3;
+        width: 100%;
+        height: 100%;
+        border: 0.5px solid #EEDFDA;
+        transform: rotate(-3deg);
+      }
+      .stack-layer-2 {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -2;
+        background: #FDF8F3;
+        width: 100%;
+        height: 100%;
+        border: 0.5px solid #EEDFDA;
+        transform: rotate(4deg);
+      }
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-[#FDF8F3] text-on-background font-body min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-[#FDF8F3] dark:bg-stone-950/80 backdrop-blur-xl shadow-[0_8px_24px_-2px_rgba(46,21,0,0.08)] flex items-center justify-between px-6 h-16 w-full">
+<div class="flex items-center gap-4">
+<button class="text-orange-800 dark:text-orange-400 active:scale-95 duration-200 transition-opacity hover:opacity-80">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<h1 class="font-['Plus_Jakarta_Sans'] font-bold text-xl tracking-tight text-orange-900 dark:text-orange-200">Messages</h1>
+</div>
+<div class="flex items-center">
+<button class="text-orange-800 dark:text-orange-400 active:scale-95 duration-200 transition-opacity hover:opacity-80">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+</div>
+</header>
+<main class="pt-20 px-4 max-w-2xl mx-auto">
+<!-- Search Plate -->
+<div class="mb-8">
+<div class="bg-surface-container-high rounded-full px-5 py-3 flex items-center gap-3 transition-all focus-within:bg-surface-container-lowest focus-within:ring-1 focus-within:ring-primary/20">
+<span class="material-symbols-outlined text-outline" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 w-full text-on-surface-variant placeholder:text-outline font-body text-sm" placeholder="Search conversations..." type="text"/>
+</div>
+</div>
+<!-- Section Label -->
+<div class="mb-6 flex items-center justify-between">
+<h2 class="font-headline font-bold text-primary tracking-tight">Recent Archives</h2>
+<span class="font-handwriting text-tertiary text-lg">4 new notes</span>
+</div>
+<!-- Messages List -->
+<div class="space-y-4">
+<!-- Message Item: Active/Unread -->
+<div class="bg-surface-container-low p-4 rounded-xl flex items-center gap-5 transition-transform active:scale-[0.98]">
+<div class="polaroid-avatar-container rotate-[-2deg]">
+<div class="stack-layer-1"></div>
+<img class="polaroid-img" data-alt="portrait of a woman with curly hair laughing in warm golden sunset light with a soft vintage film aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5lMrjTCzXbnQCEWvYFEs6B1izFGJZ4cC42-gkkfg3xHH8VX8cNlvSk9e1Wj8ftyMUjclEJb_9CvdWtsOvwWChWVeY67heYX3eGboQ0s_H6UTMHuFEdFbMcUfvyfghtdlP0JFdIvk5CU1EMFuGRScgrIKzzRi2f1NNggWNizCI9ZkXFO-YZfz-Xr_6FYBpDyzBRPKkIXRrc_IgRXxfw33ONWYhpon_d598y_tPImmm8EelbcI91_4P1auLebCpwwkPjezab1TdtEs"/>
+<span class="absolute bottom-0.5 left-1 font-handwriting text-[8px] text-stone-500">Elena</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-0.5">
+<h3 class="font-headline font-semibold text-on-surface truncate">Elena Thorne</h3>
+<span class="text-[10px] font-semibold text-primary uppercase tracking-tighter">2m ago</span>
+</div>
+<p class="text-sm text-on-surface-variant font-medium truncate">That record store we talked about is actually closing soon...</p>
+</div>
+<div class="w-2.5 h-2.5 bg-[#B87333] rounded-full shadow-[0_0_8px_rgba(184,115,51,0.5)]"></div>
+</div>
+<!-- Message Item -->
+<div class="bg-surface-container-lowest p-4 rounded-xl flex items-center gap-5 shadow-[0_4px_12px_-2px_rgba(46,21,0,0.04)] transition-transform active:scale-[0.98]">
+<div class="polaroid-avatar-container rotate-[3deg]">
+<img class="polaroid-img" data-alt="moody portrait of a man in a dark knit sweater against a warm textured background with soft side lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuADFa2kiABhCUnhzxpypWGK2v7CtLI1sc58t21HS4RqJHWR1vkdImiA1acfYmSSQeMxGlIw9WKcrqGoSvDW5wgRGhli8Rhy7ahrqXYDAbmzJqvS87PpzO1qS6b7juDFOS2apI52xEoaGYuYofD1ZeyRYhAm_5jVNeDf6wL466VGo43jeESDD74XTLa-nMkyXZ4foxsqz-m5oVc5StgdWtrENWnP33wQikyywNWuinDaMxktU6ddzC7MVpyJ9dWnzer3nCars2_VrnE"/>
+<span class="absolute bottom-0.5 left-1 font-handwriting text-[8px] text-stone-500">Julian</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-0.5">
+<h3 class="font-headline font-semibold text-on-surface truncate">Julian Vane</h3>
+<span class="text-[10px] text-outline font-medium">1h ago</span>
+</div>
+<p class="text-sm text-outline truncate">I think the third photo in your gallery is stunning. Where was that?</p>
+</div>
+</div>
+<!-- Message Item: Stack Effect -->
+<div class="bg-surface-container-lowest p-4 rounded-xl flex items-center gap-5 shadow-[0_4px_12px_-2px_rgba(46,21,0,0.04)] transition-transform active:scale-[0.98]">
+<div class="polaroid-avatar-container rotate-[-1deg]">
+<div class="stack-layer-1"></div>
+<div class="stack-layer-2"></div>
+<img class="polaroid-img" data-alt="young woman with freckles and amber eyes looking directly into camera with soft diffused indoor lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpunmvPB39_SbKBEMshZl68zqRjSzkOuod5f45tBmYSdzU_tn-4Fo2MQLKEXF_dByiY_YLCxHqbpPmixZy8XPxjZkcxd7-5UtYBTNUlK0tTdMrb7nMg02Dme6uFM3LL4zWS_nO_vN0epU5Pca_AbuuanKyt9b4Iay9u8dJ1MvlszpHvIVmMN4r-SkbcOUZAZGSNWRhkitKadkMciYcpyXtDJhkFdbWLQBMyFcTI6-tdgUhXLyzatye8xgemaEgmuFsKtdjF_sCzXw"/>
+<span class="absolute bottom-0.5 left-1 font-handwriting text-[8px] text-stone-500">Sloane</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-0.5">
+<h3 class="font-headline font-semibold text-on-surface truncate">Sloane Archer</h3>
+<span class="text-[10px] text-outline font-medium">4h ago</span>
+</div>
+<p class="text-sm text-outline truncate">Did you ever finish that book?</p>
+</div>
+</div>
+<!-- Message Item -->
+<div class="bg-surface-container-low p-4 rounded-xl flex items-center gap-5 transition-transform active:scale-[0.98]">
+<div class="polaroid-avatar-container rotate-[2deg]">
+<img class="polaroid-img" data-alt="close-up portrait of a man with a slight smile wearing a linen shirt on a sunlit balcony" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtEQ9faokXz-C7aPvEXXbHryzHhYVB_2OzZbRpuA5I8hkGaUSReb593zcKeTqqPVtp-xGxciLQ3LcNGKSfsTmbttoJybFE9DJg_ERe2rjoYYSg6bwbinKySjQR1jg3uCVZUADWmSiEseX98rwVrp1bwcz335v551GyXoOuDQjLjblRxWEXxQwwl2_02VJl6l9OPkJOolyTHNdvNusSTnTVtWgTMii9Rv4o7cnnZWOZ2RH0h__NEVQ-x4PeAhGWA0ncTynliDWspyw"/>
+<span class="absolute bottom-0.5 left-1 font-handwriting text-[8px] text-stone-500">Marcus</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-0.5">
+<h3 class="font-headline font-semibold text-on-surface truncate">Marcus Wright</h3>
+<span class="text-[10px] font-semibold text-primary uppercase tracking-tighter">Yesterday</span>
+</div>
+<p class="text-sm text-on-surface-variant font-medium truncate">Check out this cafe I found, it reminded me of your sketch.</p>
+</div>
+<div class="w-2.5 h-2.5 bg-[#B87333] rounded-full shadow-[0_0_8px_rgba(184,115,51,0.5)]"></div>
+</div>
+<!-- Message Item: Muted/Inactive -->
+<div class="bg-surface-container-lowest opacity-80 p-4 rounded-xl flex items-center gap-5 shadow-[0_4px_12px_-2px_rgba(46,21,0,0.04)] transition-transform active:scale-[0.98]">
+<div class="polaroid-avatar-container rotate-[-3deg] grayscale-[40%]">
+<img class="polaroid-img" data-alt="woman with short blonde hair and silver earrings looking thoughtfully away in a minimal white studio" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOc96j5k31pTAsIMGnBZcKO50R-c3bAKaltkMG1__S1jQzw7clja1hm0ajGGZqrGoblNf_FV4m8E8yCp9fQCz-9_2KKy2Zj-5OQqSxZptx56C-6Z1arrqA8E6yya9xZ7T6CE4i1pqP28BIX3PUFNFD8bzdfwbqRwJNdwHHXeOO3F5FcksPT3nc6rqg-DqkvRoy4dh1Cu-3mgL4FQH0tTWLJJ4H2LmW2chbz2BkoVhyd2-1O5DcbQmDD2EFAVq-OcfADdMyIU_xYvU"/>
+<span class="absolute bottom-0.5 left-1 font-handwriting text-[8px] text-stone-500">Ina</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-0.5">
+<h3 class="font-headline font-semibold text-on-surface truncate">Ina Moretti</h3>
+<span class="text-[10px] text-outline font-medium">Tue</span>
+</div>
+<p class="text-sm text-outline truncate">It was great meeting you last weekend!</p>
+</div>
+</div>
+</div>
+<!-- Empty State Prompt (Editorial Style) -->
+<div class="mt-16 text-center px-12">
+<div class="inline-block relative mb-4">
+<span class="material-symbols-outlined text-4xl text-primary-container/20" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<p class="font-handwriting text-2xl text-primary-container leading-tight">Every conversation is a new keepsake waiting to be shared.</p>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-8 pt-4 bg-[#FDF8F3]/90 dark:bg-stone-950/90 backdrop-blur-2xl rounded-t-[2rem] shadow-[0_-8px_24px_-2px_rgba(46,21,0,0.08)]">
+<!-- Discover -->
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-600 hover:text-orange-700 dark:hover:text-orange-300 transition-transform active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined text-2xl mb-1" data-icon="explore">explore</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold uppercase tracking-widest">Discover</span>
+</a>
+<!-- Messages (ACTIVE) -->
+<a class="flex flex-col items-center justify-center text-[#894D0D] dark:text-[#B87333] relative after:content-[''] after:absolute after:-top-1 after:w-1.5 after:h-1.5 after:bg-[#B87333] after:rounded-full transition-transform active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined text-2xl mb-1" data-icon="chat_bubble" style="font-variation-settings: 'FILL' 1;">chat_bubble</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold uppercase tracking-widest">Messages</span>
+</a>
+<!-- Feed -->
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-600 hover:text-orange-700 dark:hover:text-orange-300 transition-transform active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined text-2xl mb-1" data-icon="amp_stories">amp_stories</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold uppercase tracking-widest">Feed</span>
+</a>
+<!-- Profile -->
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-600 hover:text-orange-700 dark:hover:text-orange-300 transition-transform active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined text-2xl mb-1" data-icon="person">person</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold uppercase tracking-widest">Profile</span>
+</a>
+</nav>
+</body></html>
