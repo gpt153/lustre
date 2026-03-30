@@ -144,6 +144,8 @@ export default function BrowsePage() {
           const mapped = result
             .map((p: Record<string, unknown>) => ({
               ...p,
+              // Use userId (not Profile PK) as id for navigation
+              id: (p.userId as string) || (p.id as string),
               photos: Array.isArray(p.photos)
                 ? p.photos
                     .map((ph: unknown) =>

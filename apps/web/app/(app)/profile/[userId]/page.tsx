@@ -85,15 +85,34 @@ export default function PublicProfilePage() {
     if (!userId) return
     setIsLoading(true)
     try {
-      const [profileData, photosData, kudosData] = await Promise.all([
-        api.profile.get.query({ userId }),
-        api.photo.list.query({ userId }),
-        api.kudos.getProfileKudos.query({ userId }),
-      ])
+      const profileData = await api.profile.getPublic.query({ userId })
+      let kudosData
+      try {
+        kudosData = await api.kudos.getProfileKudos.query({ userId })
+      } catch {
+        kudosData = []
+      }
+      // Map API shape to component shape
+      const photos = (profileData.photos ?? []).map((p: { id: string; url?: string; thumbnailSmall?: string }) => ({
+        id: p.id,
+        url: p.url || p.thumbnailSmall || '',
+      }))
+      const pairLinks = (profileData.linkedPartners ?? []).map((lp: { userId: string; displayName: string; thumbnailUrl?: string }) => ({
+        id: lp.userId,
+        displayName: lp.displayName,
+        photoUrl: lp.thumbnailUrl,
+      }))
       setProfile({
-        ...profileData,
-        photos: photosData ?? [],
-        kudos: kudosData ?? [],
+        id: profileData.userId ?? userId,
+        displayName: profileData.displayName ?? '',
+        age: profileData.age ?? 0,
+        location: profileData.locationName ?? '',
+        bio: profileData.bio ?? '',
+        photos,
+        prompts: [],
+        kudos: Array.isArray(kudosData) ? kudosData : (kudosData?.badges ?? []),
+        isVerified: profileData.isVerified ?? false,
+        pairLinks,
       })
     } catch {
       setProfile(MOCK_PUBLIC_PROFILE)
