@@ -71,12 +71,12 @@ export default function SparkButton({
         ]
           .filter(Boolean)
           .join(' ')}
-        onClick={handleSendSpark}
+        onClick={(e) => { e.stopPropagation(); handleSendSpark() }}
         disabled={isDisabled}
         aria-label={`Skicka spark till användaren${balance === 0 ? ' (ingen spark tillgänglig)' : ''}`}
         tabIndex={-1}
       >
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <svg width="12" height="12" viewBox="0 0 20 20" fill="none" aria-hidden="true">
           {/* Lightning bolt SVG */}
           <path
             d="M10 2L5 10H8V18L15 10H12L10 2Z"
@@ -97,7 +97,7 @@ export default function SparkButton({
       {/* "Sparked you" indicator */}
       {sparkedYou && (
         <div className={styles.sparkedYouIndicator} title="Skickade en spark till dig">
-          <svg width="12" height="12" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <svg width="8" height="8" viewBox="0 0 20 20" fill="none" aria-hidden="true">
             <path
               d="M10 2L5 10H8V18L15 10H12L10 2Z"
               fill="currentColor"

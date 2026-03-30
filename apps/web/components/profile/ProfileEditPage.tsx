@@ -41,6 +41,7 @@ export default function ProfileEditPage({
   onDeletePhoto,
 }: ProfileEditPageProps) {
   const [formData, setFormData] = useState<ProfileFormData>(initialData)
+  const [showSaved, setShowSaved] = useState(false)
 
   const updateField = useCallback(<K extends keyof ProfileFormData>(
     field: K,
@@ -77,6 +78,8 @@ export default function ProfileEditPage({
 
   const handleSave = useCallback(() => {
     onSave?.(formData)
+    setShowSaved(true)
+    setTimeout(() => setShowSaved(false), 3000)
   }, [formData, onSave])
 
   return (
@@ -283,13 +286,20 @@ export default function ProfileEditPage({
           </div>
 
           {/* Save Button */}
-          <button
-            type="button"
-            className={styles.saveButton}
-            onClick={handleSave}
-          >
-            Save Changes
-          </button>
+          <div className={styles.saveArea}>
+            <button
+              type="button"
+              className={styles.saveButton}
+              onClick={handleSave}
+            >
+              Save Changes
+            </button>
+            {showSaved && (
+              <span className={styles.saveConfirmation}>
+                Profil sparad!
+              </span>
+            )}
+          </div>
 
           {/* Editorial Footer */}
           <div className={styles.editorialFooter}>

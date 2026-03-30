@@ -9,16 +9,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   border: none;
   cursor: pointer;
-  transition:
-    transform 200ms ease,
-    background 200ms ease,
-    box-shadow 150ms ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: opacity 200ms ease, transform 200ms ease;
+  opacity: 0.4;
+  background: transparent;
+  color: var(--stitch-on-surface-variant, #524439);
   position: relative;
 
   &:active {
@@ -32,14 +31,10 @@
 }
 
 .sparkBtn {
-  background: var(--color-gold, #D4A843);
-  color: white;
-  box-shadow: 0 4px 12px rgba(212, 168, 67, 0.4);
-
   &:hover:not(.disabled) {
-    background: #e5b854;
-    transform: scale(1.1);
-    box-shadow: 0 6px 20px rgba(212, 168, 67, 0.5);
+    opacity: 1;
+    transform: scale(1.15);
+    color: var(--color-gold, #D4A843);
   }
 
   &:not(.disabled):not(.confirmed) {
@@ -48,12 +43,11 @@
 }
 
 .sparkBtn.disabled {
-  opacity: 0.4;
+  opacity: 0.25;
   cursor: not-allowed;
 
   &:hover {
     transform: none;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   }
 }
 
@@ -64,64 +58,60 @@
 @keyframes sparkPulse {
   0% {
     transform: scale(1);
-    box-shadow: 0 6px 20px rgba(212, 168, 67, 0.5);
+    opacity: 0.4;
   }
   50% {
-    transform: scale(1.15);
-    box-shadow: 0 8px 28px rgba(212, 168, 67, 0.7);
+    transform: scale(1.2);
+    opacity: 1;
   }
   100% {
     transform: scale(1);
-    box-shadow: 0 4px 12px rgba(212, 168, 67, 0.4);
+    opacity: 0.4;
   }
 }
 
 /* Spark balance badge */
 .badge {
   position: absolute;
-  top: -8px;
-  right: -8px;
-  min-width: 22px;
-  height: 22px;
+  top: -4px;
+  right: -4px;
+  min-width: 14px;
+  height: 14px;
   background: var(--color-gold, #D4A843);
   color: #ffffff;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
+  font-size: 9px;
   font-weight: 700;
-  box-shadow: 0 2px 8px rgba(212, 168, 67, 0.4);
-  border: 2px solid var(--color-bg-elevated, #ffffff);
+  border: 1px solid var(--color-bg-elevated, #ffffff);
   line-height: 1;
 }
 
 /* "Sparked you" indicator — small lightning pill badge */
 .sparkedYouIndicator {
   position: absolute;
-  bottom: -4px;
-  left: -4px;
-  width: 24px;
-  height: 24px;
+  bottom: -2px;
+  left: -2px;
+  width: 16px;
+  height: 16px;
   background: var(--color-copper, #B87333);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #ffffff;
-  box-shadow: 0 2px 8px rgba(184, 115, 51, 0.4);
-  border: 2px solid var(--color-bg-elevated, #ffffff);
+  border: 1px solid var(--color-bg-elevated, #ffffff);
   animation: sparkedYouPulse 2s ease-in-out infinite;
 }
 
 @keyframes sparkedYouPulse {
   0%,
   100% {
-    box-shadow: 0 2px 8px rgba(184, 115, 51, 0.4);
     transform: scale(1);
   }
   50% {
-    box-shadow: 0 4px 12px rgba(184, 115, 51, 0.6);
     transform: scale(1.1);
   }
 }
@@ -140,6 +130,10 @@
 
   .sparkedYouIndicator {
     animation: none;
+  }
+
+  .actionBtn {
+    transition: none;
   }
 
   .actionBtn:active {

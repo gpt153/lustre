@@ -1,7 +1,7 @@
 /*
  * AppShell — Three-zone CSS Grid Layout
  *
- * Desktop (>= 1200px): NavRail | Main (max 720px) | Context Panel
+ * Desktop (>= 1200px): NavRail | Main (full width) | Context Panel
  * Tablet (900–1199px): NavRail | Main (context panel hidden)
  * Mobile (< 900px):    Single column with BottomNav padding
  */
@@ -44,16 +44,14 @@
   overflow-y: auto;
   overflow-x: hidden;
   padding: var(--space-xl) var(--space-xl);
-  /* Center content within flexible column */
   display: flex;
   flex-direction: column;
-  align-items: center;
 }
 
 .mainInner {
   width: 100%;
-  max-width: 720px;
-  flex: 1;
+  max-width: 100%;
+  flex: 1 0 auto;
 }
 
 /* ============================================================

@@ -286,6 +286,7 @@
   border-radius: 9999px;
   position: relative;
   transition: background 200ms ease;
+  pointer-events: none;
 }
 
 .toggleInput:checked + .toggleTrack {
@@ -395,6 +396,27 @@
 .saveButton:focus-visible {
   outline: 2px solid var(--stitch-primary);
   outline-offset: 4px;
+}
+
+/* ---- Save Confirmation ---- */
+
+.saveArea {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.saveConfirmation {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--stitch-tertiary, #4a7c59);
+  opacity: 1;
+  transition: opacity 500ms ease;
+}
+
+.saveConfirmationHidden {
+  composes: saveConfirmation;
+  opacity: 0;
 }
 
 /* ---- Editorial Footer ---- */

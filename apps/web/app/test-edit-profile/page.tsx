@@ -42,16 +42,16 @@ export default function TestEditProfilePage() {
       photos={MOCK_PHOTOS}
       initialData={MOCK_FORM_DATA}
       onSave={() => {
-        alert('Profil sparad!')
+        console.log('Profil sparad (demo)')
       }}
       onAddPhoto={() => {
-        alert('Lagg till foto (demo)')
+        console.log('Lagg till foto (demo)')
       }}
       onEditPhoto={(id) => {
-        alert(`Redigera foto ${id} (demo)`)
+        console.log(`Redigera foto ${id} (demo)`)
       }}
       onDeletePhoto={(id) => {
-        alert(`Ta bort foto ${id} (demo)`)
+        console.log(`Ta bort foto ${id} (demo)`)
       }}
     />
   )

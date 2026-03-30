@@ -81,7 +81,7 @@ const MOCK_POSTS: MockPost[] = [
   {
     id: '7',
     caption: 'Summer nights in the garden.',
-    imageUrl: 'https://images.unsplash.com/photo-1490750967868-88aa4f44baee?w=600&h=600&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=600&h=600&fit=crop',
     imageAlt: 'String lights in a garden during warm summer evening',
     likeCount: 67,
     commentCount: 19,
@@ -101,7 +101,7 @@ const MOCK_POSTS: MockPost[] = [
   {
     id: '9',
     caption: 'Street art tells stories.',
-    imageUrl: 'https://images.unsplash.com/photo-1499781350541-7783f6c6a0c8?w=600&h=600&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1569974507005-6dc61f97fb5c?w=600&h=600&fit=crop',
     imageAlt: 'Colorful street art mural on an urban brick wall',
     likeCount: 38,
     commentCount: 8,
@@ -225,7 +225,7 @@ export default function TestFeedPage() {
       </header>
 
       <main className={styles.feed}>
-        <PolaroidMasonryGrid columns={3} gap="2rem">
+        <PolaroidMasonryGrid>
           {MOCK_POSTS.map((post) => (
             <FeedPostCard key={post.id} post={post} />
           ))}

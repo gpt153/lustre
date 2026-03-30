@@ -5,6 +5,7 @@ import ConversationList, { Conversation } from '@/components/chat/ConversationLi
 import ChatRoom from '@/components/chat/ChatRoom'
 import MiniProfile, { MiniProfileData } from '@/components/chat/MiniProfile'
 import { Message } from '@/components/chat/MessageBubble'
+import styles from './page.module.css'
 
 /* ─── Mock Data ─── */
 
@@ -120,35 +121,6 @@ const AVATARS: Record<string, string> = {
 
 /* ─── Styles ─── */
 
-const layoutStyles: Record<string, React.CSSProperties> = {
-  root: {
-    height: '100vh',
-    overflow: 'hidden',
-    display: 'flex',
-    fontFamily: 'var(--font-be-vietnam-pro, "Be Vietnam Pro", sans-serif)',
-    color: 'var(--stitch-on-surface, #211a17)',
-    background: '#FDF8F3',
-  },
-  convList: {
-    width: '30%',
-    minWidth: 280,
-    flexShrink: 0,
-    borderRight: '1px solid transparent',
-  },
-  chatPanel: {
-    width: '45%',
-    flexGrow: 1,
-    position: 'relative' as const,
-    zIndex: 10,
-    boxShadow: '-2px 0 24px rgba(0,0,0,0.06), 2px 0 24px rgba(0,0,0,0.06)',
-  },
-  miniProfile: {
-    width: '25%',
-    minWidth: 260,
-    flexShrink: 0,
-  },
-}
-
 /* ─── Page Component ─── */
 
 export default function TestChatPage() {
@@ -160,9 +132,9 @@ export default function TestChatPage() {
   const activeAvatar = AVATARS[activeConvId]
 
   return (
-    <div style={layoutStyles.root}>
+    <div className={styles.root}>
       {/* Conversation List (30%) */}
-      <div style={layoutStyles.convList}>
+      <div className={styles.convList}>
         <ConversationList
           activeConversationId={activeConvId}
           conversations={MOCK_CONVERSATIONS}
@@ -171,7 +143,7 @@ export default function TestChatPage() {
       </div>
 
       {/* Active Chat Panel (45%) */}
-      <div style={layoutStyles.chatPanel}>
+      <div className={styles.chatPanel}>
         <ChatRoom
           conversationId={activeConvId}
           participantName={activeConv?.participantName}
@@ -184,7 +156,7 @@ export default function TestChatPage() {
       </div>
 
       {/* Mini Profile (25%) — hidden below 1200px via CSS */}
-      <div style={layoutStyles.miniProfile}>
+      <div className={styles.miniProfile}>
         {activeProfile && (
           <MiniProfile profile={activeProfile} />
         )}

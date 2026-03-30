@@ -1,7 +1,7 @@
 .page {
   background: var(--stitch-gradient, linear-gradient(135deg, #fff8f6 0%, #faebe6 50%, #f4e5e0 100%));
   min-height: 100vh;
-  padding: 48px;
+  padding: 24px 20px;
 }
 
 .header {
@@ -50,24 +50,29 @@
 
 .polaroidActions {
   display: flex;
-  justify-content: center;
-  gap: 12px;
-  padding: 8px 0 12px;
+  justify-content: flex-end;
+  gap: 6px;
+  padding: 2px 0 0;
 }
 
 .actionBtn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   border: none;
   cursor: pointer;
-  transition:
-    transform 200ms ease,
-    background 200ms ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: opacity 200ms ease, transform 200ms ease;
+  opacity: 0.4;
+  background: transparent;
+  color: var(--stitch-on-surface-variant, #524439);
+}
+
+.actionBtn:hover {
+  opacity: 1;
+  transform: scale(1.15);
 }
 
 .actionBtn:active {
@@ -79,24 +84,12 @@
   outline-offset: var(--focus-ring-offset);
 }
 
-.passBtn {
-  background: var(--color-charcoal);
-  color: #ffffff;
-}
-
 .passBtn:hover {
-  background: #000;
-  transform: scale(1.1);
-}
-
-.likeBtn {
-  background: var(--color-copper);
-  color: white;
+  color: var(--stitch-tertiary, #9f3c1e);
 }
 
 .likeBtn:hover {
-  background: var(--color-copper-light);
-  transform: scale(1.1);
+  color: var(--stitch-primary, #894d0d);
 }
 
 .cardFocused {

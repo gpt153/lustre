@@ -1,6 +1,6 @@
 .grid {
   column-count: 3;
-  column-gap: 2rem;
+  column-gap: 2.5rem;
 }
 
 .item {
@@ -21,11 +21,11 @@
 .item:nth-child(8n+8) { --polaroid-rotation: 3.5deg; }
 
 /* Responsive breakpoints */
-@media (min-width: 1440px) {
+/* Default (900px+): 3 columns — generous spacing, large cards */
+
+@media (min-width: 2200px) {
   .grid { column-count: 4; }
 }
-
-/* Default (900-1439px): 3 columns */
 
 @media (max-width: 899px) {
   .grid { column-count: 2; }

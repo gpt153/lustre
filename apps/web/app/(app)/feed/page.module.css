@@ -1,7 +1,6 @@
 .page {
   position: relative;
-  max-width: 960px;
-  margin: 0 auto;
+  width: 100%;
   padding: var(--space-xl) var(--space-lg) 100px;
   min-height: 100vh;
   background: var(--stitch-gradient, linear-gradient(135deg, #fff8f6 0%, #faebe6 50%, #f4e5e0 100%));

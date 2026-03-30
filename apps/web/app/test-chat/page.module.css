@@ -1,0 +1,49 @@
+.root {
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  font-family: var(--font-be-vietnam-pro, 'Be Vietnam Pro', sans-serif);
+  color: var(--stitch-on-surface, #211a17);
+  background: #FDF8F3;
+}
+
+.convList {
+  width: 30%;
+  min-width: 280px;
+  flex-shrink: 0;
+  border-right: 1px solid transparent;
+}
+
+.chatPanel {
+  width: 45%;
+  flex-grow: 1;
+  position: relative;
+  z-index: 10;
+  box-shadow: -2px 0 24px rgba(0,0,0,0.06), 2px 0 24px rgba(0,0,0,0.06);
+}
+
+.miniProfile {
+  width: 25%;
+  min-width: 260px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 899px) {
+  .convList {
+    display: none;
+  }
+
+  .chatPanel {
+    width: 100%;
+  }
+
+  .miniProfile {
+    display: none;
+  }
+}
+
+@media (max-width: 1199px) {
+  .miniProfile {
+    display: none;
+  }
+}

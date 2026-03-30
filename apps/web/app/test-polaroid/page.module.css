@@ -1,0 +1,26 @@
+.polaroidActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  padding: 2px 0 0;
+}
+
+.actionBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  transition: opacity 200ms ease, transform 200ms ease;
+  opacity: 0.4;
+  background: transparent;
+  color: var(--stitch-on-surface-variant, #524439);
+}
+
+.actionBtn:hover {
+  opacity: 1;
+  transform: scale(1.15);
+}
