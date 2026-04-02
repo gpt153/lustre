@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { TRPCError } from '@trpc/server'
 import { router, protectedProcedure } from './middleware.js'
 
-const listSchema = z.object({}).strict()
+const listSchema = z.void().or(z.object({}).strict())
 
 const getMessagesSchema = z.object({
   conversationId: z.string().uuid(),

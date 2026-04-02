@@ -6,9 +6,25 @@ import { createTRPCProxyClient, httpBatchLink } from '@trpc/client'
 import superjson from 'superjson'
 
 /**
+ * Helper to read the auth token from the Zustand persisted store in localStorage.
+ * This avoids a React hook dependency so the vanilla tRPC client can use it.
+ */
+function getAuthToken(): string | null {
+  if (typeof window === 'undefined') return null
+  try {
+    const raw = localStorage.getItem('lustre-auth')
+    if (!raw) return null
+    const parsed = JSON.parse(raw)
+    return parsed?.state?.token ?? null
+  } catch {
+    return null
+  }
+}
+
+/**
  * Vanilla tRPC client — use this for direct API calls.
- * Auth is handled via HttpOnly cookie (lustre-auth) set by /api/auth/migrate-session.
- * credentials: 'include' ensures the cookie is sent with every request.
+ * Auth token is read from the Zustand auth store (persisted in localStorage)
+ * and sent as a Bearer header. Cookie fallback is also supported.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const api = createTRPCProxyClient<any>({
@@ -17,8 +33,14 @@ export const api = createTRPCProxyClient<any>({
       transformer: superjson,
       url: '/trpc',
       fetch(url, options) {
+        const token = getAuthToken()
+        const headers = new Headers(options?.headers)
+        if (token) {
+          headers.set('Authorization', `Bearer ${token}`)
+        }
         return fetch(url, {
           ...options,
+          headers,
           credentials: 'include',
         })
       },

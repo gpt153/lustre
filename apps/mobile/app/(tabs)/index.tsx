@@ -1,5 +1,5 @@
-import { FeedScreen } from '@lustre/app'
+import { Redirect } from 'expo-router'
 
 export default function HomeScreen() {
-  return <FeedScreen />
+  return <Redirect href="/(tabs)/discover" />
 }

@@ -13,7 +13,13 @@ Replace the broken 5-tab + 10 hidden routes navigation with a clean 5-tab bottom
 
 ## Wave 1: Foundation — Bottom Nav Bar + Tab Layout
 
-**Status:** IN_PROGRESS — 2026-03-31
+**Status:** DONE — 2026-03-31
+
+**Visual Verification:**
+- Screenshots: screenshots/wave1/run4/
+- Comparison: screenshots/wave1/run4/COMPARISON.md
+- Gate result: PASS (verify-wave-screenshots.sh exit 0)
+- Runs needed: 4 (run1 = first attempt, run4 = final pass)
 
 **Goal:** Replace the current broken PolaroidTabBar with a new 5-tab BottomNavBar + center FAB. All 5 tabs render placeholder screens. Navigation structure is correct.
 
@@ -25,20 +31,28 @@ Replace the broken 5-tab + 10 hidden routes navigation with a clean 5-tab bottom
 **Stitch source:** `html/bottom-nav-spec.html`, `bottom-nav-spec.png`
 
 **Testgate:**
-- [ ] 5 tab icons visible: Upptäck, Community, FAB, Chatt, Jag
-- [ ] Tapping each tab switches content (placeholder screens OK)
-- [ ] Active tab shows copper (#894D0D) icon + dot indicator
-- [ ] Inactive tabs show outline (#857467) color
-- [ ] Center FAB elevated above nav bar with copper gradient
-- [ ] FAB has white 4px border and fab-shadow
-- [ ] Nav bar has rounded top corners (24px), nav-shadow upward
-- [ ] Nav bar uses glassmorphism (BlurView iOS, solid fallback Android)
-- [ ] No hidden routes visible in the tab bar
-- [ ] `~/bin/verify-wave-screenshots.sh F32-UX-navigation-tiles-hub 1`
+- [x] 5 tab icons visible: Upptäck, Community, FAB, Chatt, Jag
+- [x] Tapping each tab switches content (placeholder screens OK)
+- [x] Active tab shows copper (#894D0D) icon + dot indicator
+- [x] Inactive tabs show outline (#857467) color
+- [x] Center FAB elevated above nav bar with copper gradient
+- [x] FAB has white 4px border and fab-shadow
+- [x] Nav bar has rounded top corners (24px), nav-shadow upward
+- [x] Nav bar uses glassmorphism (BlurView iOS, solid fallback Android)
+- [x] No hidden routes visible in the tab bar
+- [x] `~/bin/verify-wave-screenshots.sh F32-UX-navigation-tiles-hub 1`
 
 ---
 
 ## Wave 2: Upptäck Hub + Sub-navigation
+
+**Status:** DONE — 2026-03-31
+
+**Visual Verification:**
+- Screenshots: screenshots/wave2/run1/
+- Comparison: screenshots/wave2/run1/COMPARISON.md
+- Gate result: PASS (verify-wave-screenshots.sh exit 0)
+- Runs needed: 1 (run1 = first attempt, run1 = final pass)
 
 **Goal:** Upptäck tab shows tiles hub with 6 tiles. Tapping a tile navigates to its sub-view via stack navigation. Swipe and Intentions sub-views are fully functional.
 
@@ -50,16 +64,16 @@ Replace the broken 5-tab + 10 hidden routes navigation with a clean 5-tab bottom
 **Stitch source:** `html/upptack-hub.html`, `html/swipe-view.html`, `html/intentions-view.html`, `upptack-hub.png`, `swipe-view.png`, `intentions-view.png`
 
 **Testgate:**
-- [ ] Upptäck hub shows 6 tiles in 2-column masonry grid
-- [ ] Hero tile (Swipe) is full-width with image overlay gradient
-- [ ] Standard tiles show icon circle + title + subtitle
-- [ ] Tapping "Swipe" tile navigates to swipe card deck
-- [ ] Swipe view shows Polaroid card with 5 action buttons
-- [ ] Tapping "Intentioner" tile shows intentions filter pills + cards
-- [ ] Back arrow from sub-views returns to hub
-- [ ] Tiles have polaroid-shadow and rounded-lg corners
-- [ ] Screen padding 24px horizontal
-- [ ] `~/bin/verify-wave-screenshots.sh F32-UX-navigation-tiles-hub 2`
+- [x] Upptäck hub shows 6 tiles in 2-column masonry grid
+- [x] Hero tile (Swipe) is full-width with image overlay gradient
+- [x] Standard tiles show icon circle + title + subtitle
+- [x] Tapping "Swipe" tile navigates to swipe card deck
+- [x] Swipe view shows Polaroid card with 5 action buttons
+- [x] Tapping "Intentioner" tile shows intentions filter pills + cards
+- [x] Back arrow from sub-views returns to hub
+- [x] Tiles have polaroid-shadow and rounded-lg corners
+- [x] Screen padding 24px horizontal
+- [x] `~/bin/verify-wave-screenshots.sh F32-UX-navigation-tiles-hub 2`
 
 ---
 

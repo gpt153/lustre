@@ -23,6 +23,8 @@ export { PolaroidAvatar } from './PolaroidAvatar'
 export type { PolaroidAvatarProps } from './PolaroidAvatar'
 export { BottomNavBar } from './BottomNavBar'
 export type { BottomNavBarProps } from './BottomNavBar'
+export { TilesHub } from './TilesHub'
+export type { TilesHubProps, TileDef } from './TilesHub'
 export { CenterFAB } from './CenterFAB'
 export type { CenterFABProps } from './CenterFAB'
 

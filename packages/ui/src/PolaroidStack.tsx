@@ -10,13 +10,14 @@ import { PolaroidCard } from './PolaroidCard'
 
 const SPRING_CONFIG = { damping: 20, stiffness: 90, mass: 1 }
 
-// Stack positions: index 0 = front, 1–4 = background layers
+// Stack positions: index 0 = front (w-80), 1–4 = background (w-72 = 0.9x)
+// Rotations from Stitch: background cards at +6, +3, -2, -5 degrees
 const STACK_LAYERS = [
   { rotation: 0, scale: 1, opacity: 1, translateX: 0, translateY: 0, zIndex: 5 },
-  { rotation: 3, scale: 0.95, opacity: 0.9, translateX: 2, translateY: -2, zIndex: 4 },
-  { rotation: -2, scale: 0.90, opacity: 0.8, translateX: -3, translateY: 1, zIndex: 3 },
-  { rotation: 6, scale: 0.85, opacity: 0.7, translateX: 4, translateY: -1, zIndex: 2 },
-  { rotation: -5, scale: 0.80, opacity: 0.6, translateX: -6, translateY: 2, zIndex: 1 },
+  { rotation: 6, scale: 0.9, opacity: 0.85, translateX: 8, translateY: 16, zIndex: 4 },
+  { rotation: 3, scale: 0.9, opacity: 0.80, translateX: 16, translateY: -8, zIndex: 3 },
+  { rotation: -2, scale: 0.9, opacity: 0.75, translateX: -8, translateY: -4, zIndex: 2 },
+  { rotation: -5, scale: 0.9, opacity: 0.70, translateX: -16, translateY: 4, zIndex: 1 },
 ] as const
 
 export interface PolaroidStackProps {

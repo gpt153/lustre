@@ -29,14 +29,22 @@ export default function MatchesPage() {
         if (!cancelled) {
           const raw = Array.isArray(result) ? result : []
           setMatches(
-            raw.map((m: Record<string, unknown>) => ({
-              ...m,
-              photos: Array.isArray(m.photos)
-                ? m.photos.map((ph: unknown) =>
+            raw
+              .filter((m: Record<string, unknown>) => m.matchedUser)
+              .map((m: Record<string, unknown>) => {
+                const user = m.matchedUser as Record<string, unknown>
+                const rawPhotos = Array.isArray(user.photos) ? user.photos : []
+                return {
+                  id: m.id as string,
+                  displayName: (user.displayName as string) || 'Okänd',
+                  age: (user.age as number) || 0,
+                  photos: rawPhotos.map((ph: unknown) =>
                     typeof ph === 'string' ? ph : (ph as { url: string }).url
-                  )
-                : [],
-            })) as Match[]
+                  ),
+                  location: '',
+                  matchedAt: (m.createdAt as string) || '',
+                }
+              }) as Match[]
           )
         }
       } catch {

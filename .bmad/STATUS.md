@@ -2,7 +2,7 @@
 
 **Project:** Lustre (lovelustre.com)
 **Stack:** Turborepo + Expo + Next.js + Fastify + Elixir + PostgreSQL
-**Next feature number:** F32
+**Next feature number:** F33
 
 ## Planned Features
 
@@ -22,11 +22,11 @@
 | F12 | MEET | Organizations | 2 | 4 | **DONE** (2026-03-25) |
 | F13 | SAFE | SafeDate | 2 | 5 | **DONE** (2026-03-27) |
 | F14 | SAFE | ConsentVault | 3 | 6 | **DONE** (2026-03-25) |
-| F15 | LEARN | Coach Engine | 2 | 5 | **DONE** (2026-03-25) |
-| F16 | LEARN | Coach Vanilla | 2 | 5 | PLANNED |
-| F17 | LEARN | Coach Spicy | 2 | 4 | **DONE** (2026-03-26) |
-| F18 | LEARN | Gamification | 2 | 4 | **DONE** (2026-03-26) |
-| F19 | LEARN | Sexual Health Education | 2 | 5 | **DONE** (2026-03-26) |
+| F15 | LEARN | Coach Engine | 2 | 5 | **PAUSED** (was DONE 2026-03-25) |
+| F16 | LEARN | Coach Vanilla | 2 | 5 | **PAUSED** (was PLANNED) |
+| F17 | LEARN | Coach Spicy | 2 | 4 | **PAUSED** (was DONE 2026-03-26) |
+| F18 | LEARN | Gamification | 2 | 4 | **PAUSED** (was DONE 2026-03-26) |
+| F19 | LEARN | Sexual Health Education | 2 | 5 | **PAUSED** (was DONE 2026-03-26) |
 | F20 | SHOP | Marketplace | 3 | 6 | **DONE** (2026-03-26) |
 | F21 | SHOP | Business Shops | 2 | 4 | **DONE** (2026-03-26) |
 | F22 | SHOP | Advertising | 2 | 5 | **DONE** (2026-03-26) |
@@ -40,6 +40,7 @@
 | F30 | CORE | Auth Fix (Swish+SPAR, Email/OAuth) | 3 | 8 | **DONE** (2026-03-26) |
 | F31 | UX | Design System | 2 | 4 | **DONE** (2026-03-27) |
 | F40 | UX | Polaroid Mobile | 5 | 18 | **DONE** (2026-03-29) |
+| F32 | UX | Navigation Tiles Hub | 4 | 11 | PLANNED |
 
 ## Build Order (Suggested Phases)
 
@@ -48,7 +49,7 @@
 ### Phase 3: Connect MVP (F07, F08, F09, F24)
 ### Phase 4: Safety (F13, F06)
 ### Phase 5: Voice/Video & Events (F10, F11)
-### Phase 6: Learn Platform (F15, F16, F18)
-### Phase 7: Advanced Features (F12, F14, F17, F19)
+### Phase 6: Learn Platform (F15, F16, F18) — PAUSED
+### Phase 7: Advanced Features (F12, F14, F17, F19) — F17/F19 PAUSED
 ### Phase 8: Commerce (F20, F21, F22)
 ### Phase 9: Admin & Growth (F26, F27)

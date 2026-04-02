@@ -221,6 +221,8 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
   - `VIDEOSEAL_API_URL`, `VIDEOSEAL_API_KEY` — VideoSeal forensic watermarking
 
 ## AI Coach Engine (F15-LEARN-coach-engine)
+> **PAUSED** — This feature is on hold. Do not include in navigation, new features, or suggestions until reactivated.
+
 - **Python service:** `services/coach/` — LiveKit Agents worker (livekit-agents>=0.12), OpenAI Whisper-1 STT, GPT-4o-mini LLM, ElevenLabs TTS, Silero VAD
 - **Personas:** `services/coach/personas.py` — `"coach"` (Axel, supportive older-brother coach, voice `ErXwobaYiN019PkySvjV`) and `"partner"` (Sophia, realistic Swedish practice partner, voice `21m00Tcm4TlvDq8ikWAM`); persona selected via room metadata `"coach_type"`
 - **REST endpoint:** `POST /api/coach/token` — Bearer JWT auth, body `{ mode: 'voice'|'text', persona?: 'coach'|'partner' }`, returns `{ token, wsUrl, roomName, persona }`
@@ -235,6 +237,8 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
   - `ELEVENLABS_API_KEY` — TTS voice synthesis
 
 ## Vanilla Coaching Modules (F16-LEARN-coach-vanilla)
+> **PAUSED** — This feature is on hold. Do not include in navigation, new features, or suggestions until reactivated.
+
 - **Schema:** `LearnModule`, `Lesson`, `UserModuleProgress`, `UserLessonProgress` — Prisma models in `services/api/prisma/schema.prisma`
 - **Module data:** 10 progressive modules (Overcome Fear → Masculine Leadership), orders 1-10; modules 1-3 unlocked by default (`isUnlocked: true`), 4-10 locked; each module has `badgeName` awarded on completion
 - **Lesson data:** 35 lessons (3-4 per module) seeded via `services/api/prisma/seed.ts`; each lesson has `coachSystemPrompt` (Axel persona), `partnerSystemPrompt` (Sophia persona), `assessmentCriteria`
@@ -247,6 +251,8 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
 - **Session integration:** lesson screens launch into existing F15 coach session — mobile via `router.push('/(tabs)/coach/start', { persona, lessonContext })`, web via `/coach/start?persona=X&context=Y`
 
 ## Spicy Coaching Modules (F17-LEARN-coach-spicy)
+> **PAUSED** — This feature is on hold. Do not include in navigation, new features, or suggestions until reactivated.
+
 - **Gating:** Requires `Profile.spicyModeEnabled = true` AND completion of vanilla module 6 (badge awarded). Without both, spicy modules are hidden from `module.list` and `startLesson` throws FORBIDDEN.
 - **Schema additions:** `Profile.spicyModeEnabled Boolean @default(false)` — `LearnModule.isSpicy Boolean @default(false)` — Migration: `services/api/prisma/migrations/20260325110000_add_spicy_mode/migration.sql`
 - **Module data:** 8 spicy modules (orders 101-108, `isSpicy: true`, `isUnlocked: false`): Consent as Flirt, Dirty Talk (Basic + Advanced), Dominance with Respect, Physical Intimacy, BDSM Intro, Fantasy Communication, Giving Pleasure
@@ -258,6 +264,8 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
 - **Web:** `/learn` spicy section with gate banner; `/learn/[moduleId]` and `/learn/.../lesson/[lessonId]` show 18+ badge when isSpicy; toggle at `/settings/spicy`; settings nav via `apps/web/app/(app)/settings/layout.tsx`
 
 ## Gamification (F18-LEARN-gamification)
+> **PAUSED** — This feature is on hold. Do not include in navigation, new features, or suggestions until reactivated.
+
 - **Schema:** `Badge`, `Medal`, `UserBadge`, `UserMedal`, `UserStreak` — Prisma models in `services/api/prisma/schema.prisma`
 - **Badge data:** 18 badges — one per module (10 vanilla orders 1-10, 8 spicy orders 101-108). Seeded via `services/api/prisma/seed.ts`. Badge keyed by `moduleOrder`.
 - **Medal data:** 15 medals for individual merit achievements (streaks, volume, speed, behavioral). Keyed by `key` string (e.g. `brave_first_step`, `week_warrior`, `century_club`).
@@ -269,6 +277,8 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
 - **Migration:** `services/api/prisma/migrations/20260326000000_add_gamification/migration.sql`
 
 ## Sexual Health Education (F19-LEARN-sexual-health)
+> **PAUSED** — This feature is on hold. Do not include in navigation, new features, or suggestions until reactivated.
+
 - **Schema:** `EducationTopic`, `EducationArticle`, `EducationPodcast`, `EducationQuiz`, `UserArticleRead`, `UserQuizAttempt` — Prisma models in `services/api/prisma/schema.prisma`
 - **Enums:** `EducationCategory` (8: ANATOMY, PLEASURE, STI_PREVENTION, MENTAL_HEALTH, RELATIONSHIPS, KINK_SAFETY, LGBTQ, AGING), `EducationAudience` (5: ALL, WOMEN, MEN, NON_BINARY, COUPLES)
 - **Seed data:** 20 topics across all 8 categories seeded via `services/api/prisma/seed.ts` (Swedish titles/descriptions)
@@ -407,7 +417,7 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
 - **Logo:** `packages/ui/src/LustreLogo.tsx`, `LogoBrand.tsx` — PNG assets with brand text
 - **Core components:** `packages/ui/src/` — LustreButton (copper-gold LinearGradient primary, ghost border secondary, pill 9999 radius), LustreInput (no-border pill, copper focus glow), CardBase (surfaceContainerLowest bg, ultra-diffused 0.06 shadow), ModalBase (white bg, 32 radius, spring animation), BottomSheetBase (glassmorphism 85% opacity, 48 radius)
 - **Tamagui config:** `packages/ui/src/tamagui.config.ts` — all tokens and themes wired
-- **Mobile nav:** `apps/mobile/app/(tabs)/_layout.tsx` — Glassmorphic floating dock (custom FloatingDock with BlurView/solid fallback), 5 tabs (Discover, Connect, Explore, Learn, Profile), copper active + dot indicator, 48px borderRadius, no borders
+- **Mobile nav:** `apps/mobile/app/(tabs)/_layout.tsx` — Glassmorphic floating dock (custom FloatingDock with BlurView/solid fallback), 5 tabs (Discover, Connect, Explore, Learn, Profile), copper active + dot indicator, 48px borderRadius, no borders. **Note: The Learn tab is PAUSED (F15-F19) — do not add new Learn content or link to Learn features until reactivated.**
 - **Screen implementations:** All mobile screens use stitch design — Discover (full-bleed swipe cards, copper-charcoal gradient), Chat (editorial list, copper gradient sent bubbles), Feed (tonal layering), Explore (tonal cards, Swedish labels), Profile (asymmetric hero gradient, ghost borders)
 - **Web header:** `apps/web/app/(app)/components/Header.tsx` — glassmorphism styling with backdrop-filter blur
 - **Swipe mechanics:** `packages/app/src/hooks/useSwipeGesture.ts` — Reanimated 3 gesture handling with spring physics
@@ -446,7 +456,7 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
 - **Typography:** `apps/web/styles/typography.css` — 5 type classes: text-hero (48px), text-section (28px), text-card-title (18px), text-body (15px), text-muted (13px)
 - **Components:** `apps/web/components/common/` — Card, Button, Input, Modal, Toast, Skeleton, EmptyState, CommandPalette, ShortcutOverlay, ModeSwitch, ThemeSwitch, AppOnlyPrompt, PolaroidCard, PolaroidMasonryGrid
 - **Layout components:** `apps/web/components/layout/` — AppShell, Header (glassmorphism), NavRail, ContextPanel, BottomNav, KeyboardShortcutsProvider, PageTransition
-- **Page components:** `apps/web/components/` — discover/ (DiscoverGrid, ProfileCard, FilterSidebar), chat/ (ChatLayout, ConversationList, ChatRoom, MessageBubble, MessageInput), profile/ (ProfileView, ProfileEdit, PhotoGrid, PromptCard), feed/ (FeedList, PostCard, PostComposer, CommentSection), events/ (EventCard), groups/ (GroupCard), learn/ (ModuleCard), achievements/ (AchievementBadge, StreakCounter), marketplace/ (ProductCard, ProductDetail, ListingForm), settings/ (SettingsSidebar, Toggle, sections/*)
+- **Page components:** `apps/web/components/` — discover/ (DiscoverGrid, ProfileCard, FilterSidebar), chat/ (ChatLayout, ConversationList, ChatRoom, MessageBubble, MessageInput), profile/ (ProfileView, ProfileEdit, PhotoGrid, PromptCard), feed/ (FeedList, PostCard, PostComposer, CommentSection), events/ (EventCard), groups/ (GroupCard), learn/ (ModuleCard — PAUSED), achievements/ (AchievementBadge, StreakCounter — PAUSED), marketplace/ (ProductCard, ProductDetail, ListingForm), settings/ (SettingsSidebar, Toggle, sections/*)
 - **Hooks:** `apps/web/hooks/` — useKeyboardShortcuts, useCommandPalette, useBreakpoint, useDiscoverKeyboard, useTheme, useSound, useCallGate
 - **Lib:** `apps/web/lib/` — sound-manager.ts (Web Audio API), app-store-links.ts (platform detection), analytics.ts (Umami tracking)
 - **Warm UI:** Paper grain texture, breathing copper gradient, noise overlay on elevated surfaces, nav micro-interactions, button press pulse, sound effects (like/match/message/send)
@@ -482,7 +492,7 @@ Master roadmap: `~/bodycontact-recon/.bmad/MASTER-ROADMAP.md`
 - **Match ceremony:** `apps/mobile/components/MatchCeremony.tsx` — two overlapping PolaroidCards at ±8 degrees, "It's a connection!" headline in tertiary, copper glow aura, spring animation entry, haptic feedback
 - **Edit profile:** `packages/app/src/screens/ProfileEditScreen.tsx` — 3-column Polaroid photo grid with tap-to-straighten animation, dashed empty slots at 88:107 aspect
 - **Welcome:** `apps/mobile/app/(auth)/welcome.tsx` — 5 scattered PolaroidCards at varied rotations (-12 to +6 degrees), LUSTRE branding, copper gradient CTA
-- **Bottom nav:** `apps/mobile/app/(tabs)/_layout.tsx` — PolaroidTabBar with glassmorphism (BlurView iOS / solid fallback Android), rounded top corners 32px, ghost border, copper active state with dot indicator, 5 tabs (Discover, Connect, Explore, Learn, Profile)
+- **Bottom nav:** `apps/mobile/app/(tabs)/_layout.tsx` — PolaroidTabBar with glassmorphism (BlurView iOS / solid fallback Android), rounded top corners 32px, ghost border, copper active state with dot indicator, 5 tabs (Discover, Connect, Explore, Learn, Profile). **Note: The Learn tab is PAUSED (F15-F19) — do not add new Learn content or link to Learn features until reactivated.**
 - **Top app bar:** `apps/mobile/components/PolaroidHeader.tsx` — glassmorphic blur (60% opacity), NotoSerif_700Bold copper title, Reanimated spring press feedback on icon buttons
 - **Visual polish:** `apps/mobile/components/PaperTextureBackground.tsx` — warm white #FDF8F3 with Skia fractal noise at 0.04 opacity; button press scale animations across all screens
 - **Key deps:** react-native-reanimated 3, react-native-gesture-handler 2, @shopify/react-native-skia, phosphor-react-native, expo-blur, expo-haptics, expo-linear-gradient
@@ -563,3 +573,33 @@ Samuel laddar ner APK:n via länken som Snotra genererar — du ska ALDRIG före
 2. Inkludera ALLTID --apk med rätt sökväg vid apk_ready
 3. Inkludera ALLTID --message med en kort beskrivning
 4. Gör detta VARJE gång, utan att fråga Samuel
+
+
+## Snotra Brain — Centralt minne
+
+Du har tillgang till **Snotra Brain** via MCP-verktyget `snotra-brain`. Det ar ett delat minne over alla Samuels system.
+
+### NAR du ska SOKA (brain_search):
+- **Innan du fattar ett arkitekturbeslut** — kolla om det finns tidigare beslut eller lardomar
+- **Nar du stoter pa en bugg** — kolla om nagon annan lost samma problem
+- **Nar du ar osaker** — sok efter kontext fran andra system
+
+### NAR du ska SPARA (brain_capture):
+- Nar du fattar ett viktigt **designbeslut** (type: decision)
+- Nar du fixar en **svarhittad bugg** (type: bug_fix)
+- Nar du lar dig nagot **nytt om kodbasen** (type: learning)
+- Nar du hittar en **sakerhetsrisk** (type: observation)
+- Nar du far **feedback fran Samuel** (type: reference)
+
+### Verktyg:
+- `brain_search` — semantisk sokning ("PII sakerhet", "prisma migration problem")
+- `brain_capture` — spara lardomar med type, topics, domain
+- `brain_list` — filtrera (--source conclaw, --type bug_fix, --days 7)
+- `brain_stats` — oversikt
+
+### Regler:
+- Sok ALLTID innan du borjar ett nytt storre arbete
+- Spara ALLTID viktiga beslut och lardomar
+- Anvand ratt source-tag nar du sparar (conclaw/odinclaw/hurricane/lustre/snotra)
+- Skriv minnen pa svenska nar innehallet ar pa svenska
+
