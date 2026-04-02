@@ -27,6 +27,8 @@ export { TilesHub } from './TilesHub'
 export type { TilesHubProps, TileDef } from './TilesHub'
 export { CenterFAB } from './CenterFAB'
 export type { CenterFABProps } from './CenterFAB'
+export { QuickCreateMenu } from './QuickCreateMenu'
+export type { QuickCreateMenuProps, QuickCreateMenuItem } from './QuickCreateMenu'
 
 // Font exports
 export { generalSansFont, interFont } from './fonts'

@@ -1,26 +1,61 @@
-import { useMemo, useCallback } from 'react'
-import { Tabs } from 'expo-router'
-import { BottomNavBar, CenterFAB } from '@lustre/ui'
+import { useState, useMemo, useCallback } from 'react'
+import { Tabs, useRouter } from 'expo-router'
+import { BottomNavBar, CenterFAB, QuickCreateMenu } from '@lustre/ui'
 import { useChat } from '@lustre/app/src/hooks/useChat'
 
 // ─── Layout ──────────────────────────────────────────────────────────────────
 
 export default function TabLayout() {
+  const router = useRouter()
   const { totalUnread } = useChat()
+  const [quickCreateOpen, setQuickCreateOpen] = useState(false)
+
   const chatBadge = useMemo(
     () => (totalUnread > 0 ? totalUnread : undefined),
     [totalUnread]
   )
 
   const handleFABPress = useCallback(() => {
-    // TODO: Open QuickCreateMenu (Wave 3)
-    console.log('[CenterFAB] pressed — QuickCreateMenu coming in Wave 3')
+    setQuickCreateOpen((prev) => !prev)
   }, [])
 
+  const handleQuickCreateClose = useCallback(() => {
+    setQuickCreateOpen(false)
+  }, [])
+
+  const handleQuickCreateAction = useCallback(
+    (id: string) => {
+      setQuickCreateOpen(false)
+      // Navigate to the corresponding screen
+      switch (id) {
+        case 'new-post':
+          // TODO: navigate to create post
+          break
+        case 'new-message':
+          router.push('/(tabs)/chat' as any)
+          break
+        case 'create-event':
+          router.push('/(tabs)/community/events' as any)
+          break
+        case 'new-group':
+          router.push('/(tabs)/community/groups' as any)
+          break
+        case 'safedate':
+          router.push('/(tabs)/safedate' as any)
+          break
+        case 'update-intentions':
+          router.push('/(tabs)/discover/intentions' as any)
+          break
+      }
+    },
+    [router]
+  )
+
   return (
+    <>
     <Tabs
       tabBar={(props) => (
-        <BottomNavBar {...props} centerFAB={<CenterFAB onPress={handleFABPress} />} />
+        <BottomNavBar {...props} centerFAB={<CenterFAB onPress={handleFABPress} rotated={quickCreateOpen} />} />
       )}
       screenOptions={{
         headerShown: false,
@@ -85,5 +120,11 @@ export default function TabLayout() {
       <Tabs.Screen name="safedate"       options={{ href: null }} />
       <Tabs.Screen name="polaroid-test"  options={{ href: null }} />
     </Tabs>
+    <QuickCreateMenu
+      visible={quickCreateOpen}
+      onClose={handleQuickCreateClose}
+      onAction={handleQuickCreateAction}
+    />
+    </>
   )
 }

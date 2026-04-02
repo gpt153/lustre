@@ -79,6 +79,14 @@ Replace the broken 5-tab + 10 hidden routes navigation with a clean 5-tab bottom
 
 ## Wave 3: Community Hub + Feed
 
+**Status:** DONE — 2026-03-31
+
+**Visual Verification:**
+- Screenshots: screenshots/wave3/run1/
+- Comparison: screenshots/wave3/run1/COMPARISON.md
+- Gate result: PASS (verify-wave-screenshots.sh exit 0)
+- Runs needed: 1 (run1 = first attempt, run1 = final pass)
+
 **Goal:** Community tab shows tiles hub with 5 tiles. Flöde (feed) sub-view shows vertical Polaroid posts. Quick Create bottom sheet functional.
 
 **Epics:**
@@ -89,16 +97,16 @@ Replace the broken 5-tab + 10 hidden routes navigation with a clean 5-tab bottom
 **Stitch source:** `html/community-hub.html`, `html/flode-feed.html`, `html/quick-create.html`, `community-hub.png`, `flode-feed.png`, `quick-create.png`
 
 **Testgate:**
-- [ ] Community hub shows 5 tiles in 2-column masonry grid
-- [ ] Hero tile (Flöde) is full-width with image overlay
-- [ ] Tapping "Flöde" navigates to vertical Polaroid post feed
-- [ ] Feed posts show white card, inner photo, optional washi tape, slight rotation
-- [ ] Engagement row: heart + comment + bookmark icons
-- [ ] Center FAB tap opens bottom sheet with 6 quick-create actions
-- [ ] Bottom sheet has dark overlay (bg-black/40) + backdrop blur
-- [ ] 2-column grid of action buttons with 56px circle icons
-- [ ] FAB rotates 45° to X when sheet is open
-- [ ] `~/bin/verify-wave-screenshots.sh F32-UX-navigation-tiles-hub 3`
+- [x] Community hub shows 5 tiles in 2-column masonry grid
+- [x] Hero tile (Flöde) is full-width with image overlay
+- [x] Tapping "Flöde" navigates to vertical Polaroid post feed
+- [x] Feed posts show white card, inner photo, optional washi tape, slight rotation
+- [x] Engagement row: heart + comment + bookmark icons
+- [x] Center FAB tap opens bottom sheet with 6 quick-create actions
+- [x] Bottom sheet has dark overlay (bg-black/40) + backdrop blur
+- [x] 2-column grid of action buttons with 56px circle icons
+- [x] FAB rotates 45° to X when sheet is open
+- [x] `~/bin/verify-wave-screenshots.sh F32-UX-navigation-tiles-hub 3`
 
 ---
 
