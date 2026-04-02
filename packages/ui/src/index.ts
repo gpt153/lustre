@@ -21,6 +21,10 @@ export { PolaroidStack } from './PolaroidStack'
 export type { PolaroidStackProps } from './PolaroidStack'
 export { PolaroidAvatar } from './PolaroidAvatar'
 export type { PolaroidAvatarProps } from './PolaroidAvatar'
+export { BottomNavBar } from './BottomNavBar'
+export type { BottomNavBarProps } from './BottomNavBar'
+export { CenterFAB } from './CenterFAB'
+export type { CenterFABProps } from './CenterFAB'
 
 // Font exports
 export { generalSansFont, interFont } from './fonts'
