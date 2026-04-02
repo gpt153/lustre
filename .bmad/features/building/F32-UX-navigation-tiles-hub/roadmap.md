@@ -112,6 +112,14 @@ Replace the broken 5-tab + 10 hidden routes navigation with a clean 5-tab bottom
 
 ## Wave 4: Chatt + Jag + Final Polish
 
+**Status:** DONE — 2026-03-31
+
+**Visual Verification:**
+- Screenshots: screenshots/wave4/run1/
+- Comparison: screenshots/wave4/run1/COMPARISON.md
+- Gate result: PASS (verify-wave-screenshots.sh exit 0)
+- Runs needed: 1 (run1 = first attempt, run1 = final pass)
+
 **Goal:** Chatt and Jag tabs are fully functional. All navigation flows work end-to-end. Visual polish pass.
 
 **Epics:**
@@ -121,16 +129,16 @@ Replace the broken 5-tab + 10 hidden routes navigation with a clean 5-tab bottom
 **Stitch source:** `html/chatt.html`, `html/jag-profil.html`, `chatt.png`, `jag-profil.png`
 
 **Testgate:**
-- [ ] Chatt tab shows "Nya matchningar" horizontal avatar scroll (56px, copper ring)
-- [ ] Chatt shows "Konversationer" vertical list with 48px avatars
-- [ ] Unread badge: primary-container bg, white text, 20px circle
-- [ ] Tapping conversation opens chat room
-- [ ] Jag tab shows 96px avatar with copper ring + verified badge
-- [ ] Name, age, location centered below avatar
-- [ ] Stats row with 3 stats and dividers
-- [ ] Posts grid: 3-column Polaroid thumbnails
-- [ ] All 5 tabs navigate correctly, no regressions
-- [ ] `~/bin/verify-wave-screenshots.sh F32-UX-navigation-tiles-hub 4`
+- [x] Chatt tab shows "Nya matchningar" horizontal avatar scroll (56px, copper ring)
+- [x] Chatt shows "Konversationer" vertical list with 48px avatars
+- [x] Unread badge: primary-container bg, white text, 20px circle
+- [x] Tapping conversation opens chat room
+- [x] Jag tab shows 96px avatar with copper ring + verified badge
+- [x] Name, age, location centered below avatar
+- [x] Stats row with 3 stats and dividers
+- [x] Posts grid: 3-column Polaroid thumbnails
+- [x] All 5 tabs navigate correctly, no regressions
+- [x] `~/bin/verify-wave-screenshots.sh F32-UX-navigation-tiles-hub 4`
 
 ---
 
